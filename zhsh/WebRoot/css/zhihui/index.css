@@ -1,0 +1,369 @@
+  html,body{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+ }
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+    color: #000;
+}
+a:link{
+text-decoration:none;
+}
+a:visited{
+text-decoration:none;
+}
+a:hover{
+text-decoration:none;
+}
+a:active{
+text-decoration:none;
+}
+.hands{
+    cursor: pointer;
+}
+.zhihui_header{
+    width: 100%;
+    height: 11%;
+    min-height: 140px;
+    background-color: #d1d9de;
+}
+.zhihui_logo{
+    width: 8%;
+    height: 100%;
+    float: left;
+}
+.zhuhui_header_middle{
+    width: 50%;
+    height:100%;
+    line-height: 140px;
+    font-size: 38px;
+    float: left;
+    padding-left: 1%;
+    color: #46606f;
+}
+.zhihui_header_right{
+    height: 100%;
+    line-height: 140px;
+    text-align: center;
+    float: right;
+    width: 20%;
+    margin-right:5%; 
+}
+.zhihui_header_right_btn{
+    float: right;
+    width:37px;
+    height: 36px;
+    background-image: url(../../img/btn.png);
+    margin-top: 50px;
+    margin-right: 10%;
+}
+
+.zhihui_body{
+    width: 100%;
+    height: 81%;
+}
+.zhihui_body_left{
+    width: 8%;
+    height: 100%;
+    background-color: #46606f;
+    float: left;
+}
+.zhihui_body_left_d1{
+    width: 100%;
+    height: 18%;
+
+}
+.zhihui_body_left_d1_img{
+    width: 60%;
+    height: 60%;
+    border-radius: 50%;
+    margin-top: 20%;
+    margin-left:20%;
+    min-width: 80px;
+    min-height: 80px;
+
+}
+@media (max-width: 1280px){
+    .zhihui_body_left_d1_img{
+    width: 60%;
+    height: 60%;
+    border-radius: 50%;
+    margin-top: 20%;
+    margin-left:10%;
+    min-width: 80px;
+    min-height: 80px;
+
+}
+}
+.zhihui_body_left_d2{
+    width: 100%;
+    height: 12%;
+
+}
+.zhihui_body_left_d2 a{
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+.zhihui_body_left_d2_img{
+    width: 22%;
+    height: 34%;
+    margin-left: 35%;
+    margin-top: 15%;
+}
+.zhihui_body_left_d2_size{
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    margin-top: 1%;
+    font-size: 18px;
+}
+.left_active{
+    background-color: #01253b;
+    color: #fff !important;
+}
+.left_active2{
+    background-color: #01253b;
+    color: #fff !important;
+    background-image: url(../../img/tubiao.png);
+    background-repeat: no-repeat;
+    background-position: 15% 33%;
+}
+.white{
+      color: #fff !important;
+}
+.zhihui_body_right{
+    width: 92%;
+    float: left;
+    height:100%;
+}
+.dingwei{
+    display: block;
+    float: left;
+    width: 2%;
+    height: 50%;
+    margin-left: 1%;
+    margin-top: .5%;
+}
+.zhihui_body_right_header{
+    width: 100%;
+    height: 6%;
+    background-color: #ededed;
+    float: left;
+}
+.dingwei_right{
+    float: left;
+    margin-top: 1%;
+    margin-left: 1%;
+}
+.daochu,.bctc{
+    float: right;
+    width: 120px;
+    height: 30px;
+    background-color: #5dc9ba;
+    border-radius: 5px;
+    margin-top: .5%;
+    margin-right: 40px;
+    text-align: center;
+    line-height: 30px;
+    color: #fff;
+    cursor: pointer;
+    display: none;
+}
+.zhihui_body_right_middle{
+    width: 16%;
+    height: 92%;
+    background-color: #d1d9de;
+    float: left;
+}
+.zhihui_body_right_middle_d1{
+    width: 100%;
+    height: 8%;
+
+}
+.zhihui_body_right_middle_d1_tb{
+    float: left;
+    margin-top: 8%;
+    margin-left: 20%;
+    width: 20px;
+    height: 20px;
+}
+.zhihui_body_right_middle_d1_content{
+    float: left;
+     margin-top: 5%;
+     margin-left: 30%;
+}
+.none{
+    display: none;
+}
+.zhihui_body_right_footer{
+     width: 100%;
+    height: 6%;
+    background-color: #ededed;
+    text-align: center;
+    padding-top: 1%;
+     float: left;
+}
+.zhihui_body_right_contern{
+     float: left;
+     width: 84%;
+     height: 88%;
+     font-size: 14px !important;
+     margin-bottom:10px;
+     /*display: none;*/
+}
+.zhihui_body_right_contern_d1{
+    width: 100%;
+    height: 80px;
+}
+.zhihui_body_right_contern_st1{
+    width: 10%;
+    height: 40%;
+    margin-left: 2%;
+    margin-top: 1%;
+    border-radius: 5px;
+}
+.zhihui_body_right_contern_ipt1{
+    display: inline-block;
+    width: 20%;
+    height: 40%;
+    margin-left: 2%;
+    margin-top: 14px;
+    border-radius: 5px;
+    padding-left: 1%;
+}
+.zhihui_body_right_contern_cx,
+.zhihui_body_right_contern_tj{
+    display: inline-block;
+    width: 8%;
+    height: 30%;
+    text-align: center;
+    background-color:#5dc9ba;
+    border-radius: 5px;
+    padding-top: .8%;
+    padding-bottom: .5%;
+    margin-left: 3%;
+    color: #fff;
+    cursor: pointer;
+}
+.zhihui_body_right_contern_d2{
+    width: 100%;
+    height: 40%;
+ }
+.zhihui_body_right_contern_table{
+    width: 90%;
+    height: 100%;
+    border:2px solid #8f8f8f;
+     border-top: 1px solid #8f8f8f;
+    border-left: 1px solid #8f8f8f;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 5px;
+    margin-left: 2%;
+    margin-bottom:10px;
+    float: left;
+    font-size: 14px !important;
+
+}
+.zhihui_body_right_contern_table td{
+    border-left:1px solid #8f8f8f;
+    border-top:1px solid #8f8f8f;
+}
+.table_xg{
+    cursor: pointer;
+    color: #2eaef0;
+}
+
+
+.dangan2_d3{
+    width: 90%;
+    height: 5%;
+    margin-top: 20px;
+}
+.dangan2_d3 dt{
+    float: right;
+
+}
+.dangan2_dt1{
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    line-height: 32px;
+    border:1px solid #8f8f8f;
+    border-radius: 3px;
+    margin-left:10px;
+    cursor: pointer;
+}
+.leftimg,
+.leftimg2,
+.leftimg3,
+.leftimg4{
+    border:none;
+    margin-top: -.2%;
+}
+.dangan2_d3_sp2{
+    display: block;
+    float: right;
+    width: 32px;
+    text-align: center;
+     height: 32px;
+     line-height: 32px;
+}
+.dangan2_d3_st1{
+    display: block;
+    float: right;
+    width: 60px;
+    height: 32px;
+    border-radius: 5px;
+}
+.dangan2_d3_sp2_2{
+    display: block;
+    float: right;
+    width: 200px;
+    height: 32px;
+    text-align: center;
+    line-height: 32px;
+}
+.bordernone{
+border:none;
+}
+
+/*ifra*/
+.zhihui_body_right_ifra{
+     float: left;
+     width: 84%;
+     height: 88%;
+     display: none;
+}
+.dangan_ifra_a1{
+    text-decoration: none;
+    color: #fff;
+}
+.dangan_ifra{
+    width: 100%;
+    height: 100%;
+    border:none;
+}
+/*#dangan,*/
+#zhifu,
+#yingxiao,
+#xitong,
+#baobiao,
+#shixiang{
+    display: none;
+}
+.active_bg{
+    background-color: #eee;
+}
+ 

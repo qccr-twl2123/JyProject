@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Pay_historyMapper">
+	
+	
+	
+	<!-- 之前的数据版本 -->
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into TB_PAY_HISTORY(
+			USER_TYPE,	
+			USER_ACCOUNT,	
+			MONEY_TYPE,	
+			MONEY,	
+			REMITTANCE_TYPE,	
+			REMITTANCE_NUMBER,	
+			PAY_TIME,	
+			PAY_STATUS,	
+			ORDER_TN,	
+			PAYEE_NUMBER,	
+			PAY_HISTORY_ID
+		) values (
+			#{user_type},	
+			#{user_account},	
+			#{money_type},	
+			#{money},	
+			#{remittance_type},	
+			#{remittance_number},	
+			#{pay_time},	
+			#{pay_status},	
+			#{order_tn},	
+			#{payee_number},	
+			#{pay_history_id}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_PAY_HISTORY
+		where 
+			PAY_HISTORY_ID = #{pay_history_id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  TB_PAY_HISTORY
+			set 
+				user_type = #{user_type},
+				user_account = #{user_account},
+				money_type = #{money_type},
+				money = #{money},
+				remittance_type = #{remittance_type},
+				remittance_number = #{remittance_number},
+				pay_time = #{pay_time},
+				pay_status = #{pay_status},
+				order_tn = #{order_tn},
+				payee_number = #{payee_number},
+			PAY_HISTORY_ID = pay_history_id
+			where 
+				PAY_HISTORY_ID = #{pay_history_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			user_type,	
+			user_account,	
+			money_type,	
+			money,	
+			remittance_type,	
+			remittance_number,	
+			pay_time,	
+			pay_status,	
+			order_tn,	
+			payee_number,	
+			PAY_HISTORY_ID
+		from 
+			TB_PAY_HISTORY
+		where 
+			PAY_HISTORY_ID = #{pay_history_id}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.user_type,	
+				a.user_account,	
+				a.money_type,	
+				a.money,	
+				a.remittance_type,	
+				a.remittance_name,
+				a.remittance_number,	
+				a.pay_time,	
+				a.pay_status,	
+				a.order_tn,	
+				a.province_name,
+				a.city_name,
+				a.area_name,
+				a.payee_number,	
+				a.payer_id,
+				a.pay_history_id
+		from 
+				tb_pay_history a
+		where  
+				a.pay_status = '1'
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+						a.user_account like CONCAT(CONCAT("%",#{pd.content}),"%")
+						or
+						a.money like CONCAT(CONCAT("%",#{pd.content}),"%")
+						or
+						a.pay_history_id like CONCAT(CONCAT("%",#{pd.content}),"%") 
+						)
+				</if>
+				<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+					and a.province_name=#{pd.province_name}
+		 		</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+					and a.city_name=#{pd.city_name}
+		 		</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+					and a.area_name=#{pd.area_name}
+		 		</if>		
+				<if test="pd.user_type!= null and pd.user_type!= ''"><!-- 用户类型 -->
+					and a.user_type=#{pd.user_type}
+		 		</if>	
+				<if test="pd.remittance_type != null and pd.remittance_type != ''"><!-- 支付类型 -->
+					and a.remittance_type=#{pd.remittance_type}
+		 		</if>	
+				<if test="pd.money_type!= null and pd.money_type!= ''"><!-- 款项类型 -->
+					and a.money_type=#{pd.money_type}
+		 		</if>	
+				<if test="pd.pay_time!= null and pd.pay_time!= ''"><!--支付时间-->
+					and date_format(a.pay_time,'%Y-%m-%d')=#{pd.pay_time}
+		 		</if>	
+				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(a.pay_time,'%Y-%m-%d') &gt;= #{pd.starttime}
+		 		</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(a.pay_time,'%Y-%m-%d') &lt;= #{pd.endtime}
+		 		</if>	
+				<if test="pd.month != null and pd.month != ''"><!-- 当前月份时间 -->
+						and date_format(a.pay_time,'%Y-%m') = #{pd.month}
+		 		</if>	
+				<if test="pd.payee_type =='0'.toString()"><!-- 收款方为公司-->
+						and payee_number='0'
+		 		</if>	
+				<if test="pd.payee_type =='1'.toString()"><!-- 收款方为商家 -->
+						and payee_number != '0'
+		 		</if>	
+				order by a.pay_time desc
+	</select>
+	
+	<!-- 合计总发生金额 -->
+	<select id="dataSumMoney" parameterType="page" resultType="String">
+		select
+				 cast(sum(a.money)  as  DECIMAL(10,2)) as allmoney
+		from 
+				tb_pay_history a
+		where  
+				a.pay_status = '1'
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+						a.user_account like CONCAT(CONCAT("%",#{pd.content}),"%")
+						or
+						a.money like CONCAT(CONCAT("%",#{pd.content}),"%")
+						or
+						a.pay_history_id like CONCAT(CONCAT("%",#{pd.content}),"%") 
+						)
+				</if>
+				<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+					and a.province_name=#{pd.province_name}
+		 		</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+					and a.city_name=#{pd.city_name}
+		 		</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+					and a.area_name=#{pd.area_name}
+		 		</if>		
+				<if test="pd.user_type!= null and pd.user_type!= ''"><!-- 用户类型 -->
+					and a.user_type=#{pd.user_type}
+		 		</if>	
+				<if test="pd.remittance_type != null and pd.remittance_type != ''"><!-- 支付类型 -->
+					and a.remittance_type=#{pd.remittance_type}
+		 		</if>	
+				<if test="pd.money_type!= null and pd.money_type!= ''"><!-- 款项类型 -->
+					and a.money_type=#{pd.money_type}
+		 		</if>	
+				<if test="pd.pay_time!= null and pd.pay_time!= ''"><!--支付时间-->
+					and date_format(a.pay_time,'%Y-%m-%d')=#{pd.pay_time}
+		 		</if>	
+				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(a.pay_time,'%Y-%m-%d') &gt;= #{pd.starttime}
+		 		</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(a.pay_time,'%Y-%m-%d') &lt;= #{pd.endtime}
+		 		</if>	
+				<if test="pd.month != null and pd.month != ''"><!-- 当前月份时间 -->
+						and date_format(a.pay_time,'%Y-%m') = #{pd.month}
+		 		</if>	
+				<if test="pd.payee_type =='0'.toString()"><!-- 收款方为公司-->
+						and payee_number='0'
+		 		</if>	
+				<if test="pd.payee_type =='1'.toString()"><!-- 收款方为商家 -->
+						and payee_number != '0'
+		 		</if>	
+				order by a.pay_time desc
+	</select>
+	
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.payer_id,
+				a.user_type,	
+				a.user_account,	
+				a.money_type,	
+				a.money,	
+				a.remittance_type,	
+				a.remittance_name,
+				a.remittance_number,	
+				date_format(a.pay_time, '%Y-%m-%d %h:%i:%s') as   pay_time,	
+ 				a.pay_status,	
+				a.order_tn,	
+				a.payee_number,	
+				a.order_id,
+				a.pay_history_id,
+				a.province_name,
+				a.city_name,
+				a.area_name,
+				b.pay_type,
+				b.user_balance,
+  				b.user_integral,
+  				b.sale_money,	
+				b.discount_money,	
+				b.no_discount_money,	
+				b.actual_money,
+				b.actual_money+b.user_balance+b.user_integral as allmoney
+		from 
+				tb_pay_history a 
+				left join tb_order b on a.order_id=b.order_id
+		where 
+				1=1
+				<if test="starttime != null and starttime != ''">
+					and date_format(a.pay_time,'%Y-%m-%d') <![CDATA[ >= ]]> #{starttime}
+				</if>
+				<if test="endtime != null and endtime != ''">
+					and  date_format(a.pay_time,'%Y-%m-%d')  <![CDATA[ <= ]]> #{endtime}
+				</if> 	
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_PAY_HISTORY
+		where 
+			PAY_HISTORY_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 获取所有消费统计魏汉文20160617-->
+	<select id="countAllMoney" parameterType="page" resultType="pd">
+		select 
+				 a.money,
+				 date_format(a.pay_time,'%Y-%m-%d') as pay_time 
+		from 
+				tb_pay_history a 
+ 		where  
+				1=1
+				and a.pay_status='1'
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+						a.user_account =#{pd.content}
+						or
+						a.money = #{pd.content}	 
+						)
+				</if>
+				<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+					and a.province_name=#{pd.province_name}
+		 		</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+					and a.city_name=#{pd.city_name}
+		 		</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+					and a.area_name=#{pd.area_name}
+		 		</if>		
+				<if test="pd.user_type!= null and pd.user_type!= ''"><!-- 用户类型 -->
+					and a.user_type=#{pd.user_type}
+		 		</if>	
+				<if test="pd.pay_time!= null and pd.pay_time!= ''"><!--时间-->
+					and date_format(a.pay_time,'%Y-%m-%d')=#{pd.pay_time}
+		 		</if>	
+				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(a.pay_time,'%Y-%m-%d') &gt;= #{pd.starttime}
+		 		</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(a.pay_time,'%Y-%m-%d') &lt;= #{pd.endtime}
+		 		</if>	
+				<if test="pd.month != null and pd.month != ''"><!-- 当前月份时间 -->
+						and date_format(a.pay_time,'%Y-%m') = #{pd.month}
+		 		</if>	
+		group by date_format(a.pay_time,'%Y-%m-%d')
+  	</select>
+	
+	<!-- 获取所有个人的消费统计魏汉文20160617-->
+	<select id="countAllMoneyByOne" parameterType="Page" resultType="pd">
+		select 
+				max(b.money) as money,
+				b.payer_id,
+				b.pay_time,
+				b.user_type
+		from	
+				 (	select 
+							 sum(a.money) as money,
+							 date_format(a.pay_time,'%Y-%m-%d') pay_time,
+							 a.payer_id,
+							 a.user_type
+					from 
+							tb_pay_history a 
+								
+					where
+							1=1
+							and a.pay_status='1'
+			 				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+								and
+									(
+									a.user_account =#{pd.content}
+									or
+									a.money = #{pd.content}	 
+									)
+							</if>
+							<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+								and a.province_name=#{pd.province_name}
+					 		</if>
+							<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+								and a.city_name=#{pd.city_name}
+					 		</if>
+							<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+								and a.area_name=#{pd.area_name}
+					 		</if>		
+							<if test="pd.user_type!= null and pd.user_type!= ''"><!-- 用户类型 -->
+								and a.user_type=#{pd.user_type}
+					 		</if>	
+							<if test="pd.pay_time!= null and pd.pay_time!= ''"><!--时间-->
+								and date_format(a.pay_time,'%Y-%m-%d')=#{pd.pay_time}
+					 		</if>	
+							<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+									and date_format(a.pay_time,'%Y-%m-%d') &gt;= #{pd.starttime}
+					 		</if>
+							<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+									and date_format(a.pay_time,'%Y-%m-%d') &lt;= #{pd.endtime}
+					 		</if>	
+							<if test="pd.month != null and pd.month != ''"><!-- 当前月份时间 -->
+									and date_format(a.pay_time,'%Y-%m') = #{pd.month}
+					 		</if>	
+ 					GROUP BY  date_format(a.pay_time,'%Y-%m-%d'),a.payer_id  ) b
+  		GROUP BY  b.pay_time 
+  	</select>
+  	
+  	<!-- excel导出列表(全部) -->
+	<select id="ExcellistAllHistory" parameterType="page" resultType="pd">
+		select
+				a.user_type,	
+				a.user_account,	
+				a.money_type,	
+				a.money,	
+				a.remittance_type,	
+				a.remittance_name,
+				a.remittance_number,	
+				a.pay_time,	
+				a.pay_status,	
+				a.order_tn,	
+				a.province_name,
+				a.city_name,
+				a.area_name,
+				a.payee_number,	
+				a.payer_id,
+				a.pay_history_id
+		from 
+				tb_pay_history a
+		where  
+				a.pay_status = '1'
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+						a.user_account =#{pd.content}
+						or
+						a.money = #{pd.content}	 
+						)
+				</if>
+				<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+					and a.province_name=#{pd.province_name}
+		 		</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+					and a.city_name=#{pd.city_name}
+		 		</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+					and a.area_name=#{pd.area_name}
+		 		</if>		
+				<if test="pd.user_type!= null and pd.user_type!= ''"><!-- 用户类型 -->
+					and a.user_type=#{pd.user_type}
+		 		</if>	
+				<if test="pd.remittance_type != null and pd.remittance_type != ''"><!-- 支付类型 -->
+					and a.remittance_type=#{pd.remittance_type}
+		 		</if>	
+				<if test="pd.money_type!= null and pd.money_type!= ''"><!-- 款项类型 -->
+					and a.money_type=#{pd.money_type}
+		 		</if>	
+				<if test="pd.pay_time!= null and pd.pay_time!= ''"><!--支付时间-->
+					and date_format(a.pay_time,'%Y-%m-%d')=#{pd.pay_time}
+		 		</if>	
+				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(a.pay_time,'%Y-%m-%d') &gt;= #{pd.starttime}
+		 		</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(a.pay_time,'%Y-%m-%d') &lt;= #{pd.endtime}
+		 		</if>	
+				<if test="pd.month != null and pd.month != ''"><!-- 当前月份时间 -->
+						and date_format(a.pay_time,'%Y-%m') = #{pd.month}
+		 		</if>	
+				<if test="pd.payee_number =='0'.toString()"><!-- 收款方为公司-->
+						and payee_number='0'
+		 		</if>	
+				<if test="pd.payee_number =='1'.toString()"><!-- 收款方为商家 -->
+						and payee_number != '0'
+		 		</if>	
+				order by a.pay_time desc
+ 	</select>
+	
+</mapper>

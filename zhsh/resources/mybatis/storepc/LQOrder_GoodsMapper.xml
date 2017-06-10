@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LQOrder_GoodsMapper">
+
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into TB_ORDER_GOODS(
+			GOODS_ID,	
+			ORDER_ID,	
+			PRICE,	
+			ORDER_GOODS_ID
+		) values (
+			#{goods_id},	
+			#{order_id},	
+			#{price},	
+			#{order_goods_id}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_ORDER_GOODS
+		where 
+			ORDER_GOODS_ID = #{order_goods_id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  TB_ORDER_GOODS
+			set 
+				goods_id = #{goods_id},
+				order_id = #{order_id},
+				price = #{price},
+			ORDER_GOODS_ID = order_goods_id
+			where 
+				ORDER_GOODS_ID = #{order_goods_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			goods_id,	
+			order_id,	
+			price,	
+			ORDER_GOODS_ID
+		from 
+			TB_ORDER_GOODS
+		where 
+			ORDER_GOODS_ID = #{order_goods_id}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.goods_id,	
+				a.order_id,	
+				a.price,	
+				a.ORDER_GOODS_ID
+		from 
+				TB_ORDER_GOODS a
+		where  1=1
+		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+			and
+				(
+					 
+				)
+		</if>
+		
+	</select>
+	
+	<select id="findPayTimes" parameterType="String" resultType="String">
+		select 
+			count(t.order_goods_id) 
+		from 
+			tb_order_goods t 
+		<!-- where 
+			t.fk_store_id = #{fk_store_id} -->
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.goods_id,	
+				a.order_id,	
+				a.price,	
+				a.order_goods_id
+		from 
+				TB_ORDER_GOODS a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_ORDER_GOODS
+		where 
+			ORDER_GOODS_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

@@ -1,0 +1,149 @@
+
+.inf_list{
+    width: 60%;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 3% 0 3% 5%;
+}
+.inf_list li{
+    line-height: 2.5;
+}
+.img_change{
+    padding: 3% 0;
+    width: 38%;
+    box-sizing: border-box;
+    display:inline-block;
+    vertical-align: top;
+}
+.img_change li img{
+    width: 120px;
+    height: 120px;
+}
+.title{
+    display: inline-block;
+}
+
+.qr_button{
+    cursor: pointer;
+    padding:8px 16px;
+    background: #e90000;
+    color: #fff;
+    text-align: center;
+}
+.yz_button{
+    cursor: pointer;
+    padding:4px 16px;
+    background: #fa9427;
+    color: #fff;
+    text-align: center;
+}
+.name{
+    display: inline-block;
+    text-align: justify;
+    text-align-last: justify;
+    width: 64px;
+}
+
+section input{
+    width:180px ;
+}
+section input[type="radio"]{
+    width:16px ;
+}
+.danxuankaung span{
+    cursor: pointer;
+}
+
+.nav_title p{
+    display: block;
+    width:100%;
+    height:50px;
+    background: #f6f6f6;
+    line-height: 50px;
+}
+.dask{
+    top:0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    display: none;
+}
+.img_chage_dask{
+    position: absolute;
+    margin: auto;
+    top:0;
+    bottom:0;
+    left: 0;
+    right: 0;
+    width: 60%;
+    height:40%;
+    min-height: 500px;
+
+    min-width: 700px;
+    background: #fff;
+    box-shadow: 0 0 5px #aaa;
+    border-radius: 8px;
+}
+.dingbu{
+    width: 100%;
+    height:10%;
+    line-height: 50px;
+    box-sizing: border-box;
+    padding-left: 20px;
+    position: relative;
+}
+.close{
+    position: absolute;
+    right: 0;
+    top:0;
+    padding:0 20px;
+    cursor: pointer;
+}
+.change_img_box{
+    height:90%;
+    width: 100%;
+    box-sizing: border-box;
+    padding:2%;
+}
+.left_box{
+    width: 70%;
+    height: 100%;
+    float: left;
+}
+.right_box{
+    float: right;
+    height:100%;
+    width:30%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+.preview-lg{
+    width: 160px;
+    height: 160px;
+    overflow: hidden;
+    border:1px solid #aaa;
+    float: left;
+    margin: 0 5px 5px 0;
+}
+.preview-md{
+    width: 75px;
+    height: 75px;
+    overflow: hidden;
+    border:1px solid #aaa;
+    float: left;
+    margin: 0 5px 5px 0;
+}
+.preview-sm{
+    width:60px;
+    height: 60px;
+    overflow: hidden;
+    border:1px solid #aaa;
+    float: left;
+    margin: 0 5px 5px 0;
+}
+
+
+
+
+
+

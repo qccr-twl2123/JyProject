@@ -1,0 +1,31 @@
+@import url(predefine.css);
+	.clf:after{
+		content: "";
+		display: block;
+		clear: both;
+		line-height: 0;
+		font-size: 0;
+		overflow: hidden;
+	}
+	.clf:before{
+		content: "";
+		display: block;
+		clear: both ;	
+		line-height: 0;
+		font-size: 0;
+		overflow: hidden;
+	}
+	input{
+		width: 120px;
+	}
+	select{
+		font-size: 100%;
+	}
+	.item_li{
+		line-height: 2.6;
+	}
+	.item_li span:nth-child(1){
+		width: 64px;
+		display: inline-block;
+		text-align: right;
+	}

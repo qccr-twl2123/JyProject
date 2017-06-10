@@ -1,0 +1,278 @@
+/*初始化*/
+		html,body,h1,h2,h3,h4,h5,h6,p,img,ul,li{
+			margin: 0;
+			border: 0;
+			padding: 0;
+		}
+		body,html{
+			height: 100%;
+		}
+		body{
+			font-family: Arial, 微软雅黑, sans-serif;
+			overflow:hidden;
+		}
+		ul,li{
+			list-style: none;
+		}
+		a{
+			text-decoration: none;
+			color: #000;
+		}
+		li{
+		
+			position: relative;
+			left: 0;
+		}
+		/*头部*/
+		header{
+			height: 44px;
+			width: 100%;
+			background: #fc111b;
+			line-height: 44px;
+			color: #fff;
+			position: fixed;
+			top: 0;
+			z-index: 2;
+		}
+		.goback{
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 44px;
+			text-align: center;line-height: 44px;
+			font-size: 2.5rem;
+		}
+		.title{
+			width: 100%;
+			text-align: center;
+			color: #fff;
+
+		}
+		.djs {
+		  	height: 44px;
+		  	text-align: center;
+
+		}
+		.djs h6{
+			font-weight: normal;
+			line-height: 1.6;
+			font-size: 1.41rem;
+
+		}
+		.djs span {
+		  	color: #fff;
+		}
+		.shopping{
+			padding-top: 44px;
+			height: 91%;
+			overflow-y:scroll;
+			overflow-x:hidden;
+			background: #ccc;
+		}
+		.shop{
+			padding: 0 0.71rem;
+			background: #fff;
+			margin-bottom: 1rem;
+		}
+		.shop_tit{
+			height: 2.85rem;
+			width: 100%;
+			border-bottom: 1px solid #e2e2e2;
+
+		}
+		.sign{
+			height: 100%;
+			float: left;
+		}
+		.sign span{
+			border-radius: 50%;
+			line-height: 3;
+			padding: 0.1rem 0.2rem;
+			background: #fff;
+			border:2px solid #ccc;
+			font-size: 0.85rem;
+			text-align: center;
+			color: #fff;
+		}
+		.shop_item{
+			position: relative;
+			z-index: 1;
+			padding-bottom: 1rem;
+		}
+		.shop_sign{
+			margin-top: 4rem;
+		}
+
+		.shop_sign span{
+			line-height: 3;
+			padding: 0.1rem 0.2rem;
+			background: #fff;
+			border:2px solid #ccc;
+			font-size: 0.85rem;
+			text-align: center;
+			color: #fff;
+			border-radius: 50%;
+			    margin-top: 16%;
+		}
+		li .span_check{
+			background:#f85e61;
+			border:2px solid #f85e61;
+		}
+		.shopname{
+			font-size: 1.6rem;
+			line-height: 2.85rem;
+			padding-left: 3.2rem;
+		}
+		.shop_sign,.sp,.sp_chose,.sp_cont{
+			float: left;
+		}
+		.sp{
+			width: 93%;
+		}
+		.sp_tit{
+			width: 110%;
+			overflow:hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+		}
+		.sp_chose{
+			width: 8.238rem;
+			height: 8.238rem;
+		}
+		.sp_cont{
+			width: 56%;
+ 			margin: 0.714rem;
+			font-size: 1.4rem;
+		}
+		.sp_gg{
+			color: #666;
+			font-size: 1.4rem;
+		}
+		.sp_chose img{
+			width:6.71rem;
+			height:6.71rem;
+			margin: 0.714rem;
+		}
+		.sp_sl{
+			margin-top: 1.1rem;
+			display: inline-block;
+			border: 1px solid #ccc;
+		}
+		.sljj{
+			display: inline-block;
+			width: 2.5rem;
+			height: 2.5rem;
+			font-size: 2.2rem;
+			line-height: 1.4;
+			text-align: center;
+			border: 1px solid #ccc;
+		}
+		.sljj:active{
+			background: #ccc;
+			color: #000;
+		}
+		.down{
+			color: #aaa;
+		}
+		.up{
+			color: #c90000;
+		}
+		.number{
+			display: inline-block;
+			text-align: center;
+			width: 2.4rem;
+		}
+		.sp_spr{
+			float: right;
+			height: 3rem;
+			position: absolute;
+			right: 2rem;
+			bottom: 5rem;
+			overflow: hidden;
+		}
+		.sp_xj{
+			font-size: 1.6rem;
+	text-align: right;
+
+		}
+		.sp_yj{
+			font-size: 1.2rem;
+			text-align: right;
+			text-decoration: line-through;
+		}
+		.sp_address{
+			font-size: 1.4rem;
+			height: 2.8rem;
+   			padding: 0 1.2rem 1.4rem 3rem;
+   			overflow:hidden;
+			
+		}
+		.address{
+			display: block;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+
+		}
+
+		.footer{
+			border-top: 1px solid #ccc;
+			position: fixed;
+			width: 100%;
+			height:4rem;
+			background: #fff;
+			bottom: 0;
+			line-height: 4rem;
+			padding-left: 1rem;
+			font-size: 1.4rem;
+		}
+		.footer span:nth-child(2){
+			margin-left: 1rem;
+		}
+		.footer span:nth-child(3){
+			margin-left: 1rem;
+		}
+		.footer span:nth-child(4){
+			margin-left: 1rem;
+		}
+		.footer .foot_xz{
+			line-height: 3;
+			padding: 0.1rem 0.2rem;
+			background: #fff;
+			border:2px solid #ccc;
+			font-size: 0.85rem;
+			text-align: center;
+			color: #fff;
+			border-radius: 50%;
+		}
+		.foot_tj{
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			display: block;
+			height: 4rem;
+			width: 9rem;
+			background: #fc0d1b;
+			color: #fff;
+			text-align: center;
+			line-height: 4rem;
+		}
+
+		.del_button{
+			display: none;
+			width: 20%;
+			height: 100%;
+			background: #c90000;
+			transition: all 1s;
+			position: absolute;
+			right: -20%;
+			top: 0;
+			text-align: center;
+			font-size: 2rem;
+			line-height: 13rem;
+			color:#fff;
+		}

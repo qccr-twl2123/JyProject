@@ -1,0 +1,775 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WaterRecordMapper">
+	
+	<!-- 新增流水记录-->
+	<insert id="saveWaterRecord" parameterType="pd">
+		insert into tb_waterrecord(
+			waterrecord_id,
+			user_id,
+			user_type,
+			nowuser_money,
+			money_type,
+			money,
+			withdraw_rate,
+			reduce_money,
+			arrivalmoney,
+			application_channel,
+			remittance_type,
+			remittance_name,
+			remittance_number,
+			pay_status,
+			createtime,
+			pass_time,
+			pass_operate_id,
+			exception_remark,
+			exception_time,
+			exception_operator_id,
+			chuli_remark,
+			over_time,
+			over_operator_id,
+			dakuan_remark,
+			exception_status,
+			order_tn,
+			payee_number,
+ 			jiaoyi_type,
+			province_name,
+			city_name,
+			area_name,
+			alipay_money,
+			wx_money,
+			bank_money,
+			nowypay_money ,
+			apple_money,
+			jiuyu_money,
+			integral_money,
+			balance_money
+		) values (
+			#{waterrecord_id},
+			#{user_id},
+			#{user_type},
+			#{nowuser_money},
+			#{money_type},
+			#{money},
+			#{withdraw_rate},
+			#{reduce_money},
+			#{arrivalmoney},
+			#{application_channel},
+			#{remittance_type},
+			#{remittance_name},
+			#{remittance_number},
+			#{pay_status},
+			#{createtime},
+			#{pass_time},
+			#{pass_operate_id},
+			#{exception_remark},
+			#{exception_time},
+			#{exception_operator_id},
+			#{chuli_remark},
+			#{over_time},
+			#{over_operator_id},
+			#{dakuan_remark},
+			#{exception_status},
+			#{order_tn},
+			#{payee_number},
+ 			#{jiaoyi_type},
+			#{province_name},
+			#{city_name},
+			#{area_name},
+			#{alipay_money},
+			#{wx_money},
+			#{bank_money},
+			#{nowypay_money} ,
+			#{apple_money},
+			#{jiuyu_money}, 
+			#{integral_money} ,
+			#{balance_money} 
+		)
+	</insert>
+	 
+	
+	<!-- 修改 -->
+	<update id="editWaterRecord" parameterType="pd">
+			update  tb_waterrecord
+			set 
+ 				<if test=" money != null and money != '' ">money = #{money},</if>
+ 				<if test=" money_type != null and money_type != '' ">money_type = #{money_type},</if>
+ 				<if test=" pay_status != null and pay_status != '' ">pay_status = #{pay_status},</if>
+				<if test=" order_tn != null and order_tn != '' ">order_tn = #{order_tn},over_time=now(),</if>
+				<if test=" over_operator_id != null and over_operator_id != '' ">over_operator_id = #{over_operator_id},over_time=now(),</if>
+				<if test=" dakuan_remark != null and dakuan_remark != '' ">dakuan_remark = #{dakuan_remark},</if>
+				<if test=" exception_operator_id != null and exception_operator_id != '' ">exception_operator_id = #{exception_operator_id},exception_time=now(),</if>
+				<if test=" exception_remark != null and exception_remark != '' ">exception_remark = #{exception_remark}, </if>
+				<if test=" pass_operate_id != null and pass_operate_id != '' ">pass_operate_id = #{pass_operate_id},pass_time=now(),</if>
+				<if test=" chuli_remark != null and chuli_remark != '' ">chuli_remark = #{chuli_remark},</if>
+				<if test=" exception_status != null and exception_status != '' ">exception_status = #{exception_status}, </if>
+  				waterrecord_id = waterrecord_id
+			where 
+				waterrecord_id = #{waterrecord_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findByIdWaterRecord" parameterType="pd" resultType="pd">
+		select 
+			a.waterrecord_id ,
+			a.user_id ,
+			a.user_type ,
+			a.nowuser_money ,
+			a.money_type ,
+			a.money ,
+			a.withdraw_rate ,
+			a.reduce_money,
+			a.arrivalmoney ,
+			a.application_channel ,
+			a.remittance_type ,
+			a.remittance_name ,
+			a.remittance_number ,
+			a.pay_status ,
+			date_format(a.createtime ,'%Y-%m-%d %H:%i:%s') as createtime,
+			date_format(a.pass_time ,'%Y-%m-%d %H:%i:%s') as pass_time,
+ 			a.pass_operate_id ,
+			a.exception_remark ,
+			a.exception_time ,
+			a.exception_operator_id ,
+			a.chuli_remark ,
+ 			date_format(a.over_time ,'%Y-%m-%d %H:%i:%s') as over_time,
+			a.over_operator_id ,
+			a.dakuan_remark ,
+			a.exception_status ,
+			a.order_tn ,
+			a.payee_number ,
+ 			a.jiaoyi_type ,
+			a.province_name ,
+			a.city_name ,
+			a.area_name ,
+			a.alipay_money ,
+			a.wx_money ,
+			a.bank_money ,
+			a.nowypay_money ,
+			a.jiuyu_money
+		from 
+			tb_waterrecord a
+		where 
+			a.waterrecord_id = #{waterrecord_id}
+	</select>
+	
+	
+	<!--流水的where处判断-->  
+	<sql id="waterWheresql">  
+    			<if test="pd.operator_file_id != null and pd.operator_file_id != ''"><!-- 搜索操作员 -->
+					and (a.pass_operate_id=#{pd.operator_file_id} or  a.over_operator_id=#{pd.operator_file_id}  or  a.exception_operator_id=#{pd.operator_file_id})
+ 				</if>
+ 				<if test="pd.exception_status != null and pd.exception_status != ''"><!-- 省 -->
+					and a.exception_status=#{pd.exception_status}
+ 				</if>
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+							a.remittance_number like concat(concat('%',#{pd.content}),'%')
+ 							or
+ 							a.remittance_name like concat(concat('%',#{pd.content}),'%')
+  						)
+				</if>
+				<if test="pd.store_checked != null and pd.store_checked != ''"><!-- 关键词检索 -->
+					and
+						(
+							g.store_name like concat(concat('%',#{pd.store_checked}),'%')
+							or
+							g.store_id like concat(concat('%',#{pd.store_checked}),'%')
+  						)
+				</if>
+  				<if test="pd.application_channel != null and pd.application_channel != ''"><!-- 1-app会员端，2-app商家端，3会员pc端，4-商家pc端，5-微信公众号端，6-总后台 -->
+					and a.application_channel=#{pd.application_channel}
+ 				</if>		
+				<if test="pd.remittance_type != null and pd.remittance_type != ''"><!-- 1-银联支付，2- 现金支付（为0的情况下），3-支付宝支付，4-微信支付，5-苹果支付 -->
+					and a.remittance_type=#{pd.remittance_type}
+ 				</if>		
+				<if test="pd.createtime!= null and pd.createtime!= ''"><!-- 时间-->
+					and date_format(a.createtime,'%Y-%m-%d')=#{pd.createtime}
+ 				</if>		
+ 				<choose>
+ 						<when test="pd.chuli_ok == '0'.toString() ">
+ 						        and a.pay_status=#{pd.pay_status} <!-- 0-待审批，1-已处理，支付到账，2-转为异常,3-通过，99-提现失败驳回 -->
+ 						</when>
+ 						<when test="pd.pay_status != null and pd.pay_status != ''">
+ 						        and a.pay_status=#{pd.pay_status} <!-- 0-待审批，1-已处理，支付到账，2-转为异常,3-通过，99-提现失败驳回 -->
+ 						</when>
+ 						<when test="pd.chuli_ok == '1'.toString()">
+ 							 	and a.pay_status in ('1')
+						</when>
+						<when test="pd.chuli_ok == '2'.toString()"><!-- 专属提货券1成功，98退款 -->
+ 							 	and a.pay_status in ('1','97','98')
+						</when>
+						<when test="pd.chuli_ok == '3'.toString()">
+ 							 	and a.pay_status in ('1','99')
+						</when>
+ 						<otherwise></otherwise>
+				</choose>	
+   				<choose>
+   					<when test="pd.chuli_ok == '3'.toString()">
+   						<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+								and date_format(a.over_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+				 		</if>
+						<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+								and date_format(a.over_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+				 		</if>
+   					</when>
+   					<otherwise>
+   						<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+								and date_format(a.createtime,'%Y-%m-%d') &gt;= #{pd.starttime} 
+				 		</if>
+						<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+								and date_format(a.createtime,'%Y-%m-%d') &lt;= #{pd.endtime} 
+				 		</if>
+   					</otherwise>
+   				</choose>	
+				<if test="pd.month != null and pd.month != ''"><!-- 当前月份时间 -->
+						and date_format(a.createtime,'%Y-%m') = #{pd.month}
+		 		</if>
+		 		<if test="pd.user_type!= null and pd.user_type!= ''"><!-- 用户类型1商家，2会员，3服务商，4业务员 -->
+					and a.user_type=#{pd.user_type}
+ 				</if>
+		 		<choose>
+						<when test="pd.money_type!= null and pd.money_type != ''"><!--1-充值（商家或会员充积分），2-消费，3-商家购买保证金，4-服务商支付保证金，5-提现，6-退款 -->
+ 							 	and a.money_type=#{pd.money_type}
+						</when>
+						<!-- <when test="pd.check_type == '1'.toString()">除了提现之外的所有消费
+ 							 	and  a.money_type not in ('5')  
+						</when>
+						<when test="pd.check_type == '2'.toString()">提现
+ 							 	and  a.money_type == '5'
+						</when> -->
+						<otherwise>
+								and  a.money_type not in ('8','9','10','11','12','99')  
+						</otherwise>
+				</choose>
+  				<choose>
+						<when test="pd.jiaoyi_type != null and pd.jiaoyi_type != '' and pd.jiaoyi_type=='35'.toString()"><!-- 提货券 -->
+ 							 	and  a.jiaoyi_type in ('3','5')  
+						</when>
+						<when test="pd.jiaoyi_type != null and pd.jiaoyi_type != '' and pd.jiaoyi_type !='35'.toString()">
+							and  a.jiaoyi_type = #{pd.jiaoyi_type}
+						</when>
+ 						<otherwise></otherwise>
+				</choose>
+				<choose>
+					<when test="pd.payee_type =='0'.toString()">and a.payee_number='Jiuyu'</when><!-- 收款方为公司-->
+					<when test="pd.payee_type =='1'.toString()">and char_length(a.payee_number) = 8 </when>
+					<when test="pd.payee_type =='2'.toString()">and (char_length(a.payee_number) = 17 or char_length(a.payee_number) = 32)</when>
+					<otherwise></otherwise>
+				</choose>		
+ 		 		<if test="pd.tihuo_status != null and pd.tihuo_status != '' "><!-- 收款方为商家 -->
+						and e.tihuo_status = #{pd.tihuo_status}
+		 		</if>  
+		 		<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+					and a.province_name=#{pd.province_name}
+ 				</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+					and a.city_name=#{pd.city_name}
+ 				</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+					and a.area_name=#{pd.area_name}
+ 				</if>
+		 		<if test="pd.login_cityname != null and pd.login_cityname != ''"><!-- 登录人的所在 城 市 -->
+							and  find_in_set(a.city_name,#{pd.login_cityname}) 
+				</if>
+				<if test="pd.login_areaname != null and pd.login_areaname != ''"><!-- 登录人的所在 区 域 -->
+							and  find_in_set(a.area_name,#{pd.login_areaname}) 
+				</if>
+    </sql>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPageWaterRecord" parameterType="page" resultType="pd">
+		select 
+				a.waterrecord_id ,
+				a.user_id ,
+				a.user_type ,
+				a.nowuser_money ,
+				a.money_type ,
+				cast((a.money ) as decimal(10,2)) as money ,
+				a.withdraw_rate ,
+				cast((a.reduce_money ) as decimal(10,2)) as reduce_money , 
+				cast((a.arrivalmoney ) as decimal(10,2)) as arrivalmoney , 
+ 				a.application_channel ,
+				a.remittance_type ,
+				a.remittance_name ,
+				a.remittance_number ,
+				a.pay_status ,
+				date_format(a.createtime ,'%Y-%m-%d %H:%i:%s') as createtime,
+				date_format(a.pass_time ,'%Y-%m-%d %H:%i:%s') as pass_time,
+	 			a.pass_operate_id ,
+				a.exception_remark ,
+				a.exception_time ,
+				a.exception_operator_id ,
+				a.chuli_remark ,
+	 			date_format(a.over_time ,'%Y-%m-%d %H:%i:%s') as over_time,
+				a.over_operator_id ,
+				a.dakuan_remark ,
+				a.exception_status ,
+				a.order_tn ,
+				a.payee_number ,
+ 				a.jiaoyi_type ,
+				a.province_name ,
+				a.city_name ,
+				a.area_name ,
+				cast((a.alipay_money ) as decimal(10,2)) as alipay_money , 
+				cast((a.wx_money ) as decimal(10,2)) as wx_money , 
+				cast((a.bank_money ) as decimal(10,2)) as bank_money , 
+				cast((a.nowypay_money ) as decimal(10,2)) as nowypay_money , 
+				cast((a.jiuyu_money ) as decimal(10,2)) as jiuyu_money , 
+				cast((ifnull(e.discount_money,'0')) as decimal(10,2)) as discount_money , 
+				cast((ifnull(e.no_discount_money,'0')) as decimal(10,2)) as no_discount_money , 
+				cast((ifnull(e.user_balance,'0')) as decimal(10,2)) as user_balance , 
+				cast((ifnull(e.user_integral,'0')) as decimal(10,2)) as user_integral , 
+				cast((ifnull(e.subsidiary_getmoney,'0')) as decimal(10,2)) as subsidiary_getmoney , 
+				cast((ifnull(e.sp_getmoney,'0')) as decimal(10,2)) as sp_getmoney , 
+				cast((ifnull(e.clerk_getmoney,'0')) as decimal(10,2)) as clerk_getmoney , 
+				cast((ifnull(e.onecontacts_getmoney,'0')) as decimal(10,2)) as onecontacts_getmoney , 
+				cast((ifnull(e.twocontacts_getmoney,'0')) as decimal(10,2)) as twocontacts_getmoney , 
+				cast((ifnull(e.sendxitong_integral,'0')) as decimal(10,2)) as sendxitong_integral , 
+				cast((ifnull(e.get_integral,'0')) as decimal(10,2)) as get_integral , 
+				ifnull(e.tihuo_status,'') tihuo_status,
+				ifnull(e.order_status,'') order_status,
+				g.store_name,
+				g.store_id,
+				h.name as member_name,
+				b.operator_name as pass_operator_name,
+				c.operator_name as over_operator_name,
+				d.operator_name as exception_operator_name
+ 		from 
+				tb_waterrecord a
+				left join tb_store_operator b on b.store_operator_id = a.pass_operate_id
+				left join tb_store_operator c on c.store_operator_id = a.over_operator_id
+				left join tb_store_operator d on d.store_operator_id = a.exception_operator_id
+				left join tb_order e on a.waterrecord_id = e.order_id
+ 				left join tb_store g on e.store_id = g.store_id
+ 				left join tb_member h on a.user_id = h.member_id
+ 		where  
+				1=1
+				<include refid="waterWheresql" />  	
+  		order by a.over_time desc
+	</select>
+  	
+	
+	<!-- 统计当前页和钱有关的数据 -->
+	<select id="sumNowPageWaterRecord" parameterType="page" resultType="pd">
+		select 
+ 				sum( cast((f.reduce_money) as decimal(10,2))) as sumreduce_money,
+ 				sum( cast((f.arrivalmoney) as decimal(10,2))) as sumarrivalmoney ,
+				sum( cast((f.money) as decimal(10,2))) as summoney ,
+				sum( cast((f.alipay_money) as decimal(10,2))) as sumalipay_money ,
+				sum( cast((f.wx_money) as decimal(10,2))) as sumwx_money ,
+				sum( cast((f.bank_money) as decimal(10,2))) as sumbank_money ,
+				sum( cast((f.nowypay_money) as decimal(10,2))) as sumnowypay_money ,
+ 				sum( cast((f.jiuyu_money) as decimal(10,2))) as sumjiuyu_money ,
+ 				sum( cast((f.discount_money) as decimal(10,2))) as sumdiscount_money ,
+ 				sum( cast((f.no_discount_money) as decimal(10,2))) as sumno_discount_money ,
+ 				sum( cast((f.user_balance) as decimal(10,2))) as sumuser_balance ,
+				sum( cast((f.user_integral) as decimal(10,2))) as sumuser_integral ,
+				sum( cast((f.subsidiary_getmoney) as decimal(10,2))) as sumsubsidiary_getmoney ,
+				sum( cast((f.sp_getmoney) as decimal(10,2))) as sumsp_getmoney ,
+				sum( cast((f.clerk_getmoney) as decimal(10,2))) as sumclerk_getmoney ,
+				sum( cast((f.onecontacts_getmoney) as decimal(10,2))) as sumonecontacts_getmoney ,
+				sum( cast((f.twocontacts_getmoney) as decimal(10,2))) as sumtwocontacts_getmoney ,
+				sum( cast((f.sendxitong_integral) as decimal(10,2))) as sumsendxitong_integral ,
+				sum( cast((f.get_integral) as decimal(10,2))) as sumget_integral
+		from 
+			(
+			 select 
+				a.money ,
+				a.arrivalmoney ,
+				a.reduce_money ,
+				a.wx_money ,
+				a.alipay_money ,
+				a.bank_money ,
+				a.nowypay_money,
+				a.jiuyu_money,
+				ifnull(e.discount_money,'') discount_money,	
+				ifnull(e.no_discount_money,'') no_discount_money,	
+				ifnull(e.user_balance,'') user_balance,	
+				ifnull(e.user_integral,'') user_integral,	
+				ifnull(e.subsidiary_getmoney,'') subsidiary_getmoney,	
+				ifnull(e.sp_getmoney,'') sp_getmoney,	
+				ifnull(e.clerk_getmoney,'') clerk_getmoney,	
+				ifnull(e.onecontacts_getmoney,'') onecontacts_getmoney,	
+				ifnull(e.twocontacts_getmoney,'') twocontacts_getmoney,	
+				ifnull(e.sendxitong_integral,'') sendxitong_integral,	
+				ifnull(e.get_integral,'') get_integral
+		from 
+				tb_waterrecord a
+				left join tb_store_operator b on b.store_operator_id = a.pass_operate_id
+				left join tb_store_operator c on c.store_operator_id = a.over_operator_id
+				left join tb_store_operator d on c.store_operator_id = a.exception_operator_id
+				left join tb_order e on a.waterrecord_id = e.order_id
+ 				left join tb_store g on e.store_id = g.store_id
+ 		where  
+ 				1=1
+				<include refid="waterWheresql" />  	
+  				order by a.over_time desc
+		 		limit #{pd.nowpage} , 10
+ 			) as f
+	</select> 
+	
+	
+	<!-- 统计所有于钱有关的数据 -->
+	<select id="sumAllPageWaterRecord" parameterType="page" resultType="pd">
+		select 
+ 				sum( cast((f.reduce_money) as decimal(10,2))) as sumreduce_money,
+ 				sum( cast((f.arrivalmoney) as decimal(10,2))) as sumarrivalmoney ,
+				sum( cast((f.money) as decimal(10,2))) as summoney ,
+				sum( cast((f.alipay_money) as decimal(10,2))) as sumalipay_money ,
+				sum( cast((f.wx_money) as decimal(10,2))) as sumwx_money ,
+				sum( cast((f.bank_money) as decimal(10,2))) as sumbank_money ,
+				sum( cast((f.nowypay_money) as decimal(10,2))) as sumnowypay_money ,
+ 				sum( cast((f.jiuyu_money) as decimal(10,2))) as sumjiuyu_money ,
+ 				sum( cast((f.discount_money) as decimal(10,2))) as sumdiscount_money ,
+ 				sum( cast((f.no_discount_money) as decimal(10,2))) as sumno_discount_money ,
+ 				sum( cast((f.user_balance) as decimal(10,2))) as sumuser_balance ,
+				sum( cast((f.user_integral) as decimal(10,2))) as sumuser_integral ,
+				sum( cast((f.subsidiary_getmoney) as decimal(10,2))) as sumsubsidiary_getmoney ,
+				sum( cast((f.sp_getmoney) as decimal(10,2))) as sumsp_getmoney ,
+				sum( cast((f.clerk_getmoney) as decimal(10,2))) as sumclerk_getmoney ,
+				sum( cast((f.onecontacts_getmoney) as decimal(10,2))) as sumonecontacts_getmoney ,
+				sum( cast((f.twocontacts_getmoney) as decimal(10,2))) as sumtwocontacts_getmoney ,
+				sum( cast((f.sendxitong_integral) as decimal(10,2))) as sumsendxitong_integral ,
+				sum( cast((f.get_integral) as decimal(10,2))) as sumget_integral
+		from 
+			(
+			 select 
+				a.money ,
+				a.arrivalmoney ,
+				a.reduce_money ,
+				a.wx_money ,
+				a.alipay_money ,
+				a.bank_money ,
+				a.nowypay_money,
+				a.jiuyu_money,
+				ifnull(e.discount_money,'') discount_money,	
+				ifnull(e.no_discount_money,'') no_discount_money,	
+				ifnull(e.user_balance,'') user_balance,	
+				ifnull(e.user_integral,'') user_integral,	
+				ifnull(e.subsidiary_getmoney,'') subsidiary_getmoney,	
+				ifnull(e.sp_getmoney,'') sp_getmoney,	
+				ifnull(e.clerk_getmoney,'') clerk_getmoney,	
+				ifnull(e.onecontacts_getmoney,'') onecontacts_getmoney,	
+				ifnull(e.twocontacts_getmoney,'') twocontacts_getmoney,	
+				ifnull(e.sendxitong_integral,'') sendxitong_integral,	
+				ifnull(e.get_integral,'') get_integral
+		from 
+				tb_waterrecord a
+				left join tb_store_operator b on b.store_operator_id = a.pass_operate_id
+				left join tb_store_operator c on c.store_operator_id = a.over_operator_id
+				left join tb_store_operator d on c.store_operator_id = a.exception_operator_id
+				left join tb_order e on a.waterrecord_id = e.order_id
+ 				left join tb_store g on e.store_id = g.store_id
+ 		where  
+				1=1
+				<include refid="waterWheresql" />  	
+  				order by a.over_time desc
+  			) as f
+	</select>
+	 
+	
+	<!-- 列表(全部) -->
+	<select id="listAllWaterRecord" parameterType="pd" resultType="pd">
+		select 
+			a.waterrecord_id ,
+			a.user_id ,
+			a.user_type ,
+			a.nowuser_money ,
+			a.money_type ,
+			a.money ,
+			a.withdraw_rate ,
+			a.reduce_money,
+			a.arrivalmoney ,
+			a.application_channel ,
+			a.remittance_type ,
+			a.remittance_name ,
+			a.remittance_number ,
+			a.pay_status ,
+			date_format(a.createtime ,'%Y-%m-%d %H:%i:%s') as createtime,
+			date_format(a.pass_time ,'%Y-%m-%d %H:%i:%s') as pass_time,
+ 			a.pass_operate_id ,
+			a.exception_remark ,
+			a.exception_time ,
+			a.exception_operator_id ,
+			a.chuli_remark ,
+ 			date_format(a.over_time ,'%Y-%m-%d %H:%i:%s') as over_time,
+			a.over_operator_id ,
+			a.dakuan_remark ,
+			a.exception_status ,
+			a.order_tn ,
+			a.payee_number ,
+ 			a.jiaoyi_type ,
+			a.province_name ,
+			a.city_name ,
+			a.area_name ,
+			a.alipay_money ,
+			a.wx_money ,
+			a.bank_money ,
+			a.nowypay_money  
+		from 
+			tb_waterrecord a
+		where
+			a.pay_status='1'
+			<if test="user_id != null and user_id != ''"><!-- 用户ID -->
+				and  user_id = #{user_id}
+		 	</if>
+			<if test="user_type != null and user_type != ''"><!-- 用户ID -->
+				and  user_type = #{user_type}
+		 	</if>
+			<if test="checked_type == '1'.toString()"><!-- 1-充值，消费，2-提现 -->
+				and  money_type != '5'
+		 	</if>
+		 	<if test="checked_type == '2'.toString()"><!-- 1-充值，消费，2-提现 -->
+				and  money_type == '5'
+		 	</if>
+ 			<if test="day != null and day != ''">
+				and date_format(a.createtime,'%Y-%m-%d') = #{day}
+			</if>
+		order by a.over_time desc
+	</select>
+	
+ 	<!-- 导出excel表格 -->
+	<select id="ExcellistAllHistory" parameterType="page" resultType="pd">
+		select 
+				a.waterrecord_id ,
+				a.user_id ,
+				a.user_type ,
+				a.nowuser_money ,
+				a.money_type ,
+				a.money ,
+				a.withdraw_rate ,
+				a.reduce_money,
+				a.arrivalmoney ,
+				a.application_channel ,
+				a.remittance_type ,
+				a.remittance_name ,
+				a.remittance_number ,
+				a.pay_status ,
+				date_format(a.createtime ,'%Y-%m-%d %H:%i:%s') as createtime,
+				date_format(a.pass_time ,'%Y-%m-%d %H:%i:%s') as pass_time,
+	 			a.pass_operate_id ,
+				a.exception_remark ,
+				a.exception_time ,
+				a.exception_operator_id ,
+				a.chuli_remark ,
+	 			date_format(a.over_time ,'%Y-%m-%d %H:%i:%s') as over_time,
+				a.over_operator_id ,
+				a.dakuan_remark ,
+				a.exception_status ,
+				a.order_tn ,
+				a.payee_number ,
+ 				a.jiaoyi_type ,
+				a.province_name ,
+				a.city_name ,
+				a.area_name ,
+				a.alipay_money ,
+				a.wx_money ,
+				a.bank_money ,
+				a.nowypay_money,
+				ifnull(e.discount_money,'') discount_money,	
+				ifnull(e.user_balance,'') user_balance,	
+				ifnull(e.user_integral,'') user_integral,	
+				ifnull(e.subsidiary_getmoney,'') subsidiary_getmoney,	
+				ifnull(e.sp_getmoney,'') sp_getmoney,	
+				ifnull(e.onecontacts_getmoney,'') onecontacts_getmoney,	
+				ifnull(e.twocontacts_getmoney,'') twocontacts_getmoney,	
+				ifnull(e.sendxitong_integral,'') sendxitong_integral,	
+				ifnull(e.get_integral,'') get_integral
+		from 
+				tb_waterrecord a
+				left join tb_store_operator b on b.store_operator_id = a.pass_operate_id
+				left join tb_store_operator c on c.store_operator_id = a.over_operator_id
+				left join tb_store_operator d on c.store_operator_id = a.exception_operator_id
+				left join tb_order e on a.waterrecord_id = e.order_id
+		where  
+				1=1
+				<include refid="waterWheresql" />  
+  		order by a.createtime desc
+	</select>
+	
+	<!-- 列表(全部)导出excel表格 -->
+	<select id="listAllForExcel" parameterType="pd" resultType="pd">
+		select 
+			a.waterrecord_id ,
+			a.user_id ,
+			a.user_type ,
+			a.nowuser_money ,
+			a.money_type ,
+			a.money ,
+			a.withdraw_rate ,
+			a.arrivalmoney ,
+			a.application_channel ,
+			a.remittance_type ,
+			a.remittance_name ,
+			a.remittance_number ,
+			a.pay_status ,
+			date_format(a.createtime ,'%Y-%m-%d %H:%i:%s') as createtime,
+			date_format(a.pass_time ,'%Y-%m-%d %H:%i:%s') as pass_time,
+ 			a.pass_operate_id ,
+			a.exception_remark ,
+			a.exception_time ,
+			a.exception_operator_id ,
+			a.chuli_remark ,
+ 			date_format(a.over_time ,'%Y-%m-%d %H:%i:%s') as over_time,
+			a.over_operator_id ,
+			a.dakuan_remark ,
+			a.exception_status ,
+			a.order_tn ,
+			a.payee_number ,
+ 			a.jiaoyi_type ,
+			a.province_name ,
+			a.city_name ,
+			a.area_name ,
+			a.alipay_money ,
+			a.wx_money ,
+			a.bank_money ,
+			a.nowypay_money 
+		from 
+			tb_waterrecord a
+		where 
+			a.waterrecord_id  in
+				<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+	                 #{item}
+				</foreach>
+ 	</select>
+	
+		
+	<!-- 提现列表判断今天是否提现过 -->
+	<select id="isTiXianForDay" parameterType="pd" resultType="String">
+		select
+				 count(*)
+		from 
+				tb_waterrecord a
+		where 
+				a.user_id=#{user_id}
+				and a.user_type=#{user_type}
+				and a.money_type='5'
+				<if test="day != null and day != ''">
+				and date_format(a.createtime,'%Y-%m-%d') = #{day}
+				</if>
+	</select>
+	
+	<!-- 获取所有消费统计魏汉文20160617-->
+	<select id="countAllMoney" parameterType="page" resultType="pd">
+		select 
+				 a.money,
+				 date_format(a.over_time,'%Y-%m-%d') as over_time 
+		from 
+				tb_waterrecord a 
+ 		where  
+				1=1
+				and a.pay_status='1'
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+						   a.money = #{pd.content}	 
+						)
+				</if>
+				<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+					and a.province_name=#{pd.province_name}
+		 		</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+					and a.city_name=#{pd.city_name}
+		 		</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+					and a.area_name=#{pd.area_name}
+		 		</if>		
+				<if test="pd.user_type!= null and pd.user_type!= ''"><!-- 用户类型 -->
+					and a.user_type=#{pd.user_type}
+		 		</if>	
+				<if test="pd.startmonth != null and pd.startmonth != ''"><!-- 当前月份时间 -->
+						and date_format(a.over_time,'%Y-%m') = #{pd.startmonth}
+		 		</if>	
+		 		<if test="pd.check_type == '1'.toString()"><!-- 1-充值，消费，2-提现 -->
+						and  money_type != '5'
+		 		</if>
+		 		<if test="pd.check_type == '2'.toString()"><!-- 1-充值，消费，2-提现 -->
+						and  money_type == '5'
+		 		</if>
+		group by date_format(a.over_time,'%Y-%m-%d')
+  	</select>
+	
+	<!-- 获取所有个人的消费统计魏汉文20160617-->
+	<select id="countAllMoneyByOne" parameterType="Page" resultType="pd">
+		select 
+				max(b.money) as money,
+				b.user_id,
+				b.over_time,
+				b.user_type
+		from	
+				 (	select 
+							 sum(a.money) as money,
+							 date_format(a.over_time,'%Y-%m-%d') over_time,
+							 a.user_id,
+							 a.user_type
+					from 
+							tb_waterrecord a 
+								
+					where
+							 a.pay_status='1'
+			 				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+								and
+									(
+ 									a.money = #{pd.content}	 
+									)
+							</if>
+							<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+								and a.province_name=#{pd.province_name}
+					 		</if>
+							<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+								and a.city_name=#{pd.city_name}
+					 		</if>
+							<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+								and a.area_name=#{pd.area_name}
+					 		</if>		
+							<if test="pd.user_type!= null and pd.user_type!= ''"><!-- 用户类型 -->
+								and a.user_type=#{pd.user_type}
+					 		</if>	
+							<if test="pd.startmonth != null and pd.startmonth != ''"><!-- 当前月份时间 -->
+									and date_format(a.over_time,'%Y-%m') = #{pd.startmonth}
+					 		</if>	
+					 		<if test="pd.check_type == '1'.toString()"><!-- 1-充值，消费，2-提现 -->
+									and  money_type != '5'
+					 		</if>
+					 		<if test="pd.check_type == '2'.toString()"><!-- 1-充值，消费，2-提现 -->
+									and  money_type == '5'
+					 		</if>
+ 					group by  date_format(a.over_time,'%Y-%m-%d'),a.user_id  ) b
+  		GROUP BY  b.over_time 
+  	</select>
+  	
+  	<!-- 批量编辑  xjt 2016.9.24 -->
+	<update id="updateAll" parameterType="pd">
+		update  tb_waterrecord
+		set
+			<if test="pass_operate_id != null and pass_operate_id != ''">pass_operate_id=#{pass_operate_id},pass_time=now(),</if>
+			pay_status = #{pay_status}
+ 		where 
+ 			waterrecord_id in
+			<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+	                 #{item}
+			</foreach>
+	</update>
+ 
+ 
+ 	<!-- 清空支付历史记录魏汉文20160705 -->
+	<delete id="deleteStatusZero">
+		delete from tb_waterrecord
+		where pay_status='0' and money_type != '5'
+	</delete>
+	
+	<!-- 判断当前订单是否支付完成 -->
+	<select id="findWaterRecordIsPayOk" parameterType="pd" resultType="pd">
+		select 
+			a.waterrecord_id
+		from 
+			tb_waterrecord a
+		where 
+			a.waterrecord_id = #{waterrecord_id} and a.pay_status='1'
+ 	</select>
+	
+</mapper>

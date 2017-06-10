@@ -1,0 +1,50 @@
+@charset "utf-8";
+/* CSS Document */
+html,body,span,h1,h2,h3,h4,h5,h6,p,dl,dt,dd,ol,ul,li,form{ margin:0;padding:0}
+body { font-family:'微软雅黑',sans-serif; font-size:12px;}
+a{ text-decoration:none;}
+ul,li{margin:0;padding:0;list-style-type:none;}
+a img {border:none;}
+a {text-decoration:none;color:#fff;blr:expression(this.onFocus=this.blur());outline:none;}
+
+                    
+input{ cursor:pointer}
+.fl{ float:left}
+.fr{ float:right}
+input{ cursor:pointer}
+.clear{ clear:both; overflow:hidden; height:0}
+.content{ width:1000px; margin:auto;}
+.logo{ margin:8px 0;}
+.nav{ margin-left:137px; margin-top:40px}
+.nav ul li a{ color:#231815; font-size:16px;}
+.nav ul li{ float:left; margin-right:30px}
+.ewm span img{ display:inline-block}
+.ewm span{ text-align:center; margin:8px 0 0 10px}
+
+.banner{ background:url(../images/banner_25.jpg) no-repeat center center; height:402px;}
+.login-registration{ background:#529437; width:300px; float:right; margin:50px 53px 0 0 }
+.login-registration-title{ background:#f0ebd6;}
+.login-registration-title a{ display:inline-block; text-align:center; line-height: 48px; width:150px; color:#231815}
+.login-registration-title .current{ background:#529437; color:#fff}
+.import{ background:#fff; line-height:36px; width:250px; margin-bottom:10px}
+.login-registration-content{ width:250px; margin:20px auto 0; display:none}
+.import input{ background:none; border:0; line-height:30px; outline:0; height:30px}
+.import span{ margin:3px 10px 0 10px}
+.sign{ background:url(../images/anniu_22.jpg) no-repeat; text-align:center; display:inline-block; line-height:39px; color:#231815; font-size:16px; width:251px; margin:20px 0}
+.technological-process{ margin-top:60px}
+.technological-process ul li{ text-align:center; width:210px; font-size:14px; color:#666; float:left; margin-right:24px;}
+.technological-process ul li div{ color:#519437; font-size:20px}
+.checkbox{ display:inline-block; width:12px; height:13px; border:1px solid #fff; float:left; margin-right:7px}
+.checkbox i img{ display:inline-block}
+
+.footer{ background:#f6f6f5 url(../images/footertp_11.jpg) no-repeat 200px bottom}
+.xz{ margin:30px 0;}
+.xz a{ margin-left:10px}
+.kf-left { text-align:center; font-size:20px;}
+.kf-left div{ font-size:12px;}
+.kf{ margin-top:40px; margin-right:220px}
+.kf-right{ margin-left:10px}
+.phone{ background:url(../images/kf_37.jpg) left center no-repeat; padding-left:20px; margin-bottom:7px; }
+.week{ background:url(../images/kf_40.jpg) no-repeat left center; padding-left:20px;}
+.xian{ background:url(../images/footerbj_43.jpg) repeat-x; height:2px;}
+.yzm{ background:url(../images/yzm_22.jpg) no-repeat; text-align:center; line-height:39px; width:92px; color:#231815}

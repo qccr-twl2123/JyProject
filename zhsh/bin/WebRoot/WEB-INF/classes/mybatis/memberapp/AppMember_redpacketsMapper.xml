@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AppMember_redpacketsMapper">
+
+	<!-- 我的红包列表刘耀耀2016.06.27 -->
+	<select id="list" parameterType="pd" resultType="pd">
+			select
+ 				a.store_redpackets_id,
+				a.redpackage_id,
+				a.redpackage_money,
+ 				a.redpackage_content,
+				a.enddate,
+				a.set_id,
+ 				a.set_type,
+ 				date_format(a.createdate ,'%Y-%m-%d %H:%i:%s') as createdate,
+ 				c.redpackage_type, 
+				b.store_name
+			from 
+				tb_member_redpackets a 
+				join tb_store_redpackets c  on c.store_redpackets_id=a.store_redpackets_id
+				join tb_store b  on a.set_id=b.store_id
+ 				
+			where 
+				a.member_id=#{member_id}
+				and a.isshiyong='0'
+				<if test="isguoqi != null and isguoqi != ''">
+				and a.isguoqi=#{isguoqi}
+				</if>
+			order by a.createdate desc
+ 	</select>
+	
+	<!-- 我的红包列表刘耀耀2016.06.27 -->
+	<select id="listRedId" parameterType="pd" resultType="pd">
+			select
+				redpackage_id
+			from 
+				tb_member_redpackets
+			where 
+				member_id=#{member_id}
+				and isshiyong='0'
+				<if test="isguoqi != null and isguoqi != ''">
+				and isguoqi=#{isguoqi}
+				</if>
+	</select>
+
+ 	
+ 	<!-- 删除指定过期红包 -->
+ 	<delete id="deleteGuoqiRed" parameterType="pd" >
+		 	delete from tb_member_redpackets
+		 	where redpackage_id=#{redpackage_id}
+  	</delete>
+	
+	<!-- 我的可以使用的红包列表魏汉文20160630 -->
+	<select id="listAllById" parameterType="pd" resultType="pd">
+			select
+				a.store_redpackets_id,
+				a.redpackage_id,
+				a.redpackage_money,
+				a.redpackage_type, 
+				a.redpackage_content,
+				a.enddate,
+				a.set_id,
+				b.redpackage_type as store_redpackage_type,
+				b.srp_usercondition_id
+			from 
+				tb_member_redpackets a 
+				join tb_store_redpackets b  on b.store_redpackets_id=a.store_redpackets_id
+			where 
+				a.member_id=#{member_id}
+ 				and a.isguoqi='0'
+ 				and a.isshiyong='0'
+  				<if test="store_id != null and store_id != ''">
+ 				and a.set_id=#{store_id}
+ 				</if>
+ 		 	order by cast(a.redpackage_money  as decimal(10,2))
+ 	</select>
+	
+ 
+ 	
+ 	<!-- 修改红包的拥有者魏汉文20160701-->
+	<update id="editRedPackageForId" parameterType="pd">
+			update  tb_member_redpackets
+			set 
+				member_id = #{newmember_id},
+				isshiyong='0',
+				iszhuanzeng='0'
+			where 
+				member_id=#{member_id}
+			    and  redpackage_id  =#{redpackage_id}
+	</update>
+	
+	
+	
+	<!-- 添加发送的积分红包 刘耀耀 2016.06.29-->
+	<insert id="saveSendRed" parameterType="pd">
+		insert into tb_ms_redpackage(
+			ms_redpackage_id,
+ 			user_id,
+ 			user_type,
+ 			redpackage_money,
+ 			redpackage_type,
+ 			redpackage_number,
+ 			content,
+			createtime
+		) values (
+			#{ms_redpackage_id},
+			#{user_id},
+			#{user_type},
+			#{redpackage_money},
+			ifnull(#{redpackage_type},'2'),<!-- 默认平均金额 -->
+			ifnull(#{redpackage_number},'1'),<!-- 默认1个红包 -->
+			#{content},
+			now()
+		)
+	</insert>
+	
+	
+	<!-- 修改红包状态魏汉文20160705-->
+	<update id="editRedStatus" parameterType="pd">
+			update  tb_member_redpackets
+			set 
+				<if test="isguoqi != null and isguoqi !='' ">
+				isguoqi = #{isguoqi},
+				</if>
+				<if test="isshiyong != null and isshiyong !='' ">
+				isshiyong = #{isshiyong},
+				</if>
+				<if test="iszhuanzeng != null and iszhuanzeng !='' ">
+				iszhuanzeng = #{iszhuanzeng},
+				</if>
+				redpackage_id=redpackage_id
+			where 
+				redpackage_id=#{redpackage_id}
+				<if test="member_id != null and member_id !=''">
+				and member_id=#{member_id}
+				</if>
+	</update>
+	
+		
+	
+	<!-- 删除红包状态魏汉文20160705-->
+	<delete id="deleteRed" parameterType="pd">
+			delete from   tb_member_redpackets
+ 			where 
+				redpackage_id=#{redpackage_id}
+ 	</delete>
+	
+	<!-- 我的红包列表魏汉文20160630 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+			select
+				a.store_redpackets_id,
+				a.member_id,
+				a.redpackage_id,
+				a.redpackage_money,
+				a.redpackage_type, 
+				a.redpackage_content,
+				a.enddate,
+				date_format(a.enddate,'%Y-%m-%d') as enddatestr,
+				a.set_id,
+				a.isshiyong,
+				a.iszhuanzeng,
+				a.isguoqi,
+				b.name,
+				b.image_url
+			from 
+				tb_member_redpackets a 
+				join tb_member b on a.member_id=b.member_id
+			where 
+				1=1
+				<if test="member_id != null and member_id != ''">
+				and a.member_id=#{member_id}
+				</if>
+				<if test="redpackage_id != null and redpackage_id != ''">
+				and a.redpackage_id=#{redpackage_id}
+				</if>
+				<if test="iszhuanzeng != null and iszhuanzeng != ''">
+				and a.iszhuanzeng=#{iszhuanzeng}
+				</if>
+ 			limit 1	
+  	</select>
+  	
+  	<!-- 转增红包列表 -->
+	<select id="listAllZZred" parameterType="pd" resultType="pd">
+			select
+ 				a.redpackage_id,
+  				a.enddate 
+			from 
+				tb_member_redpackets a 
+  				
+			where 
+ 				a.iszhuanzeng='1'
+  	</select>
+	
+</mapper>

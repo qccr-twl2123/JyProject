@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LQStoreMapper">
+
+	
+
+	<!-- 梁秦2016-6-12 -->
+	<select id="findAll" parameterType="String" resultType="pd">
+		select * 
+		from tb_store_file 
+		where store_id = #{store_id}
+	</select>
+
+	<!-- 通过StoreId来查找商家信息 -->
+	<select id="findStoreById" parameterType="String" resultType="Store">
+		select
+			*
+		from
+			tb_store
+		where
+			store_id = #{store_id}
+	</select>
+
+	<update id="updatePassword" parameterType="pd">
+		update
+			tb_store
+		set 
+			password = #{password}
+		where
+			store_id = #{store_id}
+	</update>
+
+	<!-- 根据手机号查询商家 -->
+	<select id="findSomeProperties" parameterType="String" resultType="Store">
+		select
+			withdraw_rate,
+			transaction_times,
+			zan_times,
+			store_id,
+			registertel_phone
+		from tb_store
+		where store_id = #{store_id}
+	</select>
+	
+	<!-- 根据手机号和密码查询商家（pc端） 刘耀耀 2016.07.07 -->
+	<select id="listNamePwd" parameterType="pd" resultType="pd">
+		select
+			*
+		from	
+			tb_store 
+		where
+ 				(registertel_phone = #{registertel_phone} or store_id= #{registertel_phone})
+				<if test="password!=null  and  password!=''">
+				and password=#{password}
+				</if>
+		limit 1
+  	</select>
+	
+	<!-- 获取当前手机号的商家数量 -->
+	<select id="getNumberForStore" parameterType="pd" resultType="Integer">
+		select
+			count(*)
+		from	
+			tb_store 
+		where
+ 			registertel_phone = #{registertel_phone} 
+    	</select>
+  	
+  		
+	<!-- 根据ID号和密码查询商家（pc端） 刘耀耀 2016.07.07 -->
+	<select id="listNamePwdById" parameterType="pd" resultType="pd">
+		select
+				a.store_id,
+				a.store_name,
+				a.registertel_phone,
+ 				a.check_status,
+				a.store_vip_id,
+				a.merchant_status,
+				a.merchant_level,
+				a.integral_rate,
+				a.service_rate,
+				a.withdraw_rate,
+				a.lowest_score,
+				a.remind_integral,
+				a.sort_score,
+				a.comment_score,
+				a.complex_score,
+				a.recharge_times,
+				a.transaction_times,
+				a.withdraw_times,
+				a.zan_times,
+				a.collection_times,
+				a.bigtype_max,
+				a.smalltype_max,
+				a.goods_max,
+				a.operate_id,
+				a.store_file_id,
+				a.keyword,
+				a.logindate,
+				a.longitude,
+				a.latitude,
+				a.pictrue_url,
+				a.islogin,
+				a.registertime,
+				a.tixian_money,
+				a.store_biaozhun,
+				a.ispk,
+				a.jichushezhi,
+				a.istuisong
+		from	
+				tb_store  a
+		where
+ 				a.store_id= #{registertel_phone} 
+				<if test="password !=null  and  password !=''">
+				and a.password=#{password}
+				</if>
+		limit 1
+  	</select>
+  	
+  	<!-- 根据手机号和密码查询商家的操作员（pc端） 魏汉文0711 -->
+	<select id="getOperateLogin" parameterType="pd" resultType="pd">
+		select
+			a.store_operator_id,
+			a.operator_name,
+			a.operator_position,
+			a.operator_status,
+			a.operator_phone,
+ 			a.sy_competence,
+			a.yx_competence,
+			a.sp_competence,
+			a.hd_competence,
+			a.cw_competence,
+			a.store_shift_id,
+			a.store_id,
+			a.logintime,
+			a.downtime,
+			a.alldesk_no,
+			a.createdate,
+			a.islogin,
+			a.istuisong,
+			b.store_name
+		from	
+			tb_store_operator a 
+			left join tb_store b on a.store_id=b.store_id
+		where
+				store_operator_id= #{registertel_phone}
+				<if test="password!=null  and  password!=''">
+				and a.operator_password=#{password}
+				</if>
+  		limit 1
+   	</select>
+	
+	<!-- pc端商家注册 刘耀耀2016.07.07   -->
+	<insert id="save" parameterType="pd">
+		insert into tb_store(  
+			store_name,
+			registertel_phone,
+			password,
+			registertime,
+			store_vip_id,
+			longitude,
+			latitude,
+			store_file_id,
+			store_id,
+			only_store_id,
+			pictrue_url
+		)values(
+			#{store_name},
+			#{registertel_phone},
+			#{password},
+			now(),
+			#{store_vip_id},
+			#{longitude},
+			#{latitude},
+			#{store_file_id},
+			#{store_id},
+			#{only_store_id},
+			'https://www.jiuyuvip.com/FileSave/File/userFile/moren.png'
+		)
+	</insert>
+	
+	
+	<!-- 根据store_id来查询store,从而查询联盟信息 -->
+	<select id="findStoreUnionlistPage" parameterType="page" resultMap="StoreBean">
+		select
+			store_union.store_union_id,
+			store_union.fk_store_id,
+			store_union.type,
+			store_union.union_status,
+			store_union.invite_desc,
+			store_union.leader_store_id,
+			store_union.addunion_time
+		from		
+			tb_store store,
+			tb_store_union store_union,
+			tb_store_file store_file
+		where
+			store.store_id=store_union.leader_store_id 
+			and store.store_id=#{pd.store_id} 
+			and store.store_id=store_file.store_file_id
+	</select>
+
+
+	<resultMap type="Store" id="StoreBean">
+		<id column="store_id" property="store_id" />
+		<result column="store_name" property="store_name" />
+
+		<collection property="store_UnionList" ofType="Store_Union">
+			<id column="store_union_id" property="store_union_id" />
+			<result column="name" property="name" />
+			<result column="starttime" property="starttime" />
+			<result column="endtime" property="endtime" />
+			<result column="invite_desc" property="invite_desc" />
+			<result column="fk_store_id" property="fk_store_id" />
+			<result column="leader_store_id" property="leader_store_id" />
+			<result column="type" property="type" />
+			<result column="union_status" property="union_status" />
+			<result column="addunion_time" property="addunion_time" />
+		</collection>
+ 	</resultMap>
+ 	
+	<!-- 新增魏汉文20160709-->
+	<insert id="saveWealth" parameterType="pd">
+		insert into tb_store_wealth(
+			wealth_type,	
+			store_id,	
+			store_wealth_id
+		) values (
+			#{wealth_type},		
+			#{store_id},	
+			#{store_wealth_id}
+		)
+	</insert>
+	
+	<!-- 修改登录状态魏0714 -->
+	<update id="updateStatus" parameterType="pd">
+		update tb_store
+		set 
+			<if test="istuisong != null and istuisong != ''">istuisong = #{istuisong},</if>
+			<if test="islogin != null and islogin != ''">islogin = #{islogin},</if>
+			<if test="islogin == '1'.toString()"> logindate=now(),login_ip=#{login_ip}, </if>
+			store_id=store_id
+		where
+			store_id = #{store_id}
+	</update>
+	
+	<!-- 修改登录状态魏0714 -->
+	<update id="updateTime" parameterType="pd">
+		update tb_store_operator
+		set 
+			<if test="login == '1'.toString()">logintime = now(),islogin='1',</if>
+			<if test="login == '2'.toString()">downtime = now(),islogin='0',</if>
+			<if test="istuisong != null and istuisong != ''">istuisong = #{istuisong},</if>
+			store_operator_id=store_operator_id
+ 		where
+			store_operator_id = #{store_operator_id}
+	</update>
+	<!-- 查看商家id是否存在 -->
+	<select id="getStoreId" parameterType="String" resultType="pd">
+		select
+			*
+		from	
+			tb_store
+		where store_id = #{store_id}
+   	</select>
+   	
+   	
+	<!-- 通过StoreId来查找商家信息 -->
+	<select id="findByStorephone" parameterType="String" resultType="pd">
+		select
+			*
+		from
+			tb_store
+		where
+			store_id = #{store_id}
+	</select>
+ 	
+ 
+</mapper>

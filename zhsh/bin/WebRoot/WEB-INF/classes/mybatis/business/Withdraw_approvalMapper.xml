@@ -1,0 +1,537 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Withdraw_approvalMapper">
+	
+	<!-- 新增提现记录魏汉文20160704-->
+	<insert id="saveWithdraw" parameterType="pd">
+		insert into tb_withdraw_approval(
+			withdraw_approval_id,
+			user_id,	
+			user_type,	
+ 			money,	
+ 			withdraw_rate,	
+ 			arrivalMoney,
+ 			nowuser_money,
+  			withdraw_channel,	
+			withdraw_number,
+			withdraw_username,	
+			withdraw_type,	
+ 			apply_time ,
+ 			account_name,
+			account_type,
+			province_name,
+			city_name,
+			area_name,
+ 			phone
+		) values (
+			#{withdraw_approval_id},	
+			#{user_id},	
+			#{user_type},	
+ 			#{money},	
+ 			#{withdraw_rate},	
+ 			#{arrivalMoney},	
+ 			#{nowuser_money},	
+			#{withdraw_channel},	
+			#{withdraw_number},	
+			#{withdraw_username},	
+			#{withdraw_type},	
+ 			now() ,
+ 			#{account_name},	
+			#{account_type},
+			#{province_name},
+			#{city_name},
+			#{area_name},
+			#{phone}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from tb_withdraw_approval
+		where 
+			withdraw_approval_id = #{withdraw_approval_id}
+	</delete>
+	
+	
+	<!-- 修改 魏汉文-->
+	<update id="edit" parameterType="pd">
+		update  TB_WITHDRAW_APPROVAL
+			set 
+				<if test=" withdraw_type != null and withdraw_type != '' ">withdraw_type = #{withdraw_type},</if>
+				<if test=" withdraw_status != null and withdraw_status != '' ">withdraw_status = #{withdraw_status},</if>
+				<if test=" remark != null and remark != '' ">remark = #{remark},</if>
+  				withdraw_approval_id = withdraw_approval_id
+			where 
+				withdraw_approval_id = #{withdraw_approval_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 魏汉文-->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			user_id,	
+			phone,
+			user_type,	
+ 			money,	
+			withdraw_number,
+			withdraw_username,
+			withdraw_type,	
+			withdraw_status,	
+			remark,	
+			apply_time,	
+			operator_id,	
+			ifnull(chuli_remark,'') as chuli_remark,
+			withdraw_approval_id
+		from 
+			tb_withdraw_approval
+		where 
+			withdraw_approval_id = #{withdraw_approval_id}
+	</select>
+	
+	
+	<!-- 列表  刘耀耀 2016.6.7 魏汉文2016.6.12-->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.user_id,	
+				a.user_type,	
+ 				ifnull(a.money,'0') as money,
+ 				a.withdraw_rate,
+ 				a.arrivalMoney,
+ 				a.nowuser_money,	
+ 				a.phone,
+ 				a.withdraw_channel,
+				a.withdraw_number,
+				a.withdraw_username,
+				a.withdraw_type,	
+				a.withdraw_status,	
+				a.remark,	
+				a.exception_remark,
+				a.exception_status,
+				a.chuli_remark,
+				a.dakuan_remark,
+				a.apply_time,
+  				a.moneyarrival_time,	
+				a.operator_id,
+				a.passmoney_operator_id,	
+				a.province_name,	
+				a.city_name,	
+				a.area_name,
+				a.account_name,
+				a.account_type,
+				a.withdraw_approval_id,
+				a.pass_time,
+				b.operator_name,
+				c.operator_name as dakuan_operator_name
+		from 
+				tb_withdraw_approval a
+				left join tb_store_operator b on b.store_operator_id = a.operator_id
+				left join tb_store_operator c on c.store_operator_id = a.passmoney_operator_id
+		where  
+				1=1
+				<if test="pd.store_operator_id != null and pd.store_operator_id != ''"><!-- 省 -->
+					and (a.operator_id=#{pd.store_operator_id} or  a.passmoney_operator_id=#{pd.store_operator_id})
+ 				</if>
+ 				<if test="pd.exception_status != null and pd.exception_status != ''"><!-- 省 -->
+					and a.exception_status=#{pd.exception_status}
+ 				</if>
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+						a.withdraw_number =#{pd.content}
+						or
+						a.money =#{pd.content}
+							 
+						)
+				</if>
+				<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+					and a.province_name=#{pd.province_name}
+ 				</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+					and a.city_name=#{pd.city_name}
+ 				</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+					and a.area_name=#{pd.area_name}
+ 				</if>	
+				<if test="pd.user_type!= null and pd.user_type!= ''"><!-- 用户类型1商家，2会员，3服务商，4业务员 -->
+					and a.user_type=#{pd.user_type}
+ 				</if>		
+				<if test="pd.account_type != null and pd.account_type != ''"><!-- 到账类型1现金,2微信,3支付宝,4银行卡,5积分支付 -->
+					and a.account_type=#{pd.account_type}
+ 				</if>		
+				<if test="pd.apply_time!= null and pd.apply_time!= ''"><!-- 时间-->
+					and date_format(a.apply_time,'%Y-%m-%d')=#{pd.apply_time}
+ 				</if>	
+				<if test="pd.withdraw_type!= null and pd.withdraw_type!= ''"><!-- 0未处理 ，1手动提现，2自动提现-->
+					and a.withdraw_type=#{pd.withdraw_type}
+ 				</if>	
+				<if test="pd.withdraw_status!= null and pd.withdraw_status!= ''"><!-- 0待审批，1审批通过，2审批驳回-->
+					and a.withdraw_status=#{pd.withdraw_status}
+ 				</if>	
+   				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(a.pass_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+		 		</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(a.pass_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+		 		</if>	
+				<if test="pd.month != null and pd.month != ''"><!-- 当前月份时间 -->
+						and date_format(a.pass_time,'%Y-%m') = #{pd.month}
+		 		</if>
+		 		<if test="pd.chuli == '1'.toString()"><!-- 已处理-->
+					and a.withdraw_status in ('3','99')
+  				</if>
+  		order by a.apply_time desc
+	</select>
+	
+	<select id="sunMoney" parameterType="page" resultType="String" >
+		select cast( cast(sum(a.money)  as  DECIMAL(10,2)) as char ) as summoney 
+		from 
+				tb_withdraw_approval a
+		where  
+				1=1
+				<if test="pd.store_operator_id != null and pd.store_operator_id != ''"><!-- 省 -->
+					and (a.operator_id=#{pd.store_operator_id} or  a.passmoney_operator_id=#{pd.store_operator_id})
+ 				</if>
+ 				<if test="pd.exception_status != null and pd.exception_status != ''"><!-- 省 -->
+					and a.exception_status=#{pd.exception_status}
+ 				</if>
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+						a.withdraw_number =#{pd.content}
+						or
+						a.money =#{pd.content}
+							 
+						)
+				</if>
+				<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+					and a.province_name=#{pd.province_name}
+ 				</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+					and a.city_name=#{pd.city_name}
+ 				</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+					and a.area_name=#{pd.area_name}
+ 				</if>	
+				<if test="pd.user_type!= null and pd.user_type!= ''"><!-- 用户类型1商家，2会员，3服务商，4业务员 -->
+					and a.user_type=#{pd.user_type}
+ 				</if>		
+				<if test="pd.account_type != null and pd.account_type != ''"><!-- 到账类型1现金,2微信,3支付宝,4银行卡,5积分支付 -->
+					and a.account_type=#{pd.account_type}
+ 				</if>		
+				<if test="pd.apply_time!= null and pd.apply_time!= ''"><!-- 时间-->
+					and date_format(a.apply_time,'%Y-%m-%d')=#{pd.apply_time}
+ 				</if>	
+				<if test="pd.withdraw_type!= null and pd.withdraw_type!= ''"><!-- 0未处理 ，1手动提现，2自动提现-->
+					and a.withdraw_type=#{pd.withdraw_type}
+ 				</if>	
+				<if test="pd.withdraw_status!= null and pd.withdraw_status!= ''"><!-- 0待审批，1审批通过，2审批驳回-->
+					and a.withdraw_status=#{pd.withdraw_status}
+ 				</if>	
+   				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(a.pass_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+		 		</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(a.pass_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+		 		</if>	
+				<if test="pd.month != null and pd.month != ''"><!-- 当前月份时间 -->
+						and date_format(a.pass_time,'%Y-%m') = #{pd.month}
+		 		</if>
+		 		<if test="pd.chuli == '1'.toString()"><!-- 已处理-->
+					and a.withdraw_status in ('3','99')
+  				</if>
+  		order by a.apply_time desc
+	</select>
+	
+	<select id="sunMoneyTwo" parameterType="page" resultType="String" >
+		select cast( cast(sum(a.arrivalMoney)  as  DECIMAL(10,2))  as char ) as summoney 
+		from 
+				tb_withdraw_approval a
+		where  
+				1=1
+				<if test="pd.store_operator_id != null and pd.store_operator_id != ''"><!-- 省 -->
+					and (a.operator_id=#{pd.store_operator_id} or  a.passmoney_operator_id=#{pd.store_operator_id})
+ 				</if>
+ 				<if test="pd.exception_status != null and pd.exception_status != ''"><!-- 省 -->
+					and a.exception_status=#{pd.exception_status}
+ 				</if>
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+						a.withdraw_number =#{pd.content}
+						or
+						a.money =#{pd.content}
+							 
+						)
+				</if>
+				<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+					and a.province_name=#{pd.province_name}
+ 				</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+					and a.city_name=#{pd.city_name}
+ 				</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+					and a.area_name=#{pd.area_name}
+ 				</if>	
+				<if test="pd.user_type!= null and pd.user_type!= ''"><!-- 用户类型1商家，2会员，3服务商，4业务员 -->
+					and a.user_type=#{pd.user_type}
+ 				</if>		
+				<if test="pd.account_type != null and pd.account_type != ''"><!-- 到账类型1现金,2微信,3支付宝,4银行卡,5积分支付 -->
+					and a.account_type=#{pd.account_type}
+ 				</if>		
+				<if test="pd.apply_time!= null and pd.apply_time!= ''"><!-- 时间-->
+					and date_format(a.apply_time,'%Y-%m-%d')=#{pd.apply_time}
+ 				</if>	
+				<if test="pd.withdraw_type!= null and pd.withdraw_type!= ''"><!-- 0未处理 ，1手动提现，2自动提现-->
+					and a.withdraw_type=#{pd.withdraw_type}
+ 				</if>	
+				<if test="pd.withdraw_status!= null and pd.withdraw_status!= ''"><!-- 0待审批，1审批通过，2审批驳回-->
+					and a.withdraw_status=#{pd.withdraw_status}
+ 				</if>	
+   				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(a.pass_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+		 		</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(a.pass_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+		 		</if>	
+				<if test="pd.month != null and pd.month != ''"><!-- 当前月份时间 -->
+						and date_format(a.pass_time,'%Y-%m') = #{pd.month}
+		 		</if>
+		 		<if test="pd.chuli == '1'.toString()"><!-- 已处理-->
+					and a.withdraw_status in ('3','99')
+  				</if>
+  		order by a.apply_time desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.user_id,	
+				a.user_type,	
+ 				a.money,	
+				a.withdraw_number,	
+				a.withdraw_type,	
+				a.withdraw_status,	
+				a.remark,	
+				a.apply_time,	
+				a.operator_id,	
+				a.withdraw_approval_id
+		from 
+				TB_WITHDRAW_APPROVAL a
+		where 
+				withdraw_approval_id=(
+				select min(withdraw_approval_id) from tb_withdraw_approval where apply_time=a.apply_time
+				)
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAllZiDian" parameterType="pd" resultType="pd">
+		select
+				a.*
+		from 
+				tb_withdraw_approval a
+ 	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from tb_withdraw_approval
+		where 
+			withdraw_approval_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 修改提现状态  2016.9.25-->
+	<update id="updateForId" parameterType="pd">
+		update  tb_withdraw_approval
+		set
+			<if test="withdraw_status != null and withdraw_status != '' ">
+			withdraw_status =  #{withdraw_status},
+			</if>
+			<if test="withdraw_status =='1'.toString() ">
+			pass_time = now(),
+			</if>
+			<if test="withdraw_status =='3'.toString() ">
+			moneyArrival_time = now(),
+			</if>
+ 			<if test="exception_operator_id != null and exception_operator_id != '' ">
+			exception_operator_id =  #{exception_operator_id},
+			</if>
+ 			<if test="passmoney_operator_id != null and passmoney_operator_id != '' ">
+			passmoney_operator_id =  #{passmoney_operator_id},
+			</if>
+			<if test="operator_id != null and operator_id != '' ">
+			operator_id =  #{operator_id},
+			</if>
+			<if test="chuli_remark != null and chuli_remark != '' ">
+			chuli_remark =  #{chuli_remark},
+			</if>
+			<if test="dakuan_remark != null and dakuan_remark != '' ">
+			dakuan_remark =  #{dakuan_remark},
+			</if>
+			<if test="exception_remark != null and exception_remark != '' ">
+			exception_remark =  #{exception_remark},
+			</if>
+			<if test="exception_status != null and exception_status != '' ">
+			exception_status =  #{exception_status},
+			</if>
+			withdraw_approval_id=withdraw_approval_id
+  		where 
+ 			withdraw_approval_id =	#{withdraw_approval_id}	 
+	</update>
+	
+	<!-- 批量编辑  xjt 2016.9.24 -->
+	<update id="updateAll" parameterType="pd">
+		update  tb_withdraw_approval
+		set
+			withdraw_status = #{withdraw_status}
+ 		where 
+ 			withdraw_approval_id in
+			<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+	                 #{item}
+			</foreach>
+	</update>
+	
+	<!-- 获取所有消费统计魏汉文20160617-->
+	<select id="countAllMoney" parameterType="page" resultType="pd">
+		select 
+				 a.money,
+				 date_format(a.pass_time,'%Y-%m-%d') as pass_time 
+		from 
+				tb_withdraw_approval a 
+ 		where  
+				1=1
+				and a.withdraw_status='1'
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+						a.withdraw_number =#{pd.content}
+						or
+						a.money =#{pd.content}
+							 
+						)
+				</if>
+				<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+					and a.province_name=#{pd.province_name}
+ 				</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+					and a.city_name=#{pd.city_name}
+ 				</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+					and a.area_name=#{pd.area_name}
+ 				</if>	
+				<if test="pd.user_type!= null and pd.user_type!= ''"><!-- 用户类型 -->
+					and a.user_type=#{pd.user_type}
+ 				</if>		
+				<if test="pd.apply_time!= null and pd.apply_time!= ''"><!-- 时间-->
+					and date_format(a.apply_time,'%Y-%m-%d')=#{pd.apply_time}
+ 				</if>		
+   				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(a.pass_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+		 		</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(a.pass_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+		 		</if>	
+				<if test="pd.month != null and pd.month != ''"><!-- 当前月份时间 -->
+						and date_format(a.pass_time,'%Y-%m') = #{pd.month}
+		 		</if>
+		group by date_format(a.pass_time,'%Y-%m-%d')
+  	</select>
+	
+	<!-- 获取所有个人的消费统计魏汉文20160617-->
+	<select id="countAllMoneyByOne" parameterType="page" resultType="pd">
+		select 
+				max(b.money) as money,
+				b.user_id,
+				b.pass_time,
+				b.user_type
+		from	
+				 (	select 
+							 sum(a.money) as money,
+							 date_format(a.pass_time,'%Y-%m-%d') pass_time,
+							 a.user_id,
+							 a.user_type
+					from 
+							tb_withdraw_approval a 
+								
+					where
+							1=1
+			 				and a.withdraw_status='1'
+							<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+								and
+									(
+									a.withdraw_number =#{pd.content}
+									or
+									a.money =#{pd.content}
+										 
+									)
+							</if>
+							<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+								and a.province_name=#{pd.province_name}
+			 				</if>
+							<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+								and a.city_name=#{pd.city_name}
+			 				</if>
+							<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+								and a.area_name=#{pd.area_name}
+			 				</if>	
+							<if test="pd.user_type!= null and pd.user_type!= ''"><!-- 用户类型 -->
+								and a.user_type=#{pd.user_type}
+			 				</if>		
+							<if test="pd.apply_time!= null and pd.apply_time!= ''"><!-- 时间-->
+								and date_format(a.apply_time,'%Y-%m-%d')=#{pd.apply_time}
+			 				</if>		
+			   				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+									and date_format(a.pass_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+					 		</if>
+							<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+									and date_format(a.pass_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+					 		</if>	
+							<if test="pd.month != null and pd.month != ''"><!-- 当前月份时间 -->
+									and date_format(a.pass_time,'%Y-%m') = #{pd.month}
+					 		</if>
+ 					GROUP BY  date_format(a.pass_time,'%Y-%m-%d'),a.user_id  ) b
+  		GROUP BY  b.pass_time 
+  	</select>
+  	
+  		
+	<!-- 列表(全部)导出excel表格 -->
+	<select id="listAllForExcel" parameterType="pd" resultType="pd">
+		select
+				a.user_id,	
+				a.user_type,	
+ 				ifnull(a.money,'0') as money,
+ 				a.nowuser_money,	
+ 				a.phone,
+ 				a.withdraw_channel,
+				a.withdraw_number,
+				a.withdraw_username,
+				a.withdraw_type,	
+				a.withdraw_status,	
+				a.remark,	
+				a.exception_remark,
+				a.exception_status,
+				a.dakuan_remark,
+				a.apply_time,
+				a.passmoney_operator_id,
+				a.moneyArrival_time,	
+				a.operator_id,	
+				a.province_name,	
+				a.city_name,	
+				a.area_name,
+				a.account_name,
+				a.account_type,
+				a.withdraw_approval_id,
+				a.pass_time 
+		from 
+				tb_withdraw_approval a
+		where  
+				withdraw_approval_id in
+				<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+	                 #{item}
+				</foreach>
+  		order by a.apply_time desc
+	</select>
+	
+</mapper>

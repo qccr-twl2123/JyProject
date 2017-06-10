@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Member_wealthhistoryMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into TB_MEMBER_WEALTHHISTORY(
+			WEALTH_TYPE,	
+			CONSUME_TYPE,	
+			CONTENT,	
+			NUMBER,	
+			MEMBER_ID,	
+			NOW_MONEY,	
+			CREATETIME,	
+			MEMBER_WEALTHHISTORY_ID
+		) values (
+			#{wealth_type},	
+			#{consume_type},	
+			#{content},	
+			#{number},	
+			#{member_id},	
+			#{now_money},	
+			#{createtime},	
+			#{member_wealthhistory_id}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_MEMBER_WEALTHHISTORY
+		where 
+			MEMBER_WEALTHHISTORY_ID = #{member_wealthhistory_id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  TB_MEMBER_WEALTHHISTORY
+			set 
+				wealth_type = #{wealth_type},
+				consume_type = #{consume_type},
+				content = #{content},
+				number = #{number},
+				member_id = #{member_id},
+				now_money = #{now_money},
+				createtime = #{createtime},
+			MEMBER_WEALTHHISTORY_ID = member_wealthhistory_id
+			where 
+				MEMBER_WEALTHHISTORY_ID = #{member_wealthhistory_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			wealth_type,	
+			consume_type,	
+			content,	
+			number,	
+			member_id,	
+			now_money,	
+			createtime,	
+			MEMBER_WEALTHHISTORY_ID
+		from 
+			TB_MEMBER_WEALTHHISTORY
+		where 
+			MEMBER_WEALTHHISTORY_ID = #{member_wealthhistory_id}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.wealth_type,	
+				a.consume_type,	
+				a.content,	
+				a.number,	
+				a.member_id,	
+				a.now_money,	
+				a.createtime,	
+				a.MEMBER_WEALTHHISTORY_ID
+		from 
+				TB_MEMBER_WEALTHHISTORY a
+		where  1=1
+		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+			and
+				(
+					 1=1
+				)
+		</if>
+		
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.wealth_type,	
+				a.consume_type,	
+				a.content,	
+				a.number,	
+				a.member_id,	
+				a.now_money,	
+				a.createtime,	
+				a.member_wealthhistory_id
+		from 
+				TB_MEMBER_WEALTHHISTORY a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_MEMBER_WEALTHHISTORY
+		where 
+			MEMBER_WEALTHHISTORY_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

@@ -1,0 +1,132 @@
+body{
+    overflow: hidden;
+}
+/*头部*/
+.top_bar{
+    width:100%;
+    height:44px;
+    box-sizing: border-box;
+    background: #ff0600;
+    text-align: center;
+    position: relative;
+    color: #ffffff;
+}
+.l_fanhui{
+    width:12px;
+    height:22px;
+    margin: 11px 16px;
+    position: absolute;
+    left:0;
+    top: 0;
+}
+.r_jinru{
+    height:22px;
+    margin: 11px 0px 11px 0px;
+    display:inline-block;
+    vertical-align: top;
+    line-height: 22px;
+    color: #fff;
+}
+.r_item .r_jinru:nth-child(2){
+    margin-right: 8px;
+}
+.top_bar_name{
+    line-height: 44px;
+    color: #fff;
+    font-size: 112.5%;
+}
+.l_item{
+    float: left;
+    position: absolute;
+    width:44px;
+    height: 44px;
+    line-height: 44px;
+    left:0;
+    top:0;;
+}
+.r_item{
+    float: right;
+    position: absolute;
+    height: 44px;
+    line-height: 44px;
+    right:0;
+    top:0;
+}
+
+/*视口*/
+.change{
+    width:100%;
+}
+.shopping_list{
+    width:100%;
+}
+.list_title{
+    width: 100%;
+    border-bottom:1px solid #ccc;
+    padding: 2%;
+    box-sizing: border-box;
+}
+.ddzt{
+    float: right;
+}
+.ddsj{
+    color: #999;
+    font-size: 85%;
+}
+.img_box{
+    width:20%;
+    float: left;
+    padding: 1%;
+    box-sizing: border-box;
+}
+.img_box .img{
+    width:100%;
+    padding-top: 100%;
+    position: relative;
+    overflow: hidden;
+}
+.img_box img{
+    width:100%;
+
+    position: absolute;
+    top:0;
+}
+.img_box img{
+    width:100%;
+}
+.cont_box{
+    width:80%;
+    float: left;
+    box-sizing: border-box;
+    padding: 2% 0;
+}
+.cont_box li{
+    padding:0% 2%;
+    font-size: 98%;
+}
+.cont_box li div{
+    width: 100%;
+    height:100%;
+    padding-top:4px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed #aaa;
+}
+.zengsongjf{
+    float: right;
+    font-size: 80%;
+    line-height: 2.3;
+}
+.shopping_list {
+    margin-bottom: 6px;
+    box-shadow: 0 2px 4px #aaa;
+}
+.pj_wwc{
+    border:1px solid #ff0600;
+    color: #ff0600;
+    padding:0% 2%;
+    float: right;
+}
+.pj_ywc{
+    color: rgb(28,25,206);
+    float: right;
+}

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XJTStore_marketingMapper">
+
+	<!-- 新增营销记录  邢江涛 -->
+	<insert id="save" parameterType="pd">
+			insert into tb_store_marketing(
+				store_marketing_id,
+				marketing_type,
+				change_type,
+				grantrule,
+				starttime,
+				endtime,
+				marketing_id,
+				store_id,
+				daytime
+			)values(
+				#{store_marketing_id},
+				#{marketing_type},
+				#{change_type},
+				#{grantrule},
+				#{starttime},
+				#{endtime},
+				#{marketing_id},
+				#{store_id},
+				now()
+			)
+	</insert>
+	
+	<!-- 积分新增营销记录，默认开启  邢江涛 -->
+	<insert id="savescore" parameterType="pd">
+			insert into tb_store_marketing(
+				store_marketing_id,
+				marketing_type,
+				change_type,
+				grantrule,
+				starttime,
+				endtime,
+				marketing_id,
+				store_id,
+				open_status,
+				daytime
+			)values(
+				#{store_marketing_id},
+				#{marketing_type},
+				#{change_type},
+				#{grantrule},
+				#{starttime},
+				#{endtime},
+				#{marketing_id},
+				#{store_id},
+				'1',
+				now()
+			)
+	</insert>
+
+	
+	<select id="count"  parameterType="pd" resultType="java.lang.Integer">
+		select count(*) 
+		from tb_store_marketing  
+		where 
+			 open_status = '1' 
+			 and store_id=#{store_id}
+	</select>
+
+	<!-- 分页查询营销记录  邢江涛 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select 
+			*
+		from tb_store_marketing
+		where store_id = #{pd.store_id}
+	</select>
+	
+	<!-- 分页查询营销记录  邢江涛 -->
+	<select id="marketlistPage" parameterType="page" resultType="pd">
+		select 
+			a.*,b.store_name
+		from tb_store_marketing a 
+		LEFT JOIN tb_store b on a.store_id = b.store_id
+	</select>
+	
+	
+	<!-- 删除营销记录  邢江涛-->
+	<delete id="delete" parameterType="pd">
+		delete from tb_store_marketing
+		where 
+			 store_marketing_id = #{store_marketing_id}
+	</delete>
+	
+	<!-- 删除营销记录  邢江涛-->
+	<delete id="deleteByType" parameterType="pd">
+		delete from tb_store_marketing
+			where marketing_type = #{marketing_type} and store_id=#{store_id}
+	</delete>
+
+
+	<!-- 修改营销记录  邢江涛 -->
+	<update id="edit" parameterType="pd">
+		update  tb_store_marketing
+			set 
+				<!-- marketing_type = #{marketing_type},
+				grantrule = #{grantrule},
+				starttime = #{starttime},
+				endtime = #{endtime},
+				send_type = #{send_type},
+				sort = #{sort}, -->
+				open_status = #{open_status},
+				daytime = #{daytime}
+				<!-- store_id = #{store_id}, -->
+			where 
+				store_marketing_id = #{store_marketing_id}
+	</update>
+ 	<!-- 更新营销状态为到期的时候 刘耀耀 2016.07.19-->
+	<update id="updateTime" parameterType="pd" >
+		update 
+			tb_store_marketing
+		set 
+			isguoqi='1'
+		where 
+			store_marketing_id=#{store_marketing_id}
+		and
+			endtime &lt; #{data}
+	</update>
+	
+	<!-- 查看指定的营销有没有开启-->
+	<select id="findYxByOpenForOne" parameterType="pd" resultType="pd">
+		select 
+			*
+		from tb_store_marketing
+		where store_id = #{store_id} and open_status='1' and marketing_type=#{marketing_type} and isguoqi='0'
+		limit 1
+	</select>
+	
+	
+	<!-- 修改密码sql如下 -->
+	<select id="selectoperator" parameterType="pd" resultType="pd">
+		SELECT * FROM tb_operator_file
+		where 1 = 1 
+		<if test="content != null and content != ''">
+			and operator_file_id = #{content}
+		</if>
+	</select>
+	<select id="selectclerk" parameterType="pd" resultType="pd">
+		SELECT * from tb_clerk_file
+		where 1 = 1 
+		<if test="content != null and content != ''">
+			and clerk_file_id = #{content}
+		</if>
+	</select>
+	<select id="selectsp" parameterType="pd" resultType="pd">
+		SELECT * from tb_sp_file
+		where 1 = 1 
+		<if test="content != null and content != ''">
+			and sp_file_id = #{content}
+		</if>
+	</select>
+	<select id="selectsubsidiary" parameterType="pd" resultType="pd">
+		select a.subsidiary_id,a.subsidiary_name,b.phone,a.createdate from tb_subsidiary a
+		left join tb_subsidiary_posts b on a.subsidiary_id = b.subsidiary_id
+		where 1 = 1 
+		<if test="content != null and content != ''">
+			and a.subsidiary_id = #{content}
+		</if>
+	</select>
+	
+	<update id="updateOperator" parameterType="pd" >
+		update 
+			tb_operator_file
+		set 
+			password = #{password}
+		where 
+			operator_file_id=#{id}
+	</update>
+	
+	<update id="updateClerk" parameterType="pd" >
+		update 
+			tb_clerk_file
+		set 
+			password = #{password}
+		where 
+			clerk_file_id=#{id}
+	</update>
+	
+	<update id="updateSp" parameterType="pd" >
+		update 
+			tb_sp_file
+		set 
+			password = #{password}
+		where 
+			sp_file_id=#{id}
+	</update>
+	
+	<update id="updateSubsidiary" parameterType="pd" >
+		update 
+			tb_subsidiary
+		set 
+			password = #{password}
+		where 
+			subsidiary_id=#{id}
+	</update>
+	
+	<select id="findBySort" parameterType="pd" resultType="pd">
+		select * 
+		from  tb_store_marketing 
+		where store_id =#{store_id} and sort=#{sort}   
+		limit 1
+	</select>
+	
+	<update id="updateSort" parameterType="pd" >
+		update 
+			tb_store_marketing
+		set 
+			sort=#{sort}
+		where 
+			store_marketing_id =#{store_marketing_id}
+	</update>
+	
+</mapper>

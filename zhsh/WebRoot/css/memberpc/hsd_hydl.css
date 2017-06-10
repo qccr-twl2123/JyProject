@@ -1,0 +1,235 @@
+/*初始化*/
+html,body,h1,h2,h3,h4,h5,h6,p{
+	margin: 0;
+	border: 0;
+	padding: 0;
+}
+body{
+	font-family: Arial, "微软雅黑", sans-serif;
+}
+ul,li{
+	list-style: none;
+}
+a{
+	text-decoration: none;
+}
+a:hover{
+	text-decoration: underline;
+}
+img{
+	border: 0;
+	line-height: 0;
+	margin: 0;
+}
+
+header{
+	width: 100%;
+	height: 88px;
+	padding: 10px 0 10px 0;
+}
+.head_cont{
+	width: 83.6666%;
+	margin: 0 auto;
+}
+.head_cont span{
+	line-height: 84px;
+	font-size: 32px;
+	display: inline-block;
+	float: left;
+}
+.head_cont a{
+	float: left;
+}
+
+
+section {
+  height: 530px;
+  background-color: #ff2829;
+  width: 100%;
+  position: relative;
+}
+section .cont {
+  width: 1230px;
+  height: 530px;
+  padding-left: 5%;
+  background-image: url("../../img/hydlbg.png");
+  background-size: auto;
+  transition: width 2s;
+}
+.denglu {
+	position: absolute;
+	right: 5%;
+	top: 0;
+
+  margin-top: 60px;
+  width: 19%;
+  background: rgba(255,255,255,0.9);
+  border-radius: 18px;
+  padding: 24px 40px;
+  transition: all 2s;
+}
+.denglu input {
+  height: 42px ;
+  width: 75%;
+  font-size: 17px;
+  float: left;
+  background: #fafafa;
+  outline: 0;
+  border: 0;
+  margin-left: 10px;
+}
+.denglu ul li{
+  display: inline-block;
+  height: 70px;
+}
+.denglu .rowborder {
+  height: 100%;
+  float: left;
+}
+.denglu .rowborder img {
+height: 100%;
+}
+.denglu h6 {
+  color: #ff7f00;
+  font-weight: normal;
+  font-size: 18px;
+}
+.denglu h6 a{
+	float: right;
+	color: red;
+	font-size: 14px;
+}
+.denglu .yhm {
+  width: 100%;
+  height: 44px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  margin-top: 33px;
+}
+.denglu .mm {
+  width: 100%;
+  height: 44px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+.denglu .yzm {
+  width: 100%;
+  height: 44px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  float: left;
+}
+.denglu .yzm input {
+  margin-left: 10px;
+  width: 48%;
+}
+.denglu .yzm_img {
+  width: 30%;
+  height: 44px;
+  margin-bottom: 20px;
+  float: right;
+}
+.denglu .zhcz {
+  float: left;
+  font-size: 13px;
+  width: 100%;
+}
+.denglu .zhcz input {
+	
+  width: 13px;
+  height: 13px;
+}
+.denglu .zhcz a {
+  font-size: 13px;
+  color: #888;
+  float: right;
+}
+.denglu .zhcz span {
+  font-size: 13px;
+  color: #666;
+}
+.denglu .button {
+  float: left;
+  height: 50px;
+  background: #15acf2;
+  width: 100%;
+  border-radius: 5px;
+  margin-top: 22px;
+  color: #ffffff;
+  text-align: center;
+  line-height: 50px;
+}
+.denglu .button:hover {
+  cursor: pointer;
+}
+.denglu .button:active {
+  box-shadow: 2px 2px 0px #aaa;
+}
+@media screen and (max-width: 1200px) {
+  .denglu {
+    width: 30%;
+  }
+}
+@media screen and (max-width: 960px) {
+  .denglu {
+    width: 46%;
+  }
+}
+@media screen and (max-width: 1200px) {
+  {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  {
+    width: 700px;
+  }
+}
+footer .footcont {
+  width: 1200px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+footer .footcont ul {
+  display: block;
+  width: 720px;
+  margin: 0 auto;
+}
+footer .footcont ul li {
+  float: left;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+footer .footcont ul li a {
+  line-height: 1;
+  font-size: 14px;
+  color: #000;
+  display: block;
+  width: 142px;
+  text-align: center;
+  border-left: 1px solid #666;
+}
+footer .footcont ul li a:hover {
+  color: #15acf2;
+}
+footer .footcont ul li .noborder {
+  border-left: 0;
+}
+footer .beian {
+  text-align: center;
+  font-size: 12px;
+  color: #666666;
+}
+@media screen and (max-width: 1200px) {
+  footer .footcont {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  footer .footcont {
+    width: 700px;
+  }
+}

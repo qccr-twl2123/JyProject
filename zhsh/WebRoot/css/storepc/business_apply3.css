@@ -1,0 +1,208 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+    color: #000;
+}
+/*header*/
+.signin_header{
+    width: 100%;
+    height: 10%;
+    min-height: 122px;
+}
+.signin_logo{
+    display: block;
+    float: left;
+    width: 112px;
+    height: 112px;
+    margin-left: 50px;
+
+}
+.signin_header_sp1{
+    display: inline-block;
+    font-size: 26px;
+    float: left;
+    width: 200px;
+    height: 122px;
+    line-height: 132px;
+    margin-left: 50px;
+}
+.red{
+    color: red;
+    height: 60px;
+    font-size: 14px;
+    line-height: 60px;
+
+}
+/*body*/
+.tx{
+    font-size: 20px;
+    margin-left: 3%;
+    width: 100%;
+    height: 7%;
+}
+.signin_body{
+    width: 100%;
+    height: 65%;
+    margin-top: 30px;
+    background-color: #d2d2d2;    
+}
+.signin_body_left{
+    width: 45%;
+    margin-left: 3%;
+    height: 90%;
+    float: left;
+    margin-top: 1%;
+}
+.signin_body_left p{
+    width: 100%;
+    height: 12%;
+    font-size: 20px;
+
+}
+.signin_body_left_sp1{
+    display: block;
+    float: left;
+    width: 15%;
+    min-width: 100px;
+    height: 40px;
+    line-height: 40px;
+    text-align: right;
+}
+.signin_body_left_ipt1{
+    width: 390px;
+    height: 40px;
+    margin-left: 4%;
+}
+.signin_body_left_p1{
+    display: block;
+    width: 400px;
+    height: 20px;
+    font-size: 14px;
+    line-height: 20px;
+    margin-left: 19%;
+    color: #888;
+}
+.signin_body_left_p2{
+    display: inline-block;
+    width: 70%;
+    height: 40px;
+    line-height: 40px;
+    margin-left: 4%;
+}
+.signin_body_left_ipt2{
+    display: block;
+    width: 390px;
+    height: 40px;
+    margin-left: 19%;
+}
+.signin_body_left_sp3{
+    height: 7% !important;
+    margin-top: 6%;
+}
+.p1{
+    margin-bottom: 3%;
+ }
+.signin_body_left_ipt3{
+    height: 100px;
+    line-height: top;
+}
+.subment{
+    display: inline-block;
+    width: 120px;
+    height:40px;
+    background-color: #3385ff;
+    color: #fff;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 40px;
+    margin-left: 30%;
+    cursor: pointer;
+        margin-top: 2%;
+}
+@media(max-width: 1280px){
+    .signin_body_left_p1{
+    margin-left: 22%;
+}
+    .signin_body_left_ipt2{
+    margin-left: 21.5%;
+}
+.subment{
+    margin-top: 2%;
+    margin-left: 40%;
+}
+}
+
+.signin_body_right{
+    width: 40%;
+    float: left;
+    height: 80%;
+    position: relative;
+}
+.right_p1{
+    position: absolute;
+    width: 80%;
+    height: 30%;
+    margin-left: 10%;
+    font-size: 14px;
+    top: 40%;
+}
+/*footer*/
+.signin_footer{
+    width: 100%;
+    height: 15%;
+    background-color: #eee;
+    min-height: 100px;
+    position: absolute;
+    bottom: 0;
+}
+.footer_d1{
+    width: 60%;
+    margin-left: 20%;
+    height: 100px;
+
+}
+.footer_d1 span {
+    display: inline-block;
+    font-size: 18px;
+    width: 24%;
+    text-align: center;
+    line-height: 100px;
+
+}
+.footer_d2{
+    width: 100%;
+    height: 40px;
+    text-align: center;
+    font-size: 14px;
+    color: #ccc;
+}
+@media(max-width:1280px ){
+  .footer_d1{
+    width: 60%;
+    margin-left: 20%;
+    height: 70px;
+
+}
+.footer_d1 span {
+    display: inline-block;
+    font-size: 18px;
+    width: 24%;
+    text-align: center;
+    line-height: 70px;
+
+}
+}

@@ -1,0 +1,223 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+    color: #000;
+}
+/*header*/
+.signin_header{
+    width: 94%;
+    height: 10%;
+    min-height: 13%;
+    border-bottom: 1px solid #ccc;
+    margin:0 auto;
+}
+.signin_header_sp1{
+    display: block;
+    float: left;
+    width: 82px;
+    height: 82px;
+    margin-left: 50px;
+    margin-top: 20px;
+ }
+.signin_logo{
+    display: block;
+    float: left;
+    width: 4%;
+    height: 90%;
+}
+.signin_homepage{
+    display: block;
+    float: right;
+    width: 3%;
+  /*   height: 80px; */
+    margin-top: 2%;
+    margin-right: 5%;
+    text-align: center;
+    cursor: pointer;
+}
+.signin_homepage_img{
+    width: 40px;
+    height: 40px;
+
+}
+/*body*/
+.signin_body{
+    width: 100%;
+    height: 60%;
+    margin-top: 2%;
+}
+.signin_body_left{
+    width: 50%;
+    height: 100%;
+    margin-left: 3%;
+    float: left;
+}
+.signin_body_right{
+        width: 30%;
+    margin-right: 10%;
+     float: right;
+    padding-top: 3%;
+
+}
+.signin_body_right_d1{
+    width: 92%;
+    height: 14%;
+    background-color: #169ada;
+    color: #fff;
+    border-radius: 10px;
+    margin: 0 auto;
+}
+.signin_body_right_d1 p{
+        width: 30%;
+     float: left;
+    height: 100%;
+    line-height: 80px;
+    text-align: center;
+    cursor: pointer;
+ }
+.d1_p2{
+    font-size: 14px;
+    color: #fff;
+}
+@media(max-width:1280px ){
+    .signin_body_right_d1 p{
+    width: 30%;
+    margin-left: 10%;
+    float: left;
+    height: 100%;
+    line-height: 50px;
+    text-align: center;
+    cursor: pointer;
+}
+}
+.signin_body_right_d2{
+     width: 90%;
+    height: 10%;
+     margin: 3% auto;
+    border: 1px solid #ccc;
+}
+.signin_body_right_d2_img{
+    display: block;
+    float: left;
+    width: 11%;
+    height: 100%;
+}
+.right_ipt1{
+    width: 89%;
+    padding-left: 5%;
+    height: 100%;
+    border:none;
+}
+/* .signin_body_right_d3{
+    width: 45%;
+} */
+.right_ipt2{
+    width: 55%;
+    float: left;
+}
+/* .signin_body_right_d2_img1{
+    width: 23%;
+} */
+.signin_body_right_d2_img2{
+    display: inline-block;
+    width: 25%;
+    float: right;
+    margin-top: -12%;
+    margin-right: 5%;
+    height: 10%;
+}
+.d2_text{
+    line-height: 50px;
+    cursor: pointer;
+    border:none;
+    font-size: 14px;
+}
+.d2_ipt{
+    cursor: pointer;
+}
+.d2_sp1{
+    display: inline-block;
+    float: right;
+    margin-right: 10%;
+}
+.signin{
+    border:none;
+    background-color: #169ada;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    line-height: 60px;
+}
+@media(max-width:1280px ){
+   .signin{
+    border:none;
+    background-color: #169ada;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    line-height: 40px;
+}
+}
+
+/*footer*/
+.signin_footer{
+    width: 94%;
+    height: 15%;
+  /*   background-color: #eee; */
+    min-height: 100px;
+    /* position: absolute;
+    bottom: 0; */
+             margin: 2% auto;
+}
+.footer_d1{
+    width: 100%;
+    height: 100px;
+    background-color: #eee;
+}
+.footer_d1 span {
+    display: inline-block;
+    font-size: 18px;
+    width: 19%;
+    text-align: center;
+    line-height: 100px;
+
+}
+.footer_d2{
+    width: 100%;
+    height: 40px;
+    text-align: center;
+    font-size: 14px;
+    color: #0f0f0f;
+}
+@media(max-width:1280px ){
+  .footer_d1{
+    width: 60%;
+    margin-left: 20%;
+    height: 70px;
+
+}
+.footer_d1 span {
+    display: inline-block;
+    font-size: 18px;
+    width: 24%;
+    text-align: center;
+    line-height: 70px;
+
+}
+}

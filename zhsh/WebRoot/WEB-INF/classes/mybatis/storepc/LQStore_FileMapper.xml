@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LQStore_FileMapper">	
+		
+ 	<!-- pc端商家档案注册 刘耀耀2016.07.07   -->
+	<insert id="save" parameterType="pd">
+		insert into tb_store_file(
+			store_id,
+			store_file_id,
+			user_number,
+			store_name,
+			store_abbreviation_name,
+			business_licenses_name,
+			province_name,
+			city_name,
+			area_name,
+			address,
+			management_projects_desc,
+			principal,
+			phone,
+			phone_bymemeber,
+			store_phone,
+			createdate,
+			starttime,
+			endtime,
+			sp_file_id
+		) values (
+			#{store_id},
+			#{store_file_id},
+			#{store_file_id},
+			#{store_name},
+			#{store_name},
+			#{business_licenses_name},
+			#{province_name},
+			#{city_name},
+			#{area_name},
+			#{address},
+			#{management_projects_desc},
+			#{principal},
+			#{phone},
+			#{phone},
+			#{registertel_phone},
+			now(),
+			now(),
+			now(),
+			#{sp_file_id}
+		)
+	</insert>
+	
+	<!-- 修改基础设置 -->
+	<update id="editJiuchushezhi" parameterType="pd">
+		update  tb_store 
+		set
+ 			<if test="jichushezhi != null and jichushezhi != ''">jichushezhi = #{jichushezhi},</if>
+      		store_id=store_id
+		where
+			store_id=#{store_id}	
+	</update>
+		
+		
+		
+ 	<!-- pc端商家信息修改刘耀耀2016.07.17   -->
+	<update id="editStore" parameterType="pd">
+		update  tb_store_file
+		set
+			<if test="address != null and address != ''">address=#{address},</if>
+  			store_storey=#{store_storey},
+			management_projects_desc=#{management_projects_desc},
+			notice_information=#{notice_information},
+			<if test="business_licenses_image_one != null and business_licenses_image_one != ''">business_licenses_image_one = #{business_licenses_image_one},</if>
+ 			<if test="business_licenses_image_two != null and business_licenses_image_two != ''">business_licenses_image_two = #{business_licenses_image_two},</if>
+ 			<if test="license_image_one != null and license_image_one != ''">license_image_one = #{license_image_one},</if>
+ 			<if test="license_image_two != null and license_image_two != ''">license_image_two = #{license_image_two},</if>
+ 			<if test="license_image_three != null and license_image_three != ''">license_image_three = #{license_image_three},</if>
+ 			<if test="license_image_four != null and license_image_four != ''">license_image_four = #{license_image_four},</if>
+ 			<if test="license_image_fix != null and license_image_fix != ''">license_image_fix = #{license_image_fix},</if>
+			keyword=#{keyword},
+			website_address=#{website_address},
+			store_introduce=#{store_introduce},
+			phone_bymemeber = #{phone_bymemeber},
+			store_phone = #{phone_bymemeber},
+			updatedate=now()
+		where
+			store_id=#{store_id}	
+	</update>
+	
+		
+	<update id="saveMemberScore" parameterType="Member">
+		update  TB_MEMBER
+			set 
+				now_integral = #{now_integral}
+			where 
+				member_id = #{member_id}
+	</update>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_MEMBER
+		where 
+			member_id = #{member_id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  TB_MEMBER
+			set 
+				image_url = #{image_url},
+				name = #{name},
+				phone = #{phone},
+				vip_level = #{vip_level},
+				charm_number = #{charm_number},
+				now_money = #{now_money},
+				now_integral = #{now_integral},
+			member_id = member_id
+			where 
+				member_id = #{member_id}
+	</update>
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			image_url,	
+			name,	
+			phone,	
+			vip_level,	
+			charm_number,	
+			now_money,	
+			now_integral,	
+			member_id
+		from 
+			TB_MEMBER
+		where 
+			member_id = #{member_id}
+	</select>
+	<!-- 通过StoreID获取数据 刘耀耀 2016.07.13-->
+	<select id="findByStoreId" parameterType="pd" resultType="pd">
+		select 
+			a.* ,
+			b.pictrue_url
+		from 
+			tb_store_file a  left join tb_store  b on a.store_id=b.store_id 
+		where 
+			a.store_id = #{store_id}
+	</select>
+	
+		<!-- 通过StoreID获取数据 刘耀耀 2016.07.13-->
+	<select id="findImage" parameterType="pd" resultType="pd">
+		select 
+			ifnull(address,'') address, 
+			ifnull(address1,'') address1, 
+			ifnull(explain_pic,'') explain_pic, 
+			type,
+ 			store_id
+		from 
+			tb_store_image
+		where 
+			store_id = #{store_id}
+ 	</select>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.image_url,	
+				a.sex,
+				a.wechat_number,
+				a.recommended,
+				a.recommended_type,
+				a.status,
+				a.name,	
+				a.phone,	
+				a.province_name,	
+				a.city_name,	
+				a.area_name,
+				a.money_pay_number,
+				a.wechat_pay_number,
+				a.alipay_pay_number,
+				a.bank_pay_number,
+				a.apple_pay_number,
+				a.integral_pay_number,
+				a.consumption,
+				a.vip_level,	
+				a.charm_number,	
+				a.now_money,	
+				a.now_integral,
+				a.createdate,	
+				a.member_id
+		from 
+				TB_MEMBER a 
+		where  1=1
+		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+			and
+				(
+					a.name like CONCAT(CONCAT("%",#{pd.content}),"%")
+					or
+					a.phone like CONCAT(CONCAT("%",#{pd.content}),"%")
+				)
+ 		</if>
+		<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+					and
+						(
+							a.province_name=#{pd.province_name}
+						)
+				</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市-->
+					and
+						(
+							a.city_name=#{pd.city_name}
+						)
+				</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+					and
+						(
+							a.area_name=#{pd.area_name}
+						)
+				</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.image_url,	
+				a.sex,
+				a.wechat_number,
+				a.recommended,
+				a.recommended_type,
+				a.status,
+				a.name,	
+				a.phone,	
+				a.province_name,	
+				a.city_name,	
+				a.area_name,
+				a.new_money,
+				a.wechat,
+				a.alipay,
+				a.bank,
+				a.apple_pay,
+				a.integral,
+				a.consumption,
+				a.vip_level,	
+				a.charm_number,	
+				a.now_money,	
+				a.now_integral,
+				a.createdate,	
+				a.member_id
+		from 
+				TB_MEMBER a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_MEMBER
+		where 
+			member_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过ID获取数据魏汉文20160608 -->
+	<select id="detailById" parameterType="pd" resultType="pd">
+		select 
+ 			name,	
+			phone,		
+			member_id
+		from 
+			TB_MEMBER
+		where 
+			member_id = #{member_id}
+	</select>
+
+	
+</mapper>

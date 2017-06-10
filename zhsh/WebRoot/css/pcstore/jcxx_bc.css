@@ -1,0 +1,112 @@
+@import "predefine.css";
+
+	.dask{
+			display: none;
+			width: 100%;
+			height: 100%;
+			position: fixed;
+			z-index: 3;
+		}
+		.alert_xl,
+		.alert_dl,
+		.alert_xg{
+			display: none;
+			position: fixed;
+			z-index: 10;
+			max-width: 600px;
+  			max-height: 350px;
+			min-width: 500px;
+			min-height: 300px;
+			margin: auto;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			background: #ffffff;
+			box-shadow: 0 0  20px #aaa;
+			border-radius: 13px;
+		}
+		.close{
+			background: url(../img/close.png);
+			margin: 9px 9px 0 0 ;
+			float: right;
+		  	width: 38px;
+		 	height: 38px;
+		 	cursor: pointer;
+		  	background-size: contain;
+		}
+		.alert_tit {
+  			height: 20%;
+  			line-height: normal;
+  			text-align: center;
+		}
+		 .alert_tit span {
+  			font-size: 20px;
+  			display: block;
+    		padding-top: 14px;
+    		margin-bottom: 5px;
+		}
+		.one {
+		  width: 80%;
+		  margin: 0 auto ;
+		  padding-top: 18px;
+		  border-bottom: 1px solid #d2d2d2;
+		}
+		.al_body {
+
+		 padding: 6% 20% 10% 20%;
+		}
+		.al_body li{
+			line-height: 1.6;
+			padding-top: 15px;
+		}
+		.al_body select{
+			width: 224px;
+			height: 30px;
+		}
+		.al_body input{
+			width: 220px;
+			height: 24px;
+
+		}
+
+
+
+	
+	.bc_list_box{
+		width: 80%;
+		display: block;
+		margin: 0 auto;
+	}
+	.bc_list_box li{
+		position: relative;
+		display: block;
+		width: 8%;
+		background: #117dd0;
+		color: #fff;
+		float: left;
+		margin: 15px 1%;
+		padding: 5px 15px;
+		text-align: center;
+		border-radius: 4px;
+		cursor: pointer;
+		transition: all 2s;
+	}
+	.bc_list_box .closeto{
+		width: 100%;
+		height: 100%;
+		color: #117dd0;
+		text-align: center;
+		padding: 5px 15px;
+		box-sizing: border-box;
+		border:1px solid #117dd0;
+		position: absolute;
+		transition: all 2s;
+		background: #fff;
+		top: 0;
+		left: 0;
+	}
+	.anniu-m{
+		padding:8px 18px;
+		margin: 0 18px;
+	}

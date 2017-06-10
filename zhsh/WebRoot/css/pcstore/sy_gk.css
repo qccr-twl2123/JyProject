@@ -1,0 +1,58 @@
+	body,ul,li,p,a,h1,h2,h3,h4,h5,h6{
+	  border: 0;
+	  margin: 0;
+	  padding: 0;
+	  list-style: none;
+	  text-decoration: none;
+	  font-weight: normal;
+	}
+	body,html {
+ 	  	font-family: Arial, "微软雅黑", sans-serif;
+	  	color: #333;
+	}
+
+	.col-r{
+		color: #c90000;
+	}
+	.col-o{
+		color: #ff7b11;
+	}
+	.anniu{
+		display: inline-block;
+		text-align: center;
+		color: #fff;
+		background: #1187e2;
+		padding: 2% 6.5%;
+		cursor: pointer;
+		border-radius: 2px;
+	}
+	.anniu:active{
+		background: #006ec2;
+	}
+	.viewto{
+		cursor: pointer;
+	}
+	td{
+		padding:  5px 0;
+	}
+	.biaoge{
+		display: none;
+	}
+	.biaoge td{
+		border: 1px solid #999;
+		text-align: center;
+		color: #333;
+		font-size: 0.9rem;
+		padding:7px 12px;
+	}
+	.box{
+		border: 1px solid #999;
+		padding: 5px 0 0 0 ;
+	}
+	.title{
+		color: ;
+		font-size: ;
+	}
+	.fir_tr li{
+		margin-bottom: 14px;
+	}

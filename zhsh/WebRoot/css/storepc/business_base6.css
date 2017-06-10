@@ -1,0 +1,141 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+*{
+   margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+    font-size: 15px;
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+    color: #000;
+}
+span   {
+    display: inline-block;
+}
+.hands{
+    cursor: pointer;
+}
+/*header*/
+.parent{
+    width: 100%;
+    height:100%;
+
+}
+.d1{
+    width: 100%;
+    margin-top: 20px;
+    border-bottom: 1px solid #8f8f8f;
+    height: 40px;
+}
+.d1_sp1{
+    width: 4em;
+    text-align: center;
+}
+.mgleft10{
+    margin-left: 10%;
+}
+.d1_sp1_new{
+    width: 138px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: #169ada;
+    color:#fff;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right;margin-right: 5%;
+    font-size: 14px; 
+}
+.d2{
+    width: 80%;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+.p1{
+    display: inline-block;
+    width: 50%;
+    color: #888;
+    float: left;
+}
+.p2{
+    color: #000;
+    clear: both;
+
+}
+.p1 span{
+    width: 5em;
+    font-size: 14px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #ccc;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.blue{
+    color: #fff;
+    background-color: #169ada !important;
+}
+
+.new_tc,.new_tc2{
+    width: 700px;
+    height: 350px;
+    background-color: #fff;
+    border:1px solid #888;
+    position: absolute;
+    top: 100px;
+    left: 50px;
+    border-radius: 10px;
+    display: none;
+}
+
+.new_p1{
+    width: 100%;
+    height: 40px;
+    border-bottom: 1px solid #888;
+    text-align: center;
+    line-height: 30px;
+}
+.new_sp1{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border:1px solid #888;
+    float: right;
+    margin-top: 5px;
+    margin-right: 10px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+.new_yes,.new_no{
+    display: inline-block;
+    width: 120px;
+    height: 30px;
+    border:1px solid #888;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 30px;
+    margin-left: 100px;
+    margin-top: 50px;
+    cursor: pointer;
+}
+.new_yes{
+    margin-left: 180px;
+}
+.new_ipt1{
+    margin-left: 100px;
+    margin-top: 50px;
+    width: 500px;
+    height: 40px;
+}

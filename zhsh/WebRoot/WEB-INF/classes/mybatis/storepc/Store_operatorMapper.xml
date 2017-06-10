@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Store_operatorMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into TB_STORE_OPERATOR(
+			operator_name,	
+			operator_position,	
+			operator_status,	
+			operator_phone,	
+			operator_password,	
+			sy_competence,	
+			yx_competence,	
+			hd_competence,
+			cw_competence,	
+			sp_competence,	
+  			store_shift_id,	
+			store_id,	
+			createdate,
+			store_operator_id
+		) values (
+			#{operator_name},	
+			#{operator_position},	
+			#{operator_status},	
+			#{operator_phone},	
+			#{operator_password},	
+			#{sy_competence},	
+			#{yx_competence},	
+			#{hd_competence},	
+			#{cw_competence},	
+			#{sp_competence},	
+ 			#{store_shift_id},	
+			#{store_id},	
+			now(),
+			#{store_operator_id}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from tb_store_operator
+		where 
+			store_operator_id = #{store_operator_id}
+	</delete>
+
+	
+	
+	<!-- 修改 -->
+	<update id="updateOperator" parameterType="pd">
+			update  tb_store_operator
+			set 
+				<if test="operator_status != null and operator_status != ''">
+				operator_status = #{operator_status},
+				</if>
+ 				<if test="operator_name != null and operator_name != ''">
+ 				operator_name = #{operator_name},
+ 				</if>
+ 				<if test="operator_position != null and operator_position != ''">
+ 				operator_position = #{operator_position},
+ 				</if>
+ 				<if test="operator_phone != null and operator_phone != ''">
+ 				operator_phone = #{operator_phone},
+ 				</if>
+  				<if test="operator_password != null and operator_password != ''">
+ 				operator_password = #{operator_password},
+ 				</if>
+ 				<if test="alldesk_no != null and alldesk_no != ''">
+ 				alldesk_no = #{alldesk_no},
+ 				</if>
+ 				<if test="store_shift_id != null and store_shift_id != ''">
+ 				store_shift_id = #{store_shift_id},
+ 				</if>
+ 				<if test="sy_competence != null and sy_competence != ''">
+ 				sy_competence = #{sy_competence},
+ 				</if>
+ 				<if test="yx_competence != null and yx_competence != ''">
+ 				yx_competence = #{yx_competence},
+ 				</if>
+ 				<if test="hd_competence != null and hd_competence != ''">
+ 				hd_competence = #{hd_competence},
+ 				</if>
+ 				<if test="cw_competence != null and cw_competence != ''">
+ 				cw_competence = #{cw_competence},
+ 				</if>
+ 				<if test="sp_competence != null and sp_competence != ''">
+ 				sp_competence = #{sp_competence},
+ 				</if>
+   				store_operator_id = store_operator_id
+			where 
+				store_operator_id = #{store_operator_id}
+	</update>
+	
+		
+	
+	<!-- 修改 桌号-->
+	<update id="updatealldesk_no" parameterType="pd">
+			update  tb_store_operator
+			set 
+				alldesk_no = #{alldesk_no},
+ 				store_operator_id = store_operator_id
+			where 
+				1=1
+				<if test="store_operator_id != null and store_operator_id != '' ">
+				and store_operator_id = #{store_operator_id}
+				</if>
+				
+	</update>
+		
+	<!-- 修改操作员状态 -->
+	<update id="updateOperatorStatus" parameterType="pd">
+			update  tb_store_operator
+			set 
+				<if test="operator_status != null and operator_status != ''">
+				operator_status = #{operator_status},
+				</if>
+ 				store_operator_id = store_operator_id
+			where 
+				store_operator_id = #{store_operator_id}
+	</update>
+	
+	
+	<!-- 通过ID获取密码 -->
+	<select id="findPassword" parameterType="String" resultType="String">
+		select 
+ 			ifnull(operator_password,'') as operator_password	
+ 		from 
+			tb_store_operator
+		where 
+			store_operator_id = #{store_operator_id}
+	</select>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			operator_name,	
+			operator_position,	
+			operator_status,	
+			operator_phone,	
+			operator_password,	
+			sy_competence,	
+			yx_competence,	
+			hd_competence,
+			cw_competence,	
+			sp_competence,	
+ 			store_shift_id,	
+			store_id,
+			logintime,	
+			ifnull(alldesk_no,'') alldesk_no,
+			store_operator_id
+		from 
+			tb_store_operator
+		where 
+			store_operator_id = #{store_operator_id}
+	</select>
+	
+	
+	<!-- 列表魏汉文0717 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.operator_name,	
+				a.operator_position,	
+				a.operator_status,	
+				a.operator_phone,	
+				a.operator_password,	
+				a.sy_competence,	
+				a.yx_competence,	
+				a.hd_competence,	
+				a.sp_competence,	
+				a.cw_competence,	
+ 				a.store_shift_id,	
+				a.store_id,	
+				a.logintime,
+				a.downtime,
+				a.createdate,
+				ifnull(a.alldesk_no,'') alldesk_no,
+				a.store_operator_id
+		from 
+				tb_store_operator a
+		where  
+				1=1
+				<if test="pd.operator_position != null and pd.operator_position != ''"> 
+					and  a.operator_position = #{pd.operator_position}
+ 				</if>
+				<if test="pd.operator_phone != null and pd.operator_phone != ''"> 
+					and  a.operator_phone = #{pd.operator_phone}
+ 				</if>
+				<if test="pd.operator_status != null and pd.operator_status != ''"> 
+					and a.operator_status = #{pd.operator_status}
+ 				</if>
+				<if test="pd.store_id != null and pd.store_id != ''"> 
+					and a.store_id = #{pd.store_id}
+ 				</if>
+				<if test="pd.store_operator_id != null and pd.store_operator_id != ''"> 
+					and a.store_operator_id = #{pd.store_operator_id}
+ 				</if>
+		order by  a.logintime desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.operator_name,	
+				a.operator_position,	
+				a.operator_status,	
+				a.operator_phone,	
+				a.operator_password,	
+				a.sy_competence,	
+				a.yx_competence,	
+				a.hd_competence,	
+				a.sp_competence,	
+				a.cw_competence,	
+ 				a.store_shift_id,	
+				a.store_id,	
+				a.logintime,
+				a.downtime,
+				ifnull(a.alldesk_no,'') alldesk_no,
+				a.store_operator_id
+		from 
+				tb_store_operator a
+		where 
+				1=1
+				<if test="store_id != null and store_id != ''">
+				and a.store_id=#{store_id}
+				</if>
+				<if test="login_type == '2'.toString() and store_operator_id != null and store_operator_id != ''">
+				and a.store_operator_id=#{store_operator_id}
+				</if>
+		order by a.logintime desc
+	</select>
+ 	
+ 	<select id="operatorList" parameterType="pd" resultType="pd">
+ 		select * from tb_store_operator
+ 	</select>
+ 	
+ 	<!-- 获取操作员指定班次或id -->
+	<select id="listAllOperator" parameterType="pd" resultType="pd">
+		select
+				a.store_operator_id,
+				a.operator_name,
+				ifnull(date_format(a.logintime,'%Y-%m-%d %H:%i:%s'),'') logintime,
+ 				ifnull(date_format( a.downtime,'%Y-%m-%d %H:%i:%s'),'') downtime,
+  				a.store_id,
+				ifnull(b.shift_name,'')  shift_name
+		from 
+				tb_store_operator a
+				left join tb_store_shift b on  a.store_shift_id=b.store_shift_id
+		where 
+				 a.store_id=#{store_id}
+ 				<if test="store_operator_id != null and store_operator_id != ''"><!-- 操作员 -->
+				and a.store_operator_id=#{store_operator_id}
+				</if>
+				<if test="starttime != null and starttime != ''">  and date_format(a.logintime ,'%Y-%m-%d') &gt;= #{starttime} </if>
+				<if test="endtime != null and endtime != ''"> and date_format(a.downtime ,'%Y-%m-%d') &lt;= #{endtime} </if>
+		order by a.store_operator_id desc
+ 	</select>
+	
+</mapper>

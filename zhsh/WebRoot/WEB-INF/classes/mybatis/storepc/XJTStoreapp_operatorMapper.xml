@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XJTStoreapp_operatorMapper">	
+
+
+	<!-- 查询内部人员  邢江涛 -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+			select 
+				store_operator_id,
+				ifnull(sy_competence,'0,0,0,0') as sy_competence ,
+				ifnull(yx_competence,'0,0,0,0') as yx_competence ,
+				ifnull(hd_competence,'0,0,0,0') as hd_competence ,
+				ifnull(cw_competence,'0,0,0,0') as cw_competence ,
+				ifnull(sp_competence,'0,0,0,0') as sp_competence ,
+  				ifnull(operator_name,'') as operator_name ,
+ 				ifnull(operator_position,'') as operator_position ,
+ 				ifnull(operator_phone,'') as operator_phone ,
+ 				ifnull(operator_status,'') as operator_status ,
+ 				store_id 
+			from 
+				tb_store_operator 
+			where 
+				store_id = #{store_id}
+				<if test="store_operator_id != null and store_operator_id != ''">
+				and store_operator_id=#{store_operator_id}
+				</if>
+	</select>
+	
+	
+	<!-- 删除成员 app  邢江涛-->
+	<delete id="delete" parameterType="pd">
+		delete from tb_store_operator
+		where 
+			store_operator_id = #{store_operator_id}
+	</delete>
+
+	<!-- 新增内部人员 -->
+	<insert id="save" parameterType="pd">
+		insert into tb_store_operator(
+			store_operator_id,
+			operator_name,
+			operator_position,
+			operator_status,
+			operator_phone,
+			operator_password,
+			sy_competence,
+			yx_competence,
+ 			hd_competence,
+			cw_competence,
+			sp_competence,
+			store_shift_id,
+			store_id,
+			createdate
+		)
+		values(
+			#{store_operator_id},
+			#{operator_name},
+			#{operator_position},
+			#{operator_status},
+			#{operator_phone},
+			#{operator_password},
+			#{sy_competence},
+			#{yx_competence},
+ 			#{hd_competence},
+			#{cw_competence},
+			#{sp_competence},
+			#{store_shift_id},
+			#{store_id},
+			now()
+		)
+	
+	</insert>
+
+</mapper>

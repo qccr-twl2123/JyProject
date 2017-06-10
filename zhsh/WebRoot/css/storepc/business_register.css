@@ -1,0 +1,255 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+    color: #000;
+}
+/*header*/
+.signin_header{
+    width: 94%;
+    height: 10%;
+    min-height: 122px;
+    border-bottom: 1px solid #ccc;
+    margin: 0 auto;
+}
+.signin_logo{
+    display: block;
+    float: left;
+    width: 82px;
+    height: 82px;
+    margin-top: 20px;
+}
+.signin_header_sp1{
+    display: block;
+    float: left;
+    width: 82px;
+    height: 82px;
+     margin-top: 20px;
+ }
+.signin_homepage{
+        display: block;
+    float: right;
+    width: 200px;
+    height: 40px;
+    margin-top: 50px;
+    margin-right: 4%;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+}
+.signin_homepage_sp1{
+    display: inline-block;
+    background-color: #f69b59;
+    color: #fff;
+    border:1px solid #ccc;
+    width: 5em;
+}
+/*body*/
+.signin_body{
+    width: 94%;
+    height: 60%;
+    margin: 1% auto;
+        padding-top: 2%;
+}
+.signin_body_left{
+   width: 50%;
+    height: 100%;
+    float: left;
+    background-color: #eee;
+    margin-left: 3%;
+    margin-top: -1%;
+}
+.signin_body_right{
+    width: 30%;
+    margin-left: 5%;
+     float: left;
+    font-size: 18px;
+    padding-top: 1%;
+ }
+.signin_body_right_d1{
+    width: 94%;
+    height: 15%;
+    background-color: #ff2929;
+    color: #fff;
+    border-radius: 10px;
+    margin: 0 auto;
+}
+.signin_body_right_d1 p{
+    line-height: 80px;
+    margin-left: 5%;
+}
+.red{
+    color: red;
+    font-weight: 28px;
+}
+.signin_body_left p{
+    font-size: 26px;
+    margin-left: 5%;
+}
+.mgtop10{
+    margin-top: 10%;
+}
+.mgtop3{
+    margin-top: 3%;
+}
+.item{
+    font-size: 14px;
+    text-align: center;
+    margin-top: 5%;
+}
+@media(max-width:1280px ){
+   .signin_body_right_d1 p{
+    line-height: 60px;
+    margin-left: 10%;
+}
+}
+.signin_body_right_d2{
+    width: 94%;
+    height: 10%;
+     border:1px  solid #ccc;
+     margin:3% auto;
+ }
+.signin_body_right_d2_img{
+    display: block;
+    float: left;
+    width: 11%;
+    height: 100%;
+}
+.right_ipt1{
+    width: 89%;
+    padding-left: 5%;
+    height: 100%;
+    border:none;
+}
+ 
+.right_ipt2{
+    width: 89%;
+    float: left;
+}
+ 
+.signin_body_right_d2_img2{
+    display: inline-block;
+    width: 35%;
+    float: right;
+    margin-top: -13.9%;
+    margin-right: 2.9%;
+    background-color: #f69b59;
+    height: 9.9%;
+    text-align: center;
+     line-height: 60px;
+    border: 1px solid #ccc;
+    border-left: none;
+    cursor: pointer;
+}
+.signin_body_right_d2_img2 input{
+	 color: #ffffff;
+ }
+.signin_body_right_d2_img2:HOVER{
+	 color: red;;
+}
+.d2_text{
+    line-height: 50px;
+    cursor: pointer;
+    border:none;
+    font-size: 14px;
+}
+.d2_ipt{
+    cursor: pointer;
+}
+.d2_sp1{
+    display: inline-block;
+    float: right;
+    margin-right: 10%;
+}
+.signin{
+    border:none;
+    background-color: #ff2929;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    line-height: 50px;
+}
+@media(max-width:1280px ){
+   .signin{
+    border:none;
+    background-color: #ff2929;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    line-height: 40px;
+}
+    .signin_body_right_d2_img2{
+    display: inline-block;
+    width: 35%;
+    float: right;
+    margin-top: -11.8%;
+    margin-right: 10%;
+    background-color: #f69b59;
+    height: 10.2%;
+    text-align: center;
+    color: #fff;
+    line-height: 40px;
+    border:1px solid #ccc;
+    border-left: none;
+    cursor: pointer;
+}
+}
+
+/*footer*/
+.signin_footer{
+    width: 94%;
+    height: 15%;
+     min-height: 100px;
+    margin:1% auto;
+}
+.footer_d1{
+    width: 100%;
+    background-color: #eee;
+    height: 100px;
+    text-align: center;
+}
+.footer_d1 span {
+    display: inline-block;
+    font-size: 18px;
+    width: 16%;
+    text-align: center;
+    line-height: 100px;
+}
+.footer_d2{
+    width: 100%;
+    height: 40px;
+    text-align: center;
+    font-size: 14px;
+    color: #0f0f0f;
+}
+@media(max-width:1280px ){
+  .footer_d1{
+    width: 60%;
+    margin-left: 20%;
+    height: 70px;
+
+}
+.footer_d1 span {
+    display: inline-block;
+    font-size: 18px;
+    width: 24%;
+    text-align: center;
+    line-height: 70px;
+
+}
+}

@@ -1,0 +1,131 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+    font-size: 15px;
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+    color: #000;
+}
+.hands{
+    cursor: pointer;
+}
+/*header*/
+.parent{
+    width: 100%;
+    height:100%;
+
+}
+.d1{
+    width: 100%;
+    border-bottom: 1px solid #8f8f8f;
+}
+.d1_sp1{
+    display: inline-block;
+    font-size: 20px;
+    width: 8em;
+    height: 2em;
+    text-align: center;
+    line-height: 2em;
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-left: 10%;
+}
+span{
+    display: inline-block;
+}
+.d1_p1_sp1{
+    width: 4em;
+    text-align: center;
+    margin-top: 20px;
+}
+.d1_p1_ipt1{
+    width: 120px;
+    height: 30px;
+}
+.d2{
+    width: 90%;
+    margin-left: 2%;
+}
+.d2_ss{
+    display: inline-block;
+    width: 90px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+    margin-left: 20px;
+    background-color:#169ada;
+    color: #fff;
+    border-radius: 3px;
+}
+table{
+    width: 80%;
+    margin-left: 2%;
+    text-align: center;
+     border-right: 1px solid #8f8f8f;
+    border-bottom: 1px solid #8f8f8f;
+    background-color: #fff;
+    margin-top: 30px;
+}
+ table td{
+    height: 50px;
+    border-left: 1px solid #8f8f8f;
+    border-top: 1px solid #8f8f8f;
+}
+table td span{
+    display: inline-block;
+    width: 40%;
+    text-align: center;
+}
+.d3{
+    width: 80%;
+    height: 40px;
+    line-height: 40px;
+    margin-left: 10%;
+    margin-top: 20px;
+}
+.d3 span {
+    display: inline-block;
+}
+.d3_sp1{
+    width: 5em;
+    height: 40px;
+    background-color: #c0c0c0;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    color: #fff;
+}
+.d3_sp2{
+    float: right;
+}
+.d3_sp2 select{
+    width: 80px;
+    padding-left: 2%;
+}
+.d3_sp2_1{
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.white{
+    color: #eee;
+}
+.new_p1{
+    width: 5em;
+    text-align: center;
+    height: 30px;
+    margin-left: 10px;
+}

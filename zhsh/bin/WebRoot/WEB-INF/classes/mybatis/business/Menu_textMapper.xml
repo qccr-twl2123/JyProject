@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Menu_textMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into TB_MENU_TEXT(
+			NAME,	
+			TYPE,	
+			POSITION,	
+			TEXT 
+		) values (
+			#{name},	
+			#{type},	
+			#{position},	
+			#{text} 
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_MENU_TEXT
+		where 
+			MENU_TEXT_ID = #{menu_text_id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  TB_MENU_TEXT
+			set 
+				name = #{name},
+				type = #{type},
+				position = #{position},
+				text = #{text},
+				MENU_TEXT_ID = menu_text_id
+			where 
+				MENU_TEXT_ID = #{menu_text_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			name,	
+			type,	
+			position,	
+			text,	
+			menu_text_id
+		from 
+			TB_MENU_TEXT
+		where 
+			MENU_TEXT_ID = #{menu_text_id}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.name,	
+				a.type,	
+				a.position,	
+				a.text,	
+				a.menu_text_id
+		from 
+				TB_MENU_TEXT a
+		where  1=1
+		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+			and
+				(
+					 
+				)
+		</if>
+		
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.name,	
+				a.type,	
+				a.position,	
+				a.text,	
+				a.menu_text_id
+		from 
+				TB_MENU_TEXT a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_MENU_TEXT
+		where 
+			MENU_TEXT_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过类型获取数据魏汉文20160623 -->
+	<select id="findByType" parameterType="pd" resultType="pd">
+		select 
+				name,	
+	  			text,
+	  			type 
+		from 
+				tb_menu_text
+		where 
+				type = #{type}
+	</select>
+	
+</mapper>

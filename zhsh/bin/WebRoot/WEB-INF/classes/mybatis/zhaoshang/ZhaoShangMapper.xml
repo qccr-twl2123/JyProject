@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ZhaoShangMapper">
+	
+	<!-- 新增-->
+	<insert id="saveCompay" parameterType="pd">
+		insert into tb_zhaoshang(
+			company_type,
+			company_name,
+			company_contacts,
+			company_position,
+			company_phone,
+			company_mailbox,
+			province_id,
+			city_id,
+			area_id,
+			apple_time   
+		) values (
+			#{company_type},
+			#{company_name},
+			#{company_contacts},
+			#{company_position},
+			#{company_phone},
+			#{company_mailbox},
+			#{province_id},
+			#{city_id},
+			#{area_id},
+			now()
+		)
+	</insert>
+	
+	<delete id="deleteCompay" parameterType="pd">
+		delete from tb_zhaoshang
+		where zhaoshang_id=#{zhaoshang_id}
+	</delete>
+    
+    <update id="editCompay" parameterType="pd">
+    	update tb_zhaoshang
+    	set 
+    		zhaoshang_id=zhaoshang_id
+    	where zhaoshang_id=#{zhaoshang_id}
+    </update>
+	
+	<!-- 获取详情,所有的数据-->
+	<select id="findByIdCompay" parameterType="pd" resultType="pd">
+		select 
+				a.zhaoshang_id,
+			 	a.company_type,
+				a.company_name,
+				a.company_contacts,
+				a.company_position,
+				a.company_phone,
+				a.company_mailbox,
+				a.province_id,
+				a.city_id,
+				a.area_id,
+  			 	date_format(a.apple_time,	'%Y-%m-%d %H:%i:%s') as apple_time 
+		from 
+				tb_zhaoshang a 
+ 		where 
+				a.company_type = #{company_type}
+				and a.company_name = #{company_name}
+				and a.company_contacts = #{company_contacts}
+				and a.company_position = #{company_position}
+				and a.company_phone = #{company_phone}
+				and a.company_mailbox = #{company_mailbox}
+				and a.province_id = #{province_id}
+				and a.city_id = #{city_id}
+				and a.area_id = #{area_id}
+  	</select>
+	
+	
+	<!-- 分页列表　　-->
+	<select id="datalistPageCompay" parameterType="page" resultType="pd">
+		select 
+			 	a.zhaoshang_id,
+			 	a.company_type,
+				a.company_name,
+				a.company_contacts,
+				a.company_position,
+				a.company_phone,
+				a.company_mailbox,
+				a.province_id,
+				a.city_id,
+				a.area_id,
+  				date_format(a.apple_time,	'%Y-%m-%d %H:%i:%s') as apple_time , 
+  			  	b.`name` as province_name,
+				c.`name` as city_name,
+				d.`name` as area_name
+ 		from 
+				tb_zhaoshang a
+				left join tb_pcd b on a.province_id=b.pcd_id
+				left join tb_pcd c on a.city_id=c.pcd_id
+				left join tb_pcd d on a.area_id=d.pcd_id
+  		where 
+				1=1
+				<if test="pd.content != null and pd.content != ''"> 
+				and  (
+					　a.company_name like concat(concat("%",#{pd.content}),"%")
+				     or
+				     　　a.company_phone like concat(concat("%",#{pd.content}),"%") 
+				     or
+				     　　a.company_contacts like concat(concat("%",#{pd.content}),"%") 
+				     or
+				     　　a.company_mailbox like concat(concat("%",#{pd.content}),"%")
+				     )
+  				</if>
+  				<if test="pd.province_id != null and pd.province_id!= ''">
+  					and a.province_id=#{pd.province_id}
+  				</if>
+  				<if test="pd.city_id != null and pd.city_id != ''">
+  					and a.city_id=#{pd.city_id}
+  				</if>
+  				<if test="pd.area_id != null and pd.area_id != ''">
+  					and a.area_id=#{pd.area_id}
+  				</if>
+  				<if test="pd.company_type != null and pd.company_type != ''">
+  					and a.company_type=#{pd.company_type}
+  				</if>
+  		order by a.apple_time desc
+ 	</select>
+	 
+	<!-- 所有的-->
+	<select id="listAllCompay" parameterType="pd" resultType="pd">
+		select 
+			 	a.zhaoshang_id,
+			 	a.company_type,
+				a.company_name,
+				a.company_contacts,
+				a.company_position,
+				a.company_phone,
+				a.company_mailbox,
+				a.province_id,
+				a.city_id,
+				a.area_id,
+  				date_format(a.apple_time,	'%Y-%m-%d %H:%i:%s') as apple_time , 
+  			  	b.`name` as province_name,
+				c.`name` as city_name,
+				d.`name` as area_name
+ 		from 
+				tb_zhaoshang a
+				left join tb_pcd b on a.province_id=b.pcd_id
+				left join tb_pcd c on a.city_id=c.pcd_id
+				left join tb_pcd d on a.area_id=d.pcd_id
+		where 
+				1=1
+				<if test=" province_id != null and  province_id!= ''">
+  					and a.province_id=#{ province_id}
+  				</if>
+  				<if test=" city_id != null and  city_id != ''">
+  					and a.city_id=#{ city_id}
+  				</if>
+  				<if test=" area_id != null and  area_id != ''">
+  					and a.area_id=#{ area_id}
+  				</if>
+  				<if test=" company_type != null and  company_type != ''">
+  					and a.company_type=#{ company_type}
+  				</if>
+	</select>
+	 
+</mapper>

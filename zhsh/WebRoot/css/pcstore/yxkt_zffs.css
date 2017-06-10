@@ -1,0 +1,35 @@
+@import "predefine.css";
+
+	.title{
+		background: #1187e2;
+		line-height: 2.5;
+		color: #fff;
+		padding-left: 18px;
+		clear:both;
+	}
+	.check_item{
+		width: 41%;
+		float: left;
+		line-height:5;
+	}
+	.clfa input{
+		width: 18px;
+		height: 18px;
+	}
+	.list_cont{
+		width: 100%;
+	}
+	.list_cont li{
+		margin-left: 1px;
+	}
+	.content{
+		border-top:2px solid #1187e2;
+		padding: 38px 0 0 38px;
+	}
+	.list{
+		display: none;
+	}
+	.content input{
+	
+
+	}

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="XJTShopCarMapper" >
+
+	<!-- 新增购物车-->
+	<insert id="saveShop" parameterType="pd">
+		insert into tb_shopcart(
+			shopcart_id,	
+			goods_type,	
+			member_id,	
+			store_id,	
+			goods_id,	
+			goods_name,	
+			sale_money,	
+			goods_number,
+			createdate
+		) values (
+			#{shopcart_id},	
+			#{goods_type},	
+			#{member_id},	
+			#{store_id},	
+			#{goods_id},			
+			#{goods_name},			
+			#{sale_money},			
+			#{goods_number},			
+ 			now()
+		)
+	</insert>
+	
+	<!-- 更新购物车数量-->
+	<update id="updateshop" parameterType="pd" >
+		update tb_shopcart
+		set
+			<if test="goods_number != null and goods_number != ''">
+			goods_number=#{goods_number},
+			createdate=now(),<!-- 刷新时间 -->
+			</if>
+			shopcart_id=shopcart_id
+		where 
+			1=1
+			<if test="shopcart_id != null and shopcart_id != ''">
+			and shopcart_id=#{shopcart_id}
+			</if>
+			<if test="goods_id != null and goods_id != ''">
+			and goods_id=#{goods_id}
+			</if>
+			<if test="member_id != null and member_id != ''">
+			and member_id=#{member_id}
+			</if>
+ 	</update>
+ 	
+ 	<!-- 按照id清空购物车 -->
+	<delete id="delShop" parameterType="pd">
+		delete from tb_shopcart  
+		where 
+			1=1
+			<choose>
+				<when test="shopcart_id != null and shopcart_id != ''">and  shopcart_id = #{shopcart_id}</when>
+				<otherwise> 
+						<if test="member_id != null and member_id != ''">
+						and  member_id = #{member_id} 
+						</if>
+						<if test="goods_id != null and goods_id != ''">
+						and  goods_id=#{goods_id}
+						</if>
+				</otherwise>
+			</choose>
+	</delete>
+
+	 
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from tb_shopcart
+		where 
+			shopcart_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+ 	
+ 	<!-- 通过购物车的ID获取商家 -->
+ 	<select id="getStoreIdByToPay" parameterType="String" resultType="pd">
+	 	select 
+	 			distinct
+	 			store_id
+	 	from 
+	 			tb_shopcart
+	 	where 
+				shopcart_id in
+				<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+		                 #{item}
+				</foreach>
+  	</select>
+  	
+  	 <!-- 通过会员ID获取购物车商家 -->
+ 	<select id="getShopStoreIdByMember" parameterType="pd" resultType="pd">
+	 	select 
+	 			distinct
+	 			a.store_id,
+	 			s.store_name,
+ 				s.pictrue_url
+	 	from 
+	 			tb_shopcart a 
+	 			left join tb_store s on a.store_id=s.store_id 
+	 	where 
+				a.member_id=#{member_id}
+		order by a.createdate desc
+  	</select>
+ 	
+ 	
+ 	
+ 	<!-- 获取最近的一个购物车东西时间  -->
+	<select id="getproximityBuyTime" parameterType="pd" resultType="pd">
+		select 
+			 date_format(a.createdate,	'%Y-%m-%d %H:%i:%s') as createdate ,
+			 unix_timestamp(a.createdate)*1000 as starttimestamp
+ 		from 
+			tb_shopcart a 
+ 		where 
+			a.member_id = #{member_id}
+			<if test="goods_type !=null and goods_type != '' ">
+			and goods_type=#{goods_type}
+			</if>
+		order by a.createdate desc
+		limit 1
+	</select>
+	
+	
+	<!-- 我的购物车 -->
+	<select id="MyShopCarList" parameterType="pd" resultType="pd">
+		select 
+   			a.shopcart_id,
+  			a.store_id,
+ 			a.member_id,
+ 			a.goods_type,
+ 			a.goods_name,
+ 			a.goods_number,
+ 			a.sale_money, 
+ 			a.goods_id,
+ 			s.store_name,
+ 			s.pictrue_url,
+   			ifnull(b.gg_imageurl,'') gg_imageurl,
+   			ifnull(b.gg_miaosu,'0') gg_miaosu,
+ 			ifnull(c.th_address,'') th_address,
+ 			ifnull(c.goods_jfrate,'0') goods_jfrate,
+ 			ifnull(c.gf_salemoney,'0') gf_salemoney,
+ 			ifnull(c.goods_dw,'件') goods_dw,
+ 			ifnull(c.brand_name,'') brand_name
+  		from 
+			tb_shopcart a 
+			left join tb_store s on a.store_id=s.store_id 
+   			left join tb_youxuangg b on a.goods_id=b.youxuangg_id
+ 			left join tb_youxuangoods c on b.youxuangoods_id=c.youxuangoods_id
+   		where 
+			a.member_id = #{member_id}
+			<if test="store_id !=null and store_id != '' ">
+			and a.store_id=#{store_id}
+			</if>
+			<if test="goods_type !=null and goods_type != '' ">
+			and a.goods_type=#{goods_type}
+				<if test="goods_type=='2'.toString() and youxuangoods_id != null and youxuangoods_id != ''">
+					and b.youxuangoods_id=#{youxuangoods_id} 
+				</if>
+ 			</if>
+ 	</select>
+	
+	
+	<!-- 统计我的购物车的总价值 -->
+	<select id="SumMyShopCarListById" parameterType="pd" resultType="String">
+		select 
+		    cast(sum(a.goods_number*a.sale_money) as as decimal(10,2)) as allmoney
+  		from 
+			tb_shopcart a 
+			<if test="goods_type != null and goods_type=='1'.toString()">
+ 			left join tb_goods b on a.goods_id=b.goods_id
+ 			</if>
+ 			<if test="goods_type != null and goods_type=='2'.toString()">
+ 			left join tb_youxuangg b on a.goods_id=b.youxuangg_id
+  			</if>
+ 		where 
+			a.member_id = #{member_id}
+			<if test="store_id !=null and store_id != '' ">
+			and store_id=b.store_id
+			</if>
+			<if test="goods_type !=null and goods_type != '' ">
+			and goods_type=#{goods_type}
+				<if test="goods_type=='2'.toString()">
+					and b.youxuangoods_id=#{youxuangoods_id} 
+				</if>
+ 			</if>
+ 	</select>
+	
+	
+	
+	
+	<!-- 我的购物车(全部) -->
+	<select id="shopCarList" parameterType="pd" resultType="pd">
+		select 
+			a.shopcart_id,
+  			a.store_id,
+ 			a.member_id,
+ 			a.goods_type,
+ 			a.goods_name,
+  			ifnull(a.goods_number,'0') as goods_number,
+ 			ifnull(a.sale_money,'0') as sale_money,
+ 			a.goods_id
+		from 
+			tb_shopcart a 
+ 		where 
+			a.member_id = #{member_id}
+			<if test="store_id !=null and store_id != '' ">
+			and a.store_id=#{store_id}
+			</if>
+			<if test="goods_type !=null and goods_type != '' ">
+			and a.goods_type=#{goods_type}
+			</if>
+	</select>
+	
+	<!-- 我的购物车详情 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+				a.shopcart_id,
+ 	  			a.store_id,
+	 			a.member_id,
+	 			a.goods_type,
+	 			a.goods_name,
+	 			ifnull(a.goods_number,'0') as goods_number,
+ 				ifnull(a.sale_money,'0') as sale_money,
+  	 			ifnull(c.goods_jfrate,'0') as goods_jfrate,
+  	 			ifnull(c.gf_salemoney,'0') as gf_salemoney,
+ 	 			a.goods_id
+		from 
+				tb_shopcart a 
+ 	 			left join tb_youxuangg b on a.goods_id=b.youxuangg_id
+	 			left join tb_youxuangoods c on b.youxuangoods_id=c.youxuangoods_id
+  		where 
+				1=1
+				<choose>
+					<when test="shopcart_id != null and shopcart_id != ''">and a.shopcart_id = #{shopcart_id}</when>
+					<otherwise> 
+ 						and a.goods_id=#{goods_id}
+ 						and a.member_id=#{member_id}
+ 					</otherwise>
+				</choose>
+		limit 1
+   	</select>
+	
+	
+	<!-- 我的购物车数量 -->
+	<select id="shopCarCount" parameterType="pd" resultType="String">
+		select  count(*)
+		from tb_shopcart a 
+ 		where a.member_id = #{member_id}
+	</select>
+	
+	<!-- 商品id -->
+	<select id="goodsList" parameterType="pd" resultType="pd">
+		select a.*
+		from tb_goods a 
+		where a.store_id = #{store_id}
+	</select>
+	
+	<!-- 会员的购物车列表 -->
+	<select id="forMemberShopCart" parameterType="pd" resultType="pd">
+		select 
+  			a.member_id,
+ 			a.goods_type 
+   		from 
+			tb_shopcart a 
+ 		group by a.member_id,a.goods_type
+ 	</select>
+  
+</mapper>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="App_advertMapper">
+
+	<!-- 新增-->
+	<insert id="lastsaveAdvert" parameterType="pd">
+		insert into tb_app_advert(
+ 			  city_file_id ,
+			  advert_type,
+       		  app_advert_name
+		) values (
+			  #{city_file_id},
+			  '1',
+        	  '首页'
+		);
+	</insert>
+	
+
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into tb_app_advert(
+			ranking,	
+			image_name,	
+			image_url,	
+			hyperlink_type,	
+			hyperlink_url,	
+			starttime,	
+			endtime,	
+			advert_type,	
+			ifimage,
+			title,
+			app_advert_id
+		) values (
+			#{ranking},	
+			#{image_name},	
+			#{image_url},	
+			#{hyperlink_type},	
+			#{hyperlink_url},	
+			#{starttime},	
+			#{endtime},	
+			#{advert_type},	
+			#{ifimage},
+			#{title},
+			#{app_advert_id}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_APP_ADVERT
+		where 
+			APP_ADVERT_ID = #{app_advert_id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+			update  tb_app_advert
+			set 
+					ranking = #{ranking},
+					<if test="image_url != null and image_url != '' ">
+					image_name = #{image_name},
+					image_url = #{image_url},
+					</if>
+					<if test="hyperlink_url != null and hyperlink_url != '' ">
+					hyperlink_url = #{hyperlink_url},
+					</if>
+					<if test="hyperlink_type != null and hyperlink_type != '' ">
+					hyperlink_type = #{hyperlink_type},
+					</if>
+					<if test="starttime != null and starttime != '' ">
+					starttime = #{starttime},
+					</if>
+					<if test="endtime != null and endtime != '' ">
+					endtime = #{endtime},
+					</if>
+					<if test="title != null and title != '' ">
+					title = #{title},
+					</if>
+  					app_advert_id = app_advert_id
+			where 
+				app_advert_id = #{app_advert_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			ranking,	
+			image_name,	
+			title,
+			image_url,	
+			hyperlink_type,	
+			hyperlink_url,	
+			starttime,	
+			endtime,	
+			advert_type,	
+			app_advert_id,
+			app_advert_name
+		from 
+			TB_APP_ADVERT
+		where 
+			app_advert_id = #{app_advert_id}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.ranking,	
+				a.image_name,	
+				a.title,	
+				a.image_url,	
+				a.hyperlink_type,	
+				a.hyperlink_url,	
+				a.starttime,	
+				a.endtime,	
+				a.advert_type,	
+				a.app_advert_id,
+				a.app_advert_name,
+				a.ifimage,
+				a.city_file_id
+		from 
+				tb_app_advert a
+		where  
+				1=1
+				<if test=" pd.city_file_id != null and pd.city_file_id != '' ">
+					and a.city_file_id=#{pd.city_file_id}
+				</if>
+		order by advert_type 
+	</select>
+	
+ 	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.ranking,	
+				a.image_name,
+				a.title,	
+				a.image_url,	
+				a.hyperlink_type,	
+				a.hyperlink_url,	
+				a.starttime,	
+				a.endtime,	
+				a.advert_type,	
+				a.app_advert_name,
+				a.app_advert_id
+		from 
+				tb_app_advert a
+		order by ranking desc
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_APP_ADVERT
+		where 
+			APP_ADVERT_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+		<!-- 列表魏汉文20160623 -->
+	<select id="listAllAdvert" parameterType="pd" resultType="pd">
+		select
+				ifnull(a.ranking,"" ) ranking,	
+				ifnull(a.image_url,"" ) image_url,	
+				ifnull(a.title,"" ) title,	
+				ifnull(a.hyperlink_type,"1" ) hyperlink_type,	
+				ifnull(a.hyperlink_url,"#" ) hyperlink_url,	
+				a.app_advert_id
+		from 
+				tb_app_advert a
+		where
+				a.advert_type=#{advert_type}
+				<if test=" city_file_id != null and city_file_id != '' ">
+				and a.city_file_id=#{city_file_id}
+				</if>  
+				and to_days(now()) &gt;= to_days(a.starttime) 
+                and to_days(now()) &lt;= to_days(a.endtime) 
+		order by ranking 
+	</select>
+	
+</mapper>

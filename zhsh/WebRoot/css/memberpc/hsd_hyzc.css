@@ -1,0 +1,257 @@
+/*初始化*/
+html,body,h1,h2,h3,h4,h5,h6,p{
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+body{
+  font-family: Arial, "微软雅黑", sans-serif;
+}
+ul,li{
+  list-style: none;
+}
+a{
+  text-decoration: none;
+}
+a:hover{
+  text-decoration: underline;
+}
+img{
+  border: 0;
+  line-height: 0;
+  margin: 0;
+}
+
+header .head_cont {
+  width: 1200px;
+  margin: 10px auto;
+  color: #666;
+  font-family: "黑体"
+}
+header .head_cont img {
+  width: 88px;
+  height: 88px;
+  float: left;
+  margin-right: 15px;
+}
+header .head_cont div {
+  width: 400px;
+  height: 88px;
+  line-height: 88px;
+  font-size: 32px;
+}
+@media screen and (max-width: 1200px) {
+  header .head_cont {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  header .head_cont {
+    width: 700px;
+  }
+}
+section {
+  height: 530px;
+  background-color: #c3edf9;
+  width: 100%;
+}
+section .cont {
+  margin: 0 auto;
+  width: 1200px;
+  height: 530px;
+  background: url("../../img/load_1.png") no-repeat 20px 30px;
+  background-size: auto;
+  transition: width 2s;
+}
+.cont .denglu {
+  margin-top: 30px;
+  width: 35%;
+  background: rgba(255,255,255,0.9);
+  border-radius: 18px;
+  padding: 24px 30px;
+  float: right;
+  transition: all 2s;
+}
+.cont .denglu h6 {
+  color: #f00;
+  font-weight: normal;
+  font-size: 18px;
+}
+.denglu h6 a{
+  color: #888;
+  float: right;
+  font-size: 14px
+}
+.denglu ul{
+  padding-left: 10px;
+
+}
+.denglu li{
+  display: inline-block;
+  width: 100%;
+  height: 54px;
+}
+.denglu ul li select{
+width: 67%;
+height: 42px;
+  padding-left: 5px;
+ background: rgba(0,0,0,0);
+ color: #aaa;
+ border: 1px solid #888;
+}
+select option{
+  font-size: 16px;
+}
+.inp{
+  height: 38px;
+  width: 67%;
+  background: rgba(0,0,0,0);
+  border: 1px solid #888;
+    padding-left: 5px;
+    font-size: 14px;
+}
+.denglu  a{
+  font-size: 12px;
+  color: #1ca4ea;
+}
+.denglu li span{
+  display: inline-block;
+  font-size: 16px;
+  line-height: 60px;
+  width: 30%;
+  color: #888;
+  text-align: justify;
+  text-align-last:justify
+}
+
+.yzminp{
+  width: 31%;
+  height: 38px;
+  background: rgba(0,0,0,0);
+  border: 1px solid #888;
+  padding-left: 5px;
+}
+.yzmimg{
+    height: 38px;
+    width: 30%;
+    border: 1px solid #aaa;
+    line-height: 60px;
+    float: right;
+    margin-top: 12px;
+    text-align: center;
+    margin-right: 1%;
+    cursor: pointer;
+}
+.denglu ul li .huoqu{
+  font-size: 12px;
+  width: 30%;
+  float: right;
+  display: inline-block;
+  padding: 10px 0;
+  background: orange;
+  border-radius: 2px;
+  cursor: pointer;
+  color: #fff;
+   margin-top: 10px;
+    text-align: center;
+    margin-right: 1%;
+  text-align: center;
+}
+.huoqu:hover{
+  text-decoration: none;
+}
+.huoqu:active{
+  box-shadow: 1px 1px 1px #aaa;
+}
+.zhuce{
+  width: 85%;
+  margin: 8px  auto;
+  padding: 3%;
+  background: orange;
+  text-align: center;
+  display: block;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.zhuce:active{
+  box-shadow: 2px 2px 2px #aaa;
+
+}
+.fonts{
+  width: 16px;
+  height: 16px;
+}
+
+
+
+section .cont .denglu .button {
+  float: left;
+  height: 50px;
+  background: #15acf2;
+  width: 100%;
+  border-radius: 5px;
+  margin-top: 22px;
+  color: #ffffff;
+  text-align: center;
+  line-height: 50px;
+}
+section .cont .denglu .button:hover {
+  cursor: pointer;
+}
+section .cont .denglu .button:active {
+  box-shadow: 2px 2px 0px #aaa;
+}
+@media screen and (max-width: 1200px) {
+  section .cont .denglu {
+    width: 40%;
+
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  section .cont {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  section .cont {
+    width: 700px;
+  }
+}
+footer .footcont {
+  width: 1200px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+footer .footcont ul {
+  display: block;
+  width: 720px;
+  margin: 20px auto;
+}
+footer .footcont ul li {
+  float: left;
+  padding-top: 10px;
+  line-height: 30px;
+  padding-bottom: 10px;
+}
+footer .footcont ul li a {
+  font-size: 14px;
+  line-height: 1;
+  color: #000;
+  display: block;
+  width: 142px;
+  text-align: center;
+  border-left: 1px solid #666;
+}
+footer .footcont ul li a:hover {
+  color: #15acf2;
+}
+footer .footcont ul li .noborder {
+  border-left: 0;
+}
+footer .beian {
+  text-align: center;
+  font-size: 12px;
+  color: #666666;
+}

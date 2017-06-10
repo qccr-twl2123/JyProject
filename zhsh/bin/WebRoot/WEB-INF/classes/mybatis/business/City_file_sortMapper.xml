@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="City_file_sortMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into TB_CITY_FILE_SORT(
+			CITY_FILE_SORT_ID,	
+			SORT_NAME,	
+			SORT_IMAGEURL,	
+			SORT_PARENT_ID,	
+			OPEN_STATUS,	
+			SEQUENCE,	
+			CITY_FILE_ID,	
+			SORT_TYPE,	
+			CREATEDATE 
+		) values (
+			#{city_file_sort_id},	
+			#{sort_name},	
+			#{sort_imageurl},	
+			#{sort_parent_id},	
+			#{open_status},	
+			#{sequence},	
+			#{city_file_id},	
+			#{sort_type},	
+			now() 
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_CITY_FILE_SORT
+		where 
+			CITY_FILE_SORT_ID = #{city_file_sort_id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  TB_CITY_FILE_SORT
+			set 
+				<if test=" city_file_sort_id != null and city_file_sort_id != ''">city_file_sort_id = #{city_file_sort_id},</if>
+				<if test=" sort_name != null and sort_name != ''">sort_name = #{sort_name},</if>
+				<if test=" sort_imageurl != null and sort_imageurl  != ''">sort_imageurl = #{sort_imageurl},</if>
+				<if test=" sort_parent_id != null and sort_parent_id != ''">sort_parent_id = #{sort_parent_id},</if>
+				<if test=" open_status != null and open_status != ''">open_status = #{open_status},</if>
+				<if test=" sequence != null and sequence != ''">sequence = #{sequence},</if>
+				<if test=" city_file_id != null and city_file_id != ''">city_file_id = #{city_file_id},</if>
+				<if test=" sort_type != null and sort_type != ''">sort_type = #{sort_type},</if>
+  				city_file_sort_id = city_file_sort_id
+			where 
+				CITY_FILE_SORT_ID = #{city_file_sort_id}
+	</update>
+
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			city_file_sort_id,	
+			sort_name,	
+			sort_imageurl,	
+			sort_parent_id,	
+			open_status,	
+			sequence,	
+			city_file_id,	
+			sort_type,
+			onexing_money,
+			twoxing_money,	
+			threexing_money,
+			createdate,	
+			city_file_sort_id
+		from 
+			tb_city_file_sort
+		where 
+			1=1
+			<if test="city_file_sort_id != null and city_file_sort_id != ''">
+			and city_file_sort_id=#{city_file_sort_id}
+			</if>
+			<if test="city_file_id != null and city_file_id != ''">
+			and city_file_id=#{city_file_id}
+			</if>
+			<if test="sort_parent_id != null and sort_parent_id != ''">
+			and sort_parent_id=#{sort_parent_id}
+			</if>
+			<if test="sort_type != null and sort_type != ''">
+			and sort_type=#{sort_type}
+			</if>
+		limit 1
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.city_file_sort_id,	
+				a.sort_name,	
+				a.sort_imageurl,	
+				a.sort_parent_id,	
+				a.open_status,	
+				a.sequence,	
+				a.city_file_id,	
+				a.sort_type,	
+				a.createdate,	
+				a.CITY_FILE_SORT_ID
+		from 
+				TB_CITY_FILE_SORT a
+		where  1=1
+		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+			and
+				(
+					 
+				)
+		</if>
+		
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+ 				a.sort_name,	
+				a.sort_imageurl,	
+				a.sort_parent_id,	
+				a.open_status,	
+				a.sequence,	
+				a.city_file_id,	
+				a.sort_type,	
+				a.onexing_money,
+				a.twoxing_money,	
+				a.threexing_money,
+				a.ismoreng,
+				a.city_file_sort_id
+		from 
+				tb_city_file_sort a
+		where 
+				1=1
+				<if test="city_file_id  != null and city_file_id != ''"><!-- 城市档案ID -->
+				and city_file_id=#{city_file_id}
+				</if>
+				<if test="sort_parent_id != null and sort_parent_id != ''"><!-- 一级分类ID -->
+				and a.sort_parent_id=#{sort_parent_id}
+				</if>
+				<if test="sort_type != null and sort_type != ''"><!-- 分类类型：1级或是2级 -->
+				and a.sort_type=#{sort_type}
+				</if>
+				<if test="ismoreng != null and ismoreng != ''"><!-- 是否为默认收费分类 -->
+				and a.ismoreng=#{ismoreng}
+				</if>
+		order by a.sequence desc
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_CITY_FILE_SORT
+		where 
+			CITY_FILE_SORT_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+
+	<!-- 修改星级的费用魏汉文 -->
+	<update id="setMoRengXingFee" parameterType="pd">
+		update  tb_city_file_sort
+			set 
+				<if test=" onexing_money != null and onexing_money != ''">onexing_money = #{onexing_money},</if>
+				<if test=" twoxing_money != null and twoxing_money != ''">twoxing_money = #{twoxing_money},</if>
+				<if test=" threexing_money != null and threexing_money != ''">threexing_money = #{threexing_money},</if>
+				<if test=" ismoreng != null and ismoreng != ''">ismoreng = #{ismoreng},</if>
+				city_file_sort_id = city_file_sort_id
+ 			where 
+				city_file_id = #{city_file_id}
+				<if test="city_file_sort_id != null and city_file_sort_id != ''">
+				and city_file_sort_id =#{city_file_sort_id}
+				</if>
+	</update>
+	
+</mapper>

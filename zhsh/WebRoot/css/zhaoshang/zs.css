@@ -1,0 +1,254 @@
+ html, body {
+        position: relative;
+        height: 100%;
+        min-height: 480px;
+    }
+    body{
+        color:#000;
+        margin: 0;
+        padding: 0;
+    }
+    h6{
+        white-space:nowrap; 
+        margin: 0;
+        padding: 0;
+        line-height: 165%;
+    }
+    .swiper-container {
+        width: 100%;
+        height: 100%;
+    }
+    .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+    }
+    .dask{
+        display: none;
+        position: fixed;
+        width:100%;
+        height:100%;
+        z-index: 2;
+        background: rgba(0,0,0,0.39);
+    }
+
+    .alert{
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        width: 70%;
+        height:27%;
+        background: rgba(255,255,255,1);
+        text-align: center;
+        z-index: 3;
+        color: #000;
+    }
+    .alert h4{
+        font-size: 20px;
+    }
+    .alert .button{
+        float: right;
+        padding: 15% 5%;
+    }
+    .tit1,.tit2,.button1,.button2{
+        display: none;
+    }
+        .image4{
+            width: 100%;
+            height:100%;
+            background: url(../../img/bg1.png) repeat;
+    }
+ /*页面4*/
+ .cont{
+     width: 85%;
+     height: 70%;
+     background: rgba(190,190,190,0.65);
+     position: absolute;
+     z-index: 1;
+     left: 7%;
+     top: 15%;
+     margin: auto;
+     border: 4px solid #fff;
+ }
+ .title4{
+     width: 50%;
+     position: absolute;
+     left: -27%;
+     top: -18%;
+     animation:title4 2s;
+
+
+     /* Safari and Chrome */
+     -webkit-animation:title4 2s;
+
+ }
+.title5{
+    width: 50%;
+    position: absolute;
+    right: -27%;
+    bottom: -18%;
+     animation:title5 2s ;
+     animation-direction:alternate;
+     -webkit-animation:title5 2s ;
+     -webkit-animation-direction:alternate;
+ }
+ @keyframes title5
+ {
+     0%   {right: -100%;bottom: -100%}
+     100% {right: -27%;bottom: -18%;}
+ }
+
+ @-webkit-keyframes title5 /* Safari and Chrome */
+ {
+     0%   {right: -100%;bottom: -100%}
+     100% {right: -27%;bottom: -18%;}
+ }
+  @keyframes title4
+ {
+     0%   {left: -100%;top:-100%;}
+     100% {left: -27%;top: -18%;}
+ }
+
+ @-webkit-keyframes title4 /* Safari and Chrome */
+ {
+     0%   {left: -100%;top:-100%;}
+     100% {left: -27%;top: -18%;}
+ }
+ .cont .name{
+     width: 30%;
+     height:20px;
+     float: left;
+ }
+ .cont .name h6{
+    text-align: right;
+    width: 100%
+ }
+ .cont .name h6 span{
+     color: #d20000;
+ }
+ .cont .form_cont{
+     width: 100%;
+     height:80%;
+     font-size: 12px;
+     -webkit-font-size: 12px;
+     -ms-font-size: 12px;
+     text-align: left;
+     float: right;
+ }
+ .cont .form_cont .qylx{
+     width: 100%;
+     height: 30%;
+     text-align: right;
+     margin: 0;
+ }
+ .cont .form_cont .qylx .text{
+    padding-left: 10px;
+     width: 30%;
+     text-align: left;
+ }
+  .cont .form_cont .qylx .text input{
+   margin-top: 0;
+
+  }
+  .inp{
+    width: 90%;
+    margin: 0 auto;
+  }
+  .inp h6{
+    float: left;
+    text-align: right;
+    width: 32%;
+    line-height: 182%;
+  }
+    .inp h6 span{
+        color: #d20000;
+    }
+
+ .tit{
+     height:18.5%;
+ }
+ .tit .img_tit{
+     width: 80%;
+     margin-top: 5%;
+ }
+ .dlqy .mg0{
+    text-align: left;
+    height: 4%;
+     margin: 0;
+ }
+ .inp .inf{
+    margin: 0;
+    margin-top: 2px;
+    float: left;
+    width: 65%;
+    text-align: left;
+    line-height: 100%;
+
+        height: 26px;
+
+ }
+ .inp{
+    padding-top: 0.2%;
+    padding-bottom: 3%;
+    display: inline-block;
+ }
+
+ @media screen and (min-width: 700px){
+     .dlqy .mg0{
+         text-align: left;
+         margin: 5% 0 5% 0;
+     }
+     .cont .name{
+       line-height: 80%;
+     }
+ }
+
+ .dlqy select{
+     padding:0;
+ }
+ 
+ .butt{
+     position: absolute;
+     width:40% ;
+     left: 33%;
+    bottom: 6%;
+ }
+ @media screen and (height:480px){
+.butt {
+    position: absolute;
+    bottom: 2%;
+}
+ }
+    @media screen and (max-height:570px){
+.inp{
+   
+    padding-bottom: 0%;
+ }
+ .inp .inf{
+    height: 23px;
+ }
+ }
+   @media screen and (max-height:500px){
+.inp{
+   
+    padding-bottom: 0%;
+ }
+ .inp .inf{
+    height: 18px;
+ }
+ }

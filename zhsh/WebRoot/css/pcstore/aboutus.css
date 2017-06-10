@@ -1,0 +1,159 @@
+/*初始化*/
+		html,body,h1,h2,h3,h4,h5,h6,p{
+			margin: 0;
+			border: 0;
+			padding: 0;
+			font-weight: normal;
+		}
+		body,html{
+			height: 100%;
+		}
+		body{
+			font-family: Arial, "微软雅黑", sans-serif;
+			overflow-y:hidden;
+		}
+		ul,li{
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+		img{
+			border: 0;
+			line-height: 0;
+			margin: 0;
+			width: 100%;
+		}
+	.swiper-container {
+        width: 100%;
+
+        height: 100%;
+    }
+	.view1-bg{
+		width: 100%;
+		height: 100%;
+		background:#fce4e4;
+	}
+	.view2-bg{
+		width: 100%;
+		height: 100%;
+		background: #e4fcf2;
+	}
+	.view3-bg{
+		width: 100%;
+		height: 100%;
+		background: #fcf2e4;
+	}
+	.view4-bg{
+		width: 100%;
+		height: 100%;
+		background:#c9ebfa;
+	}
+	.cont{
+		width: 1200px;
+		height: 100%;
+		margin: 0 auto;
+		background: #fff;
+		box-shadow: 0 0 16px #666;
+		padding-top: 72px;
+	}
+	.cont img{
+			width: 80%;
+			display: block;
+			margin: 20px auto 0 auto;
+			
+	}
+	.text{
+		color: #414141;
+		font-size: 20px;
+		line-height: 2;
+		padding: 0 60px;
+		position: relative;
+	}
+	.cont .next{
+		width: 30px;
+		height: 30px;
+		text-align: center;
+		position: absolute;
+		bottom: -45px;
+		left: 49%;
+		transition:all 0.2s;
+		animation:mymove 3s infinite;
+	}
+
+		@keyframes mymove
+		{
+		0%   {opacity: 0;transform:rotateY(0deg);}
+		100% {opacity: 1;transform:rotateY(360deg);}
+		}
+	.text h4{
+		line-height: 46px;
+		font-weight: normal;
+		color: #b22b2b;
+		padding-top: 18px;
+	}
+
+	.cont  .img2_w{
+		width: 41%;
+		}
+
+	.last-cont{
+		width: 1200px;
+		height: 100%;
+		margin: 0 auto;
+		background: #fff;
+		box-shadow: 0 0 16px #666;
+		font-size: 20px
+	}
+	.last-cont img{
+		width: 60%;
+		display: block;
+		margin:0 auto;
+	}
+
+	@media screen and (max-width: 1500px){
+		.last-cont img{
+		width: 50%;	
+		}
+	.text{
+			font-size: 16px;
+			line-height: 1.6;
+		}
+		.cont{
+			padding-top: 30px;
+		}
+		.text h4{
+			padding-top: 12px;
+		}
+
+	}
+	.last-cont .lxfs{
+			width: 85%;
+		padding-top: 2%;
+	}
+	@media screen and (max-width: 1500px){
+		.last-cont .lxfs{
+			width: 70%;
+			padding: 0;
+	}
+	
+	}
+	
+	@media screen and (max-width: 1550px){
+		.last-cont img{
+		width: 50%;	
+		}
+	.text{
+			font-size: 16px;
+			line-height: 1.6;
+		}
+		.cont{
+			padding-top: 30px;
+		}
+		.text h4{
+			padding-top: 12px;
+		}
+		.last-cont .lxfs{
+			width: 70%;
+			padding: 0;
+		}
+	}

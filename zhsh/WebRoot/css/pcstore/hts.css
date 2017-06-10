@@ -1,0 +1,44 @@
+/*初始化*/
+html,body,h1,h2,h3,h4,h5,h6,p{
+	border: 0;
+	padding: 0;
+}
+body{
+	font-family: Arial, "微软雅黑", sans-serif;
+}
+ul,li{
+	list-style: none;
+}
+a{
+	text-decoration: none;
+}
+a:hover{
+	text-decoration: underline;
+}
+img{
+	border: 0;
+	line-height: 0;
+	margin: 0;
+}
+
+/*body背景*/
+body{
+	width: 100%;
+	background: url(../../img/htsbj.jpg);
+	background-size: cover;
+}
+/*内容*/
+.cont{
+	width: 100%;
+
+	background-image: url(../../img/xybj_02.jpg);
+	margin: 0 auto;
+	width: 83.6666%;
+}
+.cont img{
+	width: 100%;
+	vertical-align:bottom;
+	display: block;
+	margin: 0 auto;
+}
+

@@ -1,0 +1,225 @@
+html,body{
+    margin:0;
+    padding:0;
+    border:0;
+    height:100%;
+    width: 100%;
+    box-sizing: border-box;
+    font-family:"微软雅黑",Arial,serif;
+}
+html{ /*字体优化*/
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+}
+ul,li,p,h1,h2,h3,h4,h5,h6{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-weight: normal;
+    color: #333;
+}
+i{
+    font-style: normal;
+}
+b{
+    font-weight: normal;
+}
+*{
+    border-radius: 2px;
+}
+a{
+    color: #333;
+    text-decoration: none;
+    border: 0;
+}
+input{
+    outline: 0;
+}
+textarea{
+    resize: none;
+}
+.innerwidth{
+    width: 1200px;
+    margin: 0 auto;
+}
+.flr{
+   float: right;
+}
+.fll{
+    float: left;
+}
+.fs85{
+    font-size: 85%;
+}
+.fs100{
+    font-size:100%;
+}
+.fs120{
+    font-size: 120%;
+}
+.lh0{
+    line-height: 0;
+}
+.lh1{
+    line-height: 1;
+}
+.lh1_2{
+    line-height: 1.2;
+}
+.lh2{
+    line-height: 2;
+}
+.clf:after{     /*清除浮动*/
+    content: "";
+    display: block;
+    clear: both;
+    line-height: 0;
+    font-size: 0;
+    overflow: hidden;
+}
+.clf:before{
+    content: "";
+    display: block;
+    clear: both ;
+    line-height: 0;
+    font-size: 0;
+    overflow: hidden;
+}
+.ccyc{   /*超出部分隐藏  显示省略号*/
+    display: block;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.arrow_down {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #8f8f8f;
+    display: inline-block;
+}
+.arrow_up {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 0;
+    border-bottom: 8px solid #8f8f8f;
+    display: inline-block;
+}
+.arrow_left{
+    transform: scaleY(2.5);
+}
+
+.bb1{
+    border-bottom:1px solid #aaa;
+}
+.b1{
+    border:1px solid #c2c2c2;
+}
+.col_a{
+    color: #aaaaaa;
+}
+.col_e9{
+    color: #e90000;
+}
+.col_f{
+    color: #fff;
+}
+.col_42b1fd{
+    color: #42b1fd;
+}
+.bg_e9{
+    background: #e90000;
+}
+.bg_orange{
+    background: #fa9427;
+}
+.bg_a{
+    background: #aaaaaa;
+}
+.mg_b_4{
+    margin-bottom: 4px;
+}
+.mg_b_8{
+    margin-bottom: 8px;
+}
+.mg_b_12{
+    margin-bottom: 12px;
+}
+.mg_r_8{
+    margin-right: 8px;
+}
+.pd_lr_4{
+    padding:0 4px;
+}
+.pd_lr_8{
+    padding:0 8px;
+}
+.pd_15{
+    padding: 15px;
+}
+.cp{
+    cursor: pointer;
+}
+.fwb{
+    font-weight: bold;
+}
+.tac{
+    text-align: center;
+}
+.tal{
+    text-align: left;
+}
+.tar{
+    text-align: right;
+}
+.qr_button{
+    cursor: pointer;
+    padding:8px 16px;
+    background: #e90000;
+    color: #fff;
+    text-align: center;
+}
+.qx_button{
+    cursor: pointer;
+    padding:8px 16px;
+    background: rgb(102,102,102);
+    color: #fff;
+    text-align: center;
+}
+.yz_button{
+    cursor: pointer;
+    padding:4px 16px;
+    background: #fa9427;
+    color: #fff;
+    text-align: center;
+}
+.cclhxs{
+    /*超出两行显示...*/
+    word-break: break-all;
+    text-overflow: ellipsis;
+    display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
+    -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+    -webkit-line-clamp: 2; /** 显示的行数 **/
+    overflow: hidden;  /** 隐藏超出的内容 **/
+}
+.style_scroll::-webkit-scrollbar
+{
+    width: 8px;
+    height: 8px;
+    background-color: #ffffff;
+}
+.style_scroll::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: #ffffff;
+}
+.style_scroll::-webkit-scrollbar-thumb
+{
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #aaaaaa;
+}

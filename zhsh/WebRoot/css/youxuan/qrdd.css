@@ -1,0 +1,237 @@
+/*初始化*/
+		html,body,h1,h2,h3,h4,h5,h6,p,img,ul,li{
+			margin: 0;
+			border: 0;
+			padding: 0;
+		}
+		body,html{
+			height: 100%;
+		}
+		body{
+			font-family: Arial, 微软雅黑, sans-serif;
+			overflow-y:hidden;
+		}
+		ul,li{
+			list-style: none;
+		}
+		a{
+			text-decoration: none;
+			color: #000;
+		}
+		body{
+			background: #f5f5f5;
+		}
+
+
+		/*头部*/
+		header{
+			height: 44px;
+			width: 100%;
+			background: #fc111b;
+			line-height: 44px;
+			color: #fff;
+			position: fixed;
+			top: 0;
+			z-index: 2;
+		}
+		.goback{
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 44px;
+			text-align: center;line-height: 44px;
+			font-size: 3.5rem;
+		}
+		.title{
+			width: 100%;
+			text-align: center;
+			color: #fff;
+
+		}
+		.djs {
+		  	height: 44px;
+		  	text-align: center;
+
+		}
+		.djs h6{
+			font-weight: normal;
+			line-height: 44px;
+			font-size: 1.6rem;
+
+		}
+
+
+		/*商家*/
+		.shopping{
+			padding-top: 44px;
+			height: 82%;
+			overflow-y:scroll;
+			background: #f5f5f5;
+
+		}
+		  .dd_sj{
+		  	width: 100%;
+		  	border-top: 1px solid #e2e2e2;
+		  	border-bottom: 1px solid #e2e2e2;
+		  	margin-bottom: 0.7rem;
+		  }
+		  .sj_head{
+			width: 100%;
+
+			background: #fff;
+			overflow: hidden;
+			border-bottom: 1px solid #ccc;
+		  }
+		  .sj_head img{
+		  	width: 6rem;
+		  	height: 6rem;
+		  	display: block;
+		  	float: left;
+		  	padding: 0.8rem;
+
+		  }
+		  .sj_head span{
+		  	display: block;
+		  	float: left;
+		  	line-height: 6rem;
+		  	font-size: 1.5rem;
+		  }
+
+/*商品	*/
+		.sj_sp{
+			width: 100%;
+			padding: 1rem 0 1rem 0;
+			border-bottom: 1px solid #ccc;
+			position: relative;
+		}
+		.sj_sp img{
+			width: 11rem;
+			height: 9rem;
+			padding: 0 1rem;
+			display: inline-block;
+		}
+		.cont{
+			height: 100%;
+			width: 60%;
+			display: inline-block;
+		}
+		.cont p:nth-child(1){
+			font-size: 1.7rem;
+			width: 100%;
+			height: 4.4rem;
+			overflow:hidden; 
+			text-overflow:ellipsis;
+			display:-webkit-box; 
+			-webkit-box-orient:vertical;
+			-webkit-line-clamp:2; 
+			    word-break: break-all;
+		}
+		.cont p:nth-child(2){
+			font-size: 1.5rem;
+			color: #686868;
+			line-height: 2.4;
+		}
+		.sp_jg{
+			padding-top: 0.6rem;
+		
+		}
+		.sp_jg span:nth-child(1){
+			color: #fc3b1d;
+			font-size: 1.8rem;
+		}
+		.sp_jg span:nth-child(2){
+			text-decoration: line-through;
+			font-size: 1.4rem;
+		}
+		.sp_jg span:nth-child(3){
+			float: right;
+		}
+		.sj_num{
+			font-size: 2rem;
+			position: absolute;
+			right: 1rem;
+			bottom: 3rem;
+		}
+		.address{
+			padding-left: 0.8rem;
+			font-size: 1.6rem;
+			padding-top: 0.2rem;
+		}
+		.change{
+			float: right;
+			color: #999;
+		}
+		.down,.up{
+			padding: 0 0.4rem;
+			border: 1px solid #999;
+			background: #eee;
+			text-align: center;
+
+		}
+		.down{
+			padding: 0 0.56rem;
+		}
+		.num{
+			padding: 0 0.4rem;
+			color: #000;
+		}
+		.sj_jf,.sj_ysje,.sj_xj,.sp_num,.sj_hm{
+			width: 100%;
+			padding: 0 1rem;
+			border-bottom: 1px solid #ccc;
+			line-height: 3;
+			background-color: #fff;
+			font-size: 1.6rem;
+		}
+		.jf_num,.ys_money{
+			float: right;
+		}
+		.sj_xj{
+			text-align: right;
+		}
+		.sj_xj span:nth-child(1){
+			font-size: 1.4rem;
+		}
+		.sj_xj span:nth-child(2){
+			font-size: 1.4rem;
+		}
+		.sj_hm{
+			text-align: right;
+		}
+		.sj_hm span:nth-child(1){
+			font-size: 1.6rem;
+		}
+		.sj_hm span:nth-child(2){
+			font-size: 1.6rem;
+		}
+
+		  footer{
+			border-top: 1px solid #ccc;
+			position: fixed;
+			width: 100%;
+			height:5rem;
+			background: #fff;
+			bottom: 0;
+			line-height: 5rem;
+			padding-left: 1rem;
+			font-size: 1.7rem;
+		}
+		.foot_tj{
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			display: block;
+			height: 5rem;
+			width: 9rem;
+			background: #fc0d1b;
+			color: #fff;
+			text-align: center;
+			line-height: 5rem;
+		}
+		.zongjia{
+			color: #fc3b1d;
+		}
+		.text{
+			position: absolute;
+			right: 15rem;
+		}

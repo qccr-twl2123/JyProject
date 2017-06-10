@@ -1,0 +1,13 @@
+@import "predefine.css";
+
+	textarea{
+		resize:none;
+	}
+	.zhizhao{
+		padding: 20px 0 0 0;
+	}
+	.zhizhao img{
+		width: 29%;
+		display: inline-block;
+		margin: 0 2% 18px 2%;
+	}

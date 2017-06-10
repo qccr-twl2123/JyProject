@@ -1,0 +1,513 @@
+body,select {
+    background:#ededed ;
+    transition: scrolltop 2s;
+    font: 12px Arial, "微软雅黑", sans-serif;
+}
+/*轮播*/
+.shaixuanItem_box{
+    width:100%;
+    padding-bottom:20px;
+    background: #fff;
+}
+.swiper-container_1,.swiper-container_2{
+    margin-bottom:8px;
+}
+.shaixuanItem_box span{
+    width:25%;
+    box-sizing:border-box;
+    text-align:center;
+}
+.shaixuanItem_box span img{
+    width:60%;
+    display:inline;
+    padding:8% 20% 0% 20%;
+}
+.lunbo_box{
+    width:100%;
+    text-align:center;
+}
+.lunbo_box a{
+    width:100%;
+    height:100px;
+}
+.lunbo_box img{
+    width:100%;
+}
+.swiper-container .swiper-pagination{
+    bottom:5px;
+}
+.swiper-pagination_2 .swiper-pagination-bullet-active{
+    background: #fff;
+}
+/*定位*/
+.local_box{
+    width:100%;
+    height:40px;
+    background:#ff0600;
+    box-sizing:border-box;
+    position: relative;
+    color: #fff;
+    line-height: 40px;
+}
+.local_cont_box{
+    width:60%;
+    height:100%;
+    margin:0 auto;
+    text-align: center;
+}
+.local_cont_box img{
+    height: 20px;
+    padding: 10px 0;
+}
+.local_cont_box span{
+    vertical-align: top;
+    line-height: 40px;
+    font-size: 100%;
+}
+
+.add_to_list{
+    display: none;
+    background: rgba(0,0,0,0.8);
+    width: 50%;
+    position: absolute;
+    color: #fff;
+    font-size: 87.5%;
+    line-height: 2.4;
+    z-index: 9;
+    border-radius: 5px;
+    right:0;
+    text-align: center;
+}
+.add_to_list a{
+    display: inline-block;
+    width: 90%;
+    line-height: 3.7;
+    color: #fff;
+    border-bottom: 1px solid #ddd;
+    margin: 0 5%;
+}
+.add_to_list a:last-child{
+    border-bottom:0;
+}
+.add_to_list .arrow_up{
+    position: absolute;
+    top:-8px;
+    right: 15px;
+    border-bottom: 8px solid rgba(0,0,0,0.8);
+}
+.add_to{
+    font-size: 160%;
+}
+.icon_right{
+    height:40px;
+    float: right;
+    font-size: 130%;
+    position: absolute;
+    right: 0;
+    top:0;
+    vertical-align: top;
+    line-height: 40px;
+    padding: 0 3.6%;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+.icon_right img{
+    height:20px;
+    margin: 0 4px;
+}
+
+.icon_left{
+    font-size: 100%;
+    position: absolute;
+    left: 0;
+    top:0;
+    vertical-align: top;
+    line-height: 40px;
+    padding: 0 3.6%;
+    font-weight: bold;
+}
+.changelocal{
+    position: fixed;
+    top: 0;
+    z-index: 8;
+    overflow-y: scroll;
+    background: #fff;
+    width: 100%;
+    height:100%;
+}
+.local_l{
+    height:100%;
+    font-weight: normal;
+}
+/*切换*/
+.qieHuan{
+    box-sizing: border-box;
+    background: #fff;
+    padding: 0 5%;
+    color: #333;
+    line-height:50px ;
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+.font_qh{
+    padding: 0 5px;
+}
+.xianQu{
+    width: 100%;
+    background: #fff;
+    min-height:400px;
+    padding:15px;
+    box-sizing: border-box;
+}
+.xianQu span{
+    border:1px solid #ccc;
+    background: #eee;
+    padding:8px 10px;
+    margin:0px 4px 10px 4px;;
+    float: left;
+}
+/*搜索不带按钮*/
+/*<div class="search_box">
+    <div class="inputbox">
+        <input type="text" maxlength="10">
+    </div>
+  </div>*/
+.search_box{
+    width: 100%;
+    height: 50px;
+    box-sizing: border-box;
+    padding: 2% 3%;
+    position: relative;
+}
+.search_box .inputbox{
+    width:100%;
+    height:100%;
+    border-radius: 5px;
+    background: #fff;
+    overflow: hidden;
+    display: inline-block;
+}
+.search_box input{
+    border:0;
+    outline: 0;
+    height:100%;
+    width: 100%;
+    padding-left: 36px;
+    display: block;
+    box-sizing: border-box;
+    background: url(https://www.jiuyuvip.com/zhsh/images/serch_03.png) no-repeat 5px 40%;
+    background-size: 20px 20px;
+    line-height: 35px;
+}
+.search_box a{
+    display: none;
+}
+
+/*<div class="search_box-2">*/
+    /*<div class="inputbox-2">*/
+        /*<input type="text" maxlength="10">*/
+    /*</div>*/
+    /*<span class="btn_search-2">搜索</span>*/
+/*</div>*/
+/*搜索带按钮移动span位置*/
+.search_box-2{
+    width: 100%;
+    height: 50px;
+    box-sizing: border-box;
+    padding: 2% 3%;
+    position: relative;
+    background: #eeeeee;
+}
+.search_box-2 .inputbox-2{
+    width:82%;
+    height:100%;
+    border-radius: 5px;
+    background: #fff;
+    overflow: hidden;
+    display: inline-block;
+}
+.btn_search-2{
+    float: right;
+    display: inline-block;
+    height:71%;
+    background: #fff;
+    color: #ff0600;
+    margin:  0 1% ;
+    padding: 1.7% 2.8%;
+    border-radius: 5px;
+    vertical-align: top;
+}
+.search_box-2 input{
+    border:0;
+    outline: 0;
+    height:100%;
+    width: 100%;
+    padding-left: 36px;
+    display: block;
+    box-sizing: border-box;
+    background: url(https://www.jiuyuvip.com/zhsh/images/serch_03.png) no-repeat 5px 40%  ;
+    background-size: 20px 20px;
+    line-height: 50px;
+}
+
+/*城市列表*/
+.cityList{
+    position: relative;
+    width: 100%;
+    border-top: 1px solid #aaaaaa;
+}
+.cityList_item{
+    width: 95%;
+    float: left;
+}
+.cityList_item>ul{
+    width: 90%;
+    line-height: 2;
+    padding: 0 5%;
+    background: #fff;
+}
+.cityList_item>ul li{
+    border-bottom: 1px solid #cccccc;
+    margin-bottom: 5px;
+    padding-left: 20px;
+}
+.charSearch{
+    width: 14px;
+    border-radius: 7px;
+    background: rgba(200,200,200,0.6);
+    position: absolute;
+    z-index:3;
+    right: 0;
+    top:0;
+    padding: 10px 0;
+}
+.charSearch li{
+    display: block;
+    width:14px;
+    text-align: center;
+    line-height:1.5;
+    color: #fff;
+    font-size: 84.5%;
+}
+/*商家*/
+.shangjia{
+    width: 100%;
+    padding:0.55rem;
+    background: #fff;
+    margin-bottom: 0.5rem;
+    box-sizing: border-box;
+    position: relative;
+}
+.hongbao{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width:0;
+    height:0;
+    border-width:1.4rem;
+    border-style:solid;
+    border-color:transparent #e90000  #e90000  transparent;
+}
+.hongbao span{
+    position: absolute;
+    left: -0.4rem;
+    top:0.4rem;
+    word-break: normal;
+    display: block;
+    width: 26px;
+    color: #fff;
+    font-size: 12px;
+    transform: rotateZ(315deg);
+    line-height: 0;
+}
+.sj_jcxx{
+    position: relative;
+    width: 100%;
+    height: 6rem;
+    box-sizing: border-box;
+}
+.img_box{
+    position: absolute;
+    width: 6rem;
+    height: 6rem;
+}
+.sj_tit{
+    font-weight: bold;
+    font-size: 1.05rem;
+ }
+.sj_danshu{
+    float: right;
+    color: #999;
+}
+.sj_jcxx .img_box img{
+    width:100%;
+    height:100%;
+}
+.sj_inf{
+    width: 68%;
+    margin-left: 6.6rem;
+    height: 3.6rem;
+    box-sizing: border-box;
+    border-bottom: 1px dashed #ccc;
+}
+.zs_jf{
+    width: 5rem;
+    text-align: center;
+    position: relative;
+    color: #ff0600;
+    line-height: 1.4;
+    font-size: 0.8rem;
+    top: 0.4rem;
+}
+.sj_youhui{
+    position: relative;
+}
+.sj_jf_inf{
+    min-height: 1.7rem;
+    width: 68%;
+    margin-left: 6rem;
+    box-sizing: border-box;
+    position: absolute;
+    padding-left: 0.6rem;
+    top: -2rem;
+}
+.sj_list{
+    position: relative;
+}
+/*最后一个元素底部*/
+/*.sj_list li:last-child{*/
+    /*margin-bottom: 0;*/
+/*}*/
+
+.jian,.zhe,.zeng,.shi,.gou,.song,.ji{
+    background: #fa7e3e;
+    color: #fff;
+    width: 2.1rem;
+    height: 1.1rem;
+    line-height:1.1rem;
+    text-align: center;
+    display: inline-block;
+    border-radius: 0.2rem;
+    margin:5px 5px 0;
+}
+.zhe{
+    background: #7aba3f;
+}
+.zeng{
+    background: #ffb400
+}
+.gou{
+    background: #56abe4
+}
+.song{
+    background: #ff0096
+}
+.shi{
+    background: #c852ff
+}
+.ji{
+    background: #C51C2C
+}
+.sj_jf_inf li{
+    line-height: 2;
+    display: block;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    font-size: 80%;
+
+}
+.loc_num{
+    position: absolute;
+    font-size: 80%;
+    right:0%;
+    top:0;
+    line-height: 2;
+}   
+.load{
+    overflow: hidden;
+    transition: height 1s;
+    width:100%;
+    text-align: center;
+    background: #fff;
+}
+.load img{
+    height:30px;
+    padding:10px 0;
+}
+.little_arr{
+    transition: all 500ms;
+    transform:rotate(-90deg);
+    display: none;
+    position: absolute;
+    left: -4px;
+    top: 0.6rem;
+}
+.footerdi{
+    position: fixed;
+    bottom: 0;
+    z-index: 10;
+    width: 100%;
+    border-top: 1px solid #b3b3b3;
+    padding:5px 0;
+    background: #fff;
+}
+.footerdi ul li{
+    float: left;
+    width: 25%;
+}
+.footerdi ul li a{
+    color: #8e8e8e;
+    text-align: center;
+    display: block;
+}
+.footerdi a i{
+    display: block;
+    background: url(../../img/f_set.png);
+    background-size: 28px auto;
+    margin: 0 auto;
+}
+.footerdi li.f_whole i{
+    width: 30px;
+    height: 25px;
+    background-position: 0 -25px;
+    position: relative;
+    top: 1px;
+}
+.footerdi li.f_jiexiao i{
+    width: 22px;
+    height: 25px;
+    background-position: 0 -76px;
+    position: relative;
+    top: 1px;
+}
+.footerdi li.f_car i{
+    width: 22px;
+    height: 25px;
+    background-position: 0 -126px;
+    position: relative;
+    top: 1px;
+
+}
+.footerdi li.f_personal i{
+    width: 22px;
+    height: 25px;
+    background-position: 0 -175px;
+    position: relative;
+    top: 1px;
+    font-size: 12px;
+}
+.footerdi .f_whole i.cur{
+    background-position: 0 0 !important
+}
+.footerdi .f_jiexiao i.cur{
+    background-position: 0 -50px !important
+}
+.footerdi .f_car i.cur{
+    background-position:0 -102px !important
+}
+
+.footerdi .f_personal i.cur{
+    background-position:0 -151px !important
+}

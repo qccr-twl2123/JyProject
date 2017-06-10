@@ -1,0 +1,174 @@
+/*初始化*/
+		html,body,h1,h2,h3,h4,h5,h6,p{
+			margin: 0;
+			border: 0;
+			padding: 0;
+		}
+		body,html{
+			height: 100%;
+			font-size: 1.3rem;
+		}
+		body{
+			font-family: Arial, "微软雅黑", sans-serif;
+			overflow-y:scroll;
+		}
+		ul,li{
+			list-style: none;
+		}
+		img{
+			border: 0;
+			line-height: 0;
+			margin: 0;
+			width: 100%;
+		}
+
+		.view{
+			border-top: 1px solid #f43308;
+			width: 100%;
+			height: 750px;
+			background: url(../../img/zc-bg.png) no-repeat;
+			background-size: 100% 100%;
+		}
+		.input-view{
+			border-radius: 4px;
+			height: 49%;
+			background: url(../../img/view-bg.png) no-repeat;
+			background-size: 100% 100%;
+			width: 93%;
+			margin: 0 auto;
+			margin-top: 40%;
+			padding: 7.7% 15.5% 7.1% 15.5%;
+		}
+		.input-box{
+			height: 81.22%;
+			margin-left: 2%;
+			width: 96%;
+			padding-left: 15%;
+		}
+		.input-box input{
+			display: block;
+			font-size: 1.4rem;
+			height: 14.3%;
+			margin-bottom: 7%;
+			float: left;
+			border: 0;
+			background: rgba(0,0,0,0);
+			padding-left: 0.1rem;
+		}
+		input:focus{
+			outline: none;
+		}
+		.input-box img{
+			width: 48%;
+			margin-left: 2%;
+			height: 14.9%;
+			float: left;
+			display: block;
+			margin-bottom: 8.5%;
+			border-radius: 2px;
+			
+		}
+		.btn-huoqu{
+			width: 48%;
+			height: 14.1%;
+			margin-left: 2%;
+			float: left;
+			margin-bottom: 6.2%;
+			background: #BFBCB8;
+			text-align: center;
+			line-height: 2.8;
+			color: #fff;
+			border-radius: 2px;
+			font-size: 1.4rem;
+
+		}
+		.input-box input:nth-child(1),.input-box input:nth-child(7){
+			width: 100%;
+
+		}
+		.input-box select:nth-child(2){
+			width: 100%;
+			display: inline-block;
+			height: 14.2%;
+			border: 0;
+			font-size: 1.4rem;
+			margin-bottom: 7%;
+			float: left;
+			background: rgba(0,0,0,0);
+			padding-left: 0.1rem;
+		}
+		select:focus{
+			outline: none;
+		}
+		.input-box input:nth-child(3),.input-box input:nth-child(5){
+			width: 50%;
+
+		}
+		.btn-zhuce{
+			    width: 100%;
+			    float: left;
+			    background: #BFBCB8;
+			    border-radius: 4px;
+			    line-height: 2.8;
+			    text-align: center;
+			    color: #fff;
+			    /* box-shadow: 0 0.1rem #BFBCB8; */
+			    font-size: 1.4rem;
+		}
+		@media screen and (max-height:550px){
+			.input-view{
+				margin-top: 100%;
+			}
+			.input-box img{
+				margin-top: 1;
+			}
+			.input-box input{
+				margin-bottom: 6.8%;
+			}
+		}
+		@media screen and (max-height:600px){
+			.input-view{
+				margin-top: 76%;
+			}
+			.input-box img{
+				    margin-bottom: 9.8%;
+			}
+			.input-box input{
+				margin-bottom: 9.2%;
+			}
+		}
+
+		@media screen and (min-height:610px){
+			.input-view{
+				margin-top: 66%;
+			}
+/*			.input-box img{
+				margin-top: 2.2%;
+			}*/
+			.input-box input{
+				margin-bottom: 8.5%;
+			}
+		}
+		@media screen and (min-height:650px){
+			.input-view{
+				margin-top: 67%;
+			}
+/*			.input-box img{
+				margin-top: 2%;
+			}*/
+			.input-box input{
+				margin-bottom: 8.5%;
+			}
+		}
+		@media screen and (min-height:700px){
+			.input-view{
+				margin-top: 60%;
+			}
+			.input-box img{
+				margin-top: 0.2%;
+			}
+			.input-box input{
+				margin-bottom:6.9%;
+			}
+		}
+

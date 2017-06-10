@@ -1,0 +1,163 @@
+section{
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+}
+select ,select option {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin:0;
+    border: none;
+    outline: none;
+    text-align-last: center;
+    text-align-all: center;;
+    color:#333;
+    -webkit-appearance:none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    background-color: #fff;
+}
+.sjpos{
+    position: absolute;
+    right: 2%;
+}
+.sx_click{
+    width:100%;
+    display: block;
+     position: fixed;
+      top: 40px;
+     left:0;
+    z-index: 8;
+    background: #fff;
+}
+.shangpin{
+    position: relative;
+}
+.spxx{
+    background: #fff;
+    padding: 11px;
+    margin-bottom: 9px;
+}
+.img_box{
+    box-sizing: border-box;
+    float: left;
+    position: relative;
+}
+.img_box .zhekou{
+    position: absolute;
+    width: 1.2rem;
+    height:1.2rem;
+    line-height: 1.2rem;
+    border-radius: 0.6rem;
+    background: #e90000;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #fff;
+    left:-0.5rem;
+    top:-0.5rem;
+}
+.img_box img{
+    width: 80px;
+    height:80px;
+}
+.cont_box {
+    width: 100%;
+    box-sizing: border-box;
+    float: left;
+    padding-left: 30%;
+}
+.cont_tit{
+    white-space: normal;
+    font-weight: bold;
+    max-height: 2.8rem;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
+    -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+    -webkit-line-clamp: 2; /** 显示的行数 **/
+    overflow: hidden;  /** 隐藏超出的内容 **/
+}
+.youhui{
+    font-size: 80%;
+    background: #e90000;
+    color: #fff;
+    border-radius: 2px;
+    padding: 1px;
+}
+
+.dianpu{
+    font-size: 80%;
+    background: #0000e9;
+    color: #fff;
+    border-radius: 2px;
+    padding: 1px;
+    text-align: center;
+}
+.yuanjia{
+    color: #dddddd;
+}
+.all_list_ul{
+    display: none;
+    position: relative;;
+    background: #fff
+}
+.paixu_ul{
+    position: relative;
+    background: #fff;
+    display: none;
+}
+.sx_box_list_ul{
+    display: none;
+    background: #fff;
+}
+.show_ul{
+    position: relative;
+    background: #fff;
+    display: none;
+}
+.all_list_ul li,.paixu_ul li,.show_ul li{
+    text-align: center;
+    box-sizing: border-box;
+    padding: 2% 5%;
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+}
+.all_list_ul li{
+    width: 50%;
+}
+.all_list_ul img{
+    float: right;
+}
+.all_list_ul_2{
+    position: absolute;
+    left: 50%;
+    width:50%;
+    background: #fff;
+    display:none;
+    top:0;
+}
+.all_list_ul_2 li{
+    width: 100%;
+    border-bottom: 1px solid #eee;
+    border-right: 0;
+    padding: 4.2% 5%;
+}
+
+.gotop {
+    display: none;
+    position: fixed;
+    right: 8px;
+    bottom: 70px;
+    transition: all 1s;
+    width: 30px;
+    height: 30px;
+    opacity: 0.3;
+    background-image: url(../../img/gotop.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 50%;
+    z-index: 8;
+}
+

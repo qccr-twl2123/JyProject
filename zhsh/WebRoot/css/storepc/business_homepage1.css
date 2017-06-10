@@ -1,0 +1,254 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-size: 15px;
+    font-family: '微软雅黑';
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+    color: #000;
+}
+.hands{
+    cursor: pointer;
+}
+/*header*/
+.parent{
+    width: 100%;
+    height:100%;
+
+}
+.d1{
+    width: 100%;
+    height: 68px;
+    border-bottom: 1px solid #ccc;
+    line-height: 68px;
+        margin-bottom: 15px;
+}
+.d1_sp1{
+    display: inline-block;
+    width: 15%;
+    font-size: 24px;
+    margin-left: 10%;
+}
+.d1_sp2,.d1_sp3{
+    display: inline-block;float: right;
+    width: 5em;
+    height: 2em;
+    line-height: 2em;
+    margin-right: 1%;
+    background-color: #169ada;
+    color: #fff;
+    text-align: center;
+    line-height: 2em;
+    border-radius: 3px;
+    margin-top: 1em;
+    cursor: pointer;
+    font-size: 18px;
+}
+.d1_sp3{
+    width: 10em;
+    margin-right: 5%;
+}
+.d2{
+    width: 100%;
+    margin-bottom: 2px;
+    font-size: 16px;
+}
+.d2_sp1{
+    display: inline-block;
+    text-align: center;
+    width: 8em;
+    height: 2em;
+    line-height: 2em;
+    margin-left: 100px;
+    cursor: pointer;
+}
+.d2_sp1_active{
+    background-color: #169ada;
+    color: #fff;
+}
+.d2_sp2{
+    display: inline-block;
+    width: 8em;
+    text-align: right;
+    margin-left: 7%;
+}
+.d2_sp3_youhui{
+    display: inline-block;
+     text-align: right;
+    margin-left: 7%;
+}
+.d2_sp8{
+    display: inline-block;
+    width: 8em;
+    text-align: right;
+    margin-left: 7%;
+}
+.d2_ipt1{
+    width: 124px;
+    margin-left: 20px;
+}
+.d2_sp2_2{
+    margin-left: 1%;
+}
+.red{
+    font-size: 18px;
+    color: red;
+}
+.red2{
+    color: red;
+}
+.blue{
+    color: #87a7dc;
+}
+.width{
+    color: #eee;
+}
+.d2_sp2_3{
+
+    width: 3em;
+    height: 40px;
+    margin-left: 2%;
+}
+.d2_sp3{
+    display: inline-block;
+    color: red;
+    margin-left: 2%;
+    font-size: 18px;
+    text-align: center;
+
+}
+.d2_sp4{
+    display: inline-block;
+    width: 4em;
+    text-align: center;
+    margin-left: 2%;
+    color: #87a7dc;
+
+}
+.dx{
+    width: 22px;
+    height: 22px;
+    float: left;
+}
+.yes{
+display: inline-block;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 1em;
+    width: 7em;
+    line-height: 2em;
+    background-color: #169ada;
+    cursor: pointer;
+    color: #fff;
+    margin-left: 30%;
+    border-radius: 3px;
+    margin-right: 3%;
+}
+.font14{
+    font-size: 14px;
+}
+.new_tc,.new_tc2,.new_tc3,.new_tc4{
+    width: 400px;
+    height: 300px;
+    background-color: #fff;
+    border:1px solid #888;
+    position: absolute;
+    top: 100px;
+    left: 200px;
+    border-radius: 10px;
+    display: none;
+}
+.new_tcwhw{
+    width: 400px;
+    height: 300px;
+    background-color: #fff;
+    border:1px solid #888;
+    position: absolute;
+    top: 100px;
+    left: 200px;
+    border-radius: 10px;
+    display: none;
+}
+.new_tc2{
+    width: 650px;
+     left: 50px;
+    height: 500px; 
+}
+.new_p1{
+    width: 100%;
+    height: 40px;
+    border-bottom: 1px solid #888;
+}
+.new_sp1{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border:1px solid #888;
+    float: right;
+    margin-top: 5px;
+    margin-right: 10px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+.new_p2{
+    width: 80%;
+    height: 100px;
+    margin:0 auto;
+    margin-top: 50px;
+}
+.new_ipt1{
+    width: 300px;
+    height: 40px;
+    margin-top: 5px;
+    letter-spacing: 8px;
+    font-size:24px;
+}
+.new_yes,.new_yes2,.new_yes3{
+    display: inline-block;
+    width: 120px;
+    height: 40px;
+    border:1px solid #888;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 40px;
+    margin-left: 100px;
+    margin-top: 50px;
+    cursor: pointer;
+}
+.new_tc2_p1{
+    line-height: 50px;
+    margin-left: 50px;
+}
+.new_tc2_p2{
+    line-height: 30px;
+    margin-left: 50px;
+}
+.new_tc2_p2_sp1{
+    display: inline-block;
+    width: 5em;
+    text-align: center;
+}
+.new_img{
+    display: inline-block;
+    width: 120px;
+    height: 120px;
+    margin-top: -10px;
+    margin-left: 100px;
+}
+.new_img img{
+    width: 100%;
+    height: 100%;
+}

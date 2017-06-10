@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XJTPayapp_historyMapper">
+
+	
+		
+	<!-- 收银记录魏汉文20160706-->
+	<select id="confirmedHistorylistPage" parameterType="page" resultType="pd">
+			  select 
+			  		  cast(cast((a.sale_money-a.discount_money) as decimal(10,2)) as char)  money,
+			  		  cast(cast((a.actual_money) as decimal(10,2)) as char)  actual_money,
+			  		  cast(cast((a.sale_money) as decimal(10,2)) as char)  sale_money,
+			  		  cast(cast((a.no_discount_money) as decimal(10,2)) as char)  no_discount_money,
+ 					  a.pay_type,	
+					  ifnull( a.desk_no,'')  desk_no,
+					  a.store_operator_id,	
+					  a.order_status,	
+					  a.tihuo_status,	
+   				      a.look_number,
+   				      date_format(a.createtime,'%Y-%m-%d %H:%i:%s') as createtime,
+ 				      ifnull(a.discount_content,'')  as discount_content,
+ 				      a.pay_sort_type,
+  				      ifnull( b.operator_name,'') as operator_name,
+ 				      a.order_id
+			   from 
+					  tb_order a 
+ 					  left join tb_store_operator b on a.store_operator_id=b.store_operator_id
+  			   where 
+			          a.store_id=#{pd.store_id}
+			          <if test="pd.store_operator_id != null and pd.store_operator_id != '' ">
+			          and a.store_operator_id=#{pd.store_operator_id}
+			          </if>
+			          <if test="pd.pay_sort_type != null and pd.pay_sort_type != '' ">
+			          and a.pay_sort_type=#{pd.pay_sort_type}
+			          </if>
+			          <if test="pd.pay_type != null and pd.pay_type != '' ">
+			          and a.pay_type=#{pd.pay_type}
+			          </if>
+			          <if test="pd.order_status != null and pd.order_status != '' ">
+			          and a.order_status=#{pd.order_status}
+			          </if>
+			  order by a.createtime desc
+ 	</select>
+ 	
+ 	
+	<!-- 收银记录详情魏汉文20160706-->
+	<select id="confirmedFindById" parameterType="pd" resultType="pd">
+			    select 
+					  b.phone,
+					  b.name,
+					  b.image_url,
+					  cast(cast((b.now_integral) as decimal(10,2)) as char)  now_integral,
+ 				      a.desk_no,
+				      cast(cast((a.sale_money) as decimal(10,2)) as char)  sale_money,
+				      cast(cast((a.sale_money-a.discount_money) as decimal(10,2)) as char)  money,
+			  		  cast(cast((a.actual_money) as decimal(10,2)) as char)  actual_money,
+ 			  		  cast(cast((a.no_discount_money) as decimal(10,2)) as char)  no_discount_money,
+			  		  cast(cast((a.get_integral) as decimal(10,2)) as char)  get_integral,
+			  		  cast(cast((a.user_balance) as decimal(10,2)) as char)  user_balance,
+			  		  cast(cast((a.user_integral) as decimal(10,2)) as char)  user_integral,
+  				      ifnull(a.discount_content,'') discount_content,
+				      a.pay_sort_type,
+ 				      a.order_id,
+				      a.store_id,
+				      a.payer_id,
+				      a.look_number,
+				      date_format(a.createtime,'%Y-%m-%d %H:%i:%s') as createtime 
+				from 
+					  tb_order a join tb_member b on a.payer_id=b.member_id 
+				where
+				      a.order_id=#{order_id}
+  	</select>
+  	
+  	
+  	<!-- 会员按类别购买的类别集合魏汉文20160706-->
+	<select id="orderSortList" parameterType="pd" resultType="pd">
+			   select 
+				      sum(price) as price,
+					  d.goods_category_id,
+				      d.name,
+				      d.back_rate,
+				      a.order_id
+				from 
+						tb_order a 
+						left join tb_order_goods b on a.order_id=b.order_id 
+			      		left join tb_goods c on b.goods_id=c.goods_id
+			     		left join tb_goods_category d on c.goods_category_id=d.goods_category_id
+				group by d.name,d.back_rate,d.goods_category_id
+				having a.order_id=#{order_id}
+ 	</select>
+ 	
+ 	<!-- 修改订单状态魏汉文20160705 -->
+	<update id="editOrderStatus" parameterType="pd">
+			update  tb_order
+			set 
+				<if test="store_operator_id != null and store_operator_id != ''">
+				store_operator_id = #{store_operator_id},
+				</if>
+				<if test="order_status != null and order_status != ''">
+				order_status = #{order_status},
+				</if>
+				<if test="tihuo_status != null and tihuo_status != ''">
+					tihuo_status = #{tihuo_status},
+ 					tihuo_time=now(),
+ 					createtime=now(),
+  				</if>
+ 				<if test="desk_no != null and desk_no != ''">
+				desk_no = #{desk_no},
+				</if>
+				<if test="subsidiary_id != null and subsidiary_id != ''">
+				subsidiary_id = #{subsidiary_id},
+				</if>
+ 				<if test="subsidiary_getmoney != null and subsidiary_getmoney != ''">
+				subsidiary_getmoney = #{subsidiary_getmoney},
+				</if>
+				<if test="sp_file_id != null and sp_file_id != ''">
+				sp_file_id = #{sp_file_id},
+				</if>
+ 				<if test="sp_getmoney != null and sp_getmoney != ''">
+				sp_getmoney = #{sp_getmoney},
+				</if>
+				<if test="clerk_file_id != null and clerk_file_id != ''">
+				clerk_file_id = #{clerk_file_id},
+				</if>
+ 				<if test="clerk_getmoney != null and clerk_getmoney != ''">
+				clerk_getmoney = #{clerk_getmoney},
+				</if>
+				<if test="onecontacts_id != null and onecontacts_id != ''">
+				onecontacts_id = #{onecontacts_id},
+				</if>
+				<if test="onecontacts_type != null and onecontacts_type != ''">
+				onecontacts_type = #{onecontacts_type},
+				</if>
+ 				<if test="onecontacts_getmoney != null and onecontacts_getmoney != ''">
+				onecontacts_getmoney = #{onecontacts_getmoney},
+				</if>
+				<if test="twocontacts_id != null and twocontacts_id != ''">
+				twocontacts_id = #{twocontacts_id},
+				</if>
+				<if test="twocontacts_type != null and twocontacts_type != ''">
+				twocontacts_type = #{twocontacts_type},
+				</if>
+ 				<if test="twocontacts_getmoney != null and twocontacts_getmoney != ''">
+				twocontacts_getmoney = #{twocontacts_getmoney},
+				</if>
+ 			    <if test="sendxitong_integral != null and sendxitong_integral != ''">
+				sendxitong_integral = #{sendxitong_integral},
+				</if>
+ 				<if test="channel != null and channel != ''">
+				channel = #{channel},
+				</if>
+ 				<if test="store_renmai_money != null and store_renmai_money != ''">
+				store_renmai_money = #{store_renmai_money},
+				</if>
+ 				order_id = order_id
+			where 
+				order_id = #{order_id}
+	</update>
+	
+    <!-- 删除订单-->
+	<delete id="deleteOrderw" parameterType="pd">
+		delete from tb_order
+		where 
+			order_id = #{order_id}
+	</delete>
+	
+	
+	<!-- 提货单详情魏汉文20160705 -->
+	<select id="tihuoByOrderId" parameterType="pd" resultType="pd">
+		select		
+				 a.payer_id,
+				 a.payer_id as member_id,
+				 a.store_id,
+				 a.order_id,
+				 a.order_status,
+ 				 a.tihuo_id,
+ 				 a.tihuo_status,
+ 				 date_format(a.startdate,'%Y-%c-%d') startdate,
+ 				 date_format( a.enddate,'%Y-%c-%d') enddate,
+ 				 date_format( a.createtime,'%Y-%c-%d %H:%i:%s') createtime,
+   				 ifnull(a.pay_sort_type,'1') as pay_sort_type,
+  				 ifnull(a.money_pay_type,'2') as money_pay_type,
+ 				 a.redpackage_id,
+ 				 ifnull(a.remark,'') as remark ,
+  				 ifnull(a.user_balance,'0') as   user_balance,
+				 ifnull(a.user_integral,'0') as   user_integral,
+				 ifnull(a.sale_money,'0') as sale_money,
+				 ifnull( a.actual_money,'0') as   actual_money,
+				 ifnull( a.get_integral,'0') as   get_integral,
+				 ifnull( a.discount_money,'0') as   discount_money,
+				 ifnull( a.no_discount_money,'0') as   no_discount_money,
+ 				 ifnull(cast(a.user_integral+a.user_balance+a.actual_money as char) , '0') as allmoney,
+ 				 ifnull(a.channel,'nowpay') as channel,
+ 				 ifnull(a.channel,'nowpay') as pay_way,
+				ifnull(a.discount_content,'') as discount_content,
+ 				 ifnull( c.phone,'') as   phone,
+				 c.name,
+				 c.image_url as memberimage_url,
+				 b.store_name,
+				 b.registertel_phone
+ 		from 
+				tb_order a 
+				left join tb_store b on a.store_id=b.store_id 
+				left join tb_member c on a.payer_id=c.member_id
+		where 
+				1=1
+  				<if test="tihuo_id != null and tihuo_id != '' ">and a.tihuo_id=#{tihuo_id}</if>
+				<if test="order_id != null and order_id != '' ">and a.order_id=#{order_id}</if>
+				<if test="store_id != null and store_id != '' ">and a.store_id=#{store_id}</if>
+   	</select>
+	
+  	
+  	<!-- 魏汉文20160705获取订单的所有商品-->
+	<select id="listAllGoodsByOrder" parameterType="pd" resultType="pd">
+		select
+				a.goods_id,
+				a.shop_number,
+ 				ifnull(b.goods_name,'') goods_name
+		from 
+				tb_order_goods a   left join tb_goods b on a.goods_id=b.goods_id
+		where  
+				a.order_id=#{order_id} 
+	</select>
+ 	
+ 	
+ 	<!-- 获取该订单的订单状态-->
+	<select id="orderStatus" parameterType="String" resultType="String">
+		SELECT order_status from tb_order where order_id=#{order_id} 
+	</select>
+ 	
+	
+</mapper>
+

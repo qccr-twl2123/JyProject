@@ -1,0 +1,230 @@
+body,
+ul,
+li,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 ;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  font-family: "arial", "微软雅黑", "宋体"!important;
+}
+body {
+  overflow-y: hidden;
+}
+header .head_cont {
+  width: 1200px;
+  margin: 10px auto;
+}
+header .head_cont img {
+  width: 88px;
+  height: 88px;
+  float: left;
+}
+header .head_cont div {
+  width: 400px;
+  height: 88px;
+  text-align: center;
+  line-height: 88px;
+  font-size: 32px;
+}
+@media screen and (max-width: 1200px) {
+  header .head_cont {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  header .head_cont {
+    width: 700px;
+  }
+}
+section {
+  height: 530px;
+  background-color: #15acf3;
+  width: 100%;
+}
+section .cont {
+  margin: 0 auto;
+  width: 1200px;
+  height: 530px;
+  background-image: url("../../img/dlbg.png");
+  background-size: auto;
+  transition: width 2s;
+}
+section .cont .denglu {
+  margin-top: 60px;
+  width: 35%;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px 40px;
+  float: right;
+  transition: all 2s;
+}
+section .cont .denglu input {
+  height: 46px ;
+  width: 75%;
+  font-size: 17px;
+  float: left;
+  background: #fafafa;
+  outline: 0;
+  border: 0;
+  background: rgba(0, 0, 0, 0);
+}
+section .cont .denglu .rowborder {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #a9a9a9;
+  margin-top: 9px;
+  margin-left: 9px;
+  margin-right: 9px;
+  float: left;
+}
+section .cont .denglu .rowborder img {
+  width: 20px;
+  display: block;
+  margin: 5px;
+}
+section .cont .denglu h6 {
+  color: #666;
+  font-weight: bold;
+  font-size: 16px;
+}
+section .cont .denglu .yhm {
+  width: 100%;
+  height: 48px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  margin-top: 33px;
+}
+section .cont .denglu .mm {
+  width: 100%;
+  height: 48px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+section .cont .denglu .yzm {
+  width: 56%;
+  height: 48px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  float: left;
+}
+section .cont .denglu .yzm input {
+  width: 60%;
+}
+section .cont .denglu .yzm_img {
+  width: 43%;
+  height: 48px;
+  border: 1px solid  #ccc;
+  margin-bottom: 20px;
+  float: right;
+}
+section .cont .denglu .zhcz {
+  float: left;
+  font-size: 13px;
+}
+section .cont .denglu .zhcz input {
+  width: 13px;
+  height: 13px;
+}
+section .cont .denglu .zhcz a {
+  font-size: 13px;
+  color: #de782e;
+  float: right;
+}
+section .cont .denglu .zhcz span {
+  font-size: 13px;
+  color: #666;
+}
+section .cont .denglu .button {
+  float: left;
+  height: 50px;
+  background: #15acf2;
+  width: 100%;
+  border-radius: 5px;
+  margin-top: 22px;
+  color: #ffffff;
+  text-align: center;
+  line-height: 50px;
+}
+section .cont .denglu .button:hover {
+  cursor: pointer;
+}
+section .cont .denglu .button:active {
+  box-shadow: 2px 2px 0px #aaa;
+}
+@media screen and (max-width: 1200px) {
+  section .cont .denglu {
+    width: 40%;
+    margin-top: 120px;
+  }
+}
+@media screen and (max-width: 960px) {
+  section .cont .denglu {
+    margin: 120px auto 0 auto;
+    width: 50%;
+  }
+}
+@media screen and (max-width: 1200px) {
+  section .cont {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  section .cont {
+    width: 700px;
+  }
+}
+footer .footcont {
+  width: 1200px;
+  overflow: hidden;
+  margin: 18px auto;
+}
+footer .footcont ul {
+  display: block;
+  width: 720px;
+  margin: 0 auto;
+}
+footer .footcont ul li {
+  float: left;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+footer .footcont ul li a {
+  font-size: 14px;
+  color: #000;
+  display: block;
+  width: 142px;
+  text-align: center;
+  border-left: 1px solid #666;
+}
+footer .footcont ul li a:hover {
+  color: #15acf2;
+}
+footer .footcont ul li .noborder {
+  border-left: 0;
+}
+footer .beian {
+  text-align: center;
+  font-size: 12px;
+  color: #666666;
+}
+@media screen and (max-width: 1200px) {
+  footer .footcont {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  footer .footcont {
+    width: 700px;
+  }
+}

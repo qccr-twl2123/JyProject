@@ -1,0 +1,1154 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AppMemberMapper">
+	
+	
+	<!-- 新增魏汉文-->
+	<insert id="save" parameterType="pd">
+		insert into tb_member(
+ 			phone,	
+ 			name,
+			member_id,
+			show_lookid,
+			password,
+			recommended,
+			recommended_type,
+			charm_number,
+			vip_level,
+			createdate,
+			image_url,
+			province_name,
+			city_name,
+			area_name,
+			zhuce_shebei,
+			sex,
+			wxunionid,
+			qqunionid,
+			wbunionid,
+			alipayunionid
+		) values (
+  			#{phone},			
+ 			ifnull(#{name},#{show_lookid}),			
+			#{member_id},
+			#{show_lookid},
+ 			#{password},
+ 			#{recommended},
+ 			#{recommended_type},
+ 			#{charm_number},
+ 			#{vip_level},
+			now(),
+			#{image_url},
+			#{province_name},
+			#{city_name},
+			#{area_name},
+			#{zhuce_shebei},
+			#{sex},
+			#{wxunionid},			
+ 			#{qqunionid},			
+ 			#{wbunionid},			
+ 			#{alipayunionid}
+		)
+	</insert>
+	
+	<!-- 修改魏汉文-->
+	<update id="edit" parameterType="pd">
+			update  tb_member
+			set 
+				<if test="logindate != null and logindate != ''">
+					logindate = now(),
+ 				</if>
+				<if test="longitude != null and longitude != ''">
+					longitude = #{longitude},
+ 				</if>
+				<if test="latitude != null and latitude != ''">
+					latitude = #{latitude},
+ 				</if>
+				<if test="province_name != null and province_name != ''">
+					province_name = #{province_name},
+ 				</if>
+				<if test="city_name != null and city_name != ''">
+					city_name = #{city_name},
+ 				</if>
+				<if test="area_name != null and area_name != ''">
+					area_name = #{area_name},
+ 				</if>
+				<if test="islogin != null and islogin != ''">
+					islogin = #{islogin},
+					<if test="islogin =='1'.toString()">
+					logindate=now(),
+					</if>
+ 				</if>
+ 				
+				<if test="onetime_red != null and onetime_red != ''">
+					onetime_red = #{onetime_red},
+ 				</if>
+				<if test="twotime_red != null and twotime_red != ''">
+					twotime_red = #{twotime_red},
+ 				</if>
+ 				<if test="phone != null and phone != ''">
+					phone = #{phone},
+ 				</if>
+ 				<if test="password != null and password != ''">
+					password = #{password},
+ 				</if>
+ 				<if test="name != null and name != ''">
+					name = #{name},
+ 				</if>
+ 				<if test="image_url != null and image_url != ''">
+					image_url = #{image_url},
+ 				</if>
+ 				<if test="now_integral != null and now_integral != ''">
+					now_integral = #{now_integral},
+ 				</if>
+ 				<if test="now_money != null and now_money != ''">
+					now_money = #{now_money},
+ 				</if>
+ 				<if test="charm_number != null and charm_number != ''">
+					charm_number = #{charm_number},
+ 				</if>
+ 				<if test="vip_level != null and vip_level != ''">
+					vip_level = #{vip_level},
+ 				</if>
+ 				<if test="cz_number != null and cz_number != ''">
+					cz_number = #{cz_number},
+ 				</if>
+ 				<!-- <if test="in_jiqi != null and in_jiqi == '5'.toString()">
+ 					wxopen_id = '',
+ 					wechat_number = '',
+ 				</if>  
+  				<if test="qqopen_id != null and qqopen_id != ''">
+					qqopen_id = #{qqopen_id},
+ 				</if>
+ 				<if test="wbopen_id != null and wbopen_id != ''">
+					wbopen_id = #{wbopen_id},
+ 				</if>
+ 				<if test="wechat_number != null and wechat_number != ''">
+					wechat_number = #{wechat_number},
+ 				</if> -->
+ 				<if test="onecontactintegral != null and onecontactintegral != ''">
+					onecontactintegral = #{onecontactintegral},
+ 				</if>
+ 				<if test="twocontactintegral != null and twocontactintegral != ''">
+					twocontactintegral = #{twocontactintegral},
+ 				</if>
+ 				<if test="istuisong != null and istuisong != ''">
+					istuisong = #{istuisong},
+ 				</if>
+ 				<if test="show_lookid != null and show_lookid != ''">
+					show_lookid = #{show_lookid},
+ 				</if>
+ 				<if test="wxunionid != null and wxunionid != ''">
+					wxunionid = #{wxunionid},
+ 				</if>
+ 				<if test="qqunionid != null and qqunionid != ''">
+					qqunionid = #{qqunionid},
+ 				</if>
+ 				<if test="wbunionid != null and wbunionid != ''">
+					wbunionid = #{wbunionid},
+ 				</if>
+ 				<if test="alipayunionid != null and alipayunionid != ''">
+					alipayunionid = #{alipayunionid},
+ 				</if>
+ 				<if test="wxopen_id != null and wxopen_id != ''">
+					wxopen_id = #{wxopen_id},
+ 				</if>
+ 				member_id = member_id
+			where 
+				member_id = #{member_id}
+	</update>
+	
+	
+ 	<!-- 忘记密码 刘耀耀	20160630-->
+	<update id="editPawd" parameterType="pd">
+			update  tb_member
+			set 
+ 				password = #{password}
+			where 
+				1=1
+				<if test="phone != null and phone != '' ">
+				and phone = #{phone}
+				</if>
+				<if test="member_id != null and member_id != '' ">
+				and member_id = #{member_id}
+				</if>
+ 	</update>
+ 
+	 
+	<!-- 通过手机号码(密码)获取会员信息魏汉文20160620 -->
+	<select id="detailByPhone" parameterType="pd" resultType="pd">
+		select 
+ 			name,	
+			phone,
+			password,
+			image_url,	
+			recommended,	
+			istuisong,
+			member_id  as  id ,
+			member_id   
+		from 
+			tb_member
+		where 
+			phone = #{phone}
+		limit 1
+	</select>
+ 	<select id="getIntegerByPhone" parameterType="pd" resultType="pd">
+		select 
+ 			 member_id,
+ 			 now_integral,
+ 			 now_money
+		from 
+			tb_member
+		where 
+			phone = #{phone}
+		limit 1
+	</select>
+	
+	
+	<!-- 通过openid获取会员信息魏汉文 -->
+	<select id="getByOpenid" parameterType="pd" resultType="pd">
+		select
+				a.member_id,
+				a.show_lookid,
+				a.image_url,
+				a.name,
+				a.phone,
+				a.vip_level,
+				a.charm_number,
+				cast(cast((ifnull(a.now_money,'0')) as decimal(10,2)) as char)  now_money,
+				cast(cast((ifnull(a.now_integral,'0')) as decimal(10,2)) as char)  now_integral,
+  				a.isnewmember,
+				a.istuisong,
+				a.islogin,
+				a.createdate,
+				a.logindate,
+				a.wechat_number,
+				a.wxopen_id,
+				a.sex,
+				ifnull(a.recommended,'0') as recommended,
+				ifnull(a.recommended_type,'0') as recommended_type,
+ 				a.status,
+				a.province_name,
+				a.city_name,
+				a.area_name,
+				a.money_pay_number,
+				a.wechat_pay_number,
+				a.alipay_pay_number,
+				a.bank_pay_number,
+				a.apple_pay_number,
+				a.integral_pay_number,
+				a.consumption,
+				a.redpackage_number,
+				a.longitude,
+				a.latitude,
+				a.onetime_red,
+				a.twotime_red,
+				a.cz_number,
+				a.onecontactintegral,
+				a.twocontactintegral
+		from 
+				tb_member a
+		where 
+			<choose>
+				<when test="wbopen_id != null and wbopen_id != ''">a.wbopen_id = #{wbopen_id} </when>
+				<when test="qqopen_id != null and qqopen_id != ''">a.qqopen_id = #{qqopen_id} </when>
+				<when test="alipayopen_id != null and alipayopen_id != ''">a.alipayopen_id = #{alipayopen_id} </when>
+				<otherwise>a.wxopen_id = #{wxopen_id} </otherwise>
+ 			</choose>
+ 		order by a.createdate desc
+		limit 1
+	</select>
+	<!-- 通过Unionid获取会员信息魏汉文 -->
+	<select id="getByUnionid" parameterType="pd" resultType="pd">
+		select
+				a.member_id,
+				a.show_lookid,
+				a.image_url,
+				a.name,
+				a.phone,
+				a.vip_level,
+				a.charm_number,
+				cast(cast((ifnull(a.now_money,'0')) as decimal(10,2)) as char)  now_money,
+				cast(cast((ifnull(a.now_integral,'0')) as decimal(10,2)) as char)  now_integral,
+  				a.isnewmember,
+				a.istuisong,
+				a.islogin,
+				a.createdate,
+				a.logindate,
+				a.wechat_number,
+				a.wxopen_id,
+				a.sex,
+				ifnull(a.recommended,'0') as recommended,
+				ifnull(a.recommended_type,'0') as recommended_type,
+ 				a.status,
+				a.province_name,
+				a.city_name,
+				a.area_name,
+				a.money_pay_number,
+				a.wechat_pay_number,
+				a.alipay_pay_number,
+				a.bank_pay_number,
+				a.apple_pay_number,
+				a.integral_pay_number,
+				a.consumption,
+				a.redpackage_number,
+				a.longitude,
+				a.latitude,
+				a.onetime_red,
+				a.twotime_red,
+				a.cz_number,
+				a.onecontactintegral,
+				a.twocontactintegral
+		from 
+				tb_member a
+		where 
+			<choose>
+				<when test="alipayunionid != null and alipayunionid != ''">a.alipayunionid = #{alipayunionid} </when>
+				<when test="qqunionid != null and qqunionid != ''">a.qqunionid = #{qqunionid} </when>
+				<when test="wbunionid != null and wbunionid != ''">a.wbunionid = #{wbunionid} </when>
+				<otherwise>a.wxunionid = #{wxunionid} </otherwise>
+ 			</choose>
+ 		order by a.createdate desc
+		limit 1
+	</select>
+	<!-- 通过微信的show_lookid获取会员信息魏汉文 -->
+	<select id="detailByShowLookId" parameterType="pd" resultType="Integer">
+		select 
+ 			 count(*)
+		from 
+			tb_member
+		where 
+			show_lookid = #{show_lookid}
+ 	</select>
+	 
+	<!-- 登陆验证魏汉文20160620 -->
+	<select id="findByLogin" parameterType="pd" resultType="pd">
+		select
+ 				ifnull(a.name,'') name,	
+				a.phone,		
+				a.istuisong,
+				a.member_id
+		from 
+				tb_member a 
+		where 
+				a.phone = #{phone}
+	 			and password=#{loginpassword}
+	 	limit 1
+ 	</select>
+	 	<!-- 短信登陆验证刘耀耀 -->
+	<select id="findSMSLogin" parameterType="pd" resultType="pd">
+		select
+ 				ifnull(a.name,'') name,	
+				a.phone,		
+				a.member_id
+		from 
+				tb_member a 
+		where 
+				a.phone = #{phone}
+ 	</select>
+	<!-- 前往个人中心魏汉文20160620 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+				a.member_id,
+				a.show_lookid,
+				a.image_url,
+				a.name,
+				a.phone,
+				a.vip_level,
+				a.charm_number,
+				cast(cast((ifnull(a.now_money,'0')) as decimal(10,2)) as char)  now_money,
+				cast(cast((ifnull(a.now_integral,'0')) as decimal(10,2)) as char)  now_integral,
+  				a.isnewmember,
+				a.istuisong,
+				a.islogin,
+				a.createdate,
+				a.logindate,
+				a.wechat_number,
+				a.wxopen_id,
+				a.sex,
+				ifnull(a.recommended,'0') as recommended,
+				ifnull(a.recommended_type,'0') as recommended_type,
+ 				a.status,
+				a.province_name,
+				a.city_name,
+				a.area_name,
+				a.money_pay_number,
+				a.wechat_pay_number,
+				a.alipay_pay_number,
+				a.bank_pay_number,
+				a.apple_pay_number,
+				a.integral_pay_number,
+				a.consumption,
+				a.redpackage_number,
+				a.longitude,
+				a.latitude,
+				a.onetime_red,
+				a.twotime_red,
+				a.cz_number,
+				a.onecontactintegral,
+				a.twocontactintegral
+		from 
+				tb_member a 
+		where 
+				a.member_id=#{member_id}
+ 	</select>
+ 	
+	
+	
+	<!-- 新增人脉关系魏汉文-->
+	<insert id="saveContact" parameterType="pd">
+		insert into tb_contacts(
+			contacts_id,	
+			contacts_parent_id,
+			contacts_parent_type,	
+			contacts_type,
+			createdate
+		) values (
+			#{contacts_id},	
+			#{contacts_parent_id},	
+			#{contacts_parent_type},	
+			#{contacts_type} ,
+			now()
+		)
+	</insert>
+	
+	<!-- 新增用户红包魏汉文20160622-->
+	<insert id="saveRedForMember" parameterType="pd">
+		insert into tb_member_redpackets(
+			redpackage_id,
+			store_redpackets_id,
+ 			member_id,	
+			redpackage_money,
+			redpackage_type,
+			redpackage_content,
+			startdate,
+			enddate,
+			set_id,
+			set_type,
+			createdate
+		) values (
+ 			#{redpackage_id},			
+ 			#{store_redpackets_id},			
+ 			#{member_id},			
+			#{redpackage_money},
+ 			#{redpackage_type},
+ 			#{redpackage_content},
+ 			#{startdate},
+ 			#{enddate},
+ 			#{set_id},
+ 			#{set_type},
+			now()
+		)
+	</insert>
+	
+	
+	<!-- 刘耀耀 获取用户名称2016.06.24-->
+	<select id="findPowd" parameterType="pd" resultType="String">
+	select
+			password
+	from 
+			tb_member
+	where
+			member_id=#{member_id}
+	</select>
+	
+	<!-- 刘耀耀 获取用户手机号2016.06.24-->
+	<select id="findTel" parameterType="pd" resultType="String">
+	select
+			phone
+	from 
+			tb_member
+	where
+			member_id=#{member_id}
+	</select>
+	
+	<!-- 刘耀耀 获取我的信息2016.06.27-->
+	<select id="listPersonal" parameterType="pd" resultType="pd">
+	select
+			charm_number,
+			now_money,
+			now_integral,
+			redpackage_number,
+			image_url,
+			name,
+			phone
+	from 
+			tb_member
+	where
+			member_id=#{member_id}
+	</select>
+
+	<!-- 获取用户个人开机红包 魏汉文20160623-->
+	<select id="findRePackagedById" parameterType="pd" resultType="pd">
+		select
+				a.redpackage_id,
+	 			a.member_id,	
+				a.redpackage_money,
+ 				a.redpackage_content,
+ 				a.redpackage_content as reduce_content,
+				a.set_type,
+				a.enddate,
+				a.startdate,
+				a.enddate as endtime,
+				a.startdate as starttime,
+				a.isguoqi,
+				a.isshiyong,
+				b.store_name
+		from 
+				tb_member_redpackets a left join tb_store b on a.set_id=b.store_id
+		where 
+				a.member_id=#{member_id}
+ 				<if test="redpackage_id != null and redpackage_id != ''">
+				and redpackage_id=#{redpackage_id}
+				</if>
+				<if test="store_redpackets_id != null and store_redpackets_id != ''">
+				and store_redpackets_id=#{store_redpackets_id}
+				</if>
+				<if test="isok == '0'.toString() ">
+				and a.isshiyong='0' and a.isguoqi='0'
+				</if>
+ 	</select>
+ 	
+ 	
+ 	<!-- 获取用户的个人红包 魏汉文20160623-->
+	<select id="findRePackagedByIdTwo" parameterType="pd" resultType="pd">
+		select
+				a.redpackage_id,
+	 			a.member_id,	
+				a.redpackage_money,
+ 				a.redpackage_content,
+				a.set_type,
+				a.enddate 
+		from 
+				tb_member_redpackets  
+		where 
+				a.member_id=#{user_id}
+				and a.store_redpackets_id=#{store_redpackets_id}
+ 	</select>
+ 	
+ 	
+ 	<!-- 获取用户账号信息 刘耀耀20160624-->
+	<select id="findAccount" parameterType="pd" resultType="pd">
+		select
+				image_url,
+				name,
+				vip_level,
+				phone
+		from 
+				tb_member
+		where 
+				member_id=#{member_id}
+ 	</select>
+
+ 	
+ 	
+ 		
+	<!-- 修改魏汉文20160624-->
+	<update id="editRedPackageNumber" parameterType="pd">
+			update  tb_member
+			set 
+				redpackage_number=cast(redpackage_number as signed)+1+'',
+ 				member_id = member_id
+			where 
+				member_id = #{member_id}
+	</update>
+	
+	<!-- 修改魏汉文20160624-->
+	<update id="editRedPackageNumberJian" parameterType="pd">
+			update  tb_member
+			set 
+				redpackage_number=cast(redpackage_number as signed)-1+'',
+ 				member_id = member_id
+			where 
+				member_id = #{member_id}
+	</update>
+	
+	<!-- 个人收货地址列表魏汉文20160624 -->
+	<select id="listAllAddressById" parameterType="pd" resultType="pd">
+		select
+				a.member_id,	
+				a.name,	
+				a.sex,	
+				a.phone,	
+				a.address,	
+				a.member_address_id
+		from 
+				tb_member_address a
+		where
+				a.member_id=#{member_id}
+	</select>
+	
+	
+	<!-- 新增个人收货地址魏汉文20160624 -->
+	<insert id="addAddressById" parameterType="pd">
+		insert into tb_member_address(
+			MEMBER_ID,	
+			NAME,	
+			SEX,	
+			PHONE,	
+			ADDRESS,	
+			MEMBER_ADDRESS_ID
+		) values (
+			#{member_id},	
+			#{name},	
+			#{sex},	
+			#{phone},	
+			#{address},	
+			#{member_address_id}
+		)
+	</insert>
+	
+	<!-- 修改个人收货地址魏汉文20160624  -->
+	<update id="editAddressById" parameterType="pd">
+			update  tb_member_address
+			set 
+					member_id = #{member_id},
+					name = #{name},
+					sex = #{sex},
+					phone = #{phone},
+					address = #{address},
+					member_address_id = member_address_id
+			where 
+					member_address_id = #{member_address_id}
+	</update>
+	
+	<!-- 获取个人收货地址魏汉文20160624 -->
+	<select id="findAddressById" parameterType="pd" resultType="pd">
+		select 
+			member_id,	
+			name,	
+			sex,	
+			phone,	
+			address,	
+			member_address_id
+		from 
+			tb_member_address
+		where 
+			member_address_id = #{member_address_id}
+	</select>
+	
+	
+	<!-- 获取我的vip信息魏汉文2016.06.29-->
+	<select id="getStoreVipById" parameterType="pd" resultType="pd">
+	select
+			member_vipcard_id,
+			image_url,
+			font_color,
+			store_id,
+			member_id
+	from 
+			tb_member_vipcard 
+	where
+			member_id=#{member_id}
+			<if test="store_id != null and store_id != ''">
+			and store_id=#{store_id}
+			</if>
+ 	</select>
+ 	
+ 	<!-- 获取我的vip魏汉文2016.06.29-->
+	<select id="listAllVipImage" parameterType="pd" resultType="pd">
+		select
+				a.image_url,
+				a.font_color,
+				a.shop_number,	
+				a.total_money,	
+				a.member_vipcard_id,
+				c.store_name,
+				c.store_id,
+				c.address,
+				ifnull(d.sort_name ,'') as name1,
+				ifnull(e.sort_name ,'') as name2,
+				ifnull(f.sort_name ,'') as name3
+		from 
+			tb_member_vipcard a left join tb_store_file c on a.store_id=c.store_id
+			left join tb_city_file_sort d on d.city_file_sort_id= c.city_sort_one
+			left join tb_city_file_sort e on e.city_file_sort_id= c.city_sort_two
+			left join tb_city_file_sort f on f.city_file_sort_id= c.city_sort_three
+		where
+				a.member_id=#{member_id}
+ 	</select>
+	
+	<!-- 新增VIP魏汉文20160629 -->
+	<insert id="addStoreVip" parameterType="pd">
+		insert into tb_member_vipcard(
+			image_url,	
+			store_id,	
+			font_color,	
+			member_id
+		) values (
+			#{image_url},	
+			#{store_id},	
+			#{font_color},	
+			#{member_id}
+		)
+	</insert>
+	<!-- 更新会员的vip卡信息 -->
+	<update id="updateStoreVipById" parameterType="pd">
+		update tb_member_vipcard
+		set 
+ 			<if test="sale_money != null and sale_money != ''">
+			total_money=cast(cast(total_money as DECIMAL(10,2))+cast(#{sale_money} as DECIMAL(10,2)) as char),
+			</if>
+			shop_number=shop_number+1
+		where member_id=#{member_id} and store_id=#{store_id}
+ 	</update>
+ 	
+	
+	
+	<!-- 新增推荐信息魏汉文20160630-->
+	<insert id="saveTuiJian" parameterType="pd">
+		insert into tb_tuijian(
+ 			id,	
+			be_phone,
+			type,
+			content
+		) values (
+ 			#{id},			
+			#{be_phone},
+ 			#{type},
+ 			#{content}
+		)
+	</insert>
+	
+	<!-- 推荐人列表魏汉文 2016.06.29 -->
+	<select id="listAllTuiJian" parameterType="pd" resultType="pd">
+		select
+				distinct
+				id,
+				type
+		from 
+				tb_tuijian
+		where
+				be_phone=#{be_phone}
+ 	</select>
+ 	
+ 	<!-- 推荐人添加 2016.07.25 -->
+	<insert id="saveTuijian" parameterType="pd">
+		insert into tb_tuijian
+		(
+		tuijian_id,
+		id,
+		be_phone,
+		type,
+		content
+		)
+		values
+		(
+		#{tuijian_id},
+		#{id},
+		#{be_phone},
+		#{type},
+		#{content}
+		)
+ 	</insert>
+
+ 	
+ 	<!-- 前往个人中心魏汉文20160620 -->
+	<select id="contactMember" parameterType="pd" resultType="pd">
+		select
+				ifnull(a.image_url,"") image_url,	
+				ifnull(a.name,"") name,		
+ 				a.member_id as id
+		from 
+				tb_member a 
+		where 
+				a.member_id=#{member_id}
+  	</select>
+
+ 	
+ 	<!-- 前往个人中心魏汉文20160620 -->
+	<select id="contactMemberList" parameterType="pd" resultType="pd">
+		select
+				ifnull(a.image_url,"") image_url,	
+				ifnull(a.name,"") name,	
+ 				a.member_id as id
+		from 
+				tb_member a 
+ 	</select>
+ 	
+ 	
+ 	 	
+ 	<!-- 获得积分红包的详细信息魏汉文20160702 -->
+	<select id="findJfRedById" parameterType="pd" resultType="pd">
+		select
+				ms_redpackage_id,
+	 			user_id,
+	 			user_type,
+	 			overget_money,
+	 			redpackage_money,
+	 			redpackage_type,
+	 			overget_number,
+	 			isguoqi,
+	 			redpackage_number,
+	 			content
+		from 
+				tb_ms_redpackage
+		where 
+				ms_redpackage_id=#{ms_redpackage_id}
+  	</select>
+  	
+  		
+ 	<!-- 更新积分红包魏汉文20160702-->
+	<update id="editJfRed" parameterType="pd">
+			update  tb_ms_redpackage
+			set 
+				<if test="overget_money != null and overget_money != ''">overget_money = #{overget_money},</if>
+				<if test="overget_number != null and overget_number != ''">overget_number = #{overget_number},</if>
+				<if test="isguoqi != null and isguoqi != ''">isguoqi = #{isguoqi},</if>
+   				ms_redpackage_id = ms_redpackage_id
+			where 
+				ms_redpackage_id=#{ms_redpackage_id}
+	</update>
+
+	
+	<!-- 新增获取积分红包历史记录 魏汉文20160702 -->
+	<insert id="saveJfMrRed" parameterType="pd">
+		insert into tb_mr_history(
+ 			user_id,	
+			overget_money,
+			ms_redpackage_id,
+			user_type,
+			createtime
+		) values (
+ 			#{user_id},			
+			#{overget_money},
+			#{ms_redpackage_id},
+ 			#{user_type},
+ 			now()
+		)
+	</insert>
+	
+		 	
+ 	<!-- 获得积分红包的历史记录列表魏汉文20160702 -->
+	<select id="findJfRedHistoryList" parameterType="pd" resultType="pd">
+		select
+				mr_history_id,
+				user_id,	
+				overget_money, 
+				user_type,
+ 				date_format(createtime,'%Y-%c-%d %h:%i:%s') createtime
+		from 
+				tb_mr_history
+		where 
+				ms_redpackage_id=#{ms_redpackage_id}
+  	</select>
+  	
+  	<!-- 获得积分红包的历史记录详情魏汉文20160702 -->
+	<select id="findJfRedHistoryById" parameterType="pd" resultType="pd">
+		select
+				mr_history_id,
+				user_id,	
+				overget_money, 
+				user_type,
+ 				date_format(createtime,'%Y-%c-%d %h:%i:%s') createtime
+		from 
+				tb_mr_history
+		where 
+				ms_redpackage_id=#{ms_redpackage_id}
+				and user_id=#{user_id}
+				and user_type=#{user_type} 
+		limit 1
+  	</select>
+  	
+  
+  	
+  	
+  	 <!-- 获得所有用户id -->
+	<select id="listAllMember" parameterType="pd" resultType="pd">
+		select
+				member_id,longitude,latitude,phone,show_lookid
+		from 
+				tb_member
+  	</select>
+  	
+  	<!-- 更新会员的红包个数0822 -->
+	<update id="updateMemberRedNumber" parameterType="pd">
+		update tb_member 
+		set 
+ 			redpackage_number=(select count(*) from tb_member_redpackets a where a.member_id=#{member_id} and isguoqi='0' and isshiyong='0'),
+ 			member_id=member_id
+		where 
+			member_id=#{member_id}  
+ 	</update>
+  	
+  	
+  	<!-- 更新会员的账户信息 -->
+	<update id="updateMemberById" parameterType="pd">
+		update tb_member 
+		set 
+			<if test="sale_money != null and sale_money != '' ">
+			consumption=cast(cast(consumption as DECIMAL(10,3))+cast(#{sale_money} as DECIMAL(10,3)) as char),
+			</if>
+ 			<if test="pay_way =='alipay' or pay_way == 'alipay_pc_direct' ">
+			alipay_pay_number=alipay_pay_number+1,
+			</if>
+			<if test="pay_way =='nowmoney' ">
+			money_pay_number=money_pay_number+1,
+			</if>
+			<if test="pay_way =='wx' or pay_way == 'wx_pub' ">
+			wechat_pay_number=wechat_pay_number+1,
+			</if>
+			<if test="pay_way =='upacp' or pay_way == 'upacp_pc' ">
+			bank_pay_number=bank_pay_number+1,
+			</if>
+			<if test="pay_way =='applepay_upacp' ">
+			apple_pay_number=apple_pay_number+1,
+			</if>
+			<if test="pay_way =='integralmoney' ">
+			integral_pay_number=integral_pay_number+1,
+			</if>
+			member_id=member_id
+		where 
+			member_id=#{member_id}  
+ 	</update>
+ 	
+ 	<!-- 获取商家信息 邢江涛 -->
+	<select id="redfindById" parameterType="pd" resultType="pd">
+		SELECT a.redpackage_id,a.store_redpackets_id,b.store_id,c.store_name from tb_member_redpackets a
+		LEFT JOIN tb_store_redpackets b on a.store_redpackets_id = a.store_redpackets_id
+		LEFT JOIN tb_store c on c.store_id = b.store_id
+		where a.redpackage_id = #{ms_redpackage_id}
+ 	</select>
+ 	
+ 	<!-- 根据推荐的手机号来判断是否是会员 -->
+ 	<select id = "findStorephone" parameterType="String" resultType="pd">
+ 		select * from tb_store where 
+			registertel_phone = #{phone}
+ 	</select>
+ 	
+ 	<!-- 通过会员ID获取会员信息魏汉文20160620 -->
+	<select id="findByPhone" parameterType="pd" resultType="pd">
+		select
+				a.member_id,
+				a.show_lookid,
+				a.image_url,
+				a.name,
+				a.phone,
+				a.vip_level,
+				a.charm_number,
+				cast(cast((ifnull(a.now_money,'0')) as decimal(10,2)) as char)  now_money,
+				cast(cast((ifnull(a.now_integral,'0')) as decimal(10,2)) as char)  now_integral,
+  				a.isnewmember,
+				a.istuisong,
+				a.islogin,
+				a.createdate,
+				a.logindate,
+				a.wechat_number,
+				a.wxopen_id,
+				a.sex,
+				ifnull(a.recommended,'0') as recommended,
+				ifnull(a.recommended_type,'0') as recommended_type,
+ 				a.status,
+				a.province_name,
+				a.city_name,
+				a.area_name,
+				a.money_pay_number,
+				a.wechat_pay_number,
+				a.alipay_pay_number,
+				a.bank_pay_number,
+				a.apple_pay_number,
+				a.integral_pay_number,
+				a.consumption,
+				a.redpackage_number,
+				a.longitude,
+				a.latitude,
+				a.onetime_red,
+				a.twotime_red,
+				a.cz_number,
+				a.onecontactintegral,
+				a.twocontactintegral
+		from 
+				tb_member a
+		where 
+				a.member_id = #{member_id}
+	</select>
+ 	
+ 	<!-- 测试数据 -->
+	<select id="ceshilist" parameterType="pd" resultType="pd">
+		select 
+ 			 *
+		from 
+			aa
+ 	</select>
+ 	
+ 	 <!-- 根据区域获取所有用户 -->
+	<select id="listAllMemberByCity" parameterType="pd" resultType="pd">
+		select
+				member_id,
+				province_name,
+				city_name,
+				area_name,
+				phone,
+				name
+		from 
+				tb_member
+		where 
+				area_name=#{area_name}
+				<if test="city_name != null and city_name != ''">and city_name=#{city_name}</if>
+   	</select>
+   	
+   	
+   	<!-- 更新微信的调用凭证 -->
+	<update id="editWx" parameterType="pd">
+			update  tb_wxaccess
+			set 
+ 				access_token = #{access_token},
+ 				jsapi_ticket = #{jsapi_ticket},
+ 				createtime = now()
+			where 
+				only_id='1'
+ 	</update>
+	 <!-- 获取微信的调用凭证 -->
+	<select id="getWxAccess" parameterType="pd" resultType="pd">
+		select
+ 				ifnull(access_token,'') access_token,
+ 				ifnull(jsapi_ticket,'') jsapi_ticket,
+				only_id
+ 		from 
+				tb_wxaccess
+		where 
+				only_id='1'
+   	</select>
+   	
+   	
+ 	
+ 	<!-- 个人财富详情魏汉文20160624 -->
+	<select id="findWealthById" parameterType="pd" resultType="pd">
+		select
+				a.now_money,	
+				a.now_integral,
+				a.member_id
+		from 
+				tb_member a 
+		where 
+				a.member_id=#{member_id}
+ 	</select>
+   	
+   	
+   	<!-- 获得用户余额刘耀耀20160711 -->
+	<select id="findBalance" parameterType="pd" resultType="String">
+		select
+				ifnull(now_money,'0') now_money
+		from 
+				tb_member
+		where 
+				member_id=#{member_id}
+  	</select>
+  	
+  	<!-- 获得用户余额刘耀耀20160711 -->
+	<select id="findIntegrale" parameterType="pd" resultType="String">
+		select
+				ifnull(now_integral,'0') now_integral
+		from 
+				tb_member
+		where 
+				member_id=#{member_id}
+  	</select>
+  	
+  
+	
+	<!-- 微信端 -->
+ 	<update id="editHtmlLogin" parameterType="pd">
+			update  tb_member
+			set 
+ 				<if test="islogin != null and islogin != ''">
+					islogin = #{islogin},
+					<if test="islogin =='1'.toString()">
+					logindate=now(),
+					</if>
+ 				</if>
+ 				<if test="wxopen_id != null and wxopen_id != ''">
+					wxopen_id = #{wxopen_id},
+ 				</if>
+ 				<if test="wxunionid != null and wxunionid != ''">
+					wxunionid = #{wxunionid},
+ 				</if>
+  				member_id = member_id
+			where 
+				member_id = #{member_id}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 总后台 -->
+   	<!-- 分页列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.image_url,	
+				a.sex,
+ 				a.recommended,
+				a.recommended_type,
+ 				a.name,	
+				a.phone,	
+				a.province_name,	
+				a.city_name,	
+				a.area_name,
+ 				a.vip_level,	
+				a.charm_number,	
+				a.now_money,	
+				a.now_integral,
+				date_format(a.createdate ,'%Y-%m-%d %H:%i:%s') as createdate, 
+				a.show_lookid,	
+				a.zhuce_shebei,
+				a.member_id
+		from 
+				tb_member a 
+		where  
+				1=1
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+							a.name like CONCAT(CONCAT("%",#{pd.content}),"%")
+							or
+							a.phone like CONCAT(CONCAT("%",#{pd.content}),"%")
+						)
+		 		</if>
+				<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+					and a.province_name=#{pd.province_name}  
+				</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市-->
+					and a.city_name=#{pd.city_name} 
+				</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+					and a.area_name=#{pd.area_name}  
+				</if>
+		order by a.createdate desc
+	</select>
+	
+ 	<!-- 支付方式的次数 -->
+	<select id="nowpaynumber" parameterType="pd" resultType="String">
+		select count(*) from tb_order 
+		where order_status='1' and tihuo_status ='1' and payer_id=#{member_id} and money_pay_type='2'
+   	</select>
+   	<select id="alipaynumber" parameterType="pd" resultType="String">
+		select count(*) from tb_order 
+		where order_status='1' and tihuo_status ='1' and payer_id=#{member_id} and money_pay_type='3'
+   	</select>
+   	<select id="wxpaynumber" parameterType="pd" resultType="String">
+		select count(*) from tb_order 
+		where order_status='1' and tihuo_status ='1' and payer_id=#{member_id} and money_pay_type='4'
+   	</select>
+   	<select id="integralpaynumber" parameterType="pd" resultType="String">
+		select count(*) from tb_order 
+		where order_status='1' and tihuo_status ='1' and payer_id=#{member_id} and cast(user_integral as decimal(10,2))> 0 
+   	</select>
+   	<select id="balancepaynumber" parameterType="pd" resultType="String">
+		select count(*) from tb_order 
+		where order_status='1' and tihuo_status ='1' and payer_id=#{member_id} and cast(user_balance as decimal(10,2))> 0 
+   	</select>
+   	<!-- 总销售金额 -->
+   	<select id="allsalemoneybyid" parameterType="pd" resultType="String">
+ 		select cast( sum(sale_money)   as decimal(10,2) ) from tb_order 
+		where order_status='1' and tihuo_status ='1' and payer_id=#{member_id}
+	</select>
+	
+	
+	
+	
+	
+	
+</mapper>

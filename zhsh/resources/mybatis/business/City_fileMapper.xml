@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="City_fileMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into TB_CITY_FILE(
+			province_id,	
+			city_id,	
+			area_id,	
+			open_status,	
+ 			createdate,	
+			city_file_id 
+		) values (
+			#{province_id},	
+			#{city_id},	
+			#{area_id},	
+			#{open_status},	
+ 			now(),	
+			#{city_file_id} 
+		)
+	</insert>
+	
+ 	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_CITY_FILE
+		where 
+			city_file_id = #{city_file_id}
+	</delete>
+ 	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  tb_city_file
+			set 
+				<if test=" province_id != null and province_id != ''">province_id = #{province_id},</if>
+				<if test=" city_id != null and  city_id != ''">city_id = #{city_id},</if>
+				<if test=" area_id != null and  area_id != ''">area_id = #{area_id},</if>
+				<if test=" open_status != null and  open_status != ''">open_status = #{open_status},</if>
+				<if test=" bj_fee != null and  bj_fee != ''">bj_fee = #{bj_fee},</if>
+				<if test=" sj_fee != null and  sj_fee != ''">sj_fee = #{sj_fee},</if>
+				<if test=" nf_number != null and  nf_number != ''">nf_number = #{nf_number},</if>
+     			city_file_id = city_file_id
+			where 
+				city_file_id = #{city_file_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据  魏汉文20160602 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			a.province_id,	
+			a.city_id,	
+			a.area_id,	
+			b.name as province_name,	
+			c.name as city_name,	
+			d.name as area_name,	
+ 			a.open_status,	
+ 			a.createdate,	
+ 			ifnull(a.bj_fee,'0') as bj_fee,
+ 			ifnull(a.sj_fee,'0') as sj_fee,
+ 			ifnull(a.nf_number,'0') as nf_number,
+			a.city_file_id
+ 		from 
+			tb_city_file a
+			left join tb_pcd b on b.pcd_id=a.province_id
+			left join tb_pcd c on c.pcd_id=a.city_id
+			left join tb_pcd d on d.pcd_id=a.area_id
+		where 
+			1=1
+			<choose>
+				<when test="area_id != null and area_id != ''">
+					<if test="province_id != null and province_id != ''">
+					and province_id = #{province_id}
+					</if>
+					<if test="city_id != null and city_id != ''">
+					and city_id = #{city_id}
+					</if>
+					and area_id = #{area_id}
+				</when>
+				<when test="area_name != null and area_name != ''">
+					<if test="province_name != null and province_name != ''">
+					and b.name = #{province_name}
+					</if>
+					<if test="city_name != null and city_name != ''">
+					and c.name = #{city_name}
+					</if>
+					and d.name = #{area_name}
+				</when>
+				<otherwise>and city_file_id = #{city_file_id}</otherwise>
+			</choose>
+		order by city_file_id 
+		limit 1
+   	</select>
+	
+	
+	<!-- 列表  魏汉文20160602-->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.province_id,	
+				a.city_id,	
+				a.area_id,	
+				b.`name` as province_name,
+				c.`name` as city_name,
+				d.`name` as area_name,
+				a.open_status,	
+ 				a.createdate,	
+				a.city_file_id 
+		from 
+				tb_city_file a 
+				left join tb_pcd b on a.province_id=b.pcd_id
+				left join tb_pcd c on a.city_id=c.pcd_id
+				left join tb_pcd d on a.area_id=d.pcd_id
+		where  
+				1=1
+ 				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+							 b.name=#{pd.content}
+							 or c.name=#{pd.content}
+							 or d.name=#{pd.content}
+						)
+				</if>
+				<if test="pd.province_id != null and pd.province_id != ''"><!-- 省 -->
+					and a.province_id=#{pd.province_id}
+ 				</if>
+				<if test="pd.city_id != null and pd.city_id != ''"><!-- 市-->
+					and a.city_id=#{pd.city_id}
+ 				</if>
+				<if test="pd.area_id != null and pd.area_id != ''"><!-- 区 -->
+					and a.area_id=#{pd.area_id}
+ 				</if>
+				<if test="pd.open_status != null and pd.open_status != ''"><!-- 是否启用 -->
+					and a.open_status=#{pd.open_status}
+ 				</if>
+ 				<if test="pd.login_cityname != null and pd.login_cityname != ''"><!-- 登录人的所在 城 市 -->
+							and  find_in_set(c.name,#{pd.login_cityname}) 
+				</if>
+				<if test="pd.login_areaname != null and pd.login_areaname != ''"><!-- 登录人的所在 区 域 -->
+							and  find_in_set(d.name,#{pd.login_areaname}) 
+				</if>
+		order by a.city_file_id desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.province_id,	
+				a.city_id,	
+				a.area_id,	
+				a.open_status,	
+ 				a.createdate,	
+				a.city_file_id
+		from 
+				tb_city_file a
+	</select>
+	
+	
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from tb_city_file
+		where 
+			city_file_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 获取当前表的最大值ID  魏汉文20160602 -->
+	<select id="getMaxID" parameterType="pd" resultType="String">
+		select
+				max(a.city_file_id)
+		from 
+				tb_city_file a
+	</select>
+	
+	
+	
+	<!-- 获取所有的省（魏汉文20160606） -->
+	<select id="listAllProvince" parameterType="pd" resultType="pd">
+		select
+				distinct
+				a.province_id,
+				b.name as province_name	
+ 		from 
+				tb_city_file a
+				left join tb_pcd b on b.pcd_id=a.province_id 
+		where  
+				1=1
+				<if test="login_provincename != null and login_provincename != ''"><!-- 登录人的所在省 -->
+						and  find_in_set(b.name,#{login_provincename}) 
+				</if>
+				<if test="open_status != null and open_status != ''">
+						and a.open_status=#{open_status}
+				</if>
+	</select>
+	
+	<!-- 获取所有的市（魏汉文20160606） -->
+	<select id="listAllCity" parameterType="pd" resultType="pd">
+		select
+				distinct
+				a.city_id,
+				b.name as city_name	
+ 		from 
+				tb_city_file a
+				left join tb_pcd b on b.pcd_id=a.city_id
+		where 
+				1=1
+				<if test="province_id != null and province_id != '' ">
+				and a.province_id=#{province_id}
+				</if>
+				<if test="open_status != null and open_status != ''">
+				and a.open_status=#{open_status}
+				</if>
+				<if test="login_cityname != null and login_cityname != ''"><!-- 登录人的所在 城 市 -->
+							and  find_in_set(b.name,#{login_cityname}) 
+				</if>
+ 	</select>
+	
+	<!-- 获取所有的区（魏汉文20160606） -->
+	<select id="listAllArea" parameterType="pd" resultType="pd">
+		select
+				distinct
+				a.area_id,
+				b.name as area_name	
+ 		from 
+				tb_city_file a
+				left join tb_pcd b on b.pcd_id=a.area_id
+		where
+				1=1
+				<if test="province_id != null and province_id != ''">
+				and a.province_id=#{province_id}
+				</if>
+				<if test="city_id != null and city_id != ''">
+				and a.city_id=#{city_id}
+				</if>
+				<if test="open_status != null and open_status != ''">
+				and a.open_status=#{open_status}
+				</if>
+				<if test="login_areaname != null and login_areaname != ''"><!-- 登录人的所在 区 域 -->
+							and  find_in_set(b.name,#{login_areaname}) 
+				</if>
+ 	</select>
+	
+	<!-- 获取所有的城市1/2级分类（魏汉文20160606） -->
+	<select id="listAllCitySort" parameterType="pd" resultType="pd">
+		select
+				  b.city_file_sort_id,	
+				  b.choose_status,
+				  b.sort_name,
+				  b.sort_type,
+ 				  ifnull(b.sort_imageurl,"") sort_imageurl
+   		from 
+				tb_city_file a left join tb_city_file_sort b on a.city_file_id=b.city_file_id
+		where
+				a.open_status='1'<!-- 城市开启状态 -->
+				and b.open_status='1'<!-- 分类开启状态 -->
+ 				<if test="province_id != null and province_id != ''">
+				and a.province_id=#{province_id}
+				</if>
+				<if test="city_id != null and city_id != ''">
+				and a.city_id=#{city_id}
+				</if>
+				<if test="area_id != null and area_id != ''">
+				and a.area_id=#{area_id}
+				</if>
+				<if test="choose_status != null and choose_status != ''">
+				and b.choose_status=#{choose_status}
+				</if>
+ 				and b.sort_parent_id=#{sort_parent_id}
+				and b.sort_type=#{sort_type}
+	</select>
+	
+		
+	
+	<!-- 批量修改状态 -->
+	<update id="editStatusChoose" parameterType="pd">
+		update    tb_city_file_sort
+		set    	  choose_status=#{choose_status}
+		where	  city_file_sort_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	
+	<!-- 新增城市营销的收费标准-->
+	<insert id="addCityFileFee" parameterType="pd">
+		insert into tb_city_file_fee(
+			city_file_fee_id,	
+			purchase_type,	
+			buying_time,	
+			present_time,	
+			purchase_price,	
+			send_integer,	
+ 			createdate,	
+			city_file_id 
+		) values (
+			#{city_file_fee_id},	
+			#{purchase_type},	
+			#{buying_time},	
+			#{present_time},	
+			#{purchase_price},	
+			#{send_integer},	
+ 			now(),	
+			#{city_file_id} 
+		)
+	</insert>
+	
+	 	
+	<!-- 城市营销的收费标准(更新状态)-->
+	<update id="updateCityFileFee" parameterType="pd">
+		update tb_city_file_fee
+		set    isdelete=#{isdelete}
+		where 
+			city_file_fee_id = #{city_file_fee_id}
+	</update>
+	
+	<!-- 获取所有城市营销的收费标准1010 -->
+	<select id="listAllCityFee" parameterType="pd" resultType="pd">
+		select
+				  a.*,
+				  cast(  a.buying_time+a.present_time as decimal(10)) as allmonth
+   		from 
+				tb_city_file_fee a 
+				left join tb_city_file b on a.city_file_id=b.city_file_id
+				left join tb_pcd c on b.province_id=c.pcd_id
+				left join tb_pcd d on b.city_id=d.pcd_id
+				left join tb_pcd e on b.area_id=e.pcd_id
+		where
+				a.isdelete='0'
+				and b.open_status='1' 
+ 				<if test="city_file_id != null and city_file_id != ''">
+				and b.city_file_id=#{city_file_id}
+				</if>
+ 				<if test="province_name != null and province_name != ''">
+				and c.name=#{province_name}
+				</if>
+ 				<if test="city_name != null and city_name != ''">
+				and d.name=#{city_name}
+				</if>
+ 				<if test="area_name != null and area_name != ''">
+				and e.name=#{area_name}
+				</if>
+ 				<if test="purchase_type != null and purchase_type != ''">
+				and a.purchase_type=#{purchase_type}
+				</if>
+ 		order by a.createdate desc
+	</select>
+	
+	<!-- 获取 城市营销的收费标准详情  -->
+	<select id="getCityFeeDetail" parameterType="pd" resultType="pd">
+		select
+				  a.*
+   		from 
+				tb_city_file_fee a  
+		where
+				a.city_file_fee_id=#{city_file_fee_id}
+		limit 1
+ 	</select>
+ 	
+ 	
+	<!-- 获取所有已开通城市（省）的信息 -->
+	<select id="listAllCityOpen" parameterType="pd" resultType="pd">
+		select 
+			distinct
+			a.province_id,	
+ 			b.name  as province_name 	
+ 		from 
+			tb_city_file a
+			left join tb_pcd b on b.pcd_id=a.province_id
+			left join tb_pcd c on c.pcd_id=a.city_id
+		where
+		    open_status='1'
+		    <if test="province_name != null and province_name != ''">
+		    and b.name=#{province_name}
+		    </if>
+		    <if test="city_name != null and city_name != ''">
+		     and c.name=#{city_name}
+		    </if>
+ 	</select>
+	
+	
+</mapper>

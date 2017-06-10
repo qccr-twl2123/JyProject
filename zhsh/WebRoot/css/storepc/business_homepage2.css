@@ -1,0 +1,152 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-size:15px;
+    font-family: '微软雅黑';
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+    color: #000;
+}
+.hands{
+    cursor: pointer;
+}
+/*header*/
+.parent{
+    width: 100%;
+    height:100%;
+
+}
+.d1{
+    width: 100%;
+    height: 68px;
+    border-bottom: 1px solid #ccc;
+    line-height: 68px;
+}
+.d1_sp1{
+    display: inline-block;
+    width: 15%;
+    font-size: 24px;
+    margin-left: 10%;
+}
+.d1_sp2,.d1_sp3{
+    display: inline-block;float: right;
+    width: 5em;
+    height: 2em;
+    line-height: 2em;
+    margin-right: 1%;
+    background-color: #169ada;
+    color: #fff;
+    text-align: center;
+    line-height: 2em;
+    border-radius: 3px;
+    margin-top: 1em;
+    cursor: pointer;
+}
+.d1_sp3{
+    width: 10em;
+    margin-right: 5%;
+}
+.d2{
+    width: 100%;
+    height: 65px;
+    line-height: 65px;
+}
+.d2_sp1{
+    display: inline-block;
+    text-align: center;
+    width: 8em;
+    height: 2em;
+    line-height: 2em;
+    margin-left: 100px;
+    cursor: pointer;
+}
+.d2_sp1_active{
+    background-color: #169ada;
+    color: #fff;
+}
+.d2_sp2{
+    display: inline-block;
+    width: 8em;
+    text-align: right;
+    margin-left: 7%;
+}
+.d2_ipt1{
+    width: 124px;
+    height: 26px;
+    margin-left: 20px;
+}
+.d2_sp2_2{
+    margin-left: 1%;
+}
+.red{
+    font-size: 18px;
+    color: red;
+}
+.red2{
+    color: red;
+}
+.blue{
+    color: #87a7dc;
+}
+.width{
+    color: #eee;
+}
+.d2_sp2_3{
+
+    width: 3em;
+    height: 40px;
+    margin-left: 2%;
+}
+.d2_sp3{
+    display: inline-block;
+    width: 3em;
+    color: red;
+    margin-left: 2%;
+    font-size: 18px;
+    text-align: center;
+
+}
+.d2_sp4{
+    display: inline-block;
+    width: 4em;
+    text-align: center;
+    margin-left: 2%;
+    color: #87a7dc;
+
+}
+.dx{
+    width: 22px;
+    height: 22px;
+    float: left;
+    margin-top: 1.3rem;
+}
+.yes{
+    display: inline-block;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 2em;
+    width: 7em;
+    height: 2em;
+    line-height: 2em;
+    background-color: #169ada;
+    cursor: pointer;
+    color: #fff;
+    margin-left: 30%;
+    border-radius: 3px;
+    margin-right: 3%;
+    margin-bottom: 50px;
+}
+.font14{
+    font-size: 14px;
+}

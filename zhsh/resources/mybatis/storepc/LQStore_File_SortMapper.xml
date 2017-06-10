@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LQStore_File_SortMapper">	
+		
+	<!-- 梁秦2016-6-24 -->	
+	<!-- 查询 -->
+	<select id="findSortMessage" resultType="pd" parameterType="String">
+ 		select
+ 				(select g.sort_name from tb_city_file_sort g where d.sort_parent_id=g.city_file_sort_id ) as parent_name1,
+			 	(select g.sort_name from tb_city_file_sort g where e.sort_parent_id=g.city_file_sort_id ) as parent_name2,
+			 	(select g.sort_name from tb_city_file_sort g where f.sort_parent_id=g.city_file_sort_id ) as parent_name3,
+			 	d.sort_name as name1,
+ 				e.sort_name as name2,
+				f.sort_name as name3 
+		from 
+				tb_store_file a 
+				left join tb_city_file_sort d on d.city_file_sort_id= a.city_sort_one
+				left join tb_city_file_sort e on e.city_file_sort_id= a.city_sort_two
+				left join tb_city_file_sort f on f.city_file_sort_id= a.city_sort_three
+		where 
+				a.store_id=#{store_id}
+	</select>
+	
+	
+	<update id="updateMessage" parameterType="pd">
+			update  tb_store
+			set 
+				remind_integral = #{remind_integral}
+			where 
+				store_id = #{store_id}
+	</update>
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into tb_store_file(
+			
+		) values (
+			
+		)
+	</insert>
+	
+		
+	<update id="saveMemberScore" parameterType="Member">
+		update  TB_MEMBER
+			set 
+				now_integral = #{now_integral}
+			where 
+				member_id = #{member_id}
+	</update>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_MEMBER
+		where 
+			member_id = #{member_id}
+	</delete>
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  TB_MEMBER
+			set 
+				image_url = #{image_url},
+				name = #{name},
+				phone = #{phone},
+				vip_level = #{vip_level},
+				charm_number = #{charm_number},
+				now_money = #{now_money},
+				now_integral = #{now_integral},
+			member_id = member_id
+			where 
+				member_id = #{member_id}
+	</update>
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			image_url,	
+			name,	
+			phone,	
+			vip_level,	
+			charm_number,	
+			now_money,	
+			now_integral,	
+			member_id
+		from 
+			TB_MEMBER
+		where 
+			member_id = #{member_id}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.image_url,	
+				a.sex,
+				a.wechat_number,
+				a.recommended,
+				a.recommended_type,
+				a.status,
+				a.name,	
+				a.phone,	
+				a.province_name,	
+				a.city_name,	
+				a.area_name,
+				a.money_pay_number,
+				a.wechat_pay_number,
+				a.alipay_pay_number,
+				a.bank_pay_number,
+				a.apple_pay_number,
+				a.integral_pay_number,
+				a.consumption,
+				a.vip_level,	
+				a.charm_number,	
+				a.now_money,	
+				a.now_integral,
+				a.createdate,	
+				a.member_id
+		from 
+				TB_MEMBER a 
+		where  1=1
+		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+			and
+				(
+					a.name like CONCAT(CONCAT("%",#{pd.content}),"%")
+					or
+					a.phone like CONCAT(CONCAT("%",#{pd.content}),"%")
+				)
+ 		</if>
+		<if test="pd.province_name != null and pd.province_name != ''"><!-- 省 -->
+					and
+						(
+							a.province_name=#{pd.province_name}
+						)
+				</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市-->
+					and
+						(
+							a.city_name=#{pd.city_name}
+						)
+				</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+					and
+						(
+							a.area_name=#{pd.area_name}
+						)
+				</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.image_url,	
+				a.sex,
+				a.wechat_number,
+				a.recommended,
+				a.recommended_type,
+				a.status,
+				a.name,	
+				a.phone,	
+				a.province_name,	
+				a.city_name,	
+				a.area_name,
+				a.new_money,
+				a.wechat,
+				a.alipay,
+				a.bank,
+				a.apple_pay,
+				a.integral,
+				a.consumption,
+				a.vip_level,	
+				a.charm_number,	
+				a.now_money,	
+				a.now_integral,
+				a.createdate,	
+				a.member_id
+		from 
+				TB_MEMBER a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_MEMBER
+		where 
+			member_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过ID获取数据魏汉文20160608 -->
+	<select id="detailById" parameterType="pd" resultType="pd">
+		select 
+ 			name,	
+			phone,		
+			member_id
+		from 
+			TB_MEMBER
+		where 
+			member_id = #{member_id}
+	</select>
+	
+</mapper>

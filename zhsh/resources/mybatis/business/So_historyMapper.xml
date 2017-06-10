@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="So_historyMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into TB_SO_HISTORY(
+			STORE_OPERATOR_ID,	
+			STARTTIME,	
+			ENDTIME,	
+			STORE_ID,	
+			SO_HISTORY_ID
+		) values (
+			#{store_operator_id},	
+			#{starttime},	
+			#{endtime},	
+			#{store_id},	
+			#{so_history_id}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_SO_HISTORY
+		where 
+			SO_HISTORY_ID = #{so_history_id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  TB_SO_HISTORY
+			set 
+				store_operator_id = #{store_operator_id},
+				starttime = #{starttime},
+				endtime = #{endtime},
+				store_id = #{store_id},
+			SO_HISTORY_ID = so_history_id
+			where 
+				SO_HISTORY_ID = #{so_history_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			store_operator_id,	
+			starttime,	
+			endtime,	
+			store_id,	
+			SO_HISTORY_ID
+		from 
+			TB_SO_HISTORY
+		where 
+			SO_HISTORY_ID = #{so_history_id}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.store_operator_id,	
+				a.starttime,	
+				a.endtime,	
+				a.store_id,	
+				a.SO_HISTORY_ID
+		from 
+				TB_SO_HISTORY a
+		where  1=1
+		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+			and
+				(
+					 
+				)
+		</if>
+		
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.store_operator_id,	
+				a.starttime,	
+				a.endtime,	
+				a.store_id,	
+				a.so_history_id
+		from 
+				TB_SO_HISTORY a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_SO_HISTORY
+		where 
+			SO_HISTORY_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

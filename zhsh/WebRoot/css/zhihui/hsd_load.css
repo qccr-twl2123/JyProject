@@ -1,0 +1,122 @@
+/*初始化*/
+		html,body,h1,h2,h3,h4,h5,h6,p,img,ul,li{
+			margin: 0;
+			border: 0;
+			padding: 0;
+		}
+		body,html{
+			height: 100%;
+			position: relative;
+		}
+		body{
+			font-family: Arial, 微软雅黑, sans-serif;
+		}
+		ul,li{
+			list-style: none;
+		}
+		a{
+			text-decoration: none;
+			color: #000;
+		}
+
+
+	body{
+		background: url(../../img/bg.png);
+		background-size: cover;
+	}
+	.cont{
+		width: 38.54%;
+		height: 100%;
+		margin: 0 auto;
+		background: url(../../img/yuan_02.png);
+		background-size: cover;
+		position: relative;
+	}
+	.cont .tiaozhuan{
+		float: right;
+		width: 31%;
+		height: 100%;
+	}
+	.tiaozhuan a{
+		width: 100%;
+		display: block;
+		padding-top: 193%;
+
+	}
+	.tiaozhuan a img{
+		width: 100%;
+		transition:all 1s;
+		transform:scale(1,1);
+	}
+	.tiaozhuan a img:hover{
+		transform: scale(1.1,1.1)
+	}
+	.load{
+		width: 68%;
+		height: 100%;
+		float: left;
+	}
+	.load_box{
+		width: 100%;
+		height: 11.666%;
+		margin-top: 100%;
+		padding-left: 18%;
+		position: relative;
+
+	}
+	ul{
+		width: 67.4%;
+		height: 100%;
+
+		position: absolute;
+	}
+	li {
+		height: 1.2rem;
+	}
+	li span{
+		float: left;
+		width: 26%;
+		font-size: 0.9rem;
+		text-align: justify;
+		color: #fff;
+		/*text-align-last:justify;*/
+	}
+	li input{
+		margin-bottom: 1%;
+		width: 70%;
+		border-radius: 4px;
+		padding-left: 3%;
+		float: left;
+			}
+	.yzm{
+		width: 35%;
+	}
+	.yzm_img{
+		    width: 27%;
+    display: inline-block;
+    margin-left: 1.5rem;
+    border-radius:3px;
+	}
+	
+	@media screen and (min-width: 1450px){
+		.inputbox input{
+		margin-bottom: 5%;
+	}
+		li {
+		height: 2.5rem;
+	}
+	}
+	.cont .inf{
+		display: block;
+		position: absolute;
+		bottom: 3%;
+		width: 100%;
+		text-align: center;
+		margin: 0 auto;
+		color: #fff;
+		font-size: 14px;
+	}
+
+
+
+

@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FaPiaoMapper">	
+		
+	 <!-- 新增申请发票信息 -->
+  	<insert id="savebillinfor" parameterType="pd">
+				insert into tb_billinfor(
+ 					bill_tt,
+					bill_type,
+					nsr_type,
+					yy_address,
+					yy_phone,
+					swdj_number,
+					sj_bankname,
+					sj_banknumber,
+					sj_name,
+					sj_address,
+					sj_phone,
+					postcode,
+					sq_id,
+					sq_type,
+					createtime
+				)
+				values(
+ 					#{bill_tt},
+					'增值税普通发票',
+					#{nsr_type},
+					#{yy_address},
+					#{yy_phone},
+					#{swdj_number},
+					#{sj_bankname},
+					#{sj_banknumber},
+					#{sj_name},
+					#{sj_address},
+					#{sj_phone},
+					#{postcode},
+					#{sq_id},
+					#{sq_type},
+ 					 now()
+				)
+ 	</insert>
+ 	
+ 	 <!-- 修改申请发票信息 -->
+  	<update id="updatebillinfor" parameterType="pd">
+			update  tb_billinfor
+			set
+ 					bill_tt=#{bill_tt},
+					bill_type=#{bill_type},
+					nsr_type=#{nsr_type},
+					yy_address=#{yy_address},
+					yy_phone=#{yy_phone},
+					swdj_number=#{swdj_number},
+					sj_bankname=#{sj_bankname},
+					sj_banknumber=#{sj_banknumber},
+ 					sj_name=#{sj_name},
+					sj_address=#{sj_address},
+					sj_phone=#{sj_phone},
+					postcode=#{postcode},
+					billinfor_id=billinfor_id
+ 			where 
+ 					billinfor_id=#{billinfor_id}
+  	</update>
+  	
+  	<!--定义sql片段-->  
+	<sql id="bill">  
+    				a.billinfor_id,
+					a.bill_tt,
+					a.bill_type,
+					a.nsr_type,
+					a.yy_address,
+					a.yy_phone,
+					a.swdj_number,
+					a.sj_bankname,
+					a.sj_banknumber,
+					a.sj_name,
+					a.sj_address,
+					a.sj_phone,
+					a.postcode,
+					a.sq_id,
+					a.sq_type,
+					date_format(a.createtime,'%Y-%c-%d %H:%i:%s') as createtime ,  
+    </sql> 
+ 	
+ 	
+	
+	
+	<!-- 发票信息的详情(每个ID只能有一个信息) -->
+	<select id="findByIdbillinfor" parameterType="pd" resultType="pd">
+		select		
+					<!--引用sql片段-->  
+    				<include refid="bill" /> 
+ 					c.sp_file_id as ls_sp_file_id
+		from 
+					tb_billinfor a
+					left join tb_sp_file e    on e.sp_file_id=a.sq_id
+					left join tb_store_file b on b.store_id=a.sq_id
+					left join tb_sp_file c    on b.sp_file_id=c.sp_file_id
+		where 
+					1=1
+					<choose>
+						<when test="sq_id != null and sq_id != ''">and a.sq_id=#{sq_id}</when>
+						<otherwise>and a.billinfor_id=#{billinfor_id}</otherwise>
+					</choose>
+		limit 1
+  	</select>
+	
+	
+	
+	
+	
+	
+	
+	<!-- 新增发票 -->
+  	<insert id="savebill" parameterType="pd">
+				insert into tb_bill(
+					bill_id,
+					bill_money,
+					billinfor_id,
+					kd_name,
+					kd_number,
+					sp_file_id,
+					chuli_status,
+					createtime
+				)values(
+					#{bill_id},
+					#{bill_money},
+					#{billinfor_id},
+					#{kd_name},
+					#{kd_number},
+ 					#{sp_file_id},
+					#{chuli_status},
+ 					 now()
+				)
+ 	</insert>
+	<!-- 新增发票关联的订单记录 -->
+  	<insert id="savebillandid" parameterType="pd">
+				insert into tb_billandid(
+					bill_id,
+ 					waterrecord_id
+				)
+				values(
+					#{bill_id},
+ 					#{waterrecord_id} 
+ 				)
+ 	</insert>
+ 	
+ 	<!-- 修改发票信息  -->
+	<update id="updatebill" parameterType="pd">
+		update  
+				tb_bill
+		set 	
+				<if test="kd_name != null and kd_name != ''">kd_name=#{kd_name},</if>
+				<if test="kd_number != null and kd_number != ''">kd_number=#{kd_number},</if>
+				<if test="chuli_status != null and chuli_status != ''">chuli_status=#{chuli_status},</if>
+				<if test="bill_number != null and bill_number != ''">bill_number=#{bill_number},</if>
+				bill_id=bill_id
+		where   bill_id = #{bill_id}
+	</update>
+	
+	<!-- 发票详情 -->
+	<select id="findByIdbill" parameterType="pd" resultType="pd">
+		select
+					a.bill_id,
+					a.bill_number,
+					a.bill_money,
+					a.billinfor_id,
+					a.kd_name,
+					a.kd_number,
+					a.sp_file_id,
+					a.chuli_status,
+					date_format(a.createtime,'%Y-%c-%d %H:%i:%s') as createtime ,
+					e.sp_address,
+					e.principal,
+					e.phone,
+ 					b.bill_tt,
+					b.bill_type,
+					b.nsr_type,
+					b.yy_address,
+					b.yy_phone,
+					b.swdj_number,
+					b.sj_bankname,
+					b.sj_banknumber,
+					b.sj_name,
+					b.sj_address,
+					b.sj_phone,
+					b.postcode,
+					b.sq_id,
+					b.sq_type,
+					c.store_name,
+					d.team_name as ls_team_name,
+					d.sp_file_id as ls_sp_file_id,
+					d.sp_address as ls_sp_address,
+					d.phone as ls_phone
+ 		from 
+					tb_bill a 
+					left join tb_sp_file e on a.sp_file_id=e.sp_file_id <!-- tb_bill服务商地址 -->
+					left join tb_billinfor b on a.billinfor_id=b.billinfor_id
+					left join tb_store_file c on b.sq_id=c.store_id
+					left join tb_sp_file d on c.sp_file_id=d.sp_file_id
+					
+		where
+					a.bill_id=#{bill_id}			
+ 	</select>
+ 	
+ 	<!-- 发票记录列表（分页） -->
+	<select id="billlistPage" parameterType="page" resultType="pd">
+		select
+					a.bill_id,
+					a.bill_number,
+					a.bill_money,
+					a.billinfor_id,
+					a.kd_name,
+					a.kd_number,
+					a.sp_file_id,
+					a.chuli_status,
+					date_format(a.createtime,'%Y-%c-%d %H:%i:%s') as createtime ,
+					e.sp_address,
+					e.principal,
+					e.phone,
+ 					b.bill_tt,
+					b.bill_type,
+					b.nsr_type,
+					b.yy_address,
+					b.yy_phone,
+					b.swdj_number,
+					b.sj_bankname,
+					b.sj_banknumber,
+					b.sj_name,
+					b.sj_address,
+					b.sj_phone,
+					b.postcode,
+					b.sq_id,
+					b.sq_type,
+					c.store_name,
+					d.team_name as ls_team_name,
+					d.sp_file_id as ls_sp_file_id,
+					d.sp_address as ls_sp_address,
+					d.phone as ls_phone
+ 		from 
+					tb_bill a 
+					left join tb_sp_file e on a.sp_file_id=e.sp_file_id <!-- tb_bill服务商地址 -->
+					left join tb_billinfor b on a.billinfor_id=b.billinfor_id
+					left join tb_store_file c on b.sq_id=c.store_id
+					left join tb_sp_file d on c.sp_file_id=d.sp_file_id
+		where
+					1=1
+					<choose>
+						<when test="pd.chuli_status == '0'.toString()"> and a.chuli_status=#{pd.chuli_status}</when>
+						<when test="pd.chuli_status == '1'.toString()">and a.chuli_status=#{pd.chuli_status}</when>
+						<otherwise> and a.chuli_status in ('2','3','4') </otherwise>
+					</choose>
+ 					<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+							a.bill_number like concat(concat('%',#{pd.content}),'%')
+  						)
+					</if>
+					<if test="pd.sp_file_id != null and pd.sp_file_id != ''">
+					and a.sp_file_id=#{pd.sp_file_id}
+					</if>
+					
+  		order by a.createtime desc			
+ 	</select>
+ 	
+	
+	<!-- 发票记录列表 -->
+	<select id="billlistAll" parameterType="pd" resultType="pd">
+		select
+					a.bill_id,
+					a.bill_number,
+					a.bill_money,
+					a.billinfor_id,
+					a.kd_name,
+					a.kd_number,
+					a.sp_file_id,
+ 					a.chuli_status,
+					date_format(a.createtime,'%Y-%c-%d %H:%i:%s') as createtime ,
+					b.bill_tt,
+					b.bill_type,
+					b.sq_id,
+					b.sq_type,
+					e.sp_address,
+					e.principal,
+					e.phone
+		from 
+					tb_bill a 
+					left join tb_billinfor b on a.billinfor_id=b.billinfor_id
+					left join tb_sp_file e on a.sp_file_id=e.sp_file_id
+		where
+					b.sq_id=#{sq_id}
+		order by a.createtime desc			
+ 	</select>
+	
+	
+	<!-- 发票关联订单的列表  -->
+	<select id="billlistandid" parameterType="pd" resultType="pd">
+		select
+					a.billandid_id,
+					a.waterrecord_id,
+					a.bill_id,
+					b.money_type,
+					abs(b.money ) as money ,<!-- 变为整数 -->
+ 					date_format(b.createtime,'%Y-%c-%d %H:%i:%s') as createtime ,
+					c.profit_type
+ 		from 
+					tb_billandid a 
+					left join tb_waterrecord b on a.waterrecord_id=b.waterrecord_id
+					left join tb_store_wealthhistory c on c.store_wealthhistory_id=b.waterrecord_id
+ 		where
+					a.bill_id=#{bill_id}			
+ 	</select>
+	
+	
+	
+	
+	
+	<!-- 可以开取发票的订单  -->
+	<select id="listOrderByBill" parameterType="pd" resultType="pd">
+		select 
+			a.waterrecord_id ,
+			a.user_id ,
+			a.user_type ,
+ 			a.money_type ,
+			abs(a.money ) as money ,
+ 			abs(a.arrivalmoney ) as arrivalmoney ,
+ 			a.pay_status ,
+			date_format(a.createtime ,'%Y-%m-%d %H:%i:%s') as createtime,
+			a.issend_bill,
+			b.profit_type
+		from 
+			tb_waterrecord a
+			left join tb_store_wealthhistory b on a.waterrecord_id=b.store_wealthhistory_id
+		where 
+			a.pay_status='1'
+			and a.money_type=#{money_type}
+			and a.user_id = #{user_id}
+			and a.issend_bill=#{issend_bill}
+ 	</select>
+ 	
+ 	<!-- 修改订单开取发票状态  -->
+	<update id="updatebillStatusByWater" parameterType="pd">
+		update  
+				tb_waterrecord
+		set 	
+				issend_bill='1',
+ 				waterrecord_id=waterrecord_id
+		where   waterrecord_id = #{waterrecord_id}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

@@ -1,0 +1,68 @@
+body,
+ul,
+li,
+p,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  border: 0;
+  margin: 0;
+  list-style: none;
+  text-decoration: none;
+}
+.title {
+  height: 2.75rem ;
+  width: 100%;
+  background: #fc111b;
+  position: fixed;
+  top: 0;
+  text-align: center;
+  line-height: 2.75rem;
+  font-size: 1.2rem;
+  color: #fff;
+}
+.title .fanhui {
+  position: absolute;
+  left: 0;
+  font-size: 2.875rem;
+  color: #fff;
+  padding-left: 1rem ;
+}
+.title h6 {
+  text-align: center;
+  float: left;
+  padding-left: 38%;
+}
+
+.cont {
+  line-height: 1.375rem;
+  padding: 0 1rem 0 1rem;
+}
+.cont p {
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+.cont img {
+  width: 100%;
+  padding: 0.8rem 0 0 0;
+}
+.gouwuche {
+  line-height: 1.375rem;
+  padding: 1rem 1rem 0 1rem;
+}
+.gouwuche p {
+  font-size: 1.2rem;
+}
+.gouwuche img {
+  width: 10rem;
+}
+.tuikuan{
+  margin-bottom: 2rem;
+}
+.marg{
+  padding-top: 3.45rem;
+}

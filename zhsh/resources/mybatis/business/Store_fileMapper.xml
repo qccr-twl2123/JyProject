@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Store_fileMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into TB_STORE_FILE(
+			store_name,	
+			store_abbreviation_name,	
+			business_licenses_name,	
+			province_id,	
+			city_id,	
+			area_id,	
+			address,	
+			management_projects_desc,	
+			city_sort_one,
+			city_sort_two,
+			city_sort_three,
+			principal,	
+			phone,	
+			email,	
+			store_phone,	
+			open_status,		
+			user_number,
+			business_licenses_image_one,	
+			business_licenses_image_two,
+			license_image_one,	
+			license_image_two,	
+			license_image_three,	
+			license_image_four,	
+			license_image_fix,
+			earnest_status,	
+			earnest_money,	
+			em_statestatus,	
+			service_status,	
+			system_service_fee,	
+			sf_statestatus,	
+			starttime,	
+			endtime,	
+			sp_file_id,	
+			clerk_file_id,	
+			createdate,	
+			updatedate,	
+			store_file_id,
+			operate_id
+		) values (
+			#{store_name},	
+			#{store_abbreviation_name},	
+			#{business_licenses_name},	
+			#{province_id},	
+			#{city_id},	
+			#{area_id},	
+			#{address},	
+			#{management_projects_desc},	
+			#{city_sort_one},	
+			#{city_sort_two},	
+			#{city_sort_three},	
+			#{principal},	
+			#{phone},	
+			#{email},	
+			#{store_phone},	
+			#{open_status},		
+			#{store_file_id},		
+			#{business_licenses_image_one},	
+			#{business_licenses_image_two},	
+			#{license_image_one},	
+			#{license_image_two},	
+			#{license_image_three},	
+			#{license_image_four},	
+			#{license_image_fix},	
+			#{earnest_status},	
+			#{earnest_money},	
+			#{em_statestatus},	
+			#{service_status},	
+			#{system_service_fee},	
+			#{sf_statestatus},	
+			#{starttime},	
+			#{endtime},	
+			#{sp_file_id},	
+			#{clerk_file_id},	
+ 			now(),	
+			now(),	
+			#{store_file_id},
+			#{operate_id}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+			CALL deletestore(#{store_id});
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+			update  tb_store_file
+			set 
+				store_name = #{store_name},
+				store_abbreviation_name = #{store_abbreviation_name},
+				business_licenses_name = #{business_licenses_name},
+				address = #{address},
+				management_projects_desc = #{management_projects_desc},
+				<if test="city_sort_one != null and city_sort_one != ''">city_sort_one = #{city_sort_one},</if>
+				<if test="city_sort_two != null and city_sort_two != ''">city_sort_two = #{city_sort_two},</if>
+				<if test="city_sort_three != null and city_sort_three != ''">city_sort_three = #{city_sort_three},</if>
+ 				principal = #{principal},
+ 				email = #{email},
+ 				open_status = #{open_status},
+  				<if test="phone != null and phone != ''">phone = #{phone},</if>
+  				<if test="phone_bymemeber != null and phone_bymemeber != ''">phone_bymemeber = #{phone_bymemeber},store_phone = #{phone_bymemeber},</if>
+ 				<if test="business_licenses_image_one != null and business_licenses_image_one != ''">business_licenses_image_one = #{business_licenses_image_one},</if>
+ 				<if test="business_licenses_image_two != null and business_licenses_image_two != ''">business_licenses_image_two = #{business_licenses_image_two},</if>
+ 				<if test="license_image_one != null and license_image_one != ''">license_image_one = #{license_image_one},</if>
+ 				<if test="license_image_two != null and license_image_two != ''">license_image_two = #{license_image_two},</if>
+ 				<if test="license_image_three != null and license_image_three != ''">license_image_three = #{license_image_three},</if>
+ 				<if test="license_image_four != null and license_image_four != ''">license_image_four = #{license_image_four},</if>
+ 				<if test="license_image_fix != null and license_image_fix != ''">license_image_fix = #{license_image_fix},</if>
+				sp_file_id = #{sp_file_id},
+				clerk_file_id = #{clerk_file_id},
+				<if test="starttime != null and starttime != '' ">starttime=#{starttime},</if>
+				<if test="endtime != null and endtime != '' ">endtime = #{endtime},</if>
+				<if test="isopen_points != null and isopen_points != ''">isopen_points = #{isopen_points},</if>
+				<if test="transaction_points != null and transaction_points != ''">transaction_points = #{transaction_points},</if>
+     			store_file_id = store_file_id
+			where 
+				store_file_id = #{store_file_id}
+	</update>
+	
+	
+	<!-- 修改商家的服务商-->
+	<update id="editStoreSp" parameterType="pd">
+			update  tb_store_file
+			set 
+				sp_file_id = #{sp_file_id}
+			where 
+				store_file_id = #{store_file_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			a.store_name,	
+			a.store_abbreviation_name,	
+			a.business_licenses_name,
+			(select b.pcd_id from tb_pcd b where b.name=a.province_name limit 1) as province_id,
+			(select b.pcd_id from tb_pcd b where b.name=a.city_name limit 1) as city_id,
+			(select b.pcd_id from tb_pcd b where b.name=a.area_name limit 1) as area_id,
+ 			a.province_name,	
+			a.city_name,	
+			a.area_name,
+			a.address,	
+			a.management_projects_desc,	
+			a.city_sort_one,
+			(select b.sort_name from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_one limit 1) city_sort_one_name,
+			(select b.sort_parent_id from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_one limit 1) city_sort_one_parent,
+			a.city_sort_two,
+			(select b.sort_name from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_two limit 1) city_sort_two_name,
+			(select b.sort_parent_id from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_two limit 1) city_sort_two_parent,
+			a.city_sort_three,
+			(select b.sort_name from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_three limit 1) city_sort_three_name,
+			(select b.sort_parent_id from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_three limit 1) city_sort_three_parent,
+			a.principal,	
+			a.phone,	
+			a.email,	
+			a.store_phone,	
+			a.open_status,	
+			a.user_number,	
+			a.phone_bymemeber,
+			a.business_licenses_image_one,	
+			a.business_licenses_image_two,
+			a.license_image_one,	
+			a.license_image_two,	
+			a.license_image_three,	
+			a.license_image_four,	
+			a.license_image_fix,	
+			a.earnest_status,	
+			a.earnest_money,	
+			a.em_statestatus,	
+			a.service_status,	
+			a.system_service_fee,	
+			a.sf_statestatus,	
+			a.starttime,	
+			a.endtime,	
+			a.store_file_id,	
+			a.store_id,	
+			a.sp_file_id,
+			a.clerk_file_id,
+			(select b.clerk_name from tb_clerk_file b where a.clerk_file_id=b.clerk_file_id limit 1 ) as clerk_file_name,
+ 			a.createdate,
+			a.updatedate,
+			a.operate_id,
+			a.biaozhun_status,
+			a.biaozhun_content,
+			a.city_file_fee_id,
+			ifnull(a.isopen_points,'0') as isopen_points,
+			ifnull(a.transaction_points,'0') as transaction_points,
+ 			c.check_status,
+			c.password,
+			c.merchant_level,
+			c.registertel_phone,
+			c.withdraw_rate
+		from 
+			tb_store_file a 
+			left join tb_store c on a.store_id=c.store_id
+		where 
+			1=1
+			<if test="store_file_id != null and store_file_id != ''">
+			and a.store_file_id = #{store_file_id}
+			</if>
+ 			<if test="store_id != null and store_id != ''">
+			and a.store_id = #{store_id}
+			</if>
+		limit 1
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.store_name,	
+				a.store_abbreviation_name,	
+				a.business_licenses_name,	
+				a.province_name,	
+				a.city_name,	
+				a.area_name,
+				a.address,	
+				a.management_projects_desc,	
+				a.city_sort_one,
+				(select b.sort_name from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_one) city_sort_one_name,
+				(select b.sort_parent_id from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_one) city_sort_one_parent,
+				a.city_sort_two,
+				(select b.sort_name from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_two) city_sort_two_name,
+				(select b.sort_parent_id from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_two) city_sort_two_parent,
+				a.city_sort_three,
+				(select b.sort_name from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_three) city_sort_three_name,
+				(select b.sort_parent_id from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_three) city_sort_three_parent,
+				a.principal,	
+				a.phone,	
+				a.email,	
+				a.store_phone,	
+				a.open_status,		
+				a.business_licenses_image_one,	
+				a.business_licenses_image_two,
+				a.license_image_one,	
+				a.license_image_two,	
+				a.license_image_three,	
+				a.license_image_four,	
+				a.earnest_status,	
+				a.earnest_money,	
+				a.em_statestatus,	
+				a.service_status,	
+				a.system_service_fee,	
+				a.sf_statestatus,	
+				a.starttime,	
+				a.endtime,	
+				a.store_file_id,	
+				a.store_id,	
+				a.sp_file_id,
+				a.clerk_file_id,	
+				a.createdate,
+				a.biaozhun_status,
+				a.updatedate,
+				b.check_status,
+				b.merchant_level
+		from 
+				tb_store_file a left join tb_store b on a.store_id=b.store_id
+		where  
+				1=1
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+							a.phone like CONCAT(CONCAT("%",#{pd.content}),"%")
+						or
+							a.store_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+						or
+							a.store_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+						)
+				</if>
+				<if test="pd.check_status != null and pd.check_status != ''"><!--是否已经审核 -->
+							and b.check_status=#{pd.check_status} 
+				</if>
+				<if test="pd.province_name != null and pd.province_name != ''"><!--省 -->
+							and a.province_name=#{pd.province_name} 
+				</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+							and a.city_name=#{pd.city_name} 
+				</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+							and a.area_name=#{pd.area_name} 
+				</if>
+				<if test="pd.sp_file_id != null and pd.sp_file_id != ''"><!-- 服务商 -->
+							and 	a.sp_file_id=#{pd.sp_file_id} 
+				</if>
+				<if test="pd.clerk_file_id != null and pd.clerk_file_id != ''"><!-- 业务员 -->
+							and 	a.clerk_file_id=#{pd.clerk_file_id} 
+				</if>
+				<if test="pd.login_cityname != null and pd.login_cityname != ''"><!-- 登录人的所在 城 市 -->
+							and  find_in_set(a.city_name,#{pd.login_cityname}) 
+				</if>
+				<if test="pd.login_areaname != null and pd.login_areaname != ''"><!-- 登录人的所在 区 域 -->
+							and  find_in_set(a.area_name,#{pd.login_areaname}) 
+				</if>
+		order by a.createdate desc
+		
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.store_name,	
+				a.store_abbreviation_name,	
+				a.business_licenses_name,	
+				a.province_name,	
+				a.city_name,	
+				a.area_name,
+				a.address,	
+				a.management_projects_desc,	
+				a.city_sort_one,
+				(select b.sort_name from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_one) city_sort_one_name,
+				(select b.sort_parent_id from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_one) city_sort_one_parent,
+				a.city_sort_two,
+				(select b.sort_name from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_two) city_sort_two_name,
+				(select b.sort_parent_id from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_two) city_sort_two_parent,
+				a.city_sort_three,
+				(select b.sort_name from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_three) city_sort_three_name,
+				(select b.sort_parent_id from tb_city_file_sort b where b.city_file_sort_id=a.city_sort_three) city_sort_three_parent,
+				a.principal,	
+				a.phone,	
+				a.email,	
+				a.store_phone,	
+				a.open_status,		
+				a.business_licenses_image_one,	
+				a.business_licenses_image_two,
+				a.license_image_one,	
+				a.license_image_two,	
+				a.license_image_three,	
+				a.license_image_four,	
+				a.earnest_status,	
+				a.earnest_money,	
+				a.em_statestatus,	
+				a.service_status,	
+				a.system_service_fee,	
+				a.sf_statestatus,	
+				a.starttime,	
+				a.endtime,	
+				a.store_file_id,	
+				a.sp_file_id,	
+				a.createdate,
+				a.updatedate
+		from 
+				tb_store_file a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_STORE_FILE
+		where 
+			STORE_FILE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	
+	<!-- 商家关系调整列表魏汉文2016068 -->
+	<select id="StoreRelationslistPage" parameterType="page" resultType="pd">
+	    select
+				a.store_file_id,
+				a.store_name,	
+				a.store_abbreviation_name,	
+				a.business_licenses_name,	
+				a.province_name,	
+				(select pcd_id from tb_pcd b where b.name=a.city_name limit 1) as city_id,
+				(select pcd_id from tb_pcd b where b.name=a.area_name limit 1) as area_id,
+				(select pcd_id from tb_pcd b where b.name=a.province_name limit 1) as province_id,
+				a.city_name,	
+				a.area_name,
+				a.operate_id,
+				a.sp_file_id,
+ 				(select c.team_name from  tb_sp_file c where  c.sp_file_id = a.sp_file_id limit 1) as team_name
+		from 
+				tb_store_file a 
+		where  
+				1=1
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and a.store_name like CONCAT("%",CONCAT(#{pd.content},"%"))
+ 				</if>
+				<if test="pd.province_name != null and pd.province_name != ''"><!--省 -->
+							and a.province_name=#{pd.province_name}
+ 				</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+							and a.city_name=#{pd.city_name}
+ 				</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+							and a.area_name=#{pd.area_name}
+ 				</if>
+ 				<if test="pd.login_cityname != null and pd.login_cityname != ''"><!-- 登录人的所在 城 市 -->
+							and  find_in_set(a.city_name,#{pd.login_cityname}) 
+				</if>
+				<if test="pd.login_areaname != null and pd.login_areaname != ''"><!-- 登录人的所在 区 域 -->
+							and  find_in_set(a.area_name,#{pd.login_areaname}) 
+				</if>
+		order by a.createdate desc
+ 	</select>
+	
+	
+	<!-- 城市营销详情的第六种营销策略-->
+	<select id="getCityForName" parameterType="pd" resultType="pd">
+		select	
+				b.`name` as province_name,
+				c.`name` as city_name,
+				d.`name` as area_name,
+				e.city_marketing_id,
+				ifnull(f.clerk_commission,'0') as clerk_commission,
+				f.cm_six_id,
+				ifnull(f.service_provider_commission,'0') as service_provider_commission
+		from 
+				tb_city_file a left join tb_pcd b on a.province_id=b.pcd_id
+				left join tb_pcd c on a.city_id=c.pcd_id
+				left join tb_pcd d on a.area_id=d.pcd_id
+				left join tb_city_marketing e on a.city_file_id=e.city_file_id
+				left join tb_cm_six f on e.city_marketing_id=f.city_marketing_id 
+		where  
+				b.name=#{province_name}
+				and c.name=#{city_name}
+				and d.name=#{area_name}
+		limit  1
+  	</select>
+	
+	
+	<!-- 城市档案分类营销详情-->
+	<select id="getStartNumberForStore" parameterType="pd" resultType="pd">
+		select	
+				b.`name` as province_name,
+				c.`name` as city_name,
+				d.`name` as area_name,
+				e.onexing_money,
+				e.twoxing_money,
+				e.threexing_money
+		from 
+				tb_city_file a left join tb_pcd b on a.province_id=b.pcd_id
+				left join tb_pcd c on a.city_id=c.pcd_id
+				left join tb_pcd d on a.area_id=d.pcd_id
+				left join tb_city_file_sort e on a.city_file_id=e.city_file_id   
+  		where  
+  				e.city_file_sort_id=#{city_sort_one}
+				and b.name=#{province_name}
+				and c.name=#{city_name}
+				and d.name=#{area_name}
+  	</select>
+  	
+  	<!-- 通过城市区域获取列表 -->
+	<select id="listStoreForName" parameterType="pd" resultType="pd">
+		select
+  				a.province_name,	
+				a.city_name,	
+				a.area_name,
+				a.address,	
+				a.store_file_id,
+				a.store_id,
+ 				a.store_name,
+ 				b.goods_max,
+				b.registertel_phone,
+  				(select count(*) from tb_goods c where c.store_id=a.store_id ) as goodsnumber,
+ 				(select count(*),d.store_id from tb_store_wealthhistory d where d.store_id=a.store_id and d.profit_type='18' and day(d.createtime) = day(now())) as wealthnumber
+		from 
+				tb_store_file a join tb_store b on a.store_id=b.store_id
+ 		where  
+				a.province_name=#{province_name}
+  				and a.city_name=#{city_name}
+  				and a.area_name=#{area_name}
+			 
+	</select>
+  	
+  	
+   	<!-- 列表(全部) -->
+	<select id="listAllForCitysort" parameterType="pd" resultType="pd">
+		select 
+				a.store_name,
+				a.pictrue_url,	
+ 				a.password,	
+				a.check_status,	
+				a.store_vip_id,	
+				a.merchant_status,	
+				a.merchant_level,		
+ 				a.integral_rate,	
+				a.service_rate,	
+				a.withdraw_rate,	
+				a.lowest_score,	
+				a.remind_integral,	
+				a.sort_score,	
+				a.complex_score,	
+				cast(cast(a.complex_score as signed) as char) star,
+				cast(cast(a.comment_score as signed) as char) comment_star,
+				a.recharge_times,	
+				a.transaction_times,	
+				a.withdraw_times,	
+				a.zan_times,	
+				a.collection_times,
+				a.bigtype_max,	
+				a.smalltype_max,	
+				a.goods_max,	
+ 				a.registertel_phone,
+				a.store_file_id,
+ 				a.longitude,
+				a.latitude ,
+				a.store_id,
+				ifnull(b.store_introduce,'') store_introduce,
+				b.address,
+				b.phone_bymemeber,
+				b.principal,
+				b.phone,
+				b.province_name,
+				b.city_name,
+				b.area_name 
+		from 
+			    tb_store a 
+				left join tb_store_file b on a.store_id=b.store_id 
+				left join tb_city_file_sort c on b.city_sort_one=c.city_file_sort_id 
+				left join tb_city_file_sort d on b.city_sort_two=d.city_file_sort_id 
+				left join tb_city_file_sort e on b.city_sort_three=e.city_file_sort_id 
+ 		where
+				1=1
+				and a.check_status='1'
+				and a.merchant_status != '4'
+				and b.open_status='1'
+				and b.biaozhun_status='1'
+				<if test="city_file_sort_id != null and city_file_sort_id != '' ">
+				and (c.sort_parent_id=#{city_file_sort_id} or d.sort_parent_id=#{city_file_sort_id} or e.sort_parent_id=#{city_file_sort_id})
+				</if>
+		order by a.complex_score desc
+	</select>
+  	
+  	
+  	
+  	
+  	
+  	
+</mapper>

@@ -1,0 +1,136 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    font-size: 14px !important;
+    
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+
+}
+.hands{
+    cursor: pointer;
+}
+.dangan2_d1{
+    width: 100%;
+    height: 80px;
+}
+
+.zhifu1_sp1{
+    display: inline-block;
+    width: 7%;
+    text-align: center;
+}
+
+.zhifu1_st1{
+    width: 15%;
+    height: 40%;
+    margin-top: 1%;
+    margin-left: 2%;
+    padding-left: 1%;
+}
+
+.zhifu1_btn1{
+    display: inline-block;
+    width: 120px;
+    height:40px;
+    line-height: 40px;
+    text-align: center;
+    background-color: #5dc9ba;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 4%;
+    color: #fff;
+    font-size: 16px;
+    margin-left: 40%;
+}
+.yingxiao5_sp1{
+    display:block;
+    width: 50%;
+    line-height: 40px;
+    padding-left: 3%;
+    color:#5dc9ba;
+
+}
+.yingxiao5_ipt1{
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 10px;
+    margin-top: 2px;
+}
+.yingxiao5_sp2{
+    display: inline-block;
+    width: 80px;
+    height: 20px;
+    margin-left: 100px;
+    margin-top: 20px;
+
+}
+.yingxiao5_sp2_sp1{
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+}
+.yingxiao5_ipt2{
+    display: block;
+    float: left;
+    width: 16px;
+    height: 16px;
+}
+.yingxiao5_sp2_2{
+    display: inline-block;
+    width: 27%;
+    padding-left: 1%;
+
+}
+.yingxiao5_sp2_sp2{
+    display: block;
+    cursor: pointer;
+    float: left;
+    line-height: 16px;
+    margin-left: 10px;
+}
+.mgtop{
+    margin-top: -1%;
+    white-space: nowrap;
+
+}
+.red{
+    color: red;
+}
+.nonesp2{
+    display: none;
+ }
+.rightnone,.rightnone2{
+    display: inline-block;
+    width: 64%;
+     float: left;
+}
+.left{
+    float: left;
+    margin-left: 7%;
+}
+.rightnone2{
+    display: none;
+}
+.yingxiao5_sp2_3{
+    display: inline-block;
+    width: 48%;
+    white-space: nowrap;
+
+}
+.st2{
+    width: 10%;
+}

@@ -1,0 +1,131 @@
+/*初始化*/
+		html,body,h1,h2,h3,h4,h5,h6,p{
+			margin: 0;
+			border: 0;
+			padding: 0;
+		}
+		body,html{
+			height: 100%;
+		}
+		body{
+			font-family: Arial, "微软雅黑", sans-serif;
+			overflow-y:hidden;
+		}
+		ul,li{
+			list-style: none;
+		}
+		img{
+			border: 0;
+			line-height: 0;
+			margin: 0;
+			width: 100%;
+			display: block;
+		}
+
+		header{
+			height: 44px;
+			width: 100%;
+			background: #fc111b;
+			line-height: 44px;
+			color: #fff;
+			position: relative;
+			top: 0;
+		}
+		.goback{
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 44px;
+			text-align: center;line-height: 44px;
+			font-size: 2.5rem;
+		}
+		.goback a{
+			color:#fff;
+		}
+ 		.title{
+			width: 100%;
+			text-align: center;
+			line-height: 44px;
+			color: #fff;
+			font-size: 1.5rem;
+		}
+		.list_box{
+			height: 100%;
+			display: block;
+			padding: 1rem 4rem;
+
+		}
+		table,th,td{border-collapse: collapse;border-spacing: 0;}
+		table,tr{
+			width: 100%;
+		}
+		tr td:nth-child(1){
+			width: 30%;
+			height: 15px;
+		}
+		tr td:nth-child(2){
+			width: 80%;
+			height: 15px;
+		}
+		td{
+			padding: 2% 2%;
+			box-sizing:border-box;
+			font-size: 1.5rem;
+			border: 1px solid #aaa;
+			background: #fff;
+	
+		}
+		.button{
+			width: 3.4rem;
+			height: 3.4rem;
+			text-align: center;
+			line-height: 3rem;
+			color: #fff;
+			font-size: 20px;
+			border-radius: 50%;
+			background: url(../../img/backup.png);
+			background-size: cover;
+			position: fixed;
+			z-index: 2;
+			right:1.66rem;
+			bottom: 2rem;
+
+		}
+
+		.xq{
+			width: 50%;
+			height: 44px;
+			line-height: 44px;
+			text-align: center;
+			color: #666;
+			float: left;
+			font-size: 1.8rem;
+			background: #fff;
+		}
+		.chushi{
+			color: #FFCF7C;
+		}
+
+		.goback img {
+			width: 12px;
+			height: 20px;
+			display: block;
+			margin: 12px auto;
+		}
+		.select {
+			width: 100%;
+			background: #fff;
+			border-bottom: 1px solid #666;
+			overflow: hidden;
+			position: relative;
+		}
+		section {
+			display: block;
+			overflow-y: scroll;
+			height: 95%;
+		}
+		.list {
+			display: none;
+			overflow-y: scroll;
+			height: 80%;
+		}

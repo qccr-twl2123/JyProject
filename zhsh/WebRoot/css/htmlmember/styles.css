@@ -1,0 +1,118 @@
+@charset "utf-8";
+.slider{display:none}/*用于获取更加体验*/
+.focus span{width:10px;height:10px;margin-right:10px;border-radius:50%;background:#b3b3b3;font-size:0;border:1px solid #b3b3b3;}
+.focus span.current{background:#fff}
+.swipe-wrap div a{
+	display: inline-block;
+	width: 20%;
+	text-align: center;
+	color: #333;
+	margin-left: 3.5%;
+	margin-top: 10px;
+}
+.swipe-wrap div a i{
+	display: block;
+	width: 50px;
+	margin: 0 auto
+}
+
+
+ #lunbotu {
+        visibility: hidden;
+        position: relative;
+        border-bottom: 1px solid #c3c1c2;
+        overflow: hidden;
+    }
+    .swipe-wrap {
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 14px;
+    }
+    .swipe-wrap > div {
+        float:left;
+        width:100%;
+        position: relative;
+    }
+    /* END required styles */
+    .swipe-wrap img{
+        width: 100%;
+    }
+    .yuandian {
+        right:43%;
+        bottom:4px;
+        position: absolute;
+        /*height: 40px;*/
+    }
+    .yuandian li{
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        
+        float: left;
+        background:#fff;
+        border:1px solid #b3b3b3;
+        margin-right: 10px;
+
+    }
+    .yuandian .cur{
+        background:red;
+        background: #b3b3b3;
+    }
+.triangle-down {   
+
+width:0;   
+
+height:0;   
+
+border-left:8px solid transparent;   
+
+border-right:8px solid transparent;   
+
+border-top:8px solid #8f8f8f;
+display: inline-block;
+} 
+
+.triangle-up {   
+
+width:0;   
+
+height:0;   
+
+border-left:8px solid transparent;   
+
+border-right:8px solid transparent;   
+
+border-top: 0;
+
+border-bottom:8px solid #8f8f8f;
+display: inline-block;
+} 
+
+
+.index-title{
+    border-top: 1px solid #dedede;
+    border-bottom: 1px solid #dedede;
+    position: relative;
+    background: #f1efef;
+}
+.index-title>ul>li{
+    float: left;
+    width: 33%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 14px;
+    color: #1a1a1a;
+    font-weight: bold;
+}
+.index-title>ul>li>i{
+    float: right;
+    background: #dedede;
+    width: 1px;
+    height: 24px;
+    margin-top: 8px;
+}
+.eleme-svg.svg-rating-star{
+    width: 50px;
+    height: 10px;
+}

@@ -1,0 +1,52 @@
+@import "predefine.css";
+	
+	.act_box{
+		position: relative;
+		display: inline-block;
+		width: 140px; 
+		height: 46px;
+		margin-right: 20px;
+		cursor: pointer;
+	}
+	.act_img{
+		display: none;
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 20px;
+	}
+	.wx_ewm{
+		position: absolute;
+		width: 24%;
+		height: 24vw;
+		border:1px solid #117dd0;
+		right:10%;
+		top: 20px;
+	}
+	.ewm_title{
+		position: absolute;bottom: 0;
+		text-align: center;
+		width: 100%;
+		height: 34px;
+		line-height: 34px;
+		color: #fff;
+		background: #117dd0;
+		font-size: 87.25%;
+	}
+	.img_box{
+		width: 100%;
+		height: 90%;
+		text-align: center;
+	}
+	.img_box canvas{
+		width: 64%;
+		height: 64%;
+		padding-top: 10%;
+	}
+	.img_box span{
+		width: 100%;
+		display: inline-block;
+
+	}
+
+	

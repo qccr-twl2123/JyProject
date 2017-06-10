@@ -1,0 +1,178 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    font-size: 14px;
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+}
+.hands{
+    cursor: pointer;
+}
+.dangan_d1,
+.dangan_d2{
+    width: 100%;
+    height: 80px;
+
+}
+.dangan_d1_whw {
+    width: 100%;
+}
+.dangan_d1_lb1{
+    margin-left: 5%;
+    text-align: right;
+}
+.dangan_d1_sp1{
+    display: inline-block;
+    width: 10%;
+    text-align: right;
+}
+.dangan_d1_ipt1{
+    width: 20%;
+    height: 40%;
+    margin-top: 1%;
+    margin-left: 1%;
+    border-radius: 5px;
+    padding-left: 1%;
+}
+.blue{
+    color: #2eaef0;
+    margin-left: 2%;
+}
+.dangan_d1_st1{
+    width: 10%;
+    height: 40%;
+    margin-left: 1%;
+    border-radius: 5px;
+    margin-top: 1%;
+    padding-left: 1%;
+}
+.dangan_d2{
+    padding-top: 1%;
+    height: 6%;
+}
+.ipt3{
+    width: 36%;
+}
+.ipt4{
+        height:200px;
+}
+.dangan_d1_btn1{
+    display: inline-block;
+    width: 120px;
+    height:40px;
+    line-height: 40px;
+    text-align: center;
+    background-color: #5dc9ba;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 4%;
+    color: #fff;
+    font-size: 16px;
+    margin-top: 20px;
+}
+.dangan_d1_sp2{
+    display: inline-block;
+     text-align: right;
+    margin-top: 2%;
+}
+.dangan_d1_ipt2{
+    width: 10%;
+    height: 40%;
+    margin-left: 1%;
+    border-radius: 5px;
+}
+.mgleft11{
+    margin-left: 30%;
+}
+.dangan8_sp1{
+    display: inline-block;
+    width: 5%;
+    margin-left: 2%;
+
+}
+.dangan8_sp1 span{
+    margin-left: 10%;
+    cursor: pointer;
+}
+.dangan12_sp1{
+    color: #5dc9ba;
+    margin-left: 3%;
+}
+.mgtop{
+    margin-top: 1%;
+}
+.dangan12_d1{
+    width: 75%;
+    height: 240px;
+    border:1px solid #8f8f8f;
+    border-radius: 5px;
+    margin-left: 7%;
+}
+.dangan12_d1_left{
+    float: left;
+    width: 30%;
+    height: 90%;
+    margin-top: 2%;
+    margin-left: 1%;
+}
+.dangan12_d1_left_sp1{
+    display: inline-block;
+    width: 100%;
+/*     height: 20px;
+ */    margin-left: 1%;
+}
+.dangan12_d1_left_img1{
+    float: left;
+    width: 45%;
+    height: 80%;
+     margin-left: 2%;
+}
+.dangan12_ipt1{
+     width:20px;
+    height: 20px;
+    margin-top: 1%;
+    margin-left: 7%;
+    display: block;
+    float: left;;
+}
+.dangan12_ipt1_sp1{
+    font-size: 18px;
+    display: block;
+    float: left;
+    width: 200px;
+    height: 50px;
+    margin-top: 1%;
+    margin-left: 1%;
+    cursor: pointer;
+}
+.dangan12_d2{
+    width: 100%;
+    height: 10%;
+    border:1px solid red;
+}
+.dangan12_jine{
+    display: block;
+    text-align: right;
+    float: left;
+    width: 10%;
+}
+.dangan_d1_st2{
+    width: 20%;
+    height: 40%;
+    margin-left: 1%;
+    border-radius: 5px;
+    margin-top: 1%;
+    padding-left: 1%;
+}

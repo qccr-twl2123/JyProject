@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XJTStore_wealthMapper">
+
+	<!-- 商家的pc后台 查询积分  邢江涛 -->
+	<select id="sumStoreWealth" parameterType="pd" resultType="String">
+		select 
+			 ifnull(cast(cast( now_wealth as decimal(10,2) )  as char) , '0') as now_wealth    
+		from  
+			tb_store_wealth
+		where 
+			store_id = #{store_id}  and wealth_type = '1'
+	</select>
+
+	<!-- 修改积分 app-->
+	<update id="edit" parameterType="pd">
+			update  tb_store_wealth
+			set 
+ 				<if test="now_wealth != null and now_wealth != ''">
+					now_wealth = #{now_wealth},
+ 				</if>
+ 				store_wealth_id=store_wealth_id
+			where 
+				store_id = #{store_id} and wealth_type = '1'
+	</update>
+ 	
+	<!-- 查出商家vip图片和颜色 刘耀耀 2016.7.21-->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+				a.image_url,
+				a.font_color
+		from
+				tb_store_vip a,tb_store b		
+		where
+				a.store_vip_id=b.store_vip_id
+		and
+				store_id=#{store_id}
+	</select>
+
+</mapper>

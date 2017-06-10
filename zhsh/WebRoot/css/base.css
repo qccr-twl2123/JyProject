@@ -1,0 +1,50 @@
+@charset "utf-8";
+html, body{height:100%}
+body,p,ul,li,dl,img,input,textarea,select,dl,dt,dd,h1{border:0;padding:0;margin:0; }
+ul,ul li{list-style: none;}
+input,button,select,textarea{outline:none}
+textarea{resize: none;}
+body{ font-family:"微软雅黑";font-size:1em;color: #333;background-color:#fff;}
+a{cursor:pointer; text-decoration:none;}
+img{display:block;width:100%;max-width:100%;vertical-align:bottom;}
+.rel{position:relative}
+.clearfloat{zoom:1;}
+.clearfloat:after{content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+.fright{float: right;}
+.fleft{float: left;}
+.center{text-align: center;}
+.right{text-align: right;}
+/*placeholder样式ʽ*/
+::-webkit-input-placeholder{color:#bfbfbf;font-size:1.6em}
+::-moz-placeholder{color:#bfbfbf;font-size:1.6em}
+::-ms-placeholder{color:#bfbfbf;font-size:1.6em}
+
+
+
+@media (min-width:800px){
+    .top{background: url(../img/topbg.jpg) no-repeat center;height: 438px;}
+    .erweima{width: 800px;margin: 0 auto;}
+    .erweima ul{width: 800px;text-align: center;overflow: hidden;}
+    .erweima ul li{float: left;margin:0 100px;}
+    
+}
+
+@media (max-width:800px){
+    .erweima{width: 100%;}
+    .erweima ul{margin: 0 10px;}
+    .erweima ul li{margin: 0 auto;margin-top:20px ;}
+    .footer p{font-size:0.8em;}
+    body{font-size: 1em;}
+}
+
+body{background:#f2f2f2;}
+.top{width: 100%;}
+
+.content{margin:30px auto;max-width: 800px;}
+.content p{text-indent: 2em;margin: 0 10px;text-align: justify;color: #4d4d4d;}
+
+.erweima ul li{width: 200px;}
+.erweima ul li span{display: block;text-align: center;color: #4d4d4d;}
+
+
+.footer p{display: block;height: 40px;line-height: 40px;background: #5e5552;text-align: center;width: 100%;margin-top:20px ;color: #fff;}

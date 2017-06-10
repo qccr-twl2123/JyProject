@@ -1,0 +1,141 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+    font-size: 15px;
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+    color: #000;
+}
+span   {
+    display: inline-block;
+}
+.hands{
+    cursor: pointer;
+}
+/*header*/
+.parent{
+    width: 100%;
+    height:100%;
+
+}
+.d1{
+    width: 100%;
+    margin-top: 20px;
+    border-bottom: 1px solid #8f8f8f;
+}
+.d1_sp1{
+    display: inline-block;
+    font-size: 20px;
+    width: 5em;
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    margin-left: 10%;
+}
+.d2{
+        width: 90%;
+    margin-left: 2%;
+}
+.p1{
+    width: 100%;
+    height:40px;
+    line-height: 40px;
+
+}
+.p1_sp1{
+    width: 6em;
+    text-align: right;
+    margin-right: 10px;
+    height: 40px;
+
+}
+.p1_sp2{
+    margin-left: 20px;
+    color: #888;
+}
+.red{
+    color: red;
+}
+.p1_ipt1{
+    width: 120px;
+}
+.p2_ipt1{
+     width: 350px;
+}
+.p3_ipt1{
+    width: 80px;
+    margin-left: 5px;
+}
+.p2{
+    width: 100%;
+    height: 100px;
+    margin-top: 10px;
+
+}
+.p2_ipt2{
+    width: 350px;
+    height: 100px;
+}
+.p1_sp1_lt{
+    float: left;
+    margin-right: 15px;
+}
+.splt{
+    margin-left: 0px  !important;
+}
+.p3{
+    width: 100%;
+}
+.p3_sp1{
+    width: 8em;
+    text-align: center;
+    line-height: 40px;
+    float: left;
+}
+.p3_img{
+    width: 100px;
+    height: 80px;
+    background-color: pink;
+    margin-left: 50px;
+}
+.tc_content_p3_a{
+    display:inline-block; width:100px; height:40px; background:#ccc; position:relative; overflow:hidden;border: 1px solid #8f8f8f;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    cursor: pointer;
+    left: 50px;
+    top: -20px;
+    border-radius: 2px;
+}
+.tc_content_p3_a_ipt{position:absolute; right:0; top:0; font-size:100px; opacity:0; filter:alpha(opacity=0);}
+.p4{
+    width: 100px;
+    height: 50px;
+    margin-top: 50px;
+    margin-left: 110px;
+}
+.tj{
+    width: 14%;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    background-color: #169ada;
+    border-radius: 5px;
+    margin-left: 35%;
+    cursor: pointer;
+    margin-bottom: 20px;
+}

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="XJTStore_marketingtypeMapper" >
+  
+  
+  <!-- 新增营销类型  邢江涛 -->
+  <insert id="save" parameterType="pd" >
+	insert into tb_store_marketingtype (
+		store_marketingtype_id,
+		marketsmall_name,
+		marketsmall_type,
+		oneachieve_money,
+		onereduce_monye,
+		onesend_redpackage,
+ 		threeachieve_money,
+		threereduce_money,
+		threediscount_rate,
+ 		fourachieve_number,
+		fourreduce_number,
+		foursend_money,
+		fiveachieve_number,
+		fiveredpackage_type,
+		goods_id,
+		startdate,
+		enddate,
+		starttime,
+		endtime,
+		marketing_type,
+		store_id,
+ 		content
+	)
+	values (
+		#{store_marketingtype_id}, 
+		#{marketsmall_name},
+		#{marketsmall_type},
+		 #{oneachieve_money},
+		#{onereduce_monye},
+		 #{onesend_redpackage},
+ 		#{threeachieve_money},
+		 #{threereduce_money},
+		  #{threediscount_rate},
+ 		 #{fourachieve_number},
+		  #{fourreduce_number},
+		#{foursend_money}, 
+		#{fiveachieve_number}, 
+		#{fiveredpackage_type},
+ 		 #{goods_id}, 
+		 #{startdate},
+		#{enddate}, 
+		#{starttime}, 
+		#{endtime},
+		#{marketing_type},
+		#{store_id},
+		#{content}
+	)
+  </insert>
+  
+  <!-- 查询营销类型   邢江涛-->
+  <select id="list" parameterType="pd" resultType="pd">
+  		select *
+  		 from tb_store_marketingtype
+  		 where marketsmall_type = #{marketsmall_type}
+  </select>
+  
+  <!-- 查询营销类型   邢江涛-->
+  <select id="listAllByType" parameterType="pd" resultType="pd">
+  		select *
+  		 from tb_store_marketingtype
+  		 where marketing_type = #{marketing_type} and store_id=#{store_id}
+  </select>
+  
+  <delete id="delete">
+  	delete from tb_store_marketingtype where store_marketingtype_id=#{store_marketingtype_id}
+  </delete>
+  
+  
+  <!-- 更新营销状态为到期的时候 -->
+	<update id="updateOverTime" parameterType="pd" >
+		update tb_store_marketingtype
+		set isguoqi='1'
+		where store_marketingtype_id=#{store_marketingtype_id}
+	</update>
+  <!-- 更新营销状态为到期的时候 刘耀耀 2016.07.19-->
+	<update id="updateTime" parameterType="pd" >
+		update 
+			tb_store_marketingtype
+		set 
+			isguoqi='1'
+		where 
+			store_marketingtype_id=#{store_marketingtype_id}
+		and
+			enddate &lt; #{data}
+	</update>
+	
+	
+		<!-- 查询详情-->
+	  <select id="findById" parameterType="pd" resultType="pd">
+	  		 select *
+	  		 from tb_store_marketingtype
+	  		 where store_marketingtype_id = #{marketing_id} and isguoqi='0'
+	  </select>
+	
+</mapper>

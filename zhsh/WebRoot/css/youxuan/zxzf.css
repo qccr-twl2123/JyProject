@@ -1,0 +1,104 @@
+/*初始化*/
+		html,body,h1,h2,h3,h4,h5,h6,p,img,ul,li{
+			margin: 0;
+			border: 0;
+			padding: 0;
+		}
+		body,html{
+			height: 100%;
+		}
+		body{
+			font-family: Arial, 微软雅黑, sans-serif;
+			overflow-y:hidden;
+		}
+		ul,li{
+			list-style: none;
+		}
+		a{
+			text-decoration: none;
+			color: #000;
+		}
+		body{
+			background: #f5f5f5;
+		}
+
+
+		/*头部*/
+		header{
+			height: 44px;
+			width: 100%;
+			background: #fc111b;
+			line-height: 44px;
+			color: #fff;
+			position: fixed;
+			top: 0;
+			z-index: 2;
+		}
+		.goback{
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 44px;
+			text-align: center;line-height: 44px;
+			font-size: 1.6rem;
+		}
+		.title{
+			width: 100%;
+			text-align: center;
+			color: #fff;
+
+		}
+		.djs {
+		  	height: 44px;
+		  	text-align: center;
+		}
+		.djs h6{
+			font-weight: normal;
+			line-height: 44px;
+			font-size: 1rem;
+		}
+		.cont{
+			padding-top: 44px;
+		}
+		.tit{
+			background: #efeff4;
+			line-height: 44px;
+			padding-left: 1rem;
+			border-bottom: 1px solid #c8c7cc;
+			padding-right: 1rem;
+		}
+		.tit span{
+			float: right;
+		}
+		.payway{
+			display: block;
+			position: relative;
+			padding-left: 1rem;
+			border-bottom: 1px solid #c8c7cc;
+			background: #fff;
+			height: 3.6rem;
+		}
+		.payway img{
+			width: 44px;
+			line-height: 0;
+			padding: 0.45rem 0.45rem 0.45rem 0;
+			position: absolute;
+		}
+		.payway p{
+			padding: 0.9rem;
+			padding-left: 4rem;
+			line-height: 1.5;
+			text-decoration: none;
+			font-weight: normal;
+		}
+		.col{
+			color: #ea4c27;
+		}
+/*		.payway p:nth-child(2){
+			font-weight: bold;
+		}
+		.payway p:nth-child(3){
+			color: #6a6a6a;
+			font-size: 0.9rem;
+		}
+*/

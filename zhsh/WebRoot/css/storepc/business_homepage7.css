@@ -1,0 +1,148 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+    font-size: 15px;
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+    color: #000;
+}
+.hands{
+    cursor: pointer;
+}
+/*header*/
+.parent{
+    width: 100%;
+    height:100%;
+
+}
+.d1{
+    width: 100%;
+    height: 68px;
+    border-bottom: 1px solid #ccc;
+    line-height: 68px;
+}
+.d1_sp1{
+    display: inline-block;
+    width: 6em;
+    text-align: center;
+    margin-left: 20px;
+    height: 2em;
+    line-height: 2em;
+    background-color: #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+.d1 span:first-child{
+    margin-left: 10%;
+}
+.d1_sp1_active{
+    background-color: #169ada;
+}
+.d1_sp1_active a{
+    color: #fff;
+}
+span a{
+    display: inline-block;
+    width: 100%;
+}
+.d2{
+   width: 90%;
+   height: 60px;
+   line-height: 60px;
+   margin: 5px;
+}
+.d2 .ssmy{
+	display: inline-block;
+	/* background-color: #169ada; */
+	width:100px;
+	margin-right:10px;
+	text-align:right;
+ }
+ .sstp{
+ 	display: inline-block;
+ 	width:30px;
+ 	height:30px;
+ 	background-image:url("../../img/sousuo.png");
+ 	text-align:center;
+ 	line-height:30px;
+ }
+.d2_sp1{
+    display: inline-block;
+    margin-left: 5%;
+    font-size: 16px;
+    width: 5em;
+    text-align: center;
+}
+
+.d2_ipt1{
+    width: 145px;
+    height: 30px;
+}
+.mgleft5{
+    margin-left: 11%;
+}
+.d2_ipt2{
+    width: 75%;
+    height: 60px;
+}
+table{
+    width: 75%;
+    margin-left: 10%;
+    text-align: center;
+     border-right: 1px solid #8f8f8f;
+    border-bottom: 1px solid #8f8f8f;
+    background-color: #fff;
+}
+ table td{
+    height: 50px;
+    border-left: 1px solid #8f8f8f;
+    border-top: 1px solid #8f8f8f;
+}
+.d3{
+    width: 80%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    margin-left: 10%;
+}
+.bc{
+    display: inline-block;
+    font-size: 16px;
+    width: 5em;
+    height: 2em;
+    line-height: 2em;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+    background-color: #169ada;
+    border-radius: 5px;
+    margin-left: 30%;
+    margin-top: 50px;
+}
+.play{
+    display: inline-block;
+    font-size: 14px;
+    width: 10em;
+    height:2.3em;
+    line-height: 2.3em;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+    background-color: #169ada;
+    border-radius: 5px;
+    margin-left: 40%;
+    margin-top: 50px;
+}

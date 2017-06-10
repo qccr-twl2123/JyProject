@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="XJTStorescoreWayModelMapper" >
+
+
+	<!-- 新增积分方式  邢江涛 -->
+  <insert id="save" parameterType="pd" >
+    insert into tb_store_scoreway 
+    (store_id, 
+    change_type, 
+    selected_status, 
+      content,
+       oneback_rate, 
+        threemin_rate, 
+        threemax_rate, 
+      fourbackintegral_integral,
+       fiveconsumer_money, 
+      fivesendintegral_rate,
+       store_scoreway_id,grantrule
+       )
+    values (
+    #{store_id},
+     #{change_type}, 
+     #{selected_status}, 
+      #{content}, 
+      #{oneback_rate},
+       #{threemin_rate},
+        #{threemax_rate}, 
+      #{fourbackintegral_integral}, 
+      #{fiveconsumer_money}, 
+      #{fivesendintegral_rate}, 
+      #{store_scoreway_id},#{grantrule}
+      )
+  </insert>
+  
+  	<!-- 删除数据库中存在的积分方式  邢江涛-->
+	<delete id="deleteBystoreid" parameterType="pd">
+		delete  from  tb_store_scoreway
+		where 1=1
+			and store_id=#{store_id}
+	</delete>
+
+	<!-- 查看详情 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select *
+		from tb_store_scoreway
+		where store_id=#{store_id}
+		<if test="change_type != null and change_type != ''">and change_type=#{change_type}</if>
+		limit 1
+	</select>
+	
+	<!-- 删除数据库中存在-->
+	<delete id="deleteById" parameterType="pd">
+		delete  from  tb_store_scoreway
+		where store_scoreway_id=#{store_scoreway_id}
+	</delete>
+  
+</mapper>

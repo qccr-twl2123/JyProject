@@ -1,0 +1,258 @@
+body,
+ul,
+li,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0 ;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  font-family: "arial", "微软雅黑", "宋体";
+}
+body,
+html {
+  height: 100%;
+}
+body {
+  background: url("../../img/page/bg.png") repeat;
+}
+.dask {
+  display: none;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: 9;
+  background: rgba(210, 210, 210, 0.5);
+}
+.dask .alert {
+  width: 920px;
+  height: 464px;
+  position: fixed;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #ffffff;
+  box-shadow: 0 0  20px #aaa;
+  border-radius: 13px;
+}
+.dask .alert .close {
+  float: right;
+  width: 38px;
+  height: 38px;
+  background-image: url("../../img/page/operator/close.png");
+  background-size: contain;
+}
+.dask .alert .alert_tit {
+  height: 20%;
+  font-weight: bold;
+  line-height: normal;
+  text-align: center;
+}
+.dask .alert .alert_tit span {
+  font-size: 25px;
+}
+.dask .alert .alert_tit .one {
+  width: 80%;
+  margin: 0 auto 22px auto;
+  padding-top: 18px;
+  border-bottom: 1px solid #d2d2d2;
+}
+.dask .alert .al_body {
+  height: 100px;
+  padding: 45px 0 128px 25%;
+}
+.dask .alert .al_body .hg {
+  margin-bottom: 10px;
+}
+.dask .alert .al_foot .button_box {
+  width: 900px;
+  height: 100px;
+  margin: 0 auto;
+  background: #ffffff;
+}
+.dask .alert .al_foot .button_box .next {
+  background: linear-gradient(to bottom, #15acf3 0%, #0f7bad 100%);
+  padding: 0 35px;
+  text-align: center;
+  line-height: 46px;
+  border-radius: 5px;
+  color: #fff;
+  text-shadow: 1px 1px #999;
+  float: right;
+  margin-right: 90px;
+}
+.dask .alert .al_foot .button_box .next:active {
+  box-shadow: 1px 1px 2px #999;
+}
+@media screen and (max-width: 1200px) {
+  .dask .alert .al_foot .button_box {
+    width: 780px;
+  }
+}
+@media screen and (max-width: 960px) {
+  .dask .alert .al_foot .button_box {
+    width: 680px;
+  }
+}
+@media screen and (max-width: 1200px) {
+  .dask .alert {
+    width: 800px;
+  }
+}
+@media screen and (max-width: 960px) {
+  .dask .alert {
+    width: 700px;
+  }
+}
+.dask .paysuccess {
+  display: none;
+}
+.bg {
+  width: 1200px;
+  background: #fff;
+  height: 100%;
+  margin: 0 auto;
+}
+.bg header {
+  height: 18%;
+}
+.bg header .head_cont {
+  background: #fff;
+  width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+}
+.bg header .head_cont img {
+  width: 55px;
+  height: 55px;
+  float: left;
+  margin: 18px 30px 15px 30px;
+}
+.bg header .head_cont .title {
+  float: left;
+  height: 88px;
+  text-align: center;
+  line-height: 88px;
+  font-size: 32px;
+}
+.bg header .head_cont .one {
+  float: left;
+  width: 96%;
+  margin: 0 2% 20px 2%;
+  border-bottom: 2px solid #15acf3;
+}
+@media screen and (max-width: 1200px) {
+  .bg header .head_cont {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  .bg header .head_cont {
+    width: 700px;
+  }
+}
+.bg section .button_box {
+  width: 1200px;
+  height: 100px;
+  margin: 0 auto;
+  background: #ffffff;
+}
+.bg section .button_box .butt {
+  background: linear-gradient(to bottom, #15acf3 0%, #0f7bad 100%);
+  padding: 0 35px;
+  text-align: center;
+  line-height: 46px;
+  border-radius: 5px;
+  color: #fff;
+  text-shadow: 1px 1px #999;
+  float: right;
+  margin-right: 90px;
+}
+.bg section .button_box .butt:hover {
+  cursor: pointer;
+}
+.bg section .button_box .butt:active {
+  box-shadow: 1px 1px 2px #999;
+}
+.bg section .sec_cont {
+  padding-left: 20%;
+}
+.bg section .sec_cont li {
+  padding: 15px 0;
+  font-size: 20px;
+}
+@media screen and (max-width: 1200px) {
+  .bg section .button_box,
+  .bg section .tab_box {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  .bg section .button_box,
+  .bg section .tab_box {
+    width: 700px;
+  }
+}
+.bg footer .font_cont {
+  width: 1200px;
+  height: 120%;
+  margin: 0 auto;
+  background: #fff;
+}
+.bg footer .font_cont .button_box {
+  width: 1200px;
+  height: 100px;
+  margin: 0 auto;
+  background: #ffffff;
+}
+.bg footer .font_cont .button_box .butt {
+  background: linear-gradient(to bottom, #15acf3 0%, #0f7bad 100%);
+  padding: 0 35px;
+  text-align: center;
+  line-height: 46px;
+  border-radius: 5px;
+  color: #fff;
+  text-shadow: 1px 1px #999;
+  float: right;
+  margin-right: 90px;
+}
+.bg footer .font_cont .button_box .butt:hover {
+  cursor: pointer;
+}
+.bg footer .font_cont .button_box .butt:active {
+  box-shadow: 1px 1px 2px #999;
+}
+@media screen and (max-width: 1200px) {
+  .bg footer .font_cont {
+    width: 960px;
+  }
+  .bg footer .font_cont .button_box {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  .bg footer .font_cont {
+    width: 700px;
+  }
+  .bg footer .font_cont .button_box {
+    width: 700px;
+  }
+}
+@media screen and (max-width: 1200px) {
+  .bg {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  .bg {
+    width: 700px;
+  }
+}

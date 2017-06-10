@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XJTStorepc_bankcardMapper">
+
+		<insert id="saveAlipay" parameterType="pd">
+				insert into tb_store_alipay(
+					store_alipay_id,
+					alipay_number,
+					alipay_name,
+					store_id,
+					createdate
+				)
+				values(
+					#{store_alipay_id},
+					#{alipay_number},
+					#{alipay_name},
+					#{store_id},
+					 now()
+					)
+			
+	</insert>
+	<!-- 删除支付宝 -->
+	<delete id="deleteAlipay" parameterType="pd" >
+		delete from tb_store_alipay
+		where store_alipay_id=#{store_alipay_id}
+	</delete>
+ 	
+	<!-- 查询支付宝是否已经存在 -->
+	<select id="listAlipay" parameterType="pd" resultType="pd">
+		select * from tb_store_alipay
+		where store_id = #{store_id}
+		<if test="alipay_number != null and alipay_number != ''">
+		and alipay_number=#{alipay_number}
+		</if>
+	</select>
+ 	
+	<!-- 支付宝数量 -->
+	<select id="AlipayCount" parameterType="pd" resultType="String">
+		select count(*) from tb_store_alipay
+		where store_id = #{store_id}
+ 	</select>
+	
+	<!-- 查询支付宝详情 -->
+	<select id="findbyAlipay" parameterType="pd" resultType="pd">
+		select * from tb_store_alipay
+		where store_alipay_id = #{store_alipay_id}
+ 	</select>
+	
+	<!-- 新增银行卡 -->
+	<insert id="save" parameterType="pd">
+		insert into tb_store_bankcard(
+			store_bankcard_id,
+			account,
+			bank_number,
+			phone,
+			isdefault,
+			store_id,
+			bankcard_name,
+			password,
+			single_payment_limit,
+			daily_payment_limit,
+			dot
+			)
+		values(
+			#{store_bankcard_id},
+			#{account},
+			#{bank_number},
+			#{phone},
+			#{isdefault},
+			#{store_id},
+			#{bankcard_name},
+			#{password},
+			#{single_payment_limit},
+			#{daily_payment_limit},
+			#{dot}
+			)
+ 	</insert>
+	
+ 	<!-- 删除银行卡 -->
+	<delete id="deleteBank" parameterType="pd" >
+		delete from tb_store_bankcard
+		where store_bankcard_id=#{store_bankcard_id}
+	</delete>
+	
+	
+	<!-- 查询银行卡  邢江涛 -->
+	<select id="list" parameterType="pd" resultType="pd">
+		select store_bankcard_id,account,bank_number,password,single_payment_limit,daily_payment_limit,dot from tb_store_bankcard
+		where 1=1 and store_id = #{store_id}
+		<if test="bank_number != null and bank_number != ''">
+		and bank_number=#{bank_number}
+		</if>
+	</select>
+	
+	<!-- 查询银行卡详情pc  邢江涛 -->
+	<select id="findByNumber" parameterType="pd" resultType="pd">
+		select store_bankcard_id,account,bank_number,password,single_payment_limit,daily_payment_limit,dot from tb_store_bankcard
+			where bank_number = #{bank_number}
+	</select>
+	
+	<!-- 查询银行卡详情app  邢江涛 -->
+	<select id="findbankinfo" parameterType="pd" resultType="pd">
+		select store_bankcard_id,account,bank_number,password,single_payment_limit,daily_payment_limit,dot from tb_store_bankcard
+		where 1=1
+		<if test="bank_number != null and bank_number != ''"><!-- 关键词检索 -->
+			and
+				(
+					 bank_number = #{bank_number}
+				)
+		</if>
+	</select>
+	
+	
+	<!-- 查询银行卡详情app  -->
+	<select id="findbankById" parameterType="pd" resultType="pd">
+		select  *
+		from tb_store_bankcard
+		where  store_bankcard_id=#{store_bankcard_id}
+	</select>
+	
+	<!-- 修改银行卡是否默认  刘耀耀 2013.7.13-->
+	<update id="update" parameterType="pd">
+	update tb_store_bankcard 
+		set
+			isdefault=0
+	where
+		store_id=#{store_id}
+	and
+		store_bankcard_id!=#{store_bankcard_id}
+	</update>
+		
+	<!-- 解除银行卡 app  邢江涛-->
+	<delete id="delete" parameterType="pd">
+		delete from tb_store_bankcard
+		where 
+			bank_number = #{bank_number}
+	</delete>
+	
+	<!-- 我的银行卡数量 -->
+	<select id="bnakCount"  parameterType="String" resultType="String">
+		SELECT count(*) from tb_store_bankcard where store_id = #{store_id}
+	</select>
+ 
+	
+</mapper>
+

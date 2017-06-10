@@ -1,0 +1,154 @@
+body,
+ul,
+li,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0 ;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  font-family: "arial", "微软雅黑", "宋体";
+}
+body,
+html {
+  height: 100%;
+}
+body {
+  background: url("../../img/page/bg.png") repeat;
+  overflow: hidden;
+}
+.bg {
+  width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  background: #ffffff;
+}
+@media screen and (max-width: 1200px) {
+  .bg {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  .bg {
+    width: 700px;
+  }
+}
+header .head_cont {
+  background: #fff;
+  width: 1200px;
+  height: 90px;
+  margin: 0 auto;
+}
+header .head_cont img {
+  width: 55px;
+  height: 55px;
+  float: left;
+  margin: 18px 30px 15px 30px;
+}
+header .head_cont .title {
+  float: left;
+  height: 88px;
+  text-align: center;
+  line-height: 88px;
+  font-size: 32px;
+}
+header .head_cont .one {
+  float: left;
+  width: 96%;
+  margin: 0 2% 20px 2%;
+  border-bottom: 2px solid #15acf3;
+}
+@media screen and (max-width: 1200px) {
+  header .head_cont {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  header .head_cont {
+    width: 700px;
+  }
+}
+section .inf_list {
+  width: 1200px;
+  height: 100%;
+  background: #fff;
+  margin: 0 auto;
+  line-height: 20px;
+}
+section .inf_list li {
+  width: 84%;
+  padding: 0.4% 8%;
+  overflow: hidden;
+}
+section .inf_list li input {
+  margin-right: 15px;
+}
+section .inf_list li .tit {
+  width: 105px;
+  height: 18px;
+  float: left;
+  font-size: 18px;
+  text-align: center;
+}
+section .inf_list li .tit span {
+  color: red;
+}
+section .inf_list li .tit p,
+section .inf_list li .tit span,
+section .inf_list li .tit input {
+  float: left;
+  display: block;
+}
+section .inf_list li textarea {
+  width: 426px;
+  height: 116px;
+  font-size: 18px;
+  max-width: 426px;
+  max-height: 116px;
+  float: left;
+}
+section .inf_list li input {
+  float: left;
+}
+@media screen and (max-width: 1200px) {
+  section .inf_list {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  section .inf_list {
+    width: 700px;
+    font-size: 12px;
+  }
+}
+footer .next {
+  width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 15px 0;
+  background: #fff;
+  text-align: center;
+}
+footer .next img:hover {
+  cursor: pointer;
+  border-radius: 5px;
+}
+footer .next img:active {
+  box-shadow: 1px 1px 2px #838383;
+}
+@media screen and (max-width: 1200px) {
+  footer .next {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  footer .next {
+    width: 700px;
+  }
+}

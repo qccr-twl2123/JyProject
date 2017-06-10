@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AppStore_marketingMapper">
+
+ 
+	<!-- 获取所有商家设置的营销手段魏汉文20160612-->
+	<select id="listAllMarketing" parameterType="pd" resultType="pd">
+		select 
+				a.store_marketing_id,
+				a.marketing_type,
+				a.change_type,
+				a.grantrule,
+				a.starttime,
+				a.endtime,
+				a.sort,
+				a.open_status,
+				a.store_id,
+				a.isguoqi,
+				a.marketing_id,
+				a.daytime
+		from 
+				tb_store_marketing a
+		where 
+				a.open_status='1'
+				and a.isguoqi='0'
+				and a.store_id=#{store_id}
+				and to_days(now()) &gt;= to_days(a.starttime)
+				and to_days(now()) &lt;= to_days(a.endtime)
+		order by sort 
+		limit 2
+	</select>
+ 
+	<!-- 获取所有商家设置的营销手段魏汉文20160628-->
+	<select id="listAllById" parameterType="pd" resultType="pd">
+		select 
+				a.store_marketing_id,
+				a.marketing_type,
+				a.change_type,
+				a.grantrule,
+				a.starttime,
+				a.endtime,
+				a.sort,
+				a.open_status,
+				a.store_id,
+				a.isguoqi,
+				a.marketing_id,
+				a.daytime
+		from 
+				tb_store_marketing a
+		where 
+				a.open_status='1'
+				and a.isguoqi='0'
+ 				and to_days(now()) &gt;= to_days(a.starttime)
+				and to_days(now()) &lt;= to_days(a.endtime)
+				and a.store_id=#{store_id}
+				<if test="marketing_type != null and marketing_type != '' ">
+				and a.marketing_type=#{marketing_type}
+				</if>
+ 		order by sort 
+ 	</select>
+ 
+	<!-- 获取所有商家设置的折扣手段魏汉文20160628-->
+	<select id="getZKById" parameterType="pd" resultType="pd">
+		select 
+				a.* 
+		from 
+				tb_store_discountway a 
+			    join tb_store_marketing b  on   a.store_discountway_id=b.marketing_id 
+		where 
+ 				a.selected_status='1'
+  				and  a.isguoqi= '0'
+ 				and b.open_status='1'
+ 				and to_days(now()) &gt;= to_days(b.starttime)
+				and to_days(now()) &lt;= to_days(b.endtime)
+  				<if test="store_id != null and store_id != ''">
+ 				and a.store_id=#{store_id}
+ 				</if>
+ 				<if test="store_discountway_id != null and store_discountway_id != ''">
+ 				and a.store_discountway_id=#{store_discountway_id}
+ 				</if>
+ 		limit 1	
+  	</select>
+  	
+  
+  	
+  		<!-- 获取所有商家设置所有的折扣手段魏汉文20160628-->
+	<select id="listAllZKById" parameterType="pd" resultType="pd">
+		select 
+				*
+		from 
+				tb_store_discountway
+		where 
+ 				store_id=#{store_id}
+ 				and selected_status='1'
+ 				<if test="isguoqi != null and isguoqi != ''">
+ 				and   isguoqi=#{isguoqi}
+ 				</if>
+   	</select>
+	
+ 
+	<!-- 获取所有商家设置的积分手段魏汉文20160628-->
+	<select id="getJfById" parameterType="pd" resultType="pd">
+		select 
+				*
+		from 
+				tb_store_scoreway
+		where 
+ 				store_id=#{store_id}
+  				and selected_status='1'
+  				<if test="store_scoreway_id != null and store_scoreway_id != ''">
+  				and store_scoreway_id=#{store_scoreway_id}
+  				</if>
+  		limit 1	
+    	</select>
+  	
+   	
+  	
+  	<!-- 获取所有商家设置的积分手段魏汉文20160628-->
+	<select id="listAllJFById" parameterType="pd" resultType="pd">
+		select 
+				*
+		from 
+				tb_store_scoreway
+		where 
+ 				store_id=#{store_id}
+  				and selected_status='1'
+  				<if test="change_type != null and change_type != ''">
+  				and change_type=#{change_type}
+  				</if>
+   	</select>
+ 	
+	 
+</mapper>

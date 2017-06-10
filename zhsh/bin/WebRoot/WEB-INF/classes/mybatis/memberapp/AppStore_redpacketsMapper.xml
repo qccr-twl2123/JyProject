@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AppStore_redpacketsMapper">
+	
+	
+	<!-- 商家产品的红包列表魏汉文20160630 -->
+	<select id="list" parameterType="pd" resultType="pd">
+			select
+					a.store_redpackets_id,
+					a.choice_type,
+					a.redpackage_type,
+					a.money, 
+					a.store_id,
+					ifnull(a.srp_opentype_id,'') as srp_opentype_id,
+					a.overget_money,
+					a.redpackage_number,
+					a.overget_number,
+					a.srp_usercondition_id,
+					a.srp_usercondition_content,
+					a.srp_usercondition_id as type,
+					a.srp_usercondition_content as name
+			from 
+					tb_store_redpackets a  
+					join tb_store b on a.store_id=b.store_id
+			where 
+					a.redpackage_status = #{redpackage_status}
+ 					and a.isguoqi='0'
+ 					and cast(a.redpackage_number as signed) &gt;  cast(a.overget_number as signed) 
+ 			    	and to_days(now()) &gt;= to_days(a.starttime) 
+                	and to_days(now()) &lt;= to_days(a.endtime) 
+                	and a.store_id=#{store_id}
+                	<if test="redpackage_type != null and redpackage_type != ''">
+                	and redpackage_type=#{redpackage_type}
+                	</if>
+ 	</select>
+ 	
+ 		
+	<!-- 统计商家的现金折扣红包 -->
+	<select id="listCountRedPackage" parameterType="pd" resultType="string">
+			select
+				 	count(*)
+			from 
+					tb_store_redpackets a  
+			where 
+					a.redpackage_status = '0'
+ 					and a.isguoqi='0'
+			    	and cast(a.redpackage_number as signed) &gt;  cast(a.overget_number as signed) 
+			    	and to_days(now()) &gt;= to_days(a.starttime) 
+                	and to_days(now()) &lt;= to_days(a.endtime) 
+                 	and redpackage_type in ('1','2')
+                  	and a.store_id=#{store_id}
+                  	<if test="member_id != null and member_id != ''">
+                	 and a.store_redpackets_id not in( select b.store_redpackets_id  from tb_member_redpackets b where b.member_id=#{member_id} )
+                	</if>
+             group by a.store_id
+ 	</select>
+	
+	
+
+	<!--  有红包的商家列表  -->
+	<select id="listIsRedlistPage" parameterType="page" resultType="pd">
+ 			select
+				distinct
+				a.store_name,
+				a.store_id,
+				a.pictrue_url,
+			  	a.latitude,
+			  	a.longitude 
+			from 
+				tb_store a 
+				<if test="pd.store_name == null or pd.store_name == ''">
+					<if test="pd.member_id != null and pd.member_id != ''">
+						join  tb_order b on a.store_id = b.store_id   and b.payer_id=#{pd.member_id}
+					</if>
+ 				</if>
+ 				<if test="pd.store_name != null and pd.store_name != ''">
+					<if test="pd.city_name != null and pd.city_name != ''">
+						join tb_store_file c on a.store_id=c.store_id and c.city_name=#{pd.city_name}
+					</if>
+  				</if>
+			where 
+					1=1
+ 					<if test="pd.store_name != null and pd.store_name != ''">
+		 					and a.store_name like concat(concat("%",#{pd.store_name}),"%")
+		 					order by a.registertime desc
+ 		 		    </if> 
+ 		 		    <if test="pd.store_name == null or pd.store_name == ''">
+					order by b.createtime desc
+					</if>
+   	</select>
+	
+	<!-- 修改  刘耀耀 2016.06.20魏汉文20160622-->
+
+	<update id="edit" parameterType="pd">
+		update  
+				tb_store_redpackets
+		SET
+				<if test="redpackage_number != null and redpackage_number != ''">
+				redpackage_number=#{redpackage_number},
+				</if>
+				<if test="overget_number != null and overget_number != ''">
+				overget_number=#{overget_number},
+				</if>
+				<if test="overget_money != null and overget_money != ''">
+				overget_money=#{overget_money},
+				</if>
+				<if test="redpackage_status != null and redpackage_status != ''">
+				redpackage_status=#{redpackage_status},
+				</if>
+				store_redpackets_id=store_redpackets_id
+				
+		where 
+				store_redpackets_id=#{store_redpackets_id}
+	</update>
+	
+	
+	<!-- 刘耀耀  获取红包数量 2016.06.21-->
+	<select id="getNumber" parameterType="pd" resultType="String">
+	select
+			redpackage_number
+	from 
+			tb_store_redpackets
+	where
+			store_redpackets_id=#{store_redpackets_id}
+	</select>
+	
+	
+	<!-- 查询商家红包记录魏汉文20160622-->
+	<select id="findRedById" parameterType="pd" resultType="pd">
+		select 
+			a.store_redpackets_id,
+			a.reduce_content,
+			a.money,
+			a.overget_money,
+			a.redpackage_number,
+			a.overget_number,
+			a.redpackage_type,
+			a.srp_usercondition_id,
+			a.srp_usercondition_content,
+ 			a.starttime,
+			a.endtime,
+  			c.store_name,
+			c.store_id,
+ 			a.choice_type
+		from 
+			tb_store_redpackets a left join tb_store c on a.store_id=c.store_id
+ 		where 
+ 			a.store_redpackets_id = #{store_redpackets_id}
+ 	</select>
+	
+	
+	<!-- 查询商家红包精简记录魏汉文20160623-->
+	<select id="findJJRedById" parameterType="pd" resultType="pd">
+		select 
+			a.store_redpackets_id,
+			a.redpackage_type,
+     		a.srp_usercondition_content as srp_usercondition_name,
+ 			a.srp_usercondition_id as srp_usercondition_type,
+ 			a.endtime,
+			c.store_name,
+			c.store_id,
+			c.complex_score
+		from 
+			tb_store_redpackets a 
+			join tb_store c on a.store_id=c.store_id 
+ 		where 
+	 		a.store_redpackets_id = #{store_redpackets_id}
+   	</select>
+ 	
+ 	
+	<!-- 附近红包列表魏汉文20160630 -->
+	<select id="listAllFjRed" parameterType="pd" resultType="pd">
+			select
+				a.store_redpackets_id,
+				a.choice_type,
+				a.redpackage_type,
+				a.srp_opentype_id,
+				a.money, 
+				a.overget_money,
+				a.redpackage_number,
+				a.overget_number,
+				b.store_id,
+				b.longitude,
+				b.latitude ,
+        		c.area_name
+			from 
+ 				tb_store_redpackets a  
+ 				left join tb_store b  on a.store_id=b.store_id
+ 				left join tb_store_file c  on a.store_id=c.store_id
+			where 
+					a.redpackage_status=#{redpackage_status}
+ 					and a.redpackage_type in('1','2')
+					and a.isguoqi='0'
+			    	and cast(a.redpackage_number as signed) &gt;  cast(a.overget_number as signed) 
+			    	and to_days(now()) &gt;= to_days(a.starttime) 
+                	and to_days(now()) &lt;= to_days(a.endtime) 
+                	and c.area_name=#{area_name}
+            order by a.createdate desc
+  	</select>
+  	
+	<select id="findRedByMem" parameterType="pd" resultType="pd">
+		 SELECT * from tb_member_redpackets a 
+		 where a.store_redpackets_id = #{store_redpackets_id} and a.member_id =#{member_id} and a.isguoqi = '0'
+		 GROUP BY a.redpackage_type
+   	</select>
+	
+	<select id="findRedByStore" parameterType="pd" resultType="pd">
+		select * from tb_store_redpackets a  where a.store_id =#{store_id}  and a.isguoqi = '0'
+		group by a.redpackage_type
+   	</select>
+   	
+   	<!-- 搜索全部商家 -->
+   	<select id="findAllStorelistPage" parameterType="pd" resultType="pd">
+			select
+			    ifnull(a.store_name,"") store_name,
+	 			ifnull(a.pictrue_url,"") pictrue_url,
+	    		store_id 
+	    	from 
+	    		tb_store a
+	    	where
+	    		1=1
+	    		<if test="pd.store_name != null and pd.store_name != ''">
+				and  a.store_name like CONCAT(CONCAT("%",#{pd.store_name}),"%")
+				</if>	 
+    	</select>
+</mapper>

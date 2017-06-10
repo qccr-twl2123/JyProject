@@ -1,0 +1,180 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    font-size: 14px;
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+
+
+
+
+a{
+    text-decoration: none ;
+}
+.hands{
+    cursor: pointer;
+}
+.dangan3_d1{
+    width: 100%;
+    height: 80px;
+    font-size: 14px;
+}
+.dangan_d1_sp1{
+    display: inline-block;
+    width: 5%;
+    height: 30%;
+    text-align: center;
+    margin-left: 1%;
+    margin-top: 2%;
+}
+.dangan3_d1_st1{
+    width: 10%;
+    height: 40%;
+    border-radius: 5px;
+}
+.dangan3_d2{
+    width: 100%;
+    height: 5%;
+}
+.dangan3_d2_sp1{
+    display: inline-block;
+    width: 7%;
+    height: 30%;
+    margin-left: 3%;
+}
+.dangan3_d2_ipt1{
+    padding-left: .5%;
+    display: inline-block;
+    cursor: pointer;
+ }
+ .dangan3_d3{
+    width: 50%;
+   
+    margin-left: 2%;
+ }
+ .dangan3_d3_d1{
+    width: 96%;
+    margin-left: 2%;
+ }
+ .dangan3_d3_sp1{
+    display: block;
+    float: left;
+    width: 20%;
+    text-align: center;
+
+ }
+ .dangan3_d3_d2{
+     float: left;
+    width: 96%;
+    margin-left: 2%;
+    border:1px solid #8f8f8f;
+    border-radius: 5px;
+    margin-top: 2%;
+ }
+ .dangan3_d3_d2_sp1{
+    text-align: center;
+    display: block;
+    float: left;
+    width: 20%;
+    height: 40px;
+    line-height: 40px;
+    margin-top: 5px;
+ }
+ .dangan3_d3_d2_sp1_ms{
+     border:1px solid #f39035;
+    border-radius: 5px;
+    width: 80px;
+    height: 34px;
+    line-height: 34px;
+    cursor: pointer;
+    text-align: center;
+ }
+ .jian{
+    display:block;
+    float: right;
+    width: 12px;
+    height: 12px;
+    border:1px solid #8f8f8f;
+    margin-top: 10px;
+    margin-right: 15%;
+ }
+.mgleft10{
+    margin-left: 10px;
+    cursor: pointer;
+}
+ .dangan3_d3_d3,
+ .dangan3_d3_d4{
+   width: 100%;
+   height: 50px;
+   float: left;
+ }
+
+ .dangan3_tj1,
+ .dangan3_tj2{
+    display: inline-block;
+    width: 140px;
+    height:40px;
+    text-align: center;
+    line-height: 40px;
+    margin-left: 20%;
+    background-color: #5dc9ba;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    color: #fff;
+    cursor: pointer;
+    
+ }
+ .dangan3_tj2{
+        margin-top: 20px;
+ }
+ .qxtj1{
+    display: inline-block;
+    width: 100px;
+    height:36px;
+    text-align: center;
+    line-height: 34px;
+    margin-left: 20%;
+    background-color: #5dc9ba;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+ }
+ .ms,
+ .xx{
+    width: 100px;
+
+ }
+ .dangan3_footer{
+    float: left;
+    width: 50%;
+    height: 5%;
+    margin-left: 3%;
+ }
+ .dangan3_d3_bc,
+ .dangan3_d3_tc{
+    display: inline-block;
+    width: 120px;
+    height:40px;
+    text-align: center;
+    margin-top: 10px;
+    line-height: 40px;
+    margin-left: 20%;
+    background-color: #5dc9ba;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+ }
+ 
+ 
+

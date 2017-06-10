@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Red_platformMapper">
+	
+	
+	<!-- 新增魏汉文20160614-->
+	<insert id="save" parameterType="pd">
+		insert into TB_RED_PLATFORM(
+ 			TARGET_TYPE,	
+			MONEY,	
+			REDPACKAGE_NUMBER,	
+			STARTTIME,	
+			ENDTIME,	
+			RP_USE_CONDITION_ID,	
+ 			PROVINCE_ID,	
+			CITY_ID,	
+			AREA_ID,	
+			OPERATION_ID,	
+			RED_PLATFORM_ID,
+			NEWMEMBER_STATUS,
+			DOWNAPP_STATUS,
+			FIRSTCZ_STATUS,
+			FIRSTjy_STATUS,
+			MLZ_STATUS,
+			MLZ_NUMBER,
+			TJ_STATUS,
+			TJ_NUMBERFRIEND,
+			TJ_GETREDNUMBER,
+			CREATEDATE,
+			full_praise,
+			praise_status
+		) values (
+ 			#{target_type},	
+			#{money},	
+			#{redpackage_number},	
+			#{starttime},	
+			#{endtime},	
+			#{rp_use_condition_id},	
+ 			#{province_id},	
+			#{city_id},	
+			#{area_id},	
+			#{operation_id},	
+			#{red_platform_id},
+			#{newmember_status},
+			#{downapp_status},
+			#{firstcz_status},
+			#{firstjy_status},
+			#{mlz_status},
+			#{mlz_number},
+			#{tj_status},
+			#{tj_numberfriend},
+			#{tj_getrednumber},
+			now(),
+			#{full_praise},
+			#{praise_status}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_RED_PLATFORM
+		where 
+			RED_PLATFORM_ID = #{red_platform_id}
+	</delete>
+	
+	
+	<!-- 修改魏汉文20160614 -->
+	<update id="edit" parameterType="pd">
+			update  tb_red_platform
+			set 
+				<if test="review_status != null and review_status !=  ''">review_status = #{review_status},</if>
+				<if test="operation_id != null and operation_id !=  ''">operation_id = #{operation_id},</if>
+				<if test="review_id != null and review_id !=  ''">review_id = #{review_id},</if>
+   				red_platform_id = red_platform_id
+			where 
+				red_platform_id = #{red_platform_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+ 			target_type,	
+			money,	
+			redpackage_number,	
+			starttime,	
+			endtime,	
+			rp_use_condition_id,	
+ 			province_id,	
+			city_id,	
+			area_id,	
+			review_status,	
+			review_id,	
+			operation_id,	
+			RED_PLATFORM_ID
+		from 
+			TB_RED_PLATFORM
+		where 
+			RED_PLATFORM_ID = #{red_platform_id}
+	</select>
+	
+	
+	<!-- 列表 魏汉文20160614-->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+ 				a.target_type,	
+				a.money,	
+				a.redpackage_number,	
+				a.starttime,	
+				a.endtime,	
+				a.rp_use_condition_id,	
+ 				a.province_id,	
+				a.city_id,	
+				a.area_id,	
+				(select b.name from tb_pcd b where b.pcd_id=a.province_id ) as province_name,	
+				(select b.name from tb_pcd b where b.pcd_id=a.city_id ) as city_name,	
+				(select b.name from tb_pcd b where b.pcd_id=a.area_id ) as area_name,
+				a.review_status,	
+				a.review_id,	
+				(select b.operator_name from tb_operator_file b where a.review_id=b.operator_file_id ) as review_name,
+				a.operation_id,	
+				(select b.operator_name from tb_operator_file b where a.operation_id=b.operator_file_id ) as operation_name,
+				a.red_platform_id,
+				a.newmember_status,
+				a.downapp_status,
+				a.firstcz_status,
+				a.firstjy_status,
+				a.mlz_status,
+				a.mlz_number,
+				a.tj_status,
+				a.tj_numberfriend,
+				a.tj_getrednumber,
+				a.createdate,
+				a.praise_status,
+				a.full_praise
+		from 
+				tb_red_platform a 
+		where  
+				1=1
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+							 
+						)
+				</if>
+				<if test="pd.starttime != null and pd.starttime != ''"><!-- 开始时间 -->
+					and a.starttime &gt;= #{pd.starttime}
+				</if>
+				<if test="pd.endtime != null and pd.endtime != ''"><!-- 结束时间 -->
+					and a.endtime &lt;= #{pd.endtime}
+				</if>
+				<if test="pd.target_type != null and pd.target_type != ''"><!-- 用户类型 -->
+					and a.target_type = #{pd.target_type}
+				</if>
+				<if test="pd.review_status != null and pd.review_status != ''"><!-- 红包状态 -->
+					and a.review_status = #{pd.review_status}
+				</if>
+		order by createdate desc
+ 	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+ 				a.target_type,	
+				a.money,	
+				a.redpackage_number,	
+				a.starttime,	
+				a.endtime,	
+				a.rp_use_condition_id,	
+ 				a.province_id,	
+				a.city_id,	
+				a.area_id,	
+				a.review_status,	
+				a.review_id,	
+				a.operation_id,	
+				a.red_platform_id
+		from 
+				TB_RED_PLATFORM a
+	</select>
+	
+	
+	<!-- 获取所有条件列表魏汉文20160614 -->
+	<select id="listAllUserCondition" parameterType="pd" resultType="pd">
+		select
+ 				a.rp_use_condition_id,	
+				a.content,	
+				a.money,	
+				a.grant_type 
+		from 
+				tb_rp_use_condition a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_RED_PLATFORM
+		where 
+			RED_PLATFORM_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

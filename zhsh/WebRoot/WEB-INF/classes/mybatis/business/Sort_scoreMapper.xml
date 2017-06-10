@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Sort_scoreMapper">
+ 	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into TB_SORT_SCORE(
+			STORE_ID,	
+			ADD_SCORE,	
+			STARTTIME,	
+			ENDTIME,	
+			SPEND_MONEY,	
+ 			OPERATION_ID,	
+			REVIEW_ID,	
+ 			NOW_SCORE,
+ 			REVIEW_STAUTS
+		) values (
+			#{store_id},	
+			#{add_score},	
+			#{starttime},	
+			#{endtime},	
+			#{spend_money},	
+ 			#{operation_id},	
+			#{review_id},	
+ 			#{now_score},
+ 			#{review_status}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_SORT_SCORE
+		where 
+			SORT_SCORE_ID = #{sort_score_id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  TB_SORT_SCORE
+			set 
+				store_id = #{store_id},
+				add_score = #{add_score},
+				starttime = #{starttime},
+				endtime = #{endtime},
+				spend_money = #{spend_money},
+				review_status = #{review_status},
+				operation_id = #{operation_id},
+				review_id = #{review_id},
+			SORT_SCORE_ID = sort_score_id
+			where 
+				SORT_SCORE_ID = #{sort_score_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			store_id,	
+			add_score,	
+			starttime,	
+			endtime,	
+			spend_money,	
+			review_status,	
+			operation_id,	
+			review_id,	
+			sort_score_id
+		from 
+			TB_SORT_SCORE
+		where 
+			SORT_SCORE_ID = #{sort_score_id}
+	</select>
+	
+	
+	<!-- 列表  	刘耀耀	2016.06.08 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				b.store_name,
+				a.now_score,	
+				a.add_score,	
+				a.starttime,	
+				a.endtime,	
+				a.spend_money,	
+				a.review_status,	
+ 				a.sort_score_id,
+				a.operation_id,	
+				a.review_id,	
+				(select c.operator_name from tb_operator_file c where c.operator_file_id=a.review_id ) as review_name,
+				(select c.operator_name from tb_operator_file c where c.operator_file_id=a.operation_id ) as operator_name,
+				b.province_name,
+				b.city_name,
+				b.area_name
+		from 
+				tb_sort_score a left join tb_store_file b on a.store_id=b.store_id
+		where 
+				 1=1
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+							b.store_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+ 						)
+				</if>
+				<if test="pd.province_name != null and pd.province_name != ''"><!--省 -->
+							and
+								(
+									b.province_name=#{pd.province_name}
+								)
+				</if>
+				<if test="pd.city_name != null and pd.city_name != ''"><!-- 市 -->
+							and
+								(
+									b.city_name=#{pd.city_name}
+								)
+				</if>
+				<if test="pd.area_name != null and pd.area_name != ''"><!-- 区 -->
+							and
+								(
+									b.area_name=#{pd.area_name}
+								)
+				</if>
+				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+				and a.starttime &gt;= #{pd.starttime}
+ 				</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+				and a.endtime &lt;= #{pd.endtime}
+ 				</if>		
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.store_id,	
+				a.add_score,	
+				a.starttime,	
+				a.endtime,	
+				a.spend_money,	
+				a.review_status,	
+				a.operation_id,	
+				a.review_id,	
+				a.sort_score_id
+		from 
+				TB_SORT_SCORE a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_SORT_SCORE
+		where 
+			SORT_SCORE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

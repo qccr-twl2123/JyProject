@@ -1,0 +1,10 @@
+@import "predefine.css";
+	
+	table td{
+		border: 0;
+		text-align: left;
+	}
+	table tr td:nth-child(1){
+		padding-left: 4%;
+		width: 40%;
+	}

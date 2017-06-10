@@ -1,0 +1,80 @@
+html,body{
+    width: 100%;
+    height: 100%;
+   
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+    font-size: 15px;
+    color: #323232;
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+    color: #000;
+}
+.hands{
+    cursor: pointer;
+}
+span{
+    display: inline-block;
+}
+
+img{
+    width: 100%;
+    height: 100%;
+}
+/*header*/
+.Buyers_body{
+    width: 1200px;
+    height: 100%;
+    margin: 0 auto;
+}
+.Buyers_body_d1{
+    width: 80%;
+    height: 300px;
+    border:1px solid #7bd019;
+    margin-top: 200px;
+    margin-left: 10%;
+}
+.Buyers_body_d1_tp{
+    width: 100%;
+    height:150px;
+    background-color: #ecffdf;
+    text-align: center;
+    line-height: 150px;
+    font-weight: bold;
+}
+.Buyers_body_d1_tp span:first-child{
+    width: 50px;
+    height: 50px;
+    position: relative;
+    top: 20px;
+}
+.Buyers_body_d1_tp span{
+    font-size: 20px;
+}
+.Buyers_body_d1_bt{
+    width: 100%;
+    height:150px;
+    
+    text-align: center;
+    line-height: 150px;
+    
+}
+.Buyers_body_d1_bt span{
+    width:7em;
+    color: #169eda;
+    cursor: pointer;
+}
+.xian{
+    width: 2px !important;
+    height: 1em !important;
+    background-color: #000;
+}

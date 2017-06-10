@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Send_notificationsMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into tb_send_notifications(
+			user_type,	
+			phone,	
+			send,	
+			province_id,	
+			city_id,	
+			area_id,
+			send_time,		
+			content,	
+			operator_id,	
+ 			createdate,	
+ 			updatedate,
+			send_notifications_id
+		) values (
+			#{user_type},	
+			#{phone},	
+			#{send},	
+			#{province_id},	
+			#{city_id},	
+			#{area_id},		
+			#{send_time},		
+			#{content},	
+			#{operator_id},	
+  			now(),	
+  			now(),	
+			#{send_notifications_id}
+		)
+	</insert>
+	
+	
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from tb_send_notifications
+		where 
+			send_notifications_id = #{send_notifications_id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  TB_SEND_NOTIFICATIONS
+			set 
+				user_type = #{user_type},
+				phone = #{phone},
+				send = #{send},
+				province_id = #{province_id},
+				city_id = #{city_id},
+				area_id = #{area_id},
+				send_time = #{send_time},
+				content = #{content},
+				operator_id = #{operator_id},
+				review_id = #{review_id},
+ 			SEND_NOTIFICATIONS_ID = send_notifications_id
+			where 
+				SEND_NOTIFICATIONS_ID = #{send_notifications_id}
+	</update>
+	
+	<update id="toExamine" parameterType="pd">
+		update  TB_SEND_NOTIFICATIONS
+			set 
+				review_status = #{review_status},
+				<if test="review_id != null and review_id !=''">
+					review_id = #{review_id}
+				</if>
+			where 
+				send_notifications_id = #{send_notifications_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			user_type,	
+			phone,	
+			send,	
+			province_id,	
+			city_id,	
+			area_id,	
+			send_time,	
+			content,	
+			operator_id,	
+			review_id,	
+			createdate,	
+			send_notifications_id
+		from 
+			TB_SEND_NOTIFICATIONS
+		where 
+			SEND_NOTIFICATIONS_ID = #{send_notifications_id}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.user_type,	
+				a.phone,	
+				a.send,	
+				a.province_id,	
+				a.city_id,	
+				a.area_id,		
+				a.send_time,	
+				a.content,	
+				a.operator_id,	
+				a.review_id,	
+				a.review_status,	
+				a.createdate,	
+				(select b.name from tb_pcd b where b.pcd_id=province_id ) as province_name,	
+				(select b.name from tb_pcd b where b.pcd_id=city_id ) as city_name,	
+				(select b.name from tb_pcd b where b.pcd_id=area_id ) as area_name,
+				a.send_notifications_id
+		from 
+				tb_send_notifications a
+		where  
+				1=1
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and (
+							 
+						)
+				</if>
+				<if test="pd.province_id != null and pd.province_id != ''"><!-- 省 -->
+					and a.province_id=#{pd.province_id}
+ 				</if>
+				<if test="pd.city_id != null and pd.city_id != ''"><!-- 市-->
+					and a.city_id=#{pd.city_id}
+ 				</if>
+				<if test="pd.area_id != null and pd.area_id != ''"><!-- 区 -->
+					and a.area_id=#{pd.area_id}
+ 				</if>
+				<if test="pd.send_startdate != null and pd.send_startdate != ''"><!-- 开始时间 -->
+					and a.send_time &gt;= #{pd.send_startdate}
+ 				</if>
+				<if test="pd.send_enddate != null and pd.send_enddate != ''"><!-- 结束时间-->
+					and  a.send_time &lt;= #{pd.send_enddate}
+ 				</if>
+		order by a.createdate desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.user_type,	
+				a.phone,	
+				a.send,	
+				a.province_id,	
+				a.city_id,	
+				a.area_id,		
+				a.send_time,	
+				a.content,	
+				a.operator_id,	
+				a.review_id,	
+				a.createdate,	
+				a.send_notifications_id
+		from 
+				tb_send_notifications a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from tb_send_notifications
+		where 
+			send_notifications_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	
+	
+	
+	
+	<!-- 新增-->
+	<insert id="saveTuisong" parameterType="pd">
+		insert into tb_sendtuisong(
+			zhu_type,
+			tuisong_type,
+			title,
+			content,
+			province_name,
+			city_name,
+			area_name,
+			createdate,
+			oprator_id,
+			jiaoyi_id
+		) values (
+			#{zhu_type},
+			#{tuisong_type},
+			#{title},
+			#{content},
+			#{province_name},
+			#{city_name},
+			#{area_name},
+			now(),
+			#{oprator_id},
+			#{jiaoyi_id}
+		)
+	</insert>
+	
+	
+	<!-- 批量删除推送 (状态改为0)-->
+	<update id="deleteTuisong" parameterType="String">
+		update tb_sendtuisong
+		set    deletestatus='1' 
+		where 
+			sendtuisong_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	
+	<!-- 列表全部推送消息-->
+	<select id="listAllTuisong" parameterType="pd" resultType="pd">
+		select
+				a.sendtuisong_id,
+				a.zhu_type,
+				a.tuisong_type,
+				a.title,
+				a.content,
+				a.province_name,
+				a.city_name,
+				a.area_name,
+				date_format(a.createdate,'%Y年%m月%d日') as createdate ,
+ 				a.oprator_id
+		from 
+				tb_sendtuisong a
+		where 
+				1=1
+				<if test="deletestatus != null and deletestatus != ''"> and a.deletestatus=#{deletestatus}</if>
+				<if test="oprator_id != null and oprator_id != ''"> and a.oprator_id=#{oprator_id}</if>
+				<if test="tuisong_type != null and tuisong_type != ''"> and a.tuisong_type=#{tuisong_type}</if>
+				<if test="zhu_type != null and zhu_type != ''"> and a.zhu_type=#{zhu_type}</if>
+		order by a.createdate desc
+	</select>
+	
+	
+	
+	
+	
+	
+	
+</mapper>

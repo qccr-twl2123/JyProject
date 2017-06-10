@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ReportFormMapper">
+	
+
+	<!--服务商保证金收入 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select 
+ 			c.money,
+			c.over_time,
+			c.waterrecord_id,
+			c.area_name,
+  			c.city_name,
+ 			c.province_name,
+ 			a.sp_file_id,
+			a.team_name,
+ 			a.createdate,
+			a.earnest_money,
+			a.sign_time,
+			a.start_time,
+ 			a.subsidiary_id,
+ 			(select d.subsidiary_name  from tb_subsidiary d where a.subsidiary_id=d.subsidiary_id)	 as subsidiary_name
+ 		from 
+			tb_waterrecord c
+			left join tb_sp_file a on c.user_id=a.sp_file_id  
+ 		where 
+			c.money_type='4'
+			and c.pay_status='1'
+			and c.user_type='3'
+ 		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+						 a.sp_file_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+						 or
+						 a.team_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+						 or
+						 c.city_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+						)
+							 
+		</if>
+		<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+				and date_format(c.over_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+		</if>
+		<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+				and date_format(c.over_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+		</if>
+		order by 	c.over_time desc
+	</select>
+
+	<select id="nowdatalistPage" parameterType="page" resultType="pd">
+		select 
+  			cast(sum( f.money  ) as  decimal(10,2) )   as summoney 
+ 		from 
+			(	select 
+		 			c.money 
+		 		from 
+					tb_waterrecord c
+					left join tb_sp_file a on c.user_id=a.sp_file_id  
+		 		where 
+					c.money_type='4'
+					and c.pay_status='1'
+					and c.user_type='3'
+		 		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+							and
+								(
+								 a.sp_file_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+								 or
+								 a.team_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+								 or
+								 c.city_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+								)
+									 
+				</if>
+				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(c.over_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+				</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(c.over_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+				</if>
+				order by 	c.over_time desc
+				limit #{pd.nowpage},10
+		 )as f
+	</select>
+ 	<select id="alldataSumMoney" parameterType="page" resultType="pd">
+		select 
+  			cast(sum( f.money  ) as  decimal(10,2) )   as summoney 
+ 		from 
+			(	select 
+		 			c.money 
+		 		from 
+					tb_waterrecord c
+					left join tb_sp_file a on c.user_id=a.sp_file_id  
+		 		where 
+					c.money_type='4'
+					and c.pay_status='1'
+					and c.user_type='3'
+		 		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+							and
+								(
+								 a.sp_file_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+								 or
+								 a.team_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+								 or
+						 		c.city_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+								)
+									 
+				</if>
+				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(c.over_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+				</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(c.over_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+				</if>
+				order by 	c.over_time desc
+ 		 )as f	
+	</select>
+ 	<!-- 商家保证金 -->
+	<select id="servicelistPage" parameterType="page" resultType="pd">
+		select 
+ 				d.over_time,
+				d.waterrecord_id,
+				d.area_name,
+	  			d.city_name,
+	 			d.province_name,
+				a.store_id,
+				a.store_name,
+			    a.earnest_status,
+				a.service_status,
+				d.money,
+ 				a.starttime,
+				a.endtime,
+				a.clerk_file_id,
+				a.sp_file_id,
+				a.sp_money,
+				a.clerk_money,
+   				e.clerk_name,
+				b.team_name,
+				b.subsidiary_id ,
+				c.subsidiary_name ,
+				cast(d.money-a.sp_money-a.clerk_money as  decimal(10,2)) as subsidiary_money
+ 		from 	
+				tb_waterrecord d
+				join tb_store_file a on d.user_id=a.store_id
+				left join tb_sp_file b on a.sp_file_id = b.sp_file_id
+				left join tb_subsidiary c on b.subsidiary_id = c.subsidiary_id
+				left join tb_clerk_file e on a.clerk_file_id = e.clerk_file_id
+		where 
+				d.money_type='3'
+				and d.pay_status='1'
+				and d.user_type='1'
+ 		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+							a.sp_file_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+							or
+							a.store_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+							or
+							a.clerk_file_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+							or
+							a.store_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+							or
+							d.area_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+							or
+							d.city_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+						)
+							 
+		</if>
+		<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+				and date_format(d.over_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+		</if>
+		<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+				and date_format(d.over_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+		</if>	
+		order by d.over_time desc
+	</select>
+ 	<select id="nowsumserviceMoney" parameterType="page" resultType="pd">
+		select 
+			sum(cast(f.money as  decimal(10,2)) ) as sumall_money,
+ 			sum(cast(f.sp_money  as  decimal(10,2)) ) as sumsp_money,
+			sum(cast(f.clerk_money as decimal(10,2)) ) as sumclerk_money,
+			sum(cast(f.money as decimal(10,2)))-sum(cast(f.sp_money+f.clerk_money as decimal(10,2)) ) as sumsubsidiary_money
+  		from (
+	  			select 
+ 					d.money,
+ 					a.sp_money,
+					a.clerk_money,
+ 					cast(d.money-a.sp_money-a.clerk_money as  decimal(10,2)) as subsidiary_money
+	 			from 	
+					tb_waterrecord d
+					join tb_store_file a on d.user_id=a.store_id
+					left join tb_sp_file b on a.sp_file_id = b.sp_file_id
+					left join tb_subsidiary c on b.subsidiary_id = c.subsidiary_id
+					left join tb_clerk_file e on a.clerk_file_id = e.clerk_file_id
+				where 
+					d.money_type='3'
+					and d.pay_status='1'
+					and d.user_type='1'
+		 			<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+							and
+								(
+									a.sp_file_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									a.store_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									a.clerk_file_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									a.store_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									d.area_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									d.city_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+								)
+									 
+					</if>
+					<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(d.over_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+					</if>
+					<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(d.over_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+					</if>	
+				order by d.over_time desc
+				limit #{pd.nowpage},10
+  		) as f
+	</select>
+ 	<select id="allserviceSumMoney" parameterType="page" resultType="pd">
+		select 
+			sum(cast(f.money as  decimal(10,2)) ) as sumall_money,
+ 			sum(cast(f.sp_money  as  decimal(10,2)) ) as sumsp_money,
+			sum(cast(f.clerk_money as decimal(10,2)) ) as sumclerk_money,
+			sum(cast(f.money as decimal(10,2)))-sum(cast(f.sp_money+f.clerk_money as decimal(10,2)) ) as sumsubsidiary_money
+  		from (
+	  			select 
+ 					d.money,
+ 					a.sp_money,
+					a.clerk_money,
+ 					cast(d.money-a.sp_money-a.clerk_money as  decimal(10,2)) as subsidiary_money
+	 		from 	
+					tb_waterrecord d
+					join tb_store_file a on d.user_id=a.store_id
+					left join tb_sp_file b on a.sp_file_id = b.sp_file_id
+					left join tb_subsidiary c on b.subsidiary_id = c.subsidiary_id
+					left join tb_clerk_file e on a.clerk_file_id = e.clerk_file_id
+			where 
+				d.money_type='3'
+				and d.pay_status='1'
+				and d.user_type='1'
+		 		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+							and
+								(
+									a.sp_file_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									a.store_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									a.clerk_file_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									a.store_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									d.area_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									d.city_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+								)
+									 
+				</if>
+				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(d.over_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+				</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(d.over_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+				</if>	
+				order by d.over_time desc
+   		) as f
+	</select>
+	
+	<!-- 平台积分（订单）列表 -->
+	<select id="integralistPage" parameterType="page" resultType="pd">
+		select 
+		  	a.waterrecord_id,
+      		a.money_type,
+      		a.pay_status,
+			a.over_time,
+      		b.store_id,
+ 			b.sendxitong_integral,
+			b.get_integral,
+			b.createtime,
+			b.pay_type,	
+			b.actual_money,
+			b.sp_file_id,
+			b.sp_getmoney,
+ 			b.clerk_file_id,
+			b.clerk_getmoney,
+ 			b.subsidiary_id,
+			b.subsidiary_getmoney,
+			(select d.team_name  from tb_sp_file d where b.sp_file_id=d.sp_file_id)	 as team_name,
+      		(select d.clerk_name  from tb_clerk_file d where b.clerk_file_id=d.clerk_file_id)	 as clerk_name,
+      		(select d.subsidiary_name  from tb_subsidiary d where b.subsidiary_id=d.subsidiary_id)	 as subsidiary_name,
+ 			b.onecontacts_getmoney,
+			b.onecontacts_id,
+ 			b.onecontacts_type,
+ 			b.twocontacts_getmoney,
+			b.twocontacts_id,
+			b.twocontacts_type,
+      		ifnull(g1.store_name,g2.name) as onename,ifnull(h1.store_name,h2.name) as twoname,
+   			b.order_id,
+      		c.store_name,
+      		c.province_name,
+			c.city_name,
+			c.area_name
+ 		from 
+			tb_waterrecord a 
+			left join tb_order b on a.waterrecord_id=b.order_id
+			left join tb_store_file c on c.store_id = b.store_id
+			left join tb_store g1 on g1.store_id = b.onecontacts_id
+ 			left join tb_member g2 on g2.member_id = b.onecontacts_id
+ 			left join tb_store h1 on h1.store_id = b.twocontacts_id
+ 			left join tb_member h2 on h2.member_id = b.twocontacts_id
+		where 
+			a.money_type='2' and a.pay_status='1'
+			<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and(
+							c.store_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+							or
+							c.store_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+							or
+							a.area_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+							or
+							a.city_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+						)
+ 			</if>
+			<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+					and date_format(a.over_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+			</if>
+			<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+					and date_format(a.over_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+			</if>
+			<if test="pd.order_id != null and pd.order_id!= ''">
+					and b.order_id = #{pd.order_id} 
+			</if>
+			<if test="pd.pay_type != null and pd.pay_type!= ''">
+					and b.pay_type =#{pd.pay_type}
+			</if>
+			order by a.over_time desc			
+	</select>
+	<!-- 统计当前页的平台积分-->
+	<select id="nowintegraSumMoney" parameterType="page" resultType="pd">
+		select 
+   			cast(sum(f.get_integral) as decimal(10,2)) as sumget_integral,
+   			cast(sum(f.sendxitong_integral) as decimal(10,2)) as sumsendxitong_integral,
+   			cast(sum(f.actual_money) as decimal(10,2)) as sumactual_money,
+ 			cast(sum(f.sp_getmoney) as decimal(10,2)) as sumsp_getmoney,
+ 			cast(sum(f.clerk_getmoney) as decimal(10,2)) as sumclerk_getmoney,
+ 			cast(sum(f.subsidiary_getmoney) as decimal(10,2)) as sumsubsidiary_getmoney,
+ 			cast(sum(f.onecontacts_getmoney) as decimal(10,2)) as sumonecontacts_getmoney,
+ 			cast(sum(f.twocontacts_getmoney) as decimal(10,2)) as sumtwocontacts_getmoney  
+  		from (
+  				select 
+  					b.sendxitong_integral,
+					b.get_integral,
+ 					b.actual_money,
+ 					b.sp_getmoney,
+ 					b.clerk_getmoney,
+ 					b.subsidiary_getmoney,
+ 		 			b.onecontacts_getmoney,
+ 		 			b.twocontacts_getmoney 
+ 		 		from 
+					tb_waterrecord a left join tb_order b on a.waterrecord_id=b.order_id
+					left join tb_store_file c on c.store_id = b.store_id
+					left join tb_store g1 on g1.store_id = b.onecontacts_id
+		 			left join tb_member g2 on g2.member_id = b.onecontacts_id
+		 			left join tb_store h1 on h1.store_id = b.twocontacts_id
+		 			left join tb_member h2 on h2.member_id = b.twocontacts_id
+				where 
+					a.money_type='2' and a.pay_status='1'
+					<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+							and(
+									c.store_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									c.store_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									a.area_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									a.city_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+								)
+		 			</if>
+					<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+							and date_format(a.over_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+					</if>
+					<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+							and date_format(a.over_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+					</if>
+					<if test="pd.order_id != null and pd.order_id!= ''">
+							and b.order_id = #{pd.order_id} 
+					</if>
+					<if test="pd.pay_type != null and pd.pay_type!= ''">
+							and b.pay_type =#{pd.pay_type}
+					</if>
+					order by a.over_time desc
+					limit #{pd.nowpage},10	
+  			) as f
+  		
+	</select>
+  	<!-- 统计平台积分-->
+	<select id="allintegraSumMoney" parameterType="page" resultType="pd">
+		select 
+   			cast(sum(f.get_integral) as decimal(10,2)) as sumget_integral,
+   			cast(sum(f.sendxitong_integral) as decimal(10,2)) as sumsendxitong_integral,
+   			cast(sum(f.actual_money) as decimal(10,2)) as sumactual_money,
+ 			cast(sum(f.sp_getmoney) as decimal(10,2)) as sumsp_getmoney,
+ 			cast(sum(f.clerk_getmoney) as decimal(10,2)) as sumclerk_getmoney,
+ 			cast(sum(f.subsidiary_getmoney) as decimal(10,2)) as sumsubsidiary_getmoney,
+ 			cast(sum(f.onecontacts_getmoney) as decimal(10,2)) as sumonecontacts_getmoney,
+ 			cast(sum(f.twocontacts_getmoney) as decimal(10,2)) as sumtwocontacts_getmoney  
+  		from (
+  				select 
+  					b.sendxitong_integral,
+					b.get_integral,
+ 					b.actual_money,
+ 					b.sp_getmoney,
+ 					b.clerk_getmoney,
+ 					b.subsidiary_getmoney,
+ 		 			b.onecontacts_getmoney,
+ 		 			b.twocontacts_getmoney 
+ 		 		from 
+					tb_waterrecord a left join tb_order b on a.waterrecord_id=b.order_id
+					left join tb_store_file c on c.store_id = b.store_id
+					left join tb_store g1 on g1.store_id = b.onecontacts_id
+		 			left join tb_member g2 on g2.member_id = b.onecontacts_id
+		 			left join tb_store h1 on h1.store_id = b.twocontacts_id
+		 			left join tb_member h2 on h2.member_id = b.twocontacts_id
+				where 
+					a.money_type='2' and a.pay_status='1'
+					<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+							and(
+									c.store_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									c.store_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									a.area_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+									or
+									a.city_name like CONCAT(CONCAT("%",#{pd.content}),"%")me like CONCAT(CONCAT("%",#{pd.content}),"%")
+								)
+		 			</if>
+					<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+							and date_format(a.over_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+					</if>
+					<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+							and date_format(a.over_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+					</if>
+					<if test="pd.order_id != null and pd.order_id!= ''">
+							and b.order_id = #{pd.order_id} 
+					</if>
+					<if test="pd.pay_type != null and pd.pay_type!= ''">
+							and b.pay_type =#{pd.pay_type}
+					</if>
+					order by a.over_time desc
+   			) as f	
+	</select>
+	
+	
+	
+	<!-- 商家人脉收益的列表 -->
+	<select id="datalistPageStoreRenMai" parameterType="page" resultType="pd">
+		  select
+				    a.store_renmaijf_id,	
+	  				a.store_id,	
+					a.firstcontact_money,	
+					a.twocontact_money,	
+					a.allmoney,	
+	 			    date_format(createtime,'%Y-%c-%d %H:%i:%s') as createtime ,
+	 			    b.store_name
+ 			from 
+					tb_store_renmaijf a 
+					left join tb_store b on a.store_id=b.store_id
+			where
+					1=1
+					<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+							and(
+									a.store_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+ 									or
+ 									b.store_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+								)
+		 			</if>
+   		order by a.createtime desc
+	</select>
+	
+	<!-- 商家人脉收益相关联的订单信息列表 -->
+	<select id="allRenMaiJf_orderById" parameterType="pd" resultType="pd">
+		select 
+				a.waterrecord_id ,
+				a.user_id ,
+				a.user_type ,
+				a.nowuser_money ,
+				a.money_type ,
+				a.money ,
+				a.withdraw_rate ,
+				a.reduce_money,
+				a.arrivalmoney ,
+				a.application_channel ,
+				a.remittance_type ,
+				a.remittance_name ,
+				a.remittance_number ,
+				a.pay_status ,
+				date_format(a.createtime ,'%Y-%m-%d %H:%i:%s') as createtime,
+				date_format(a.pass_time ,'%Y-%m-%d %H:%i:%s') as pass_time,
+	 			a.pass_operate_id ,
+				a.exception_remark ,
+				a.exception_time ,
+				a.exception_operator_id ,
+				a.chuli_remark ,
+	 			date_format(a.over_time ,'%Y-%m-%d %H:%i:%s') as over_time,
+				a.over_operator_id ,
+				a.dakuan_remark ,
+				a.exception_status ,
+				a.order_tn ,
+				a.payee_number ,
+ 				a.jiaoyi_type ,
+				a.province_name ,
+				a.city_name ,
+				a.area_name ,
+				a.alipay_money ,
+				a.wx_money ,
+				a.bank_money ,
+				a.nowypay_money,
+				a.jiuyu_money,
+				ifnull(e.discount_money,'') discount_money,	
+				ifnull(e.no_discount_money,'0') no_discount_money,	
+				ifnull(e.user_balance,'') user_balance,	
+				ifnull(e.user_integral,'') user_integral,	
+				ifnull(e.subsidiary_getmoney,'') subsidiary_getmoney,	
+				ifnull(e.sp_getmoney,'') sp_getmoney,	
+				ifnull(e.clerk_getmoney,'') clerk_getmoney,	
+				ifnull(e.onecontacts_getmoney,'') onecontacts_getmoney,	
+				ifnull(e.twocontacts_getmoney,'') twocontacts_getmoney,	
+				ifnull(e.sendxitong_integral,'') sendxitong_integral,	
+				ifnull(e.get_integral,'') get_integral,
+				ifnull(e.tihuo_status,'') tihuo_status,
+				ifnull(e.order_status,'') order_status,
+				g.store_name,
+				g.store_id,
+				h.name as member_name 
+  		from 
+				tb_store_renmaijf_order so
+				left join tb_waterrecord a on so.order_id=a.waterrecord_id
+   				left join tb_order e on a.waterrecord_id = e.order_id
+ 				left join tb_store g on e.store_id = g.store_id
+ 				left join tb_member h on a.user_id = h.member_id
+ 		where  
+				 so.store_renmaijf_id=#{store_renmaijf_id}
+  		order by a.over_time desc
+	</select>
+	
+ 
+	
+	<!--商家经营分析报表 -->
+	<select id="datalistPageStoreJJFX" parameterType="page" resultType="pd">
+ 	select 
+		a.store_id,
+		a.store_name,
+		a.principal,
+		a.phone,
+		b.tixian_money,
+		b.registertime,
+		b.remind_integral,
+		b.integral_rate,
+		b.service_rate,
+		(select sw.now_wealth  from tb_store_wealth sw where sw.store_id=a.store_id and sw.wealth_type='1') as now_wealth,
+		(select count(*)from  tb_contacts cs    where  cs.contacts_parent_id=a.store_id) as onecontacts_number,
+		(select count(*)from  tb_contacts f    where  f.contacts_parent_id in (select e.contacts_id from  tb_contacts e   where  e.contacts_parent_id=a.store_id)) as twocontacts_number,
+		(select o.createtime  from tb_order o where store_id=a.store_id and o.order_status='1' order by o.createtime desc limit 1  ) as lastcreatetime
+ 	 from  
+ 	 		tb_store_file a  join tb_store b on a.store_id=b.store_id
+      where
+    	1=1
+ 		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+						 a.store_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+						 or
+						 a.store_id like CONCAT(CONCAT("%",#{pd.content}),"%")
+ 						)
+							 
+		</if>
+ 		order by  b.registertime desc
+  </select>
+	
+	 
+	
+	<!--商家时间段的线下销售收入金额 -->
+	<select id="timeByStartEndForXxSaleMoney" parameterType="pd" resultType="String">
+		select  
+ 		 	cast(sum(a.actual_money) as decimal(10,2)) as sumactual_money 	
+ 		from 
+			tb_order a  
+ 		where 
+ 			a.store_id=#{store_id} and a.order_status='1' and a.tihuo_status='1' and a.pay_type='1'
+		 	and date_format(a.createtime,'%Y-%m-%d') &gt;= #{starttime} 
+		    and date_format(a.createtime,'%Y-%m-%d') &lt;= #{endtime} 
+  	</select>
+  	
+  	<!--商家时间段的线上销售收入金额 -->
+	<select id="timeByStartEndForXSSaleMoney" parameterType="pd" resultType="String">
+		select  
+ 		 	cast(sum(a.actual_money) as decimal(10,2)) as sumactual_money 	
+ 		from 
+			tb_order a  
+ 		where 
+ 			a.store_id=#{store_id} and a.order_status='1' and a.tihuo_status='1' and a.pay_type in ('2','3')
+		 	and date_format(a.createtime,'%Y-%m-%d') &gt;= #{starttime} 
+		    and date_format(a.createtime,'%Y-%m-%d') &lt;= #{endtime} 
+  	</select>
+	<!--商家时间段的查询收入的平均日积分 -->
+	<select id="timeByStartEndForIntegerSy" parameterType="pd" resultType="String">
+		select  
+ 		 	cast(sum(a.get_integral)/(to_days(#{endtime} )-to_days(#{starttime} )+1)+sum(a.sendxitong_integral)/(to_days(#{endtime} )-to_days(#{starttime} )+1) as decimal(10,2)) as sumzhichu_integral 	
+ 		from 
+			tb_order a  
+ 		where 
+ 			a.store_id=#{store_id} and a.order_status='1' and a.tihuo_status='1'
+		 	and date_format(a.createtime,'%Y-%m-%d') &gt;= #{starttime} 
+		    and date_format(a.createtime,'%Y-%m-%d') &lt;= #{endtime} 
+  	</select>
+	<!--商家时间段的查询支出的平均日积分 -->
+	<select id="timeByStartEndForIntegerZc" parameterType="pd" resultType="String">
+		select  
+ 		 	cast(sum(a.user_integral)/(to_days(#{endtime} )-to_days(#{starttime} )+1) as decimal(10,2)) as sumuser_integral 	
+ 		from 
+			tb_order a  
+ 		where 
+ 			a.store_id=#{store_id} and a.order_status='1' and a.tihuo_status='1'
+		 	and date_format(a.createtime,'%Y-%m-%d') &gt;= #{starttime} 
+		    and date_format(a.createtime,'%Y-%m-%d') &lt;= #{endtime} 
+	</select>
+	<!--商家时间段的查询评论数量 -->
+	<select id="timeByStartEndForCommentNumber" parameterType="pd" resultType="String">
+		select 
+			count(*) as comment_number 
+		from 
+			tb_comment cm  
+		where  
+			cm.store_id=#{store_id} 
+			and date_format(cm.star_time,'%Y-%m-%d') &gt;= #{starttime} 
+			and date_format(cm.star_time,'%Y-%m-%d') &lt;= #{endtime} 
+  	</select>
+  	<!--商家时间段新增一度人脉数 -->
+	<select id="timeByStartEndForContactNumber" parameterType="pd" resultType="String">
+		select 
+			 count(*)
+		from 
+			 tb_contacts cs   
+		where  
+			cs.contacts_parent_id=#{store_id} 
+			and date_format(cs.createdate,'%Y-%m-%d') &gt;= #{starttime} 
+			and date_format(cs.createdate,'%Y-%m-%d') &lt;= #{endtime} 
+  	</select>
+  	<!--商家时间段的查询充值金额 -->
+	<select id="timeByStartEndForCzMoney" parameterType="pd" resultType="String">
+		select 
+			count(*) as comment_number 
+		from 
+			tb_comment cm  
+		where  
+			cm.store_id=#{store_id} 
+			and date_format(cm.star_time,'%Y-%m-%d') &gt;= #{starttime} 
+			and date_format(cm.star_time,'%Y-%m-%d') &lt;= #{endtime} 
+  	</select>
+	<!--商家时间段的查询审核通过的提现金额 -->
+	<select id="timeByStartEndForTxOkMoney" parameterType="pd" resultType="String">
+		select 
+			 sum(w.money) as allmoney
+		from 
+			tb_waterrecord w 
+		where  
+			w.user_id=#{store_id} and w.user_type='1' and pay_status='1' and money_type='5'
+			and date_format(w.over_time,'%Y-%m-%d') &gt;= #{starttime} 
+			and date_format(w.over_time,'%Y-%m-%d') &lt;= #{endtime} 
+  	</select>
+	<!--商家时间段的查询等待审核的提现金额 -->
+	<select id="timeByStartEndForReadyTxMoney" parameterType="pd" resultType="String">
+		select 
+			 sum(w.money) as allmoney
+		from 
+			tb_waterrecord w 
+		where  
+			w.user_id=#{store_id} and w.user_type='1' and money_type='5' and pay_status in ('0','2','3')
+			and date_format(w.over_time,'%Y-%m-%d') &gt;= #{starttime} 
+			and date_format(w.over_time,'%Y-%m-%d') &lt;= #{endtime} 
+  	</select>
+	
+	
+	
+	
+	
+ 
+</mapper>

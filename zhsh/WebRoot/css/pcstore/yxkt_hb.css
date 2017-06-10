@@ -1,0 +1,74 @@
+@import "predefine.css";
+	.title{
+		background: #1187e2;
+		line-height: 2.5;
+		color: #fff;
+		padding-left: 18px;
+	}
+	.content{
+		border-top:2px solid #1187e2;
+		padding: 38px 0 0 38px;
+
+	
+	}
+	input[type="text"] {
+		width: 120px;
+		padding-left: 5px;
+	}
+	input[type="radio"],input[type="checkbox"]{
+		cursor: pointer;
+	}
+	select{
+		font-size: 14px;
+		line-height: 1.2;
+	}
+	.xuanzhong{
+		cursor: pointer;
+	}
+	.one{
+		width: 100%;
+		border-bottom: 1px solid #1187e2;
+		padding-top: 30px;
+		margin-bottom: 30px;
+		position: relative;
+		text-align: center;
+
+	}
+	.hbjl{
+		position: absolute;
+		display: inline-block;
+		color: #fff;
+		background: #1187e2;
+		padding: 0.7% 1.8%;
+		border-radius: 20px;
+		bottom: -20px;
+		left: 45%;
+
+	}
+	.item_list li span:nth-child(1){
+		width: 64px;
+		display: inline-block;
+		text-align-last:justify; 
+	}
+	.hb_item{
+		position: relative;
+		float: left;
+		width: 45%;
+		padding-left: 10px;
+		border-radius: 8px;
+		border: 1px solid #1187e2;
+		margin: 0 10px 10px 10px;
+	}
+	.tjsp_item{
+		padding-left: 6%;
+		text-align: left;
+	}
+	.tjsp_item span{
+		padding: 0.4% 1.2%;
+		line-height: 1.4;
+		border: 1px solid #999;
+		margin: 5px 10px;
+		word-wrap: break-word;
+		display: inline-block;
+		
+	}

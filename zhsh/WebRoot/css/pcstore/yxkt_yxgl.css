@@ -1,0 +1,28 @@
+@import url(predefine.css);
+	td{
+		padding: 0 10px;
+	}
+	.bor-b{
+		border: 1px solid #117dd0;
+		padding: 4px 8px;
+		line-height: 1.4;
+		cursor: pointer;
+	}
+	.bor-b:active{
+		background: #117dd0;
+		color: #fff;
+	}
+	.bor-6{
+		border: 1px solid #666;
+		padding: 4px 8px;
+		line-height: 1.4;
+		cursor: pointer;
+		width: 20px;
+		text-align: center;
+	}
+	tr td:nth-child(3){
+		max-width: 500px;
+		white-space:nowrap; 
+		overflow:hidden; 
+		text-overflow:ellipsis;
+	}

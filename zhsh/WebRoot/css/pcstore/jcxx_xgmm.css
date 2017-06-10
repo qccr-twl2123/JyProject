@@ -1,0 +1,33 @@
+@import "predefine.css";
+
+	.inp_box{
+		position: relative;
+		display: block;
+		line-height: 2.5%;
+		top: 8px;
+	}
+	.inp_box input{
+		position: relative;
+	}
+	.inp_box span{
+		position: absolute;
+		top:12px;
+		right:-36px;
+	}
+	.inp_box li{
+		display: inline-block;
+		width: 16.7%;
+		height: 2px;
+		background: #999;
+	}
+	.new{
+		display: inline-block;
+	}
+	.xy{
+		cursor: pointer;
+	}
+	.item_name{
+		width: 64px;
+		text-align: right;
+		display: inline-block;
+	}

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LQGoodsMapper">
+
+	<insert id="addSmallToGoods" parameterType="pd">
+		insert into tb_goods(
+				goods_category_id,
+				goods_name,
+				image_url,
+				market_money,
+				retail_money,
+				integral_rate,
+				integral_number,
+				stock_number, 
+				promotion_type,
+				promotion_content,
+				goods_id,
+ 				store_id,
+ 				starttime,
+ 				endtime,
+ 				createdate,
+ 				company
+			)values(
+				#{goods_category_id},
+				#{goods_name},
+				#{image_url},
+				#{market_money},
+				#{retail_money},
+				#{integral_rate},
+				#{integral_number},
+				ifnull(#{stock_number},'100000'), 
+				#{promotion_type},
+				#{promotion_content},
+				#{goods_id},
+				#{store_id},
+				#{starttime},
+				#{endtime},
+				now(),
+				#{company}
+			)
+	</insert>
+	
+	<update id="updateStockNum" parameterType="Goods">
+			update tb_goods
+			set
+				stock_number = #{stock_number}
+			where
+				goods_id = #{goods_id}
+	</update>
+	
+	<!-- 修改 -->
+	<update id="editGoods" parameterType="pd">
+			update  tb_goods
+			set 
+				<if test="goods_category_id != null and goods_category_id != '' ">	goods_category_id = #{goods_category_id},</if>
+				<if test="goods_name != null and goods_name != '' ">	goods_name = #{goods_name},</if>
+				<if test="image_url != null and image_url != '' ">	image_url = #{image_url},</if>
+				<if test="market_money != null and market_money != '' ">	market_money = #{market_money},</if>
+				<if test="retail_money != null and retail_money != '' ">	retail_money = #{retail_money},</if>
+				<if test="integral_rate != null and integral_rate != '' ">	integral_rate = #{integral_rate},</if>
+				<if test="integral_number != null and integral_number != '' ">	integral_number = #{integral_number},</if>
+				<if test="stock_number != null and stock_number != '' ">	stock_number = #{stock_number},</if>
+				<if test="promotion_type != null and promotion_type != '' ">	promotion_type = #{promotion_type},</if>
+				<if test="promotion_content != null and promotion_content != '' ">	promotion_content = #{promotion_content},</if>
+				<if test="starttime != null  ">	
+					<choose> 
+						<when test="starttime == ''">starttime=null,</when>
+						<otherwise>starttime = #{starttime},</otherwise>
+					</choose>
+				</if>
+				<if test="endtime != null">
+					<choose> 
+						<when test="endtime == ''">endtime=null,</when>
+						<otherwise>endtime = #{endtime},</otherwise>
+					</choose>
+ 				</if>
+				<if test="company != null and company != '' ">	company = #{company},</if>
+			    goods_id = goods_id  
+			where 
+				goods_id = #{goods_id}
+	</update>
+	
+	
+	<!-- 删除-->
+	<update id="deleteGoods" parameterType="pd">
+		update  tb_goods
+		set deletestatus = '1'
+		where 
+			goods_id = #{goods_id}
+	</update>
+	
+		
+	<!-- 统计商品 -->
+	<select id="countGoods" parameterType="pd" resultType="String">
+		select count(*) 
+		from tb_goods 
+		where 
+			 store_id=#{store_id} and deletestatus='0'
+ 	</select>
+ 	
+ 	<update id="updateJfRate" parameterType="pd">
+			update tb_goods_category
+			set
+				<if test="back_rate != null and back_rate != '' ">
+				back_rate = #{back_rate},
+				</if>
+				<if test="zk_rate != null and zk_rate != '' ">
+				zk_rate = #{zk_rate},
+				</if>
+				category_parent_id=category_parent_id
+			where
+				store_id = #{store_id}
+	</update>
+	
+</mapper>
+

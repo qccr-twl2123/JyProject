@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PcTongYong">
+	
+	 
+  	<!-- 根据省市区获取营销参数-->
+	<select id="getCityMarketingForPCD" parameterType="pd" resultType="pd">
+		select	
+				a.city_file_id,
+				b.`pcd_id` as province_id,
+				b.`name` as province_name,
+				c.`pcd_id` as city_id,
+				c.`name` as city_name,
+				d.`pcd_id` as area_id,
+				d.`name` as area_name,
+				e.city_marketing_id 
+		from 
+				tb_city_file a join tb_city_marketing e on a.city_file_id=e.city_file_id
+				left join tb_pcd b on a.province_id=b.pcd_id
+				left join tb_pcd c on a.city_id=c.pcd_id
+				left join tb_pcd d on a.area_id=d.pcd_id
+ 		where
+				c.`name`=#{city_name}
+				and  d.`name`=#{area_name}
+				<if test="province_name != null and province_name!= '' ">and b.`name`=#{province_name}</if>
+   		limit 1	
+   	</select>
+   	
+   	<!-- pc页面的广告位列表查询 -->
+   	<select id="allPcPictureById" parameterType="pd" resultType="pd">
+		select
+				ifnull(a.ranking,"" ) ranking,	
+				ifnull(a.image_url,"" ) image_url,	
+				ifnull(a.hyperlink_url,"#" ) hyperlink_url
+		from 
+				tb_pc_advert a
+		where
+				a.city_file_id=#{city_file_id}
+				and a.type=#{pc_type}
+  				and to_days(now()) &gt;= to_days(a.starttime) 
+                and to_days(now()) &lt;= to_days(a.endtime) 
+		order by ranking 
+ 	</select>
+   	
+   	
+   	
+	<!-- 当前城市的关键字-->
+	<select id="listAllcontent" parameterType="pd" resultType="pd">
+		select
+				cm_eight_id,
+				city_marketing_id,
+				ifnull(keyword,"") keyword 
+		from 
+				tb_cm_eight
+		where
+				city_marketing_id=#{city_marketing_id}
+	</select>
+	
+	<!-- 获取所有开通的市 -->
+	<select id="listAllCity" parameterType="pd" resultType="pd">
+		select
+				distinct
+				a.city_id,
+				b.name as city_name	
+ 		from 
+				tb_city_file a
+				left join tb_pcd b on b.pcd_id=a.city_id
+		where 
+				a.open_status='1'
+  	</select>
+  	
+  	
+  	<!-- 获取定位当前下市下的所有区域 -->
+	<select id="listAllArea" parameterType="pd" resultType="pd">
+		select
+				distinct
+				a.area_id,
+				b.name as area_name	
+ 		from 
+				tb_city_file a
+				left join tb_pcd b on b.pcd_id=a.area_id
+		where
+				a.city_id=#{city_id}
+				and a.open_status='1'
+  	</select>
+  	
+  	<!-- 获取当前城市下的一级/二级分类  -->
+	<select id="listAllCitySort" parameterType="pd" resultType="pd">
+		select
+				  e.city_file_id,	
+				  e.city_file_sort_id,	
+				  e.sort_name,
+				  e.sort_type,
+				  e.sequence,
+				  ifnull(e.sort_imageurl,"") sort_imageurl
+   		from 
+				  tb_city_file_sort e
+ 		where	
+ 				  e.city_file_id=#{city_file_id}
+ 				  and e.open_status='1' 
+   				  and e.sort_parent_id=#{sort_parent_id}
+				  and e.sort_type=#{sort_type}
+	    order by cast(e.sequence as signed)
+	</select>
+  	
+  	<!-- 获取所有商家设置的营销手段 -->
+	<select id="listAllMarketingLimitTwo" parameterType="pd" resultType="pd">
+		select 
+				a.store_marketing_id,
+				a.marketing_type,
+				a.change_type,
+				a.grantrule,
+  				a.marketing_id,
+				a.daytime
+		from 
+				tb_store_marketing a
+		where 
+				a.store_id=#{store_id} 
+				and a.open_status='1'
+				and a.isguoqi='0'
+ 				and to_days(now()) &gt;= to_days(a.starttime)
+				and to_days(now()) &lt;= to_days(a.endtime)
+		order by sort 
+		limit 2
+	</select>
+	
+	<!-- 获取所有商家设置的营销手段魏汉文20160628-->
+	<select id="listAllMarketing" parameterType="pd" resultType="pd">
+		select 
+				a.store_marketing_id,
+				a.marketing_type,
+				a.change_type,
+				a.grantrule,
+ 				a.sort,
+ 				a.store_id,
+ 				a.marketing_id,
+				a.daytime
+		from 
+				tb_store_marketing a
+		where 
+				a.open_status='1'
+				and a.isguoqi='0'
+ 				and to_days(now()) &gt;= to_days(a.starttime)
+				and to_days(now()) &lt;= to_days(a.endtime)
+				and a.store_id=#{store_id}
+				<if test="marketing_type != null and marketing_type != '' ">
+				and a.marketing_type=#{marketing_type}
+				</if>
+ 		order by sort 
+ 	</select>
+	
+	
+	
+	<!-- 修改会员记录  -->
+	<update id="editMember" parameterType="pd">
+			update  tb_member
+			set 
+				<if test="password != null and password != ''">
+					password = #{password},
+ 				</if>
+				<if test="logindate != null and logindate != ''">
+					logindate = now(),
+ 				</if>
+ 				<if test="longitude != null and longitude != ''">
+					longitude = #{longitude},
+ 				</if>
+				<if test="latitude != null and latitude != ''">
+					latitude = #{latitude},
+ 				</if>
+				<if test="province_name != null and province_name != ''">
+					province_name = #{province_name},
+ 				</if>
+				<if test="city_name != null and city_name != ''">
+					city_name = #{city_name},
+ 				</if>
+				<if test="area_name != null and area_name != ''">
+					area_name = #{area_name},
+ 				</if>
+				<if test="name != null and name != ''">
+					name = #{name},
+ 				</if>
+				<if test="sex != null and sex != ''">
+					sex = #{sex},
+ 				</if>
+				<if test="image_url != null and image_url != ''">
+					image_url = #{image_url},
+ 				</if>
+				<if test="email != null and email != ''">
+					email = #{email},
+ 				</if>
+				<if test="birthday != null and birthday != ''">
+					birthday = #{birthday},
+ 				</if>
+				<if test="islogin != null and islogin != ''">
+					islogin = #{islogin},
+					<if test="islogin =='1'.toString()">
+					logindate=now(),
+					</if>
+ 				</if>
+  				member_id = member_id
+			where 
+				member_id = #{member_id}
+	</update>
+  	
+  	
+  	<!-- 查看会员详情  -->
+	<select id="detailMemberById" parameterType="pd" resultType="pd">
+		select 
+			real_name,
+ 			name,	
+			phone,
+ 			image_url,	
+			recommended,	
+			sex,
+			email,
+			birthday,
+			istuisong,
+			ifnull(longitude,'--') as longitude,
+			latitude,
+ 			member_id   
+		from 
+			tb_member
+		where 
+			1=1
+			<choose>
+				<when test="member_id != null and member_id != '' ">and member_id=#{member_id}</when>
+				<otherwise>
+					and phone=#{phone}
+					<if test="password != null and password != ''">and password=#{password}</if>
+				</otherwise>
+			</choose>
+ 		limit 1
+	</select>
+	
+	<!-- 推荐人列表 -->
+	<select id="listAllTuiJian" parameterType="pd" resultType="pd">
+		select
+				distinct
+				id,
+				type
+		from 
+				tb_tuijian
+		where
+				be_phone=#{phone}
+ 	</select>
+	
+	
+	
+		<!--  通过商家ID查询出详情图。。。。。  -->
+	<select id="findImageByStore" parameterType="pd" resultType="pd">
+		select 
+			ifnull(address,'') address, 
+			ifnull(address1,'') address1, 
+			ifnull(explain_pic,'') explain_pic, 
+			type,
+ 			store_id
+		from 
+			tb_store_image
+		where 
+			store_id = #{store_id}
+ 	</select>
+ 	
+ 	<!-- 商家的评论列表魏汉文20160630 分页-->
+	<select id="datalistPageByComment" parameterType="page" resultType="pd">
+		select
+				a.store_id,	
+				a.comment_id,
+				ifnull(a.content,"") content,
+				cast(a.star_number as decimal(10,1)) star_number,	
+				date_format(a.star_time,'%Y-%m-%d %H:%i:%s') star_time,
+ 				a.order_id,		
+ 				ifnull(a.image_url,"") as commentimage_url,	
+				ifnull(b.phone,"") phone ,
+				ifnull(a.comment_store,"") comment_store ,
+				ifnull(a.comment_store_status,"") comment_store_status,
+				ifnull(b.image_url,"") image_url,
+				ifnull(b.name,"") name
+		from 
+				tb_comment a 
+				left join tb_member b on a.member_id=b.member_id
+		where   
+				a.store_id=#{pd.store_id}
+		order by a.star_time desc
+	</select>
+  	
+  	
+  	<!-- 获取所有商家设置的积分手段魏汉文20160628-->
+	<select id="getJfByIdByStore" parameterType="pd" resultType="pd">
+		select 
+				a.store_scoreway_id,
+				a.store_id,
+				a.change_type,
+				a.selected_status,
+				a.content,
+				a.oneback_rate,
+				a.threemin_rate,
+				a.threemax_rate,
+				a.fourbackintegral_integral,
+				a.fiveconsumer_money,
+				a.fivesendintegral_rate,
+				a.grantrule,
+				a.isguoqi
+
+		from 
+				tb_store_scoreway a
+		where 
+ 				a.store_id=#{store_id}
+  				and a.selected_status='1'
+   		limit 1	
+    	</select>
+    	
+    <!--取消收藏魏汉文20160629-->
+	<delete id="deleteCollect"  parameterType="pd">
+		delete from tb_collect
+		where 
+			<choose>
+				<when test="collect_id != null and collect_id != ''">collect_id=#{collect_id}</when>
+				<otherwise>member_id=#{member_id} and store_id=#{store_id}	</otherwise>
+			</choose>
+ 	</delete>
+	
+	
+	<!-- 新增收藏魏汉文2016.06.29-->
+	<insert id="saveCollect" parameterType="pd">
+		insert into tb_collect(
+			collect_id,
+ 			store_id,
+ 			member_id,	
+			collection_time
+		) values (
+ 			#{collect_id},	
+ 			#{store_id},	
+ 			#{member_id},	
+			now()
+		)
+	</insert>
+    	
+    	
+    	<!-- 查询收藏信息魏汉文20160629-->
+		<select id="getCollectionById" parameterType="pd"  resultType="pd">
+			select 
+					a.collect_id,
+					a.store_id,
+					a.member_id,
+					a.collection_time,
+					b.longitude,
+					b.latitude 
+			from 
+					tb_collect a 
+					left join tb_store b on a.store_id=b.store_id
+			where  
+					a.store_id=#{store_id} 
+					and member_id=#{member_id} 
+	</select>
+	
+	<!-- 更新收藏次数 -->
+	<update id="editCollectNumber" parameterType="pd">
+			update  tb_store a
+			set 
+ 				a.collection_times = (select count(*) from tb_collect b where b.store_id=a.store_id ),
+  				a.store_id=a.store_id
+			where 
+ 			    a.store_id = #{store_id}
+ 	</update>
+    	
+</mapper>

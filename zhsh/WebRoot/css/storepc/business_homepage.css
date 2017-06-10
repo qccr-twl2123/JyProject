@@ -1,0 +1,451 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-size: 18px;
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+    color: #000;
+}
+/*header*/
+.signin_header{
+    width: 100%;
+    min-height: 92px;
+    margin:0 20px 0 20px;
+}
+.signin_logo{
+    display: block;
+    float: left;
+    margin: 10px 0 0 50px;
+
+}
+.signin_header_sp1{
+    display: inline-block;
+    font-size: 26px;
+    float: left;
+    height: 122px;
+    line-height: 132px;
+    margin-left: 50px;
+}
+.header_p1{
+    width: 25%;
+    float: right;
+    font-size: 18px;
+    line-height: 72px;
+    margin: 1%;
+    text-align: center;
+}
+.header_p1 span{
+    display: inline-block;
+    width: 88px;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 5px;
+    color: #fff;
+    text-align: center;
+    background-color: #169ada;
+    margin-left: 20px;
+    cursor: pointer;
+}
+.red{
+    color: red;
+    height: 60px;
+    font-size: 14px;
+    line-height: 60px;
+
+}
+/*nav*/
+.nav{
+    width: 100%;
+    height: 75px;
+}
+.nav dl{
+    width: 100%;
+    height: 54px;
+     background-color:  #169ada;
+     margin-top: 11px;
+}
+.nav dl dd{
+    float: left;
+    width: 100px;
+    text-align: center;
+    color: #fff;
+    line-height: 54px;
+    cursor: pointer;
+    /*background-color: pink;*/
+}
+.nav dl dt{
+    float: left;
+    width: 300px;
+    text-align: center;
+    color: #fff;
+    line-height: 54px;
+    cursor: pointer;
+}
+.nav dl dt a:hover{
+	color:red;
+}
+.nav dl dd:first-child{
+    margin-left: 1%;
+}
+.nav dd a{
+    color: #fff;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+.nav_active{
+    background-image: url(../../img/nav_bg.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    height: 85px;
+    margin-top: -11px;
+    line-height: 74px !important;
+}
+
+/*body*/
+
+.signin_body,.signin_body_weiixn{
+    width: 100%;
+    height: 64%;
+    margin-top: 1%;
+    display: none;
+    padding-left: 50px;
+}
+.signin_body_left{
+    width: 18%;
+    float: left;
+    margin-left: 2%;
+    
+    height: 100%;
+}
+.bd{
+    border-bottom: 1px solid #ccc;
+}
+.signin_body_left dd{
+    width: 80%;
+    height: 60px;
+    font-size: 18px;
+    text-align: center;
+    line-height: 45px;
+     background-color: #eee;
+     border-top: 1px solid #ccc;
+     cursor: pointer;
+     margin-left: 20%;
+}
+.signin_body_left_active{
+    background-image: url(../../img/left_bg.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    width: 82% !important;
+    background-color: #fff!important;
+    margin-left: 20%!important;
+    border:none!important;
+    line-height: 70px!important;
+    color: #fff;
+}
+.signin_body_left_active2{
+    background-image: url(../../img/left_bg.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    width: 82% !important;
+    background-color: #fff!important;
+    margin-left: 20%!important;
+    border:none!important;
+    line-height: 50px!important;
+    color: #fff;
+}
+
+.marketingdd dd{
+    height: 50px;
+    text-align: center;
+    line-height: 40px;
+     background-color: #eee;
+     border-top: 1px solid #ccc;
+     cursor: pointer;
+}
+@media(max-width: 1280px){
+    .marketingdd dd{
+    height: 40px;
+    
+}
+    .signin_body_left dd{
+        width: 100%;
+        height: 45px;
+        text-align: center;
+        line-height: 45px;
+         background-color: #eee;
+         border-top: 1px solid #ccc;
+         cursor: pointer;
+}
+.signin_body_left_active{
+    background-image: url(../../img/left_bg.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    width: 102% !important;
+    background-color: #fff!important;
+    margin-left: -1%!important;
+    border:none!important;
+    line-height: 50px!important;
+    color: #fff;
+}
+.signin_body_left_active2{
+    background-image: url(../../img/left_bg.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    width: 102% !important;
+    background-color: #fff!important;
+    margin-left: -1%!important;
+    border:none!important;
+    line-height: 40px!important;
+    color: #fff;
+}
+}
+
+.right_bg{
+    display: inline-block;
+    float: left;
+    width: 10px;
+    height: 60px;
+    margin-left: 2%;
+}
+.signin_body_right{
+    width: 66%;
+    height: 100%;
+    float: left;
+    background-color: #eee;
+}
+.signin_body_right_ifra{
+    width: 100%;
+    height: 100%;
+}
+.dangan_ifra{
+    width: 100%;
+    height: 100%;
+    border:none;
+}
+/*footer*/
+.signin_footer{
+    width: 100%;
+    height: 6%;
+    background-color: #eee;
+    min-height: 100px;
+    position: absolute;
+    bottom: 0;
+}
+.footer_d1{
+    width: 60%;
+    margin-left: 20%;
+    height: 100px;
+
+}
+.footer_d1 span {
+    display: inline-block;
+    font-size: 18px;
+    width: 24%;
+    text-align: center;
+    line-height: 100px;
+
+}
+.footer_d2{
+    width: 100%;
+    height: 40px;
+    text-align: center;
+    font-size: 14px;
+    color: #ccc;
+}
+@media(max-width:1280px ){
+  .signin_footer{
+    height: 10%;
+   
+}
+  .footer_d1{
+    width: 60%;
+    margin-left: 20%;
+    height: 70px;
+
+}
+.footer_d1 span {
+    display: inline-block;
+    font-size: 18px;
+    width: 24%;
+    text-align: center;
+    line-height: 70px;
+
+}
+}
+span   {
+    display: inline-block;
+}
+/*#homepage,*/
+#marketing,
+#shop,
+#base,
+#account{
+    display: none;
+}
+.signin_body{
+    display: block;
+}
+.signin_body_weiixn_left{
+    width: 20%;
+    height: 100%;
+    float: left;
+}
+.weixin_img1{
+    width: 70px;
+    height: 70px;
+    margin-left:25%;
+    margin-top: 15px;
+}
+.weixin_img2{
+    display: block;
+     width: 40px;
+    height: 40px;
+    margin-left:30%;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
+.weixin_img5{
+    width: 50px;
+    height: 50px;
+    margin-top: 100%;
+}
+.signin_body_weiixn_content,
+.signin_body_weiixn_content2,.signin_body_weiixn_content3{
+    width: 24%;
+    height: 99.5%;
+    background-color: #eaeaea;
+    float: left;
+    border:1px solid #8f8f8f;
+    display: none;
+}
+.signin_body_weiixn_content{
+    display: block;
+}
+.p1{
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    background-color: #fff;
+
+}
+.p2{
+    width: 100%;
+    height: 70px;
+    line-height: 70px;
+}
+.p1 span,.p2 span{
+   margin-left: 20px; 
+}
+.mgtop30{
+    margin-top: 100px;
+}
+.red2{
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    color: #fff;
+    border-radius: 50%;
+    position: relative;
+    text-align: center;
+    line-height: 20px;
+}
+.signin_body_weiixn_content2_d1{
+    width: 100%;
+    height: 82px;
+}
+.signin_body_weiixn_content2_ipt{
+    width: 180px;
+    height: 20px;
+    margin-top: 20px;
+    margin-left: 50px;
+    float: left;
+}
+.ipt_img2{
+    width: 20px;
+    height: 20px;
+    float: left;
+    margin-left: -20px;
+    margin-top: 20px;
+    cursor: pointer;
+
+}
+.ipt_img3{
+    width: 20px;
+    height: 20px;
+    background-color: #ccc;
+    color: #888;
+    font-size: 20px;
+    text-align: center;
+    line-height: 18px;
+    float: left;
+    margin-top: 20px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.white{
+    background-color: #fff;
+}
+.white_img1{
+    width: 60px;
+    height: 60px;
+    margin-left: 20px;
+    margin-top: 10px;
+    float: left;
+}
+.white_text{
+    width: 100px;
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    margin-left: 30px;
+}
+.signin_body_weiixn_content3_name{
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background-color: #fff;
+}
+.signin_body_weiixn_content3_name span{
+    margin-left: 10px;
+}
+.name_sp1{
+    width: 20px;
+    height: 20px;
+    margin-top:50px ;
+    float: right;
+    margin-right: 50px;
+    cursor: pointer;
+}
+span img{
+    width: 100%;
+    height: 100%;
+}
+@media(max-width: 1280px){
+    .weixin_img1{
+        margin-left:15%;
+    }
+    .weixin_img2{
+    margin-left:25%;
+}
+}
+.signin_body_weiixn_right{
+    width: 65%;
+    height: 99.5%;
+    float: left;
+     border: 1px solid #8f8f8f;
+    border-left: none;
+}

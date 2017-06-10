@@ -1,0 +1,179 @@
+@import "predefine.css";
+
+	.sc_fp{  /* 首次信息填写 */
+		display: none;
+	}
+	.act_box{
+		position: relative;
+		display: inline-block;
+		width: 140px; 
+		height: 46px;
+		border: 1px solid #666;
+		margin-right: 20px;
+		cursor: pointer;
+	}
+	.act_img{
+		display: none;
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 20px;
+	}
+
+	.list-item{
+		width: 28%;
+		position: relative;
+		display: inline-block;
+		text-align: center;
+		border: 2px solid #117dd0;
+		padding: 10px 15px;
+		cursor: pointer;
+		margin: 0 0.4%;
+	}
+	.list-item ul{
+		width: 90%;
+		padding:15px 5%;
+
+	}
+	.list-item li{
+		padding: 10px 0;
+	}
+	.list_img{
+		display: none;
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 28px;
+	}
+
+
+
+	.fp_head{
+		position: relative;
+		width: 100%;
+		height: 50px;
+		background: #117dd0;
+		color: #fff;
+		text-align: center;
+	}
+
+	.sc_fp_head{
+		position: relative;
+		width: 100%;
+		height: 50px;
+		background: #117dd0;
+		color: #fff;
+		text-align: center;
+	}
+	.img_box{
+		display:block;
+		width: 40px;
+		height: 40px;
+		float: left;
+		padding: 5px 0 0 5px; 
+		cursor: pointer;
+	}
+	.img_box img{
+		width: 80%;
+		height: 80%;
+
+	}
+	.fp_bg{
+		width: 47%;
+		height: 50px;
+		position: absolute;
+		background: #0071c8;
+		left: 50px;
+		top: 0;
+		transition: all 2s;
+		
+	}
+	.sc_fp_bg{
+		width: 95%;
+		height: 50px;
+		position: absolute;
+		background: #0071c8;
+		left: 50px;
+		top: 0;
+		transition: all 2s;
+		
+	}
+	.fp_head span{
+		width: 46%;
+		float: left;
+		display: inline-block;
+		font-size: 112.5%;
+		height: 100%;
+		line-height: 50px;
+		position: relative;z-index: 1;
+	}
+	.sc_fp_head span{
+		width: 92%;
+		float: left;
+		font-size: 112.5%;
+		display: inline-block;
+		height: 100%;
+		line-height: 50px;
+		position: relative;z-index: 1;
+	}
+	.sqfp_btn{
+		background: #117dd0;
+		cursor: pointer;
+		color: #fff;
+
+	}
+	.sqfp_btn:hover{
+		background: #006ec2;	
+	}	
+	.list_name{
+		float: left;
+		width: 40%;
+		text-align: right;
+		padding: 20px 0 0 0 ;
+		vertical-align: middle;
+		line-height: 40px;
+	}
+	.list_inp{
+		float: left;
+		width: 60%;
+		text-align: left;
+		padding: 20px 0 0 0 ;
+		vertical-align: middle;
+		line-height: 40px;
+	}
+	.list_inp li,.list_name li{
+		height: 40px;
+	}
+	.list_inp input[type="text"]{
+		width: 240px;
+		height: 28px;
+	}
+	.sc_inf_list{
+		cursor: pointer;
+	}
+
+
+		
+	.fpxq_alt{
+		display: none;
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		z-index: 1;
+	}
+	.fp_xq{
+		border-radius: 8px;
+		box-shadow: 0 0 15px 1px #999;
+		background: #ccffff;
+	    position: absolute;
+	    top: 0;
+	    bottom: 0;
+	    left: 0;
+	    right: 0;
+	    width: 80%;
+	    margin: auto;
+	    height: 430px;
+
+	}
+
+

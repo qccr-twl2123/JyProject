@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FriendMapper">
+	
+	
+	<!-- 新增朋友-->
+	<insert id="save" parameterType="pd">
+		insert into TB_FRIEND(
+			INVITE_ID,	
+			BE_INVITE_ID,
+			FRIEND_STATUS	
+ 			BE_INVITE_TYPE,	
+ 			INVITE_TYPE,	
+			INVITE_TIME,	
+			friend_id
+		) values (
+			#{invite_id},	
+			#{be_invite_id},	
+			#{friend_status},	
+ 			#{be_invite_type},	
+ 			#{invite_type},	
+			now(),	
+			#{friend_id}
+		)
+	</insert>
+	
+	
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_FRIEND
+		where 
+			friend_id = #{friend_id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  TB_FRIEND
+			set 
+ 				friend_id = friend_id
+			where 
+				friend_id = #{friend_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			invite_id,	
+			be_invite_id,	
+			friend_status,	
+ 			be_invite_type,	
+ 			invite_type,	
+			invite_time,	
+			friend_id
+		from 
+			TB_FRIEND
+		where 
+			friend_id = #{friend_id}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.invite_id,	
+				a.be_invite_id,	
+				a.friend_status,	
+ 				a.be_invite_type,	
+ 				a.invite_type,	
+				a.invite_time,	
+				a.friend_id
+		from 
+				TB_FRIEND a
+		where  a.be_invite_id=0
+		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+			and
+				(
+				a.invite_status = #{pd.content}
+					 
+				)
+		</if>
+	</select>
+	
+	<!-- 列表获取-->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.invite_id,	
+				a.be_invite_id,	
+				a.friend_status,	
+ 				a.be_invite_type,	
+ 				a.invite_type,	
+				a.invite_time,	
+				a.friend_id
+		from 
+				TB_FRIEND a
+		where
+				a.be_invite_id=0
+	</select>
+	
+	
+	<!-- 一级/二级人脉列表-->
+	<select id="contactsList" parameterType="pd" resultType="pd">
+		SELECT
+				contacts_id,
+				contacts_type
+		from 
+				tb_contacts a
+		where 
+				contacts_parent_id=#{id}
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_FRIEND
+		where 
+			friend_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

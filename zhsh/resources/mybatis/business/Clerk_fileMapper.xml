@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Clerk_fileMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into TB_CLERK_FILE(
+			clerk_name,
+			menu_role_id,	
+			idnumber,	
+			phone,	
+			sp_file_id,	
+			clerk_address,	
+			open_status,	
+  			createdate,	
+  			password,
+			clerk_file_id,
+			operate_id
+		) values (
+			#{clerk_name},	
+			#{menu_role_id},	
+			#{idnumber},	
+			#{phone},	
+			#{sp_file_id},	
+			#{clerk_address},	
+			#{open_status},	
+  			now(),	
+			#{password},
+			#{clerk_file_id},
+			#{operate_id}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_CLERK_FILE
+		where 
+			CLERK_FILE_ID = #{clerk_file_id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+			update  tb_clerk_file
+			set 
+				<if test="clerk_name != null and clerk_name != ''">
+				clerk_name = #{clerk_name},
+				</if>
+				<if test="idnumber != null and idnumber != ''">
+				idnumber = #{idnumber},
+				</if>
+				<if test="phone != null and phone != ''">
+				phone = #{phone},
+				</if>
+				<if test="sp_file_id != null and sp_file_id != ''">
+				sp_file_id = #{sp_file_id},
+				</if>
+				<if test="clerk_address != null and clerk_address != ''">
+				clerk_address = #{clerk_address},
+				</if>
+				<if test="open_status != null and open_status != ''">
+				open_status = #{open_status},
+				</if>
+				<if test="password != null and password != ''">
+				password = #{password},
+				</if>
+				<if test="nowmoney != null and nowmoney != ''">
+				nowmoney = #{nowmoney},
+				</if>
+    			clerk_file_id = clerk_file_id
+			where 
+				clerk_file_id = #{clerk_file_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			clerk_name,	
+			idnumber,	
+			phone,	
+			password,
+			menu_role_id,
+			sp_file_id,	
+			clerk_address,	
+			open_status,	
+  			createdate,	
+  			nowmoney,
+			clerk_file_id
+		from 
+			tb_clerk_file
+		where 
+			clerk_file_id = #{clerk_file_id}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.clerk_name,	
+				a.idnumber,	
+				a.phone,	
+				a.clerk_file_id,
+				a.menu_role_id,	
+				a.sp_file_id,	
+				a.clerk_address,	
+				a.open_status,	
+  				a.createdate,
+  				a.nowmoney,
+  				(select count( * ) from tb_store_file c where c.clerk_file_id=a.clerk_file_id ) as allstore,
+ 				b.team_name,
+ 				c.name as area_name,
+		      	d.name as city_name
+		from 
+				tb_clerk_file a 
+				left join tb_sp_file b on a.sp_file_id=b.sp_file_id
+ 				left join tb_pcd c on b.area_id=c.pcd_id
+				left join tb_pcd d on c.parent_id=d.pcd_id
+		where  1=1
+				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+					and
+						(
+							a.clerk_name like CONCAT(CONCAT("%",#{pd.content}),"%")
+							or
+							a.phone like CONCAT(CONCAT("%",#{pd.content}),"%")
+							or
+							a.idnumber like CONCAT(CONCAT("%",#{pd.content}),"%")
+						)
+				</if>
+				<if test="pd.province_id != null and pd.province_id != ''"><!-- 关键词检索 -->
+					and a.clerk_address like CONCAT(#{pd.province_id},"%")
+		 		</if>
+				<if test="pd.sp_file_id != null and pd.sp_file_id != ''"><!--服务商 -->
+					and 	a.sp_file_id =#{pd.sp_file_id}
+		 		</if>
+				<if test="pd.clerk_file_id != null and pd.clerk_file_id != ''"><!--服务商 -->
+					and  a.clerk_file_id =#{pd.clerk_file_id}
+		 		</if>
+		 		<if test="pd.login_cityname != null and pd.login_cityname != ''"><!-- 登录人的所在 城 市 -->
+					and  find_in_set(d.name,#{pd.login_cityname}) 
+				</if>
+				<if test="pd.login_areaname != null and pd.login_areaname != ''"><!-- 登录人的所在 区 域 -->
+					and  find_in_set(c.name,#{pd.login_areaname}) 
+				</if>
+		order by a.createdate desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.clerk_name,	
+				a.idnumber,	
+				a.menu_role_id,
+				a.phone,	
+				a.sp_file_id,	
+				a.clerk_address,	
+				a.open_status,	
+  				a.createdate,	
+				a.clerk_file_id
+		from 
+				tb_clerk_file a
+		where
+				1=1
+				<if test="sp_file_id != null and sp_file_id != '' ">
+				and a.sp_file_id=#{sp_file_id}
+				</if>
+				<if test="open_status != null and open_status != '' ">
+				and a.open_status=#{open_status}
+				</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_CLERK_FILE
+		where 
+			CLERK_FILE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	
+	<!-- 获取最大值的ID -->
+	<select id="getMaxId" parameterType="pd" resultType="String">
+		select
+				MAX(a.CLERK_FILE_ID)
+		from 
+				TB_CLERK_FILE a
+	</select>
+	
+	
+	
+	<!-- 精简 -->
+	<select id="listAllCr" parameterType="pd" resultType="pd">
+		select
+				a.clerk_name as post_name,		
+				a.open_status,		
+				a.clerk_file_id as post_id
+		from 
+				tb_clerk_file a
+		where 
+				a.open_status= '1'
+	</select>
+	
+	<!-- 通过登陆获取数据 -->
+	<select id="findByLogin" parameterType="pd" resultType="pd">
+		select 
+			  a.clerk_name,	
+ 			  a.phone,	
+			  a.password,
+ 			  a.open_status,	
+  			  a.clerk_file_id,
+  			  a.menu_role_id,
+		      c.name as area_name,
+		      d.name as city_name,
+		      e.name as province_name
+		from 
+			tb_clerk_file a 
+			left join tb_sp_file b on a.sp_file_id=b.sp_file_id 
+			left join tb_pcd c on b.area_id=c.pcd_id
+			left join tb_pcd d on c.parent_id=d.pcd_id
+			left join tb_pcd e on d.parent_id=e.pcd_id
+		where 
+			a.open_status='1'
+			and a.clerk_file_id = #{clerk_file_id}
+			and a.password=#{password}
+	</select>
+	
+	
+</mapper>

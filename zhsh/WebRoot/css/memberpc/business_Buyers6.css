@@ -1,0 +1,246 @@
+html,body{
+    width: 100%;
+    height: 100%;
+   
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+    font-size: 15px;
+    color: #323232;
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+    color: #000;
+}
+.hands{
+    cursor: pointer;
+}
+span{
+    display: inline-block;
+}
+
+img{
+    width: 100%;
+    height: 100%;
+}
+/*header*/
+.Buyers_body{
+    width: 1200px;
+    height: 100%;
+    margin: 0 auto;
+}
+.Buyers_hnav{
+    width: 100%;
+    height: 44px;
+    background-color: #e5e5e5;
+}
+.Buyers_hnav_sp1,.Buyers_hnav_sp2{
+    width: 6em;
+    height: 33px;
+    line-height: 33px;
+    text-align: center;
+    cursor: pointer;
+}
+.Buyers_hnav_sp2{
+    float: right;
+}
+.orange{
+    width: 1em;
+    text-align: left;
+    color: #ff7107;
+}
+.Buyers_header{
+    width: 100%;
+    height: 116px;
+}
+.Buyers_header_logo,.Buyers_header_sp1{
+    width: 87px;
+    height: 57px;
+   /*  margin-left: 5em; */
+    float: left;
+    margin-top: 20px;
+}
+.Buyers_header_sp1{
+    width: 100px;
+     margin-left: 1em;
+}
+.Buyers_p1{
+    height: 35px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 35px;
+}
+.Buyers_p2{
+    font-size: 14px;
+    width: 6em;
+    height: 22px;
+    border:1px solid #d6d6d6;
+    color: #d6d6d6;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+
+}
+.Buyers_header_sp2{
+    width: 360px;
+    height: 60px;
+    float: left;
+    margin-top: 40px;
+}
+.Buyers_header_sp2_input{
+    width: 90%;
+    height:30px ;
+    float: left;
+}
+.Buyers_header_sp2_sp{
+    width: 10%;
+    height: 30px;
+    float: left;
+    cursor: pointer;
+}
+.Buyers_header_p2{
+    clear: both;
+    width: 100%;
+    height: 30px;
+}
+.Buyers_header_p2 span{
+    width: 3.5em;
+    height: 30px;
+    line-height: 30px;
+    color: #646464;
+    font-size: 13px;
+    text-align: center;
+    cursor: pointer;
+}
+.Buyers_header_sp3{
+    width: 250px;
+    height: 116px;
+    float: right;
+}
+.Buyers_header_sp3 p{
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    color: #ff0000;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing:3px;
+}
+.Buyers_header_sp3 p:first-child{
+    margin-top: 15px;
+}
+.Buyers_nav{
+    width: 100%;
+    height: 50px;
+    background-color: #fe2929;
+}
+.Buyers_nav_sp1{
+    width: 20%;
+    height: 50px;
+    float: left;
+    margin-left: 5%;
+    line-height: 50px;
+    color: #fff;
+
+}
+.Buyers_nav_sp2{
+    width: 9.25%;
+    height: 50px;
+    float: left;
+    line-height: 50px;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+}
+.Buyers_nav_sp2 span{
+    width: 20px;
+    height: 50px;
+    float: right;
+    margin-right: 20px;
+}
+.nav_active{
+    background-color: #e38211;
+}
+.Buyers_coutent{
+    width: 100%;
+    height: 800px;
+    border:1px solid #d6d6d6;
+    margin-top: 50px;
+}
+.Buyers_coutent_tp{
+    width: 100%;
+    height: 50px;
+    background-color: #eee;
+    line-height: 50px;
+}
+.Buyers_coutent_tp span{
+    width: 110px;
+    height: 50px;
+    text-align: center;
+    font-size: 12px;
+    color: #646464;
+    cursor: pointer;
+
+}
+.sp_active{
+    border-bottom: 2px solid red;
+    color: red;
+
+}
+.Buyers_coutent_ct{
+    width: 100%;
+
+}
+.Buyers_coutent_ct_d1{
+    width: 60%;
+    height: 500px;
+    float: left;
+}
+.Buyers_coutent_ct_d1_p{
+    width: 90%;
+    margin-left: 10%;
+    height: 40px;
+    line-height: 40px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #646464;
+}
+.Buyers_coutent_ct_d1_p span{
+    /*  font-size: 12px; */
+    color: #646464;
+    width: 6em;
+    text-align: right;
+}
+.Buyers_coutent_ct_d1_p input{
+    margin: 10px;
+    position: relative;top: 2px;
+} 
+.blue{
+    color: #169eda !important;
+    cursor: pointer;
+}
+.yes{
+    width: 100px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border:1px solid #d6d6d6;
+    border-radius: 5px;
+    background-color: #F1F9EA;
+    margin: 40px  70%;
+    cursor: pointer;
+}
+.tc{
+    width: 100px;
+    height: 100px;
+    position: relative;
+    top: -400px;
+    margin-left: 660px;
+}

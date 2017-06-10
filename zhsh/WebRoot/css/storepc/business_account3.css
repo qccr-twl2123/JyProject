@@ -1,0 +1,94 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+*{
+    margin: 0;
+    padding: 0;
+    font-family: '微软雅黑';
+    font-size: 15px;
+}
+div:before{
+  content:"";
+  display:table;
+
+}
+a{
+    text-decoration: none ;
+    color: #000;
+}
+.hands{
+    cursor: pointer;
+}
+/*header*/
+.parent{
+    width: 100%;
+    height:100%;
+
+}
+.d1{
+    width: 100%;
+    border-bottom: 1px solid #8f8f8f;
+}
+.d1_sp1{
+    display: inline-block;
+    font-size: 20px;
+    width: 5em;
+    height: 2em;
+    text-align: center;
+    line-height: 2em;
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-left: 10%;
+}
+span{
+    display: inline-block;
+}
+.d2{
+    width: 90%;
+    margin-left: 2%;
+}
+.d2 span{
+    font-size: 18px;
+    width:15em;
+    text-align: center;
+    margin-top: 20px;
+}
+.mgleft20{
+    margin-left: 10%;
+}
+.d3{
+    width: 100%;
+    margin-top: 30px;
+}
+.d3 span{
+    width: 9em;
+}
+.mgleft10{
+    margin-left: 15%;
+}
+.d3_sp1{
+   
+    text-align: right;
+}
+.d3_sp2{
+    width: 18em !important;
+}
+.d3_ipt1{
+    width: 100px;
+    margin-right: 28px;
+}
+.tj{
+    width: 120px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    background-color: #169ada;
+    border-radius: 5px;
+    margin-left: 45%;
+    cursor: pointer;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}

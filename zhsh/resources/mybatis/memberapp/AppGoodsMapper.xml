@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AppGoodsMapper">
+	
+	
+	<!-- 魏汉文20160630所有商家小类别列表-->
+	<select id="listAllSort" parameterType="pd" resultType="pd">
+		select
+				a.goods_category_id,
+				a.sort,
+				a.back_rate,
+				a.zk_rate,
+				a.name
+		from 
+				tb_goods_category a  
+		where  
+				a.store_id=#{store_id}
+				and a.category_parent_id != '0' 
+				and a.deletestatus='0'
+ 		order by a.sort	
+	</select>
+	
+		
+	<!-- 魏汉文20160630所有商家大类别列表-->
+	<select id="listAllBigSort" parameterType="pd" resultType="pd">
+		select
+				a.goods_category_id,
+				a.sort,
+				a.back_rate,
+				a.zk_rate,
+				a.name
+		from 
+				tb_goods_category a  
+		where  
+				a.store_id=#{store_id}
+				and a.category_parent_id = '0' 
+				and a.deletestatus='0'
+ 		order by a.sort	
+	</select>
+	
+
+<!-- 今日特价列表魏汉文20160630-->
+	<select id="getYingXiaoGoods" parameterType="pd" resultType="pd">
+		select
+				a.goods_category_id,	
+				ifnull(a.goods_name,"") goods_name,
+				ifnull(a.image_url,"") image_url,
+				ifnull(a.market_money,"") market_money,
+				ifnull(a.retail_money,"") retail_money,
+				ifnull(a.integral_rate,"") integral_rate,
+				ifnull(a.stock_number,"") stock_number,
+				ifnull(a.consumption_number,"") consumption_number,
+				ifnull(a.goods_status,"") goods_status,
+				ifnull(a.sales_status,"") sales_status,
+				ifnull(a.starttime,"") starttime,
+				ifnull(a.endtime,"") endtime,
+				ifnull(a.promotion_type,"") promotion_type,
+ 				ifnull(a.company,"") company,		
+ 				a.goods_id
+		from 
+				tb_goods a
+				right  join tb_goods_tj d on d.goods_id=a.goods_id 
+		where  
+				a.store_id=#{store_id}
+				and a.deletestatus='0'
+				and a.goods_status != '1'
+		order by cast(a.retail_money as decimal(10,2)) 
+		limit 0,10		
+ </select>
+
+	<!-- 人气版10条列表魏汉文20160630-->
+	<select id="getRenQiGoods" parameterType="pd" resultType="pd">
+		select
+				a.goods_category_id,	
+				ifnull(a.goods_name,"") goods_name,
+				ifnull(a.image_url,"") image_url,
+				ifnull(a.market_money,"") market_money,
+				ifnull(a.retail_money,"") retail_money,
+				ifnull(a.integral_rate,"") integral_rate,
+				ifnull(a.stock_number,"") stock_number,
+				ifnull(a.consumption_number,"") consumption_number,
+				ifnull(a.goods_status,"") goods_status,
+				ifnull(a.sales_status,"") sales_status,
+				ifnull(a.starttime,"") starttime,
+				ifnull(a.endtime,"") endtime,
+				ifnull(a.promotion_type,"") promotion_type,
+ 				ifnull(a.company,"") company,	
+				a.goods_id
+		from 
+				tb_goods a
+				right  join tb_goods_rq d on d.goods_id=a.goods_id 
+		where 
+				a.store_id=#{store_id}
+				and a.deletestatus='0'
+				and a.goods_status != '1'
+		order by cast(a.retail_money as decimal(10,2)) 		
+		limit 0,10
+</select>
+
+
+	<!-- 魏汉文20160630所有指定类别商品列表-->
+	<select id="listAllGoodsBySortId" parameterType="pd" resultType="pd">
+			select
+					a.goods_category_id,	
+					ifnull(a.goods_name,"") goods_name,
+					ifnull(a.image_url,"") image_url,
+					ifnull(a.market_money,"") market_money,
+					ifnull(a.retail_money,"") retail_money,
+					ifnull(a.integral_rate,"") integral_rate,
+					ifnull(a.stock_number,"") stock_number,
+					ifnull(a.consumption_number,"") consumption_number,
+					ifnull(a.goods_status,"") goods_status,
+					ifnull(a.sales_status,"") sales_status,
+					ifnull(a.starttime,"") starttime,
+					ifnull(a.endtime,"") endtime,
+					ifnull(a.promotion_type,"") promotion_type,
+					ifnull(a.starttime,"") starttime,
+					ifnull(a.company,"") company,	
+					a.goods_id,
+					b.name,
+					b.sort
+			from 
+					tb_goods a 
+					left join tb_goods_category b on a.goods_category_id=b.goods_category_id and b.store_id=#{store_id} 
+			where  
+					a.store_id=#{store_id}
+					and a.deletestatus='0'
+					and a.goods_status != '1'
+					and a.goods_category_id=#{goods_category_id}
+			order by cast(a.retail_money as decimal(10,2)) 	
+	</select>
+	
+	
+		
+	<!-- 魏汉文20160630获取订单的所有商品-->
+	<select id="listAllGoodsByOrder" parameterType="pd" resultType="pd">
+			select
+					a.goods_id,
+  					cast(a.price  as  decimal(10,2)) as price,
+  					ifnull(a.shop_number, '0' ) as shop_number,
+ 					ifnull(a.goods_type, '1' ) as goods_type,
+ 					a.order_id 
+ 			from 
+					tb_order_goods a  
+ 			where  
+					a.order_id=#{order_id} 
+					
+	</select>
+
+
+	<!-- 会员按类别购买的类别(大类)集合魏汉文20160706-->
+	<select id="goodsSortById" parameterType="pd" resultType="pd">
+			   select 
+   				      e.goods_category_id,
+				      e.name,
+				      e.back_rate ,
+				      e.zk_rate
+				from 
+		      		tb_goods c  
+		     		left join tb_goods_category d on c.goods_category_id=d.goods_category_id 
+		     		left join tb_goods_category e on e.goods_category_id=d.category_parent_id 
+		     	where
+				     c.goods_id=#{goods_id}
+				     and c.deletestatus='0'
+  	</select>
+ 	
+ 	<!-- 查看详情-->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+				a.goods_category_id,	
+				ifnull(a.goods_name,"") goods_name,
+				ifnull(a.image_url,"") image_url,
+				ifnull(a.market_money,"") market_money,
+				ifnull(a.retail_money,"") retail_money,
+				ifnull(a.integral_rate,"") integral_rate,
+				ifnull(a.stock_number,"10000") stock_number,
+				ifnull(a.consumption_number,"0") consumption_number,
+ 				ifnull(a.goods_status,"") goods_status,
+				ifnull(a.sales_status,"") sales_status,
+				date_format(ifnull(a.starttime,date_sub(now(),interval 1 day) ) ,'%Y-%m-%d %H:%i:%s') starttime,
+				date_format(ifnull(a.endtime,date_sub(now(),interval 1 day) ) ,'%Y-%m-%d %H:%i:%s') endtime,
+ 				ifnull(a.promotion_type,"") promotion_type,
+				ifnull(a.promotion_content,"") promotion_content,
+ 				a.store_id,	
+				a.goods_id
+		from 
+				tb_goods a
+		where 
+				a.goods_id=#{goods_id}
+ 	</select>
+	
+	<!-- 购物车到期更新购买数量  -->
+	<update id="updateGoodsBuyNumber" parameterType="pd">
+		update 	tb_goods
+		set 		
+				<if test="goods_number != null and goods_number != ''">
+				stock_number=stock_number+#{goods_number},
+				</if>
+				<if test="ok_number != null and ok_number != ''">
+				consumption_number=consumption_number+#{ok_number}, 
+				</if>
+  				goods_id=goods_id
+ 		where goods_id=#{goods_id}
+	</update>
+	
+	<!-- 获取已购买的商品的ID -->
+	<select id="getGoodsIdByOrder" parameterType="pd" resultType="pd">
+			select
+					a.goods_id,
+					a.goods_type,
+					a.shop_number,
+					a.shop_number as goods_number
+			from 
+					tb_order_goods a  
+ 			where  
+					a.order_id=#{order_id} 
+	</select>
+	
+</mapper>

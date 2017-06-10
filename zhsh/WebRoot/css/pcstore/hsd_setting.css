@@ -1,0 +1,271 @@
+html,
+body {
+  height: 100%;
+}
+body,
+ul,
+li,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 ;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  font-family: "arial", "微软雅黑", "宋体"!important;
+}
+body {
+  background: url("../../img/page/bg.png") repeat;
+}
+.bg {
+  height: 100%;
+   background: #ffffff;
+  margin: 0 auto;
+}
+@media screen and (max-width: 1200px) {
+  .bg {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  .bg {
+    width: 700px;
+  }
+}
+.dask {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background: rgba(244, 244, 244, 0.8);
+}
+.dask .alertwindow {
+  transition: all 0.2s;
+  background-image: url("../../img/page/alert.png");
+  position: absolute;
+  top: 20%;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 720px;
+  height: 390px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #666;
+}
+.dask .alertwindow .button_box {
+  width: 100%;
+  position: absolute;
+  bottom: 20px;
+  z-index: 3;
+}
+.dask .alertwindow .button_box .next {
+  color: #fff;
+  width: 96px;
+  height: 28px;
+  background: #f50202;
+  margin: 0 auto;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 5px;
+}
+.dask .alertwindow .button_box .next:hover {
+  cursor: pointer;
+}
+.dask .show {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  padding: 0 10%;
+  overflow: hidden;
+}
+.dask .show img {
+  position: relative;
+  top: -5%;
+  z-index: 2;
+  width: 120%;
+  height: 120%;
+}
+@media screen and (max-width: 1200px) {
+  .dask .show {
+    padding: 0 5%;
+  }
+  .dask .show img {
+    height: 120%;
+  }
+}
+@media screen and (max-width: 960px) {
+  .dask .show {
+    padding: 0;
+  }
+}
+header .head_cont {
+  background: #fff;
+  width: 1200px;
+  height: 90px;
+  margin: 0 auto;
+}
+header .head_cont img {
+  width: 55px;
+  height: 55px;
+  float: left;
+  margin: 18px 30px 15px 30px;
+}
+header .head_cont .title {
+  float: left;
+  height: 88px;
+  text-align: center;
+  line-height: 88px;
+  font-size: 32px;
+}
+header .head_cont .one {
+  float: left;
+  width: 96%;
+  margin: 0 2% 0 2%;
+  border-bottom: 2px solid #15acf3;
+}
+@media screen and (max-width: 1200px) {
+  header .head_cont {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  header .head_cont {
+    width: 700px;
+  }
+}
+section .sec_cont {
+  width: 1200px;
+  background: #fff;
+  margin: 0 auto;
+}
+section .sec_cont ul {
+  padding: 50px 135px 40px 135px;
+  overflow: hidden;
+}
+section .sec_cont ul li {
+  line-height: 48px;
+  font-size: 18px;
+  float: left;
+}
+section .sec_cont ul .li_size {
+  width: 50%;
+}
+section .sec_cont p {
+  padding: 0 135px 40px 135px;
+  line-height: 28px;
+  font-size: 18px;
+}
+section .sec_cont p .col {
+  color: #ff0000;
+}
+section .sec_cont p .eg {
+  padding-left: 15px;
+  font-size: 14px;
+  color: #666;
+}
+section .sec_cont p input {
+  width: 178px;
+  height: 28px;
+  border: 1px solid #aaa;
+}
+section .sec_cont .button_box {
+  width: 1200px;
+  height: 50px;
+  margin: 0 auto;
+  background: #ffffff;
+}
+section .sec_cont .button_box .butt {
+  width: 136px;
+  background: linear-gradient(to bottom, #15acf3 0%, #0f7bad 100%);
+  padding: 0 35px;
+  text-align: center;
+  line-height: 46px;
+  border-radius: 5px;
+  color: #fff;
+  text-shadow: 1px 1px #999;
+  margin: 0 auto;
+}
+section .sec_cont .button_box .butt:hover {
+  cursor: pointer;
+}
+section .sec_cont .button_box .butt:active {
+  box-shadow: 1px 1px 2px #999;
+}
+@media screen and (max-width: 1200px) {
+  section .sec_cont .button_box {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  section .sec_cont .button_box {
+    width: 700px;
+  }
+  section .sec_cont .ul .li_size {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 1200px) {
+  section .sec_cont {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  section .sec_cont {
+    width: 700px;
+  }
+}
+footer .font_cont {
+  width: 1200px;
+  margin: 0 auto;
+  background: #fff;
+}
+footer .font_cont .button_box {
+  width: 1200px;
+  height: 50px;
+  margin: 0 auto;
+  background: #ffffff;
+}
+footer .font_cont .button_box .butt {
+  background: linear-gradient(to bottom, #15acf3 0%, #0f7bad 100%);
+  padding: 0 35px;
+  text-align: center;
+  line-height: 46px;
+  border-radius: 5px;
+  color: #fff;
+  text-shadow: 1px 1px #999;
+  float: right;
+  margin-right: 90px;
+}
+footer .font_cont .button_box .fl {
+  float: left;
+  margin-left: 120px ;
+}
+footer .font_cont .button_box .butt:hover {
+  cursor: pointer;
+}
+footer .font_cont .button_box .butt:active {
+  box-shadow: 1px 1px 2px #999;
+}
+@media screen and (max-width: 1200px) {
+  footer .font_cont .button_box {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  footer .font_cont .button_box {
+    width: 700px;
+  }
+}
+@media screen and (max-width: 1200px) {
+  footer .font_cont {
+    width: 960px;
+  }
+}
+@media screen and (max-width: 960px) {
+  footer .font_cont {
+    width: 700px;
+  }
+}

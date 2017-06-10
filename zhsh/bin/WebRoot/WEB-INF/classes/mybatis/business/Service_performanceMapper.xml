@@ -1,0 +1,797 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Service_performanceMapper">
+	
+	
+	<!-- 新增服务商月报表记录 -->
+ 	<insert id="savespMonth" parameterType="pd">
+		insert into tb_sp_file_monthly(
+			sp_file_monthly_id,	
+			sp_file_id,	
+			month,	
+			user_number_indicator,	
+			actual_user_number,	
+			completion_rate,	
+			flow_indicators,	
+			actual_water,	
+			water_completion_rate,	
+			isqualified,
+			createdate,
+			leiji_water,
+			leiji_store,
+			add_member,
+			leiji_member,
+			add_xiaoshou,
+			leiji_xiaoshou,
+			add_jifen,
+			leiji_jifen,
+			add_guanggao,
+			leiji_guanggao,
+			add_tixiannumber,
+			leiji_tixianmoney,
+			add_koudian,
+			leiji_koudian,
+			lastday_money
+		) values (
+			#{sp_file_monthly_id},	
+			#{sp_file_id},	
+			#{month},	
+			#{user_number_indicator},	
+			#{actual_user_number},	
+			#{completion_rate},	
+			#{flow_indicators},	
+			#{actual_water},	
+			#{water_completion_rate},	
+			#{isqualified} ,
+ 			now(),
+			#{leiji_water},
+			#{leiji_store},
+			#{add_member},
+			#{leiji_member},
+			#{add_xiaoshou},
+			#{leiji_xiaoshou},
+			#{add_jifen},
+			#{leiji_jifen},
+			#{add_guanggao},
+			#{leiji_guanggao},
+			#{add_tixiannumber},
+			#{leiji_tixianmoney},
+			#{add_koudian},
+			#{leiji_koudian},
+			#{lastday_money}
+		) 
+	</insert>
+
+	<!-- 修改服务商月报表记录 -->
+	<update id="editspMonth" parameterType="pd">
+		update  tb_sp_file_monthly
+			set 
+				<if test="month != null and month != ''  ">month = #{month},</if>
+				<if test="user_number_indicator != null and user_number_indicator != ''  ">user_number_indicator = #{user_number_indicator},</if>
+				<if test="actual_user_number != null and actual_user_number != ''  ">actual_user_number = #{actual_user_number},</if>
+				<if test="completion_rate != null and completion_rate != ''  ">completion_rate = #{completion_rate},</if>
+				<if test="flow_indicators != null and flow_indicators != ''  ">flow_indicators = #{flow_indicators},</if>
+				<if test="actual_water != null and actual_water != ''  ">actual_water = #{actual_water},</if>
+				<if test="water_completion_rate != null and water_completion_rate != ''  ">water_completion_rate = #{water_completion_rate},</if>
+				<if test="isqualified != null and isqualified != ''  ">isqualified = #{isqualified},</if>
+				<if test="leiji_water != null and leiji_water != ''  ">leiji_water = #{leiji_water},</if>
+				<if test="leiji_store != null and leiji_store != ''  ">leiji_store = #{leiji_store},</if>
+				<if test="add_member != null and add_member != ''  ">add_member = #{add_member},</if>
+				<if test="leiji_member != null and leiji_member != ''  ">leiji_member = #{leiji_member},</if>
+				<if test="add_xiaoshou != null and add_xiaoshou != ''  ">add_xiaoshou = #{add_xiaoshou},</if>
+				<if test="leiji_xiaoshou != null and leiji_xiaoshou != ''  ">leiji_xiaoshou = #{leiji_xiaoshou},</if>
+				<if test="add_jifen != null and add_jifen != ''  ">add_jifen = #{add_jifen},</if>
+				<if test="leiji_jifen != null and leiji_jifen != ''  ">leiji_jifen = #{leiji_jifen},</if>
+				<if test="add_guanggao != null and add_guanggao != ''  ">add_guanggao = #{add_guanggao},</if>
+				<if test="leiji_guanggao != null and leiji_guanggao != ''  ">leiji_guanggao = #{leiji_guanggao},</if>
+				<if test="add_tixiannumber != null and add_tixiannumber != ''  ">add_tixiannumber = #{add_tixiannumber},</if>
+				<if test="leiji_tixianmoney != null and leiji_tixianmoney != ''  ">leiji_tixianmoney = #{leiji_tixianmoney},</if>
+				<if test="add_koudian != null and add_koudian != ''  ">add_koudian = #{add_koudian},</if>
+				<if test="leiji_koudian != null and leiji_koudian != ''  ">leiji_koudian = #{leiji_koudian},</if>
+				<if test="lastday_money != null and lastday_money != ''  ">lastday_money = #{lastday_money},</if>
+				sp_file_monthly_id=sp_file_monthly_id
+			where 
+				sp_file_monthly_id = #{sp_file_monthly_id}
+	</update>
+	
+	<!-- 通过ID获取服务商月报表详情 -->
+	<select id="findByIdspMonth" parameterType="pd" resultType="pd">
+		select 
+			sp_file_monthly_id,	
+			sp_file_id,	
+			month,	
+			user_number_indicator,	
+			actual_user_number,	
+			completion_rate,	
+			flow_indicators,	
+			actual_water,	
+			water_completion_rate,	
+			isqualified,
+			createdate,
+			leiji_water,
+			leiji_store,
+			add_member,
+			leiji_member,
+			add_xiaoshou,
+			leiji_xiaoshou,
+			add_jifen,
+			leiji_jifen,
+			add_guanggao,
+			leiji_guanggao,
+			add_tixiannumber,
+			leiji_tixianmoney,
+			lastday_money
+		from 
+			tb_sp_file_monthly
+		where 
+			1=1
+			<choose>
+				<when test="sp_file_monthly_id != null and sp_file_monthly_id != ''">and sp_file_monthly_id = #{sp_file_monthly_id}</when>
+				<otherwise>
+				and sp_file_id=#{sp_file_id}
+				and month=#{month}
+				</otherwise>
+			</choose>
+		limit 1
+	</select>
+	
+	
+	<!-- 服务商月报表列表   -->
+	<select id="listAllspMonth" parameterType="pd" resultType="pd">
+		select
+				a.sp_file_monthly_id,	
+				a.sp_file_id,	
+				a.month,	
+				a.user_number_indicator,	
+				a.actual_user_number,	
+				a.completion_rate,	
+				a.flow_indicators,	
+				a.actual_water,	
+				a.water_completion_rate,	
+				a.isqualified,
+				a.createdate,
+				a.leiji_water,
+				a.leiji_store,
+				a.add_member,
+				a.leiji_member,
+				a.add_xiaoshou,
+				a.leiji_xiaoshou,
+				a.add_jifen,
+				a.leiji_jifen,
+				a.add_guanggao,
+				a.leiji_guanggao,
+				a.add_tixiannumber,
+				a.leiji_tixianmoney,
+				a.lastday_money 
+		from 
+				tb_sp_file_monthly a
+		where 
+				1=1
+				<if test="sp_file_id != null and sp_file_id != '' ">
+				and a.sp_file_id=#{sp_file_id}
+				</if>
+	</select>
+	
+	
+	
+	
+	<!-- 获取服务商最近一个季度的信息 -->
+	<select id="getMaxMonthBySpId" parameterType="pd" resultType="pd">
+		select
+				a.sp_file_monthly_id,	
+				a.sp_file_id,	
+				a.month,	
+				a.user_number_indicator,	
+				a.actual_user_number,	
+				a.completion_rate,	
+				a.flow_indicators,	
+				a.actual_water,	
+				a.water_completion_rate,	
+				a.isqualified,
+				a.createdate,
+				a.leiji_water,
+				a.leiji_store,
+				a.add_member,
+				a.leiji_member,
+				a.add_xiaoshou,
+				a.leiji_xiaoshou,
+				a.add_jifen,
+				a.leiji_jifen,
+				a.add_guanggao,
+				a.leiji_guanggao,
+				a.add_tixiannumber,
+				a.leiji_tixianmoney,
+				a.lastday_money  
+		from 
+				tb_sp_file_monthly a
+		where
+				sp_file_id=#{sp_file_id}
+		order by month desc
+		limit 1
+	</select>
+	
+	<!-- 统计月报表时需要的sql -->
+ 	<select id="countMonthStore" parameterType="pd" resultType="String">
+		select
+				count(*)
+		from 
+				tb_store_file  
+		where
+				1=1
+				<choose>
+					<when test="clerk_file_id != null and clerk_file_id != ''">and clerk_file_id=#{clerk_file_id}</when>
+					<otherwise>and sp_file_id=#{sp_file_id}</otherwise>
+				</choose>
+ 				<if test="type == '1'.toString()">and date_format(createdate ,'%Y-%m') = #{month}</if>
+				<if test="type == '2'.toString()">and date_format(createdate ,'%Y-%m') &lt;= #{month}</if>
+				
+	</select>
+ 	<select id="countMonthMember" parameterType="pd" resultType="String">
+		 select
+				count(*)
+		from 
+				tb_member  a 
+		where
+				recommended in(
+						select b.store_id
+						from tb_store_file b
+						where 
+							1=1
+							<choose>
+								<when test="clerk_file_id != null and clerk_file_id != ''">and b.clerk_file_id=#{clerk_file_id}</when>
+								<otherwise>and b.sp_file_id=#{sp_file_id}</otherwise>
+							</choose>
+  				)
+  				<if test="type == '1'.toString()">and date_format(a.createdate ,'%Y-%m') = #{month}</if>
+				<if test="type == '2'.toString()">and date_format(a.createdate ,'%Y-%m') &lt;= #{month}</if>
+				 
+	</select>
+  	<select id="countAllMonthByWater" parameterType="pd" resultType="pd">
+		select 
+				count(*) as countnumber,
+ 				ifnull(cast(cast(sum(abs(a.money)  )  as DECIMAL(10,2)) as char),'0') as summoney  ,
+   				ifnull(cast(cast(sum(s.sp_getmoney ) as DECIMAL(10,2)) as char),'0') as sumqitasp_getmoney, 
+   				ifnull(cast(cast(sum(s.ordersp_getmoney ) as DECIMAL(10,2)) as char),'0') as sumordersp_getmoney, 
+   				ifnull(cast(cast(sum(o.sp_getmoney ) as DECIMAL(10,2)) as char) ,'0') as sumjfsp_getmoney
+  		from 
+				tb_waterrecord a
+				left join tb_store_file b on a.payee_number=b.store_id<!-- 会员user_type2 -->
+				left join tb_store_file c on a.user_id=c.store_id<!-- 商家user_type1 -->
+				left join tb_sp_file d on a.user_id=d.sp_file_id <!-- 服务商user_type3 -->
+				left join tb_store_wealthhistory s on a.waterrecord_id=s.store_wealthhistory_id
+ 				left join tb_order o on a.waterrecord_id=o.order_id
+ 		where 
+				a.pay_status='1' 
+				and a.money_type=#{money_type}
+ 				and a.user_type=#{user_type}
+ 				<choose>
+						<when test="clerk_file_id != null and clerk_file_id != ''">and b.clerk_file_id=#{clerk_file_id}</when>
+						<otherwise>
+							<choose>
+								<when test="user_type == '1'.toString()"> and c.sp_file_id=#{sp_file_id}</when>
+								<when test="user_type == '2'.toString()"> and b.sp_file_id=#{sp_file_id} </when>
+			  					<otherwise>and a.user_id =#{sp_file_id}</otherwise>
+							</choose>
+						</otherwise>
+				</choose>
+ 				<if test="type == '1'.toString()">and date_format(a.createtime ,'%Y-%m') = #{month}</if>
+				<if test="type == '2'.toString()">and date_format(a.createtime ,'%Y-%m') &lt;= #{month}</if> 
+	</select>
+	
+	
+	<!-- 新增业务员月报表记录 -->
+ 	<insert id="saveClerkMonth" parameterType="pd">
+		insert into tb_clerk_file_monthly(
+			clerk_file_monthly_id,	
+			clerk_file_id,	
+			month,	
+			add_water,	
+			leiji_water,	
+ 			add_store,	
+			leiji_store,	
+ 			add_member,
+			leiji_member,
+			createdate 
+		) values (
+			#{clerk_file_monthly_id},	
+			#{clerk_file_id},	
+			#{month},	
+			#{add_water},	
+			#{leiji_water},	
+			#{add_store},	
+			#{leiji_store},	
+ 			#{add_member},
+ 			#{leiji_member},
+			now() 
+		) 
+	</insert>
+	
+
+	<!-- 修改业务员月报表记录 -->
+	<update id="editClerkMonth" parameterType="pd">
+		update  tb_clerk_file_monthly
+			set 
+				<if test="month != null and month != ''  ">month = #{month},</if>
+				<if test="add_water != null and add_water != ''  ">add_water = #{add_water},</if>
+				<if test="leiji_water != null and leiji_water != ''  ">leiji_water = #{leiji_water},</if>
+				<if test="add_store != null and add_store != ''  ">add_store = #{add_store},</if>
+				<if test="leiji_store != null and leiji_store != ''  ">leiji_store = #{leiji_store},</if>
+				<if test="add_member != null and add_member != ''  ">add_member = #{add_member},</if>
+				<if test="leiji_member != null and leiji_member != ''  ">leiji_member = #{leiji_member},</if>
+				<if test="remark != null and remark != ''  ">remark = #{remark},</if>
+				clerk_file_monthly_id=clerk_file_monthly_id
+			where 
+				clerk_file_monthly_id = #{clerk_file_monthly_id}
+	</update>
+	
+	<!-- 通过ID获取业务员月报表详情 -->
+	<select id="findByIdClerkMonth" parameterType="pd" resultType="pd">
+		select 
+			clerk_file_monthly_id,	
+			clerk_file_id,	
+			month,	
+			add_water,	
+			leiji_water,	
+ 			add_store,	
+			leiji_store,	
+ 			add_member,
+			leiji_member,
+			date_format(createdate ,'%Y-%m-%d') as createdate
+		from 
+			tb_clerk_file_monthly
+		where 
+			1=1
+			<choose>
+				<when test="clerk_file_monthly_id != null and clerk_file_monthly_id != ''">and clerk_file_monthly_id = #{clerk_file_monthly_id}</when>
+				<otherwise>
+				and clerk_file_id=#{clerk_file_id}
+				and month=#{month}
+				</otherwise>
+			</choose>
+		limit 1
+	</select>
+	
+	
+	<!-- 业务员月报表列表   -->
+	<select id="listPageAllClerkMonth" parameterType="page" resultType="pd">
+		select
+				a.clerk_file_monthly_id,	
+				a.clerk_file_id,	
+				a.month,	
+				a.add_water,	
+				a.leiji_water,	
+	 			a.add_store,	
+				a.leiji_store,	
+	 			a.add_member,
+				a.leiji_member,
+				a.remark,
+				date_format(a.createdate ,'%Y-%m-%d') as createdate,
+				b.clerk_name
+		from 
+				tb_clerk_file_monthly a
+				left join tb_clerk_file b on a.clerk_file_id=b.clerk_file_id
+		where 
+				1=1
+				<if test="pd.content != null and pd.content != ''"> 
+					and
+						(
+							b.clerk_name like concat(concat('%',#{pd.content}),'%')
+ 							or
+ 							a.clerk_file_id like concat(concat('%',#{pd.content}),'%')
+  						)
+				</if>
+ 				<if test="pd.clerk_file_id != null and pd.clerk_file_id != '' ">
+				and a.clerk_file_id=#{pd.clerk_file_id}
+				</if>
+				<if test="pd.sp_file_id != null and pd.sp_file_id != '' ">
+				and b.sp_file_id=#{pd.sp_file_id}
+				</if>
+				order by a.createdate desc
+	</select>
+ 
+	<!-- 统计月报表sql结束 -->
+	
+	
+	
+	<!-- 新增服务商业绩表-->
+	<insert id="save" parameterType="pd">
+		insert into tb_service_performance(
+ 			money,	
+			money_type,	
+			pay_time,
+ 			operate_type,
+			operate_id,
+			isshouyi,
+  			yewu_id,
+ 			yewu_type,
+ 			isjihuo,
+			service_performance_id,
+			now_balance
+		) values (
+ 			#{money},	
+			#{money_type},	
+			now(),	
+ 			#{operate_type},	
+			#{operate_id},	
+			#{isshouyi},	
+ 			#{yewu_id},	
+			#{yewu_type},	
+			#{isjihuo},	
+			#{service_performance_id},
+			#{now_balance}
+		)
+	</insert>
+	
+	
+	<!-- 删除服务商业绩表的数据-->
+	<delete id="delete" parameterType="pd">
+		delete from tb_service_performance
+		where 
+			service_performance_id = #{service_performance_id}
+	</delete>
+	
+	
+	<!-- 修改服务商业绩表数据 -->
+	<update id="edit" parameterType="pd">
+			update  tb_service_performance
+			set 
+ 				 <if test="isjihuo != null and isjihuo != ''">isjihuo=#{isjihuo},</if>
+				 service_performance_id = service_performance_id
+			where 
+				service_performance_id = #{service_performance_id}
+	</update>
+	
+	
+	
+		
+	<!-- 修改所有满足条件的数据改变为激活状态 -->
+	<update id="editAllIsOk" parameterType="String">
+			update  tb_service_performance
+			set 
+ 				 isjihuo='1'
+			where 
+				 yewu_id=#{store_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+ 			*
+		from 
+			tb_service_performance
+		where 
+			service_performance_id = #{service_performance_id}
+	</select>
+	
+	
+	<!--列表服务商业绩 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				operate_type,
+ 				money,	
+				money_type,	
+				pay_time,
+ 				operate_id,	
+ 				isshouyi,
+  				yewu_id,
+ 				yewu_type,
+ 				isjihuo,
+				service_performance_id
+		from 
+				tb_service_performance
+		where  
+				1=1
+				<if test="pd.operate_type != null and pd.operate_type != ''">
+				and	operate_type=#{pd.operate_type}
+ 				</if>
+				<if test="pd.operate_id != null and pd.operate_id != ''">
+				and	operate_id=#{pd.operate_id}
+ 				</if>
+				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+					and  pay_time &gt;= date_format(#{pd.starttime},'%Y-%m-%d')
+ 				</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+					and  pay_time &lt;= date_format(#{pd.endtime},'%Y-%m-%d')
+ 				</if>
+ 		order by pay_time desc
+	</select>
+	
+	
+	
+	<!-- 获取未/已激活的数量 -->
+	<select id="findNeedJiHuoFeeCount" parameterType="pd" resultType="Integer">
+		select
+				count(*)
+		from 
+				tb_service_performance
+		where 	
+				isjihuo=#{isjihuo}
+				and yewu_id=#{user_id}
+				and yewu_type=#{user_type}
+				<if test="operate_id != null and operate_id != '' ">
+				and operate_id=#{operate_id}
+				</if>
+	</select>
+	
+	
+	
+	
+	<!-- 获取服务商未激活的金额 -->
+	<select id="getSumNotJiHuoOptrator" parameterType="String" resultType="Double">
+		select
+				ifnull(cast(sum(money) as char),'0')
+		from 
+				tb_service_performance
+		where 	
+				isjihuo='0'<!-- 0未激活，1已激活 -->
+				and isshouyi='0' <!-- 0收益，1提现 -->
+				and  operate_id=#{operate_id}
+	</select>
+	
+	<!-- 服务商月报表 -->
+ 	<select id="datalistPageOne" parameterType="page" resultType="pd">
+		select
+				a.sp_file_monthly_id,	
+				a.sp_file_id,	
+				a.month,	
+				a.user_number_indicator,	
+				a.actual_user_number,	
+				a.completion_rate,	
+				a.flow_indicators,	
+				a.actual_water,	
+				a.water_completion_rate,	
+				a.isqualified,
+				a.leiji_water,
+				a.leiji_store,
+				a.add_member,
+				a.leiji_member,
+				cast(cast( a.add_xiaoshou   as decimal(10,2)) as char)  add_xiaoshou ,
+				cast(cast( a.leiji_xiaoshou   as decimal(10,2)) as char)  leiji_xiaoshou ,
+				cast(cast( a.add_jifen   as decimal(10,2)) as char)  add_jifen ,
+				cast(cast( a.leiji_jifen   as decimal(10,2)) as char)  leiji_jifen ,
+ 				cast(cast( a.add_guanggao   as decimal(10,2)) as char)  add_guanggao ,
+				cast(cast( a.leiji_guanggao   as decimal(10,2)) as char)  leiji_guanggao ,
+				cast(cast( a.add_koudian   as decimal(10,2)) as char)  add_koudian ,
+				cast(cast( a.leiji_koudian   as decimal(10,2)) as char)  leiji_koudian ,
+ 				cast( (a.add_xiaoshou + a.add_koudian + a.add_jifen+a.add_guanggao) as  DECIMAL(10,2) ) as add_shouru,
+				cast( (a.leiji_xiaoshou + a.leiji_koudian + a.leiji_jifen+a.leiji_guanggao) as DECIMAL(10,2) ) as leiji_shouru,
+ 				cast(cast( a.add_tixiannumber   as decimal(10,2)) as char)  add_tixiannumber ,
+				cast(cast( a.leiji_tixianmoney   as decimal(10,2)) as char)  leiji_tixianmoney ,
+				
+				cast(cast( a.lastday_money   as decimal(10,2)) as char)  lastday_money 
+		from 
+				tb_sp_file_monthly a
+		where   
+		 		a.sp_file_id=#{pd.sp_file_id}
+		order by a.month desc
+	 </select>
+	
+	
+	
+	
+	<!-- 服务商销售明细 -->
+	<select id="datalistPageTwo" parameterType="page" resultType="pd">
+		select 
+				date_format(a.createtime ,'%Y-%m-%d %H:%i:%s') as createtime,
+				a.waterrecord_id ,
+				a.user_id ,
+				a.user_type ,
+				a.payee_number,
+				a.money_type ,
+				cast(cast( abs(a.money)   as decimal(10,2)) as char)  money,
+ 				b.store_name,
+				c.sp_file_id,
+   				cast(cast( o.sp_getmoney  as decimal(10,2)) as char)  sp_getmoney,
+  				cast(cast( o.send_jf  as decimal(10,2)) as char)  send_jf,
+  				cast(cast((abs(a.money) - o.send_jf) as decimal(10,2)) as char)  less_money
+   		from 
+				tb_waterrecord a
+ 				left join tb_store_file b on a.user_id=b.store_id
+				left join tb_sp_file c on b.sp_file_id=c.sp_file_id
+				left join tb_store_wealthhistory o on a.waterrecord_id=o.store_wealthhistory_id
+   		where  
+				a.money_type='3'
+				and a.user_type='1'
+				and a.pay_status='1'
+				and c.sp_file_id=#{pd.sp_file_id}
+				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(a.createtime,'%Y-%m-%d') &gt;= #{pd.starttime} 
+		 		</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(a.createtime,'%Y-%m-%d') &lt;= #{pd.endtime} 
+		 		</if>	
+  		order by a.createtime desc
+	</select>
+	
+	
+	
+	
+	
+	<!-- 服务商积分收入明细-->
+	<select id="datalistPageThree" parameterType="page" resultType="pd">
+		select 
+				date_format(a.createtime ,'%Y-%m-%d %H:%i:%s') as createtime,
+				a.waterrecord_id ,
+				a.user_id ,
+				a.user_type ,
+				a.payee_number,
+				a.money_type ,
+				cast(cast( abs(a.money)  as decimal(10,2)) as char)  money ,
+				cast(cast( abs(a.reduce_money)  as decimal(10,2)) as char)  reduce_money ,
+				cast(cast( abs(a.arrivalmoney)  as decimal(10,2)) as char)  arrivalmoney ,
+  				a.pay_status ,
+ 				b.name,
+ 				c.store_name,
+ 				d.sp_file_id,
+  				cast(cast( o.get_integral  as decimal(10,2)) as char)  get_integral ,
+ 				cast(cast( o.sendxitong_integral  as decimal(10,2)) as char)  sendxitong_integral ,
+ 				cast(cast( o.sp_getmoney  as decimal(10,2)) as char)  sp_getmoney 
+   		from 
+				tb_waterrecord a
+				left join tb_member b on a.user_id=b.member_id
+				left join tb_store_file c on a.payee_number=c.store_id
+				left join tb_sp_file d on c.sp_file_id=d.sp_file_id
+				left join tb_order o on a.waterrecord_id=o.order_id
+   		where  
+				a.money_type='2'
+				and a.user_type='2'
+				and a.pay_status='1'
+				and d.sp_file_id=#{pd.sp_file_id}
+				and cast( o.sp_getmoney  as decimal(10,2)) &gt; 0
+				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(a.createtime,'%Y-%m-%d') &gt;= #{pd.starttime} 
+		 		</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(a.createtime,'%Y-%m-%d') &lt;= #{pd.endtime} 
+		 		</if>	
+  		order by a.createtime desc
+	</select>
+
+	<!-- 服务商广告收入明细（优选编辑费，上架费，广告费）-->
+ 	<select id="datalistPageFour" parameterType="page" resultType="pd">
+		select 
+				date_format(a.createtime ,'%Y-%m-%d %H:%i:%s') as createtime,
+				a.waterrecord_id ,
+				a.user_id ,
+				a.user_type ,
+				a.payee_number,
+				a.money_type ,
+				cast(cast( abs(a.money)   as decimal(10,2))       as char)  money,
+				cast(cast( abs(a.reduce_money)   as decimal(10,2)) as char)  reduce_money,
+				cast(cast( abs(a.arrivalmoney)   as decimal(10,2)) as char)  arrivalmoney,
+ 				cast(cast( o.sp_getmoney  as decimal(10,2)) as char)   sp_getmoney, 
+ 				cast(cast( (abs(a.arrivalmoney)-o.sp_getmoney ) as decimal(10,2)) as char)   xt_getmoney, 
+ 				b.store_name,
+ 				c.sp_file_id,
+ 				c.team_name
+   		from 
+				tb_waterrecord a
+ 				join tb_service_performance s on a.waterrecord_id=s.service_performance_id 
+ 				left join tb_store_file b on a.user_id=b.store_id
+ 				left join tb_sp_file c on b.sp_file_id=c.sp_file_id
+ 				left join tb_store_wealthhistory o on a.waterrecord_id=o.store_wealthhistory_id
+    		where  
+				a.money_type in ('7','8','13')
+				and a.user_type='1'
+				and a.pay_status='1'
+				and c.sp_file_id=#{pd.sp_file_id}
+				and cast( o.sp_getmoney  as decimal(10,2)) &gt; 0
+ 				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(a.createtime,'%Y-%m-%d') &gt;= #{pd.starttime} 
+		 		</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(a.createtime,'%Y-%m-%d') &lt;= #{pd.endtime} 
+		 		</if>	
+  		order by a.createtime desc
+	</select>
+	
+	
+	
+	<!-- 服务商提现申请报表-->
+ 	<select id="datalistPageFive" parameterType="page" resultType="pd">
+		select 
+				date_format(a.createtime ,'%Y-%m-%d %H:%i:%s') as createtime,
+				a.waterrecord_id ,
+				a.user_id ,
+				a.user_type ,
+				a.money_type ,
+				cast(cast( abs(a.money)  as decimal(10,2)) as char)  money ,
+				( select cast(cast( abs(sum(b.money)) as decimal(10,2)) as char) from tb_waterrecord b where b.money_type='5' and b.pay_status='1'  and b.user_id=#{pd.sp_file_id} ) as summoney,
+ 				cast(cast( a.nowuser_money  as decimal(10,2)) as char)   nowuser_money , 
+				a.pay_status  
+  		from 
+				tb_waterrecord a
+  		where  
+				a.money_type='5'
+				and a.user_type='3'
+				and a.user_id=#{pd.sp_file_id}
+				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(a.createtime,'%Y-%m-%d') &gt;= #{pd.starttime} 
+		 		</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(a.createtime,'%Y-%m-%d') &lt;= #{pd.endtime} 
+		 		</if>	
+  		order by a.createtime desc
+	</select>
+	
+	
+	
+	<!-- 服务商交易扣点收入明细 -->
+	<select id="datalistPageSix" parameterType="page" resultType="pd">
+		select 
+				date_format(a.createtime ,'%Y-%m-%d %H:%i:%s') as createtime,
+				a.waterrecord_id ,
+				a.user_id ,
+				a.user_type ,
+				a.payee_number,
+				a.money_type ,
+				cast(cast( abs(a.money)   as decimal(10,2)) as char)  money,
+				cast(cast( abs(a.reduce_money)   as decimal(10,2)) as char)  reduce_money,
+				cast(cast( abs(a.arrivalmoney)   as decimal(10,2)) as char)  arrivalmoney,
+ 				b.store_name,
+				c.sp_file_id,
+   				o.transaction_points ,
+  				cast(cast( o.orderfuwu_money  as decimal(10,2)) as char)  orderfuwu_money,
+  				cast(cast( o.ordersp_getmoney as decimal(10,2)) as char)  ordersp_getmoney
+   		from 
+				tb_waterrecord a
+ 				join tb_service_performance s on a.waterrecord_id=s.service_performance_id 
+ 				left join tb_store_file b on a.payee_number=b.store_id
+ 				left join tb_sp_file c on b.sp_file_id=c.sp_file_id
+  				left join tb_store_wealthhistory o on a.waterrecord_id=o.store_wealthhistory_id
+   		where  
+				a.money_type='2'
+				and a.user_type='2'
+				and a.pay_status='1'
+				and c.sp_file_id=#{pd.sp_file_id}
+				and cast( o.orderfuwu_money  as decimal(10,2)) &gt; 0
+				<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+						and date_format(a.createtime,'%Y-%m-%d') &gt;= #{pd.starttime} 
+		 		</if>
+				<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+						and date_format(a.createtime,'%Y-%m-%d') &lt;= #{pd.endtime} 
+		 		</if>	
+  		order by a.createtime desc
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 列表(全部)总金额 -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				operate_type,
+ 				money,	
+				pay_time,
+ 				operate_id,	
+				service_performance_id,
+				isshouyi
+		from 
+				tb_service_performance 
+	</select>
+ 	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_SERVICE_PERFORMANCE
+		where 
+			service_performance_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	 
+	
+</mapper>

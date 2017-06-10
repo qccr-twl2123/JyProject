@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XJTStore_discountwayMapper">
+
+	<!-- 新增折扣方式  邢江涛-->
+	<insert id="save" parameterType="pd">
+		insert into tb_store_discountway(
+			store_discountway_id,
+			discount_type,
+			selected_status,
+			content,
+			onealldiscount_rate,
+			twoproductdiscount_rate,
+			starttime,
+			endtime,
+			store_id,
+			threemin_rate,
+			threemax_rate,
+  			grantrule
+		)values(
+			#{store_discountway_id},
+			#{discount_type},
+			#{selected_status},
+ 			#{content},
+			#{onealldiscount_rate},
+			#{twoproductdiscount_rate},
+			#{starttime},
+			#{endtime},
+			#{store_id},
+			#{threemin_rate},
+			#{threemax_rate},
+ 			#{grantrule}
+		)
+		
+	</insert>
+	
+	<!-- 查询折扣方式详情-->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			*
+		from 
+			tb_store_discountway
+		where 
+			store_id=#{store_id}
+			<if test="discount_type != null and discount_type != ''">and discount_type=#{discount_type}</if>
+			<if test="marketing_id != null and marketing_id != ''">and store_discountway_id=#{marketing_id}</if>
+	</select>
+	
+	
+	<!-- 删除 通过商家ID-->
+	<delete id="delete">
+	delete from tb_store_discountway
+	where store_id=#{store_id}
+	</delete>
+	
+	
+	<!-- 删除 通过唯一标示ID-->
+	<delete id="deleteById">
+	delete from tb_store_discountway
+	where store_discountway_id=#{store_discountway_id}
+	</delete>
+	
+	<!-- 更新折扣状态为到期的时候 -->
+	<update id="updateOverTime">
+		update tb_store_discountway
+		set isguoqi='1'
+		where store_discountway_id=#{store_discountway_id}
+	</update>
+	<!-- 更新折扣状态为到期的时候 刘耀耀 2016.07.19-->
+	<update id="updateTime">
+		update 
+			tb_store_discountway
+		set 
+			isguoqi='1'
+		where 
+			store_discountway_id=#{store_discountway_id}
+		and
+			endtime &lt; #{data}
+	</update>
+</mapper>

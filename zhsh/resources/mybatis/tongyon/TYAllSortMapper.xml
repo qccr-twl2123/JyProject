@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TYAllSortMapper">
+
+
+
+	<!-- 记录第三方登录信息 -->
+	<insert id="saveThreeLogin" parameterType="pd">
+		insert into tb_threelogin(
+ 			unionid,	
+ 			open_id,
+			type,
+			phone,
+			createtime 
+		) values (
+ 			#{unionid},			
+ 			#{open_id},			
+			#{type},
+			#{phone}, 
+			now() 
+		)
+	</insert>
+
+
+	<!-- 存储获取验证码的信息   -->
+    <insert id="saveMessageCode" parameterType="pd">
+				insert into tb_messagecode(
+					phone,
+					code,
+					content,
+ 					createdate
+				)
+				values(
+					#{phone},
+					#{code},
+					#{content},
+ 					 now()
+				)
+ 	</insert>
+ 	
+ 	
+ 	
+ 	<!-- 订单的通用模块======================================================================================== -->
+ 		
+	<!-- 获取订单的所有商品-->
+	<select id="listAllGoodsByOrder" parameterType="pd" resultType="pd">
+			select
+					a.goods_id,
+  					cast(a.price  as  decimal(10,2)) as price,
+  					ifnull(a.shop_number, '0' ) as shop_number,
+ 					ifnull(a.goods_type, '1' ) as goods_type,
+ 					a.order_id 
+ 			from 
+					tb_order_goods a  
+ 			where  
+					a.order_id=#{order_id} 
+					
+	</select>
+	<!-- 正常商品查看详情-->
+	<select id="findByIdByGoods" parameterType="pd" resultType="pd">
+		select
+				a.goods_category_id,	
+				ifnull(a.goods_name,"") goods_name,
+				ifnull(a.image_url,"") image_url,
+				ifnull(a.market_money,"") market_money,
+				ifnull(a.retail_money,"") retail_money,
+				ifnull(a.integral_rate,"") integral_rate,
+				ifnull(a.stock_number,"10000") stock_number,
+				ifnull(a.consumption_number,"0") consumption_number,
+ 				ifnull(a.goods_status,"") goods_status,
+				ifnull(a.sales_status,"") sales_status,
+				date_format(ifnull(a.starttime,date_sub(now(),interval 1 day) ) ,'%Y-%m-%d %H:%i:%s') starttime,
+				date_format(ifnull(a.endtime,date_sub(now(),interval 1 day) ) ,'%Y-%m-%d %H:%i:%s') endtime,
+ 				ifnull(a.promotion_type,"") promotion_type,
+				ifnull(a.promotion_content,"") promotion_content,
+ 				a.store_id,	
+				a.goods_id
+		from 
+				tb_goods a
+		where 
+				a.goods_id=#{goods_id}
+ 	</select>
+	 <!-- 优选商品的规格详情  -->
+	<select id="finddetailgg" parameterType="pd" resultType="pd">
+		select 
+			 a.*,
+			 b.store_id,
+			 b.isxiangou,
+ 			 ifnull(b.goods_zkrate,'0') goods_zkrate, 
+			 ifnull(b.goods_jfrate,'0') goods_jfrate, 
+			 ifnull(b.image_url,'') image_url, 
+ 			 ifnull(b.gf_salemoney,'0') as gf_salemoney,
+			 ifnull(b.th_address,'') as th_address,
+			 ifnull(b.brand_name,'') as brand_name,
+			 ifnull(b.goods_name,'') as goods_name,
+			 ifnull(b.xiangou_number,'0') as xiangou_number,
+			 ifnull(b.limit_day,'30') as limit_day,
+			 cast(concat(c.enddate," ", c.opentime) as char) as dqendtime
+		from 
+			 tb_youxuangg a
+			 left join tb_youxuangoods b on a.youxuangoods_id=b.youxuangoods_id
+			 left join tb_youxuandq c on b.youxuandq_id=c.youxuandq_id and b.city_file_id=c.city_file_id
+		where  
+			a.youxuangg_id=#{youxuangg_id}
+ 	</select>
+ 	<!-- 通过商品获取会员关联起来 魏汉文-->
+	<select id="findByIdWithMember" parameterType="pd" resultType="pd">
+		select 
+			a.oneyuangoods_id,
+			a.oneyuangoodsimage_url,	
+			a.oneyuangoods_name,	
+ 			a.oneyuangoodsneed_quantity,	
+ 			a.nowtimes,
+ 			a.value_a,
+			a.value_b,	
+			a.value_a_text,	
+ 			a.value_b_text ,
+ 			a.createtime,	
+ 			a.member_id,
+			a.locky_number,
+			a.overtime,
+			a.isover,
+			a.createoprator_id,
+			a.thistype_id,
+			b.mylocky_number,
+			date_format(b.createtime,'%Y-%m-%d %H:%i:%s') as membercreatetime,
+			b.now_ip , 
+			b.getoneyuan_quantity,
+			b.oneyuanmember_id,
+			c.phone,
+			c.name,
+			c.image_url
+		from 
+			tb_oneyuangoods a 
+			left join tb_oneyuanmember b on a.oneyuangoods_id=b.oneyuangoods_id and locate(a.locky_number,b.mylocky_number)=0  
+			left join tb_member c on a.member_id=c.member_id
+		where 
+			a.oneyuangoods_id = #{oneyuangoods_id}
+			<if test="nowtimes != null and nowtimes != ''">and a.nowtimes=#{nowtimes}</if>
+ 	</select>
+ 	
+ 	<!-- 通过ID获取数据魏汉文20160620-->
+	<select id="findByIdByStore" parameterType="pd" resultType="pd">
+		select 
+				a.store_name,
+				a.pictrue_url,	
+ 				a.check_status,	
+				a.store_vip_id,	
+ 				ifnull(a.merchant_status,'0') merchant_status,
+				ifnull(a.comment_score,'0') comment_score,
+ 				a.merchant_level,		
+ 				a.integral_rate,	
+				a.service_rate,	
+				a.withdraw_rate,	
+				a.lowest_score,	
+				a.remind_integral,	
+				a.sort_score,	
+				a.complex_score,	
+				a.recharge_times,	
+				a.transaction_times,	
+				a.withdraw_times,	
+				a.zan_times,	
+				a.collection_times,
+				a.bigtype_max,	
+				a.smalltype_max,	
+				a.goods_max,	
+ 				a.registertel_phone,
+ 				date_format(a.registertime,	'%Y-%m-%d %H:%i:%s') as registertime,
+				a.store_file_id,
+				ifnull(a.tixian_money,'0') tixian_money,
+ 				a.longitude,
+				a.latitude ,
+ 				a.jichushezhi,
+				a.store_id,
+				ifnull(a.istuisong,'0') as istuisong,
+ 				ifnull(b.store_introduce,'') store_introduce,
+ 				b.address,
+				ifnull(b.phone_bymemeber,'') phone_bymemeber,
+				ifnull(b.store_phone,'') store_phone,
+				b.principal,
+				b.phone,
+				b.province_name,
+				b.city_name,
+				b.area_name,
+  				b.sp_file_id,
+				b.clerk_file_id,
+				b.earnest_status,
+				b.em_statestatus,
+				b.earnest_money,
+				b.service_status,
+				b.system_service_fee ,
+				b.sf_statestatus,
+				ifnull(b.biaozhun_status,'0') as biaozhun_status,
+ 				ifnull(b.biaozhun_content , '') as biaozhun_content,
+				b.city_file_fee_id,
+				b.next_city_file_fee_id,
+				b.starttime,
+				b.endtime,
+				b.isopen_points,
+				ifnull(b.transaction_points,'0') as transaction_points
+ 		from 
+				tb_store a 
+				left join tb_store_file b on a.store_id=b.store_id
+		where 
+			a.store_id = #{store_id}
+	</select>
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	<!--  =========================================领头羊活动====================================================  --> 
+ 	<!-- 新增领头羊活动报名信息 -->
+	<insert id="saveLTYZhaoShangInfor" parameterType="pd">
+		insert into tb_zzltyzs(
+ 			only_id,	
+ 			phone,
+			name,
+			yjarrive_number,
+			yjarrive_time,
+			remark,
+			createtime 
+		) values (
+ 			#{only_id},			
+ 			#{phone},			
+			#{name},
+			#{yjarrive_number}, 
+			#{yjarrive_time}, 
+			#{remark}, 
+			now() 
+		)
+	</insert>
+ 	
+ 	
+ 	<!-- 获取领头羊活动报名信息-->
+	<select id="listAllLTYZhaoShangInfor" parameterType="pd" resultType="pd">
+			select
+					only_id,	
+		 			phone,
+					name,
+					yjarrive_number,
+					yjarrive_time,
+					remark,
+					date_format(createtime ,'%Y-%m-%d %H:%i:%s') as createtime  
+ 			from 
+					tb_zzltyzs  
+ 			order by createtime desc
+ 	</select>
+ 	
+ 	<!-- 获取领头羊活动报名信息-->
+	<select id="detailLTYZhaoShangInforByPhone" parameterType="pd" resultType="pd">
+			select
+					only_id,	
+		 			phone,
+					name,
+					yjarrive_number,
+					yjarrive_time,
+					remark,
+					date_format(createtime ,'%Y-%m-%d %H:%i:%s') as createtime  
+ 			from 
+					tb_zzltyzs  
+			where 
+					phone=#{phone}
+  	</select>
+ 	
+ 	
+ 	
+	
+</mapper>
+

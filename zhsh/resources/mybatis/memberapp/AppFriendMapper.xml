@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AppFriendMapper">
+	
+	<!-- 获取朋友列表魏汉文20160701-->
+	<select id="listAllFriend" parameterType="pd" resultType="pd">
+		select
+				friend_id,
+				friend_status
+		from 
+				tb_friend a
+		where
+				a.be_invite_id=#{be_invite_id} and a.invite_id=#{invite_id}
+  	</select>
+	
+	<!-- 获取朋友关系-->
+	<select id="bothFriend" parameterType="pd" resultType="pd">
+		select
+				friend_id,
+				friend_status
+		from 
+				tb_friend a
+		where
+				a.be_invite_id=#{be_invite_id} and a.invite_id=#{invite_id}
+  	</select>
+	
+	<!-- 会员人脉全部列表 魏汉文20160701 -->
+	<select id="listContacts" parameterType="pd" resultType="pd">
+		select  
+				contacts_id,
+				contacts_parent_id,
+				contacts_type
+		from
+				tb_contacts
+		where 
+				1=1
+				<if test="contacts_parent_id !=null and contacts_parent_id != '' ">
+				and contacts_parent_id=#{contacts_parent_id}
+				</if>
+				<if test="contacts_id !=null and contacts_id != '' ">
+				and  contacts_id=#{contacts_id}
+				</if>	
+				<if test="contacts_type !=null and contacts_type != '' ">
+				and  contacts_type=#{contacts_type}
+				</if>	
+ 	</select>
+
+	<!-- 获取我的朋友（好友）列表魏汉文20160701-->
+	<select id="myFriendList" parameterType="pd" resultType="pd">
+		select
+ 				ifnull(a.be_invite_id,'') as be_invite_id,
+				ifnull(a.invite_id,'') as invite_id,
+				ifnull(a.friend_status,'') as friend_status,
+				ifnull(a.be_invite_type,'') as be_invite_type,
+				ifnull(a.invite_type,'') as invite_type,
+				a.friend_id ,
+				b.name as be_member_name,
+				b.image_url as be_image_url,
+				b.member_id as be_member_id,
+				c.name as  member_name,
+				c.member_id as  member_id,
+				c.image_url as  image_url,
+				d.store_name as be_store_name,
+				d.store_id as be_store_id,
+				d.pictrue_url as be_pictrue_url,
+				e.store_name as store_name,
+				e.store_id as store_id,
+				e.pictrue_url as pictrue_url
+		from 
+				tb_friend a
+				left join tb_member b on a.be_invite_id=b.member_id
+				left join tb_member c on a.invite_id=c.member_id
+				left join tb_store d on a.be_invite_id=d.store_id
+				left join tb_store e on a.invite_id=e.store_id
+		where
+				1=1
+				<if test="friend_status != null and friend_status != ''">
+				and a.friend_status =#{friend_status}<!-- 2已经是好友,1申请互动 -->
+				</if>
+ 				<if test="be_invite_id != null and be_invite_id != ''">
+				and a.be_invite_id=#{be_invite_id} 
+				</if>
+				<if test="invite_id != null and invite_id != ''">
+				and a.invite_id=#{invite_id} 
+				</if>
+  	</select>
+  	
+  	<!-- 新增朋友魏汉文20160704-->
+	<insert id="saveFriend" parameterType="pd">
+		insert into tb_friend(
+			invite_id,	
+			be_invite_id,
+  			be_invite_type,	
+ 			invite_type,
+ 			friend_status,	
+			invite_time 
+		) values (
+			#{invite_id},	
+			#{be_invite_id},	
+  			#{be_invite_type},	
+ 			#{invite_type},	
+ 			#{friend_status},	
+			now() 
+		)
+	</insert>
+	
+	<!-- 修改 朋友状态魏汉文20160704-->
+	<update id="updateFriend" parameterType="pd">
+			update  tb_friend
+			set 
+ 				friend_status = '2'
+			where 
+				invite_id = #{invite_id}
+ 				and be_invite_id = #{be_invite_id}
+	</update>
+	
+	
+	<select id="selmFriend" parameterType="pd" resultType="pd">
+		select
+ 				a.member_id,
+				a.image_url,
+				a.name,
+				a.phone,
+				a.vip_level,
+				a.charm_number,
+				a.now_money,
+				a.now_integral,
+				a.isnewmember,
+				a.istuisong,
+				a.islogin,
+				a.createdate,
+				a.logindate,
+				a.wechat_number,
+				a.wxopen_id,
+				a.sex,
+				a.recommended,
+				a.recommended_type,
+				a.status,
+				a.province_name,
+				a.city_name,
+				a.area_name,
+				a.money_pay_number,
+				a.wechat_pay_number,
+				a.alipay_pay_number,
+				a.bank_pay_number,
+				a.apple_pay_number,
+				a.integral_pay_number,
+				a.consumption,
+				a.redpackage_number,
+				a.longitude,
+				a.latitude,
+				a.onetime_red,
+				a.twotime_red,
+				a.cz_number,
+				a.onecontactintegral,
+				a.twocontactintegral
+		from 
+				tb_member a 
+  		where 
+ 				1=1
+		 		<if test="content != null and content != ''">
+						and a.phone =#{content}
+ 				</if>
+ 		limit 1
+  	</select>
+  	
+  	<select id="selsFriend" parameterType="pd" resultType="pd">
+		select
+				a.store_id,
+				a.store_name,
+				a.registertel_phone,
+ 				a.store_vip_id,
+				a.store_biaozhun,
+				a.merchant_level,
+				a.registertime,
+				a.integral_rate,
+				a.service_rate,
+				a.withdraw_rate,
+				a.lowest_score,
+				a.remind_integral,
+				a.sort_score,
+				a.complex_score,
+				a.comment_score,
+				a.recharge_times,
+				a.transaction_times,
+				a.withdraw_times,
+				a.collection_times,
+				a.zan_times,
+				a.bigtype_max,
+				a.smalltype_max,
+				a.goods_max,
+				a.store_file_id,
+				a.check_status,
+				a.merchant_status,
+				a.operate_id,
+				a.longitude,
+				a.latitude,
+				a.pictrue_url,
+				a.tixian_money,
+				a.ispk,
+				a.istuisong
+		from 
+				tb_store a
+ 		where 
+ 				1=1
+				<if test="content != null and content != ''">
+						and a.store_id =#{content}
+				</if>
+		limit 1
+  	</select>
+  	
+  	<select id="findByFriend" parameterType="pd" resultType="pd">
+		select 
+			* 
+		from 
+			tb_friend a 
+		where 
+			a.invite_id= #{invite_id} and be_invite_id= #{be_invite_id}
+		limit 1
+    </select>
+   	
+  	
+  	<!-- 拒绝好友-->
+  	<update id="refuseFriend" parameterType="pd">
+			update  tb_friend
+			set 
+ 				friend_status = '99'
+			where 
+				invite_id = #{invite_id} and be_invite_id = #{be_invite_id}
+	</update> 
+  	
+  	<!-- 删除一个信息 -->
+  	<delete id="deleteFriendTongzhi" parameterType="pd">
+			delete from  tb_friend
+			where
+				1=1  
+				<choose>
+					<when test="friend_id != null and friend_id != ''">and friend_id=#{friend_id}</when>
+					<otherwise> and invite_id= #{invite_id} and be_invite_id= #{be_invite_id} and friend_status='1'</otherwise>
+				</choose>
+				
+ 	</delete>
+ 	
+ 	 	
+  	<!-- 删除成为好友之后的所有申请请求 -->
+  	<delete id="deleteAllFriendTongzhi" parameterType="pd">
+			delete from  tb_friend
+			where  friend_status = '1'
+				   and ((invite_id = #{invite_id} and be_invite_id = #{be_invite_id}) or (invite_id = #{be_invite_id} and be_invite_id = #{invite_id}))
+ 	</delete>
+	
+	<!-- 会员 -->
+  	<select id="listmFriend" parameterType="pd" resultType="pd">
+		select 
+				ifnull(a.`name`,"") name,
+				ifnull(a.image_url,"") url,
+				ifnull(a.member_id,"") id ,
+				<if test="invite_id != null and invite_id != ''">
+				b.be_invite_type as type, 
+				b.friend_status,
+ 				b.friend_id 
+				</if>
+				<if test="be_invite_id != null and be_invite_id != ''">
+				b.invite_type as type,  
+				b.friend_status,
+ 				b.friend_id
+				</if>
+ 		from 
+				tb_member a 
+				<if test="be_invite_id != null and be_invite_id != ''">
+				join tb_friend b on  a.member_id= b.invite_id and b.friend_status in ('1','2')
+				</if>
+				<if test="invite_id != null and invite_id != ''">
+				join tb_friend b on  a.member_id= b.be_invite_id and b.friend_status = '2'
+				</if>
+		where 	
+				1=1
+				<if test="be_invite_id != null and be_invite_id != ''">
+				and b.be_invite_id=#{be_invite_id} 
+				and b.be_invite_deletestatus='0' 
+				</if>
+				<if test="invite_id != null and invite_id != ''">
+				and b.invite_id=#{invite_id}  
+				and b.invite_deletestatus='0'
+				</if>
+				
+  	</select>
+  	<!-- 商家 -->
+  	<select id="listsFriend" parameterType="pd" resultType="pd">
+		select 
+ 				ifnull(a.pictrue_url,"") url,
+				ifnull(a.store_name,"") name,
+				ifnull(a.store_id,"") id,
+				<if test="invite_id != null and invite_id != ''">
+				b.be_invite_type as type,  
+				b.friend_status,
+ 				b.friend_id
+				</if>
+				<if test="be_invite_id != null and be_invite_id != ''">
+				b.invite_type as type,  
+				b.friend_status,
+ 				b.friend_id
+				</if>
+ 	    from 
+	    		tb_store a 
+ 				<if test="be_invite_id != null and be_invite_id != ''">
+				join tb_friend b on a.store_id = b.invite_id  and b.friend_status  in ('1','2')
+				</if>
+				<if test="invite_id != null and invite_id != ''">
+				join tb_friend b on a.store_id = b.be_invite_id and b.friend_status = '2'
+				</if>
+		where 
+				1=1
+				<if test="be_invite_id != null and be_invite_id != ''">
+				and b.be_invite_id=#{be_invite_id}  
+				and b.be_invite_deletestatus='0'
+				</if>
+				<if test="invite_id != null and invite_id != ''">
+				and b.invite_id=#{invite_id}  
+				and b.invite_deletestatus='0'
+				</if>
+  	</select>
+	
+ </mapper>

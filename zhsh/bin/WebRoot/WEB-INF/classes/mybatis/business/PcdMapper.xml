@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PcdMapper">
+	
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into TB_PCD(
+			pcd_id,	
+			NAME,	
+			PARENT_ID,	
+			pcd_id
+		) values (
+			#{pcd_id},	
+			#{name},	
+			#{parent_id},	
+			#{pcd_id}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_PCD
+		where 
+			pcd_id = #{pcd_id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  TB_PCD
+			set 
+				pcd_id = #{pcd_id},
+				name = #{name},
+				parent_id = #{parent_id},
+			pcd_id = pcd_id
+			where 
+				pcd_id = #{pcd_id}
+	</update>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			pcd_id,	
+			name,	
+			parent_id,	
+			pcd_id
+		from 
+			TB_PCD
+		where 
+			pcd_id = #{pcd_id}
+	</select>
+
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				a.pcd_id,	
+				a.name,	
+				a.parent_id
+		from 
+				TB_PCD a
+		where  1=1
+		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
+			and
+				(
+					 
+				)
+		</if>
+		
+	</select>
+	<!-- 列表(市) -->
+	<select id="listcity" parameterType="pd" resultType="pd">
+		select
+				pcd_id,	
+				name,	
+				parent_id
+		from 
+				TB_PCD
+		where
+				parent_id=#{province_id}
+	</select>
+	<!-- 列表(区) -->
+	<select id="listarea" parameterType="pd" resultType="pd">
+		select
+				pcd_id,	
+				name,	
+				parent_id
+		from 
+				TB_PCD
+		where
+				parent_id=#{city_id}
+	</select>
+	
+	
+	<!-- 获取全部的城市 -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				a.pcd_id,	
+				a.name,	
+				a.parent_id
+		from 
+				tb_pcd a
+		where 
+				a.parent_id=0
+ 	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from TB_PCD
+		where 
+			pcd_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过名称获取数据 -->
+	<select id="getIdByName" parameterType="pd" resultType="pd">
+		select 
+ 			name,	
+			parent_id,	
+			pcd_id
+		from 
+			tb_pcd
+		where 
+			1=1
+			<if test="area_name != null and area_name !=''">
+			and name = #{area_name}
+			</if>
+ 	</select>
+ 	
+ 		
+	
+	<!-- 通过市名称ID获取数据 -->
+	<select id="findByIdByCity" parameterType="pd" resultType="pd">
+		select 
+			pcd_id
+		from 
+			tb_pcd
+		where 
+			1=1
+			<if test="city_name != null and city_name !=''">
+			and name = #{city_name}
+			</if>
+		limit 1
+	</select>
+	
+	<!-- 通过市名称ID获取数据 -->
+	<select id="findProvinceByIdByCity" parameterType="pd" resultType="pd">
+		select b.name 
+		from  tb_pcd a 
+				left join tb_pcd b on a.parent_id=b.pcd_id 
+		where   a.name = #{city_name} 
+		limit 1
+	</select>
+	
+</mapper>

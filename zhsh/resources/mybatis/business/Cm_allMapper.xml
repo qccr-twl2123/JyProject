@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Cm_allMapper">
+
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from TB_CM_ALL
+		where 
+			CM_ALL_ID = #{cm_all_id}
+	</delete>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update  TB_CM_ALL
+			set 
+				cm_type = #{cm_type},
+				cm_type_id = #{cm_type_id},
+			CM_ALL_ID = cm_all_id
+			where 
+				CM_ALL_ID = #{cm_all_id}
+	</update>
+	
+	
+	<!-- 新增开机可以发行的红包-->
+	<insert id="saveRedStore" parameterType="pd">
+		insert into tb_cm_one(
+ 			STORE_REDPACKETS_ID,	
+			CITY_MARKETING_ID,
+			CREATEDATE
+		) values (
+ 			#{store_redpackets_id},	
+			#{city_marketing_id},
+			now()
+		)
+	</insert>
+	
+	<!-- 删除商家红包魏汉文20160614-->
+	<delete id="deleteRedStore" parameterType="pd">
+		delete from tb_cm_one
+		where 
+			cm_one_id = #{cm_one_id}
+	</delete>
+	
+	<!-- 列表商家红包列表魏汉文20160614 -->
+	<select id="listAllRedStore" parameterType="pd" resultType="pd">
+		select
+				a.cm_one_id,
+				a.city_marketing_id,	
+				b.money,
+				b.overget_money,
+				b.redpackage_type,
+				b.redpackage_number,
+				b.choice_type,
+				b.overget_number,
+  				b.store_redpackets_id,
+				b.starttime,
+				b.endtime,
+				b.store_id,
+				c.store_name,
+				c.longitude,
+				c.latitude,
+				c.logindate
+  		from 
+				tb_cm_one a 
+				left join tb_store_redpackets b on a.store_redpackets_id=b.store_redpackets_id
+				left join tb_store c on b.store_id=c.store_id
+		where
+				a.city_marketing_id=#{city_marketing_id}
+				and to_days(now()) &gt;= to_days(b.starttime) 
+                and to_days(now()) &lt;= to_days(b.endtime)
+                <if test="redpackage_status != null and redpackage_status != '' ">
+                and redpackage_status=#{redpackage_status}
+                </if>
+ 	</select>
+	
+	<!-- 查询商家红包列表是否存在该ID魏汉文20160614 -->
+	<select id="getRedStoreById" parameterType="pd" resultType="pd">
+		select
+				a.cm_one_id,
+				a.city_marketing_id	
+  		from 
+				tb_cm_one a  
+		where
+				a.cm_one_id=#{cm_one_id}
+	</select>
+	
+	
+	<!-- 开机红包设置列表魏汉文20160614 -->
+	<select id="listAllKaijiRed" parameterType="pd" resultType="pd">
+		select
+				cm_two_id,
+				city_marketing_id,
+				source_type,
+				source_name,
+				check_status,
+				parameter,
+				sort
+ 		from 
+				tb_cm_two
+		where
+				city_marketing_id=#{city_marketing_id}
+		order by sort 
+	</select>
+	<!-- 修改开机红包设置列表魏汉文20160614 -->
+	<update id="editKaijiRed" parameterType="pd">
+			update  tb_cm_two
+			set 
+				check_status = #{check_status}
+ 			where 
+				cm_two_id = #{cm_two_id}
+	</update>
+	
+	
+	<!-- 附近红包设置列表魏汉文20160614 -->
+	<select id="listAllfujinRed" parameterType="pd" resultType="pd">
+		select
+				cm_three_id,
+				city_marketing_id,
+ 				rule_type,
+				rule_status,
+ 				parameter 
+		from 
+				tb_cm_three
+		where
+				city_marketing_id=#{city_marketing_id}
+	</select>
+	<!-- 修改附近红包设置魏汉文20160614 -->
+	<update id="editfujinRed" parameterType="pd">
+			update  tb_cm_three
+			set 
+				rule_status = #{rule_status},
+				parameter = #{parameter}
+ 			where 
+				cm_three_id = #{cm_three_id}
+	</update>
+	
+	
+	
+	<!-- 领取红包设置时间和次数列表魏汉文20160614 -->
+	<select id="listAllRedTime" parameterType="pd" resultType="pd">
+		select
+				cm_four_id,
+				city_marketing_id,
+				refresh_type,
+ 				onerefresh_time,
+				tworefresh_time 
+		from 
+				tb_cm_four
+		where
+				city_marketing_id=#{city_marketing_id}
+	</select>
+	<!-- 修改领取红包设置时间和次数魏汉文20160614 -->
+	<update id="editRedTime" parameterType="pd">
+			update  tb_cm_four
+			set 
+				refresh_type = #{refresh_type},
+				onerefresh_time = #{onerefresh_time},
+				tworefresh_time = #{tworefresh_time}
+ 			where 
+				cm_four_id = #{cm_four_id}
+	</update>
+	
+	
+	
+	<!-- 行业星级收费标准 魏汉文20160614-->
+	<select id="listAllXingFee" parameterType="pd" resultType="pd">
+		select
+				cm_five_id,
+				city_marketing_id,
+				bigtype_id,
+				(select b.sort_name from tb_city_file_sort b where bigtype_id=b.city_file_sort_id ) as bigtype_name,
+				smalltype_id,
+				(select b.sort_name from tb_city_file_sort b where smalltype_id=b.city_file_sort_id ) as smalltype_name,
+				onestar_money,
+				twostar_money,
+				threestar_money
+		from 
+				tb_cm_five a
+		where
+				city_marketing_id=#{city_marketing_id}
+	</select>
+	<!-- 修改 行业星级收费标准魏汉文20160614-->
+	<update id="editXingFee" parameterType="pd">
+			update  tb_cm_five
+			set 
+				bigtype_id = #{bigtype_id},
+				smalltype_id = #{smalltype_id},
+				onestar_money = #{onestar_money},
+				twostar_money = #{twostar_money},
+				threestar_money = #{threestar_money}
+ 			where 
+				cm_five_id = #{cm_five_id}
+	</update>
+	
+ 
+	
+	<!-- 提出与补贴魏汉文20160614-->
+	<select id="listAllTichengButie" parameterType="pd" resultType="pd">
+		select
+				cm_six_id,
+				city_marketing_id,
+				subsidy_type,
+				send_money,
+				monthly_sales,
+				service_provider_commission,
+				clerk_commission,
+				allrenmai_number,
+				jioayi_number,
+				jiaoyi_money
+ 		from 
+				tb_cm_six
+		where
+				city_marketing_id=#{city_marketing_id}
+	</select>
+	<!-- 修改 提出与补贴魏汉文20160614-->
+	<update id="editTichengButie" parameterType="pd">
+			update  tb_cm_six
+			set 
+				<if test="clerk_commission != null and clerk_commission != ''">clerk_commission = #{clerk_commission},</if>
+				<if test="service_provider_commission != null and service_provider_commission != ''">service_provider_commission = #{service_provider_commission},</if>
+				<if test="monthly_sales != null and monthly_sales != ''">monthly_sales = #{monthly_sales},</if>
+				<if test="send_money != null and send_money != ''">send_money = #{send_money},</if>
+				<if test="allrenmai_number != null and allrenmai_number != ''">allrenmai_number = #{allrenmai_number},</if>
+				<if test="jioayi_number != null and jioayi_number != ''">jioayi_number = #{jioayi_number},</if>
+				<if test="jiaoyi_money != null and jiaoyi_money != ''">jiaoyi_money = #{jiaoyi_money},</if>
+				 cm_six_id=cm_six_id
+ 			where 
+				cm_six_id = #{cm_six_id}
+	</update>
+	
+	
+	
+
+	<!-- 超出商品限度的费用魏汉文20160614-->
+	<select id="listAllUpStoreFee" parameterType="pd" resultType="pd">
+		select
+				cm_seven_id,
+				city_marketing_id,
+				billing_time,
+				ifnull(billing_money,'') as billing_money  
+		from 
+				tb_cm_seven
+		where
+				city_marketing_id=#{city_marketing_id}
+	</select>
+	
+	<!-- 修改 超出商品限度的费用魏汉文20160614-->
+	<update id="editUpStoreFee" parameterType="pd">
+			update  tb_cm_seven
+			set 
+				billing_money = #{billing_money},
+				billing_time = #{billing_time}
+ 			where 
+				cm_seven_id = #{cm_seven_id}
+	</update>
+	
+	<!-- 关键字魏汉文20160614-->
+	<select id="listAllcontent" parameterType="pd" resultType="pd">
+		select
+				cm_eight_id,
+				city_marketing_id,
+				ifnull(keyword,"") keyword 
+		from 
+				tb_cm_eight
+		where
+				city_marketing_id=#{city_marketing_id}
+	</select>
+	
+	<!-- 修改关键字魏汉文20160614-->
+	<update id="editcontent" parameterType="pd">
+			update  tb_cm_eight
+			set 
+ 				keyword = #{keyword}
+ 			where 
+				cm_eight_id = #{cm_eight_id}
+	</update>
+	
+	
+</mapper>

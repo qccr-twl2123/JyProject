@@ -1,0 +1,338 @@
+body,
+ul,
+li,
+p,
+a,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  border: 0;
+  margin: 0;
+  list-style: none;
+  text-decoration: none;
+  font-weight: normal;
+  color: #000;
+  font-size: 1.2rem;
+}
+body,
+html {
+  height: 100%;
+  overflow-y: hidden;
+  font: 12px Arial, "微软雅黑", sans-serif;
+}
+body {
+  background: #eaeaea;
+}
+.dask{
+  display: none;
+  position: fixed;
+  z-index: 101;
+  width: 100%;
+  height: 100%;
+  background:rgba(0,0,0,0.3);
+}
+.dask_cont{
+  position: absolute;
+  right: -100%;
+
+  height: 100%;
+  width: 80%;
+  float: right;
+  background:#fff;
+}
+.anjian{
+    height: 27px;
+    text-align: center;
+    line-height: 27px;
+    float: left;
+    width: 38%;
+    margin: 7% 7% 0% 5%;
+    border: 1px solid #aaa;
+}
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+.title {
+  line-height: 3.75rem;
+  width: 100%;
+  height: 3.75rem;
+  position: fixed;
+  z-index: 3;
+  top: 0;
+  background: #fc111b;
+  font-size: 1.44rem;
+  color: #fff;
+}
+.title .left {
+  float: left;
+}
+.title .left span {
+  height: 3.75rem;
+  width: 3.75rem;
+  padding-left: 1rem;
+}
+.title .tit_cont {
+  float: left;
+  padding-left: 4.3rem ;
+  font-size: 2rem;
+  text-align: center;
+}
+.title .right {
+  float: right;
+  height: 3.75rem;
+  width: 3.75rem;
+}
+.title .right a {
+  color: #fff;
+}
+.title .right a span {
+  display: block;
+  border-radius: 50%;
+  margin-top: 0.3rem;
+  width: 3rem;
+  height: 3rem;
+  background: #e30b20;
+  text-align: center;
+  line-height: 3rem;
+  font-size: 2rem;
+}
+
+.items {
+  width: 100%;
+  position: fixed;
+  z-index: 100;
+  top: 3.75rem;
+  background: #fff;
+}
+.items .item {
+  width: 33.33333%;
+  height: 2.7rem;
+  color: #ccc;
+  font-size: 1.8rem;
+  float: left;
+  /*cursor: pointer;*/
+}
+.items .item a {
+  display: block;
+  overflow: hidden;
+  text-align: center;
+  padding-left: 3rem;
+  margin: 4% 0;
+  border-left: 1px solid #e1e1e1;
+}
+.items .item a .jg_shang,
+.items .item a .jg_xia,
+.items .item a .zk_shang,
+.items .item a .zk_xia {
+    text-align: left;
+    width: 1rem;
+    display: inline-block;
+    margin-top: 0.3rem;
+}
+.items .item span {
+  float: left;
+  font-size: 1.6rem;
+}
+.djs {
+  margin-top: 6.7rem;
+  height: 2.5rem ;
+  background: #fff;
+  line-height: 2.5rem;
+  text-align: center;
+      padding-top: 0.4rem;
+}
+.djs span {
+  color: #fb0000;
+  font-size: 1.8rem;
+}
+.item_lists {
+  height: 74.1%;
+  overflow-y: scroll;
+  border-top: 1px solid #b2b1b1;
+  padding: 0 0.4rem;
+}
+.item_lists .sp_item {
+  box-sizing: border-box;
+  padding: 0 0.4rem;
+  margin: 0.4rem 0;
+  position: relative;
+}
+.item_lists .sp_item .cont {
+  height: 100%;
+  background: #ffffff;
+}
+.item_lists .sp_item .cont .zuoshang {
+  position: absolute;
+  z-index: 2;
+  left: 0.4rem;
+  top: 0;
+  color: #fff;
+  margin-top: 0.4rem;
+  background: red;
+  text-align: center;
+      font-size: 1.4rem;
+}
+.item_lists .sp_item .cont .cont_img {
+  position: relative;
+  width: 100%;
+  background: #fff;
+  padding-bottom: 100%;
+}
+.item_lists .sp_item .cont .cont_img img {
+  width: 100%;
+  height: 100%;
+    position: absolute;
+}
+.item_lists .sp_item .cont .cont_img .sq {
+  position: absolute;
+  z-index: 1;
+  top: 2.9rem;
+  left: 4rem;
+  margin: auto;
+  width: 50%;
+      height: 50%;
+}
+.item_lists .sp_item .cont .cont_img .spimg {
+   height: 14.46rem;
+}
+.item_lists .sp_item .cont .sp_cont {
+  background: #ffffff;
+  padding: 0 0.4rem;
+}
+.item_lists .sp_item .cont .sp_cont .jgzk {
+  height: 2.4rem;
+}
+.item_lists .sp_item .cont .sp_cont .jgzk .xianjia {
+  font-size: 1.4rem ;
+  padding-top: 0.7rem;
+  float: left;
+  color: #000;
+}
+.item_lists .sp_item .cont .sp_cont .jgzk .yuanjia {
+      font-size: 1rem;
+    text-decoration: line-through;
+    float: left;
+    margin-top: 0.9rem;
+    padding: 0 0.2rem;
+    color: #aaaaaa;
+}
+.item_lists .sp_item .cont .sp_cont .jgzk .zhekou {
+  margin-top: 0.4rem;
+  float: right;
+  border: 1px solid #f00;
+  text-align: center;
+  color: #f00;
+  font-size: 0.833rem;
+}
+.item_lists .sp_item .cont .sp_title {
+	 font-size: 13px;
+	  height: 1.9rem;
+     /* 
+      display: -webkit-box;  
+      -webkit-box-orient: vertical; 
+      -webkit-line-clamp: 1;  
+      overflow: hidden;   
+      margin-bottom: 0.83rem; */
+}
+.item_lists .sp_item .cont .sp_title a {
+  font-size: 1.02rem;
+}
+.item_lists .sp_item .cont .sp_jdt {
+  height: 1.2rem;
+  padding: 0;
+  overflow: hidden;
+      padding-bottom: 15%;
+}
+.item_lists .sp_item .cont .sp_jdt .jdt_tit {
+  font-size: 0.66rem;
+  padding: 0;
+  color: #f39329;
+}
+.item_lists .sp_item .cont .sp_jdt .jdt_t {
+  padding: 0;
+      margin-top: 3%;
+}
+.item_lists .sp_item .cont .sp_jdt .jdt_t .jdtbg {
+  width: 100%;
+  height: 0.66rem;
+  background: #efeeee;
+  border-radius: 1rem;
+}
+.item_lists .sp_item .cont .sp_jdt .jdt_t .jdtbg .jdt_value {
+  width: 0;
+  background: -webkit-linear-gradient(left, #ffff00, #ff0000);
+  height: 100%;
+  transition: width 1s;
+}
+ .footerdi{
+	position: fixed;
+	bottom: 0;
+	z-index: 100;
+	width: 100%;
+	border-top: 1px solid #b3b3b3;
+	padding:5px 0;
+	background: #fff;
+}
+.footerdi ul li{
+	float: left;
+	width: 25%;
+}
+.footerdi ul li a{
+	color: #8e8e8e;
+	text-align: center;
+	display: block;
+}
+.footerdi a i{
+	display: block;
+	background: url(../../images/f_set.png);
+	background-size: 28px auto;
+	margin: 0 auto;
+}
+.footerdi li.f_whole i{
+	width: 30px;
+	height: 25px;
+	background-position: 0 -25px;
+	position: relative;
+	top: 1px;
+}
+.footerdi li.f_jiexiao i{
+	width: 22px;
+	height: 25px;
+	background-position: 0 -76px;
+	position: relative;
+	top: 1px;
+}
+.footerdi li.f_car i{
+	width: 22px;
+	height: 25px;
+	background-position: 0 -126px;
+	position: relative;
+	top: 1px;
+}
+.footerdi li.f_personal i{
+	width: 22px;
+	height: 25px;
+	background-position: 0 -175px;
+	position: relative;
+	top: 1px;
+}
+.footerdi .f_whole i.cur{
+	background-position: 0 0 !important
+}
+.footerdi .f_jiexiao i.cur{
+	background-position: 0 -50px !important	
+}
+.footerdi .f_car i.cur{
+	background-position:0 -102px !important
+}
+
+.footerdi .f_personal i.cur{
+	background-position:0 -151px !important
+}

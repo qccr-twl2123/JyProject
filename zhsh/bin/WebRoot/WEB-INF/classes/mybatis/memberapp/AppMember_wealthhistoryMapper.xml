@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AppMember_wealthhistoryMapper">
+	
+	<!-- 分页列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+				wealth_type,	
+				consume_type,	
+				content,	
+				cast(cast((number) as decimal(10,2)) as char)  number,	
+				member_id,	
+				now_money,	
+ 				date_format(createtime,'%Y-%m-%d %H:%i:%s') createtime,
+				member_wealthhistory_id
+		from 
+				tb_member_wealthhistory 
+		where 		
+				member_id=#{pd.member_id} 
+				and	wealth_type=#{pd.wealth_type}
+				and  date_sub(curdate(), interval 1 month) &lt;= date(createtime)
+		order by createtime desc
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+				wealth_type,	
+				consume_type,	
+				content,	
+				number,	
+				member_id,	
+				now_money,	
+ 				date_format(createtime,'%Y-%c-%d %H:%i:%s') createtime,
+				member_wealthhistory_id
+		from 
+				tb_member_wealthhistory 
+		where 		
+				member_id=#{member_id} 
+				and	wealth_type=#{wealth_type}
+				and  date_sub(curdate(), interval 1 month) &lt;= date(createtime)
+		order by createtime desc
+	</select>
+	
+	<!-- 新增财富历史记录魏汉文20160705-->
+	<insert id="saveWealthhistory" parameterType="pd">
+		insert into tb_member_wealthhistory(
+			<!-- member_wealthhistory_id, -->
+ 			wealth_type,	
+			consume_type,	
+			content,	
+			number,	
+			member_id,	
+			now_money,	
+			jiaoyi_id,
+			jiaoyi_status,
+			in_jiqi,
+			createtime 
+		) values (
+ 			<!-- #{member_wealthhistory_id},	 -->
+ 			#{wealth_type},	
+			#{consume_type},	
+			#{content},	
+			#{number},	
+			#{member_id},	
+			#{now_money},	
+			#{jiaoyi_id},	
+			#{jiaoyi_status},	
+			#{in_jiqi},	
+			now()
+		)
+	</insert>
+	
+	
+	<!-- 新增会员提现记录-->
+	<!-- <insert id="saveWealthhistoryByTx" parameterType="pd">
+		insert into tb_member_wealthhistory(
+			member_wealthhistory_id,
+ 			wealth_type,	
+			consume_type,	
+			content,	
+			number,	
+			member_id,	
+			now_money,	
+			jiaoyi_id,
+			jiaoyi_status,
+			createtime 
+		) values (
+ 			#{member_wealthhistory_id},	
+ 			#{wealth_type},	
+			#{consume_type},	
+			#{content},	
+			#{number},	
+			#{member_id},	
+			#{now_money},	
+			#{jiaoyi_id},	
+			#{jiaoyi_status},	
+			now()
+		)
+	</insert> -->
+	
+	<!-- 更新处理状态更具处理id-->
+	<update id="updateWealthhistory"  parameterType="pd">
+	update tb_member_wealthhistory
+	set 
+		<if test="jiaoyi_status != null and jiaoyi_status != '' ">jiaoyi_status=#{jiaoyi_status},</if>
+		member_wealthhistory_id=member_wealthhistory_id
+	where jiaoyi_id=#{jiaoyi_id}
+	</update>
+	
+	<!-- 获取最大的ID -->
+	<select id="getMaxMemberWealthId" parameterType="pd" resultType="String">
+		select
+				max(member_wealthhistory_id) as member_wealthhistory_id
+		from 
+				tb_member_wealthhistory 
+		where 		
+				member_id=#{member_id} 
+ 	</select>
+	
+	
+</mapper>

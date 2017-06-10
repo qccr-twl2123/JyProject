@@ -1,0 +1,134 @@
+html,body{
+    margin:0;
+    padding:0;
+    border:0;
+    height:100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+html{ /*字体优化*/
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+}
+ul,li,p,h1,h2,h3,h4,h5,h6{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-weight: normal;
+    /*font-family: Arial, "微软雅黑", sans-serif;*/
+    color: #333;
+}
+
+a{
+    color: #333;
+    text-decoration: none;
+    border: 0;
+}
+input{
+    outline: 0;
+
+}
+textarea{
+    resize: none;
+}
+input[type="text"],input[type="password"]{
+    font-size: 100%;
+    padding-left: 5px;
+}
+select{
+    padding: 0;
+    font-size: 100%;
+    text-align: center;
+    vertical-align: middle;
+}
+@media screen and (max-width:320px){body,input,select{font-size:13px}}
+@media screen and (min-width:360px){body,input,select{font-size:14.75px}}
+@media screen and (min-width:400px){body,input,select{font-size:16.5px}}
+@media screen and (min-width:480px){body,input,select{font-size:18px}}
+@media screen and (min-width:560px){body,input,select{font-size:20.5px}}
+@media screen and (min-width:600px){body,input,select{font-size:21.25px}}
+@media screen and (min-width:640px){body,input,select{font-size:23px}}
+.col_b{
+    color: #4594e6;
+}
+.flr{
+   float: right;
+}
+.fll{
+    float: left;
+}
+.clf:after{     /*清除浮动*/
+    content: "";
+    display: block;
+    clear: both;
+    line-height: 0;
+    font-size: 0;
+    overflow: hidden;
+
+}
+.clf:before{
+    content: "";
+    display: block;
+    clear: both ;
+    line-height: 0;
+    font-size: 0;
+    overflow: hidden;
+}
+.ccyc{   /*超出部分隐藏  显示省略号*/
+    display: block;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.font_s{
+    font-size: 87.5%;
+    /*14px*/
+}
+.font_m{
+    font-size: 112.5%;
+    /*18px*/
+}
+.arrow_down {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #8f8f8f;
+    display: inline-block;
+}
+.arrow_up {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 0;
+    border-bottom: 8px solid #8f8f8f;
+    display: inline-block;
+}
+.arrow_left{
+    transform: scaleY(2.5);
+}
+
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+.style_scroll::-webkit-scrollbar
+{
+    width: 4px;
+    height: 4px;
+    background-color: #fff;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+.style_scroll::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+/*定义滑块 内阴影+圆角*/
+.style_scroll::-webkit-scrollbar-thumb
+{
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.2);
+    background-color: #aaa;
+}
