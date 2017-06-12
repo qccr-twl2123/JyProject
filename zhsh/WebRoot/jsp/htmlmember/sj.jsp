@@ -15,6 +15,77 @@
     <link rel="stylesheet" href="css/htmlmember/labary/swiper.min.css">
     <link rel="stylesheet" href="css/htmlmember/sjsp_main.css">
 </head>
+<style>
+	    /*轮播图*/
+    .lunbo{
+        width: 100%;
+        height: 20rem;
+        background: #fff;
+        position:relative;
+        border-bottom: 1px solid #aaa;
+        padding: 10px 0 10px 0;
+    }
+    .sj_xinxi{
+        padding-left:5%;
+        position:absolute;
+        left:0;
+        bottom:0.4rem;
+        width: 70%;
+        height:4rem;
+        z-index: 1;
+    }
+    .sj_title_font{
+        display:block;
+        padding-left:4.5rem;
+        line-height:1.4;
+        color:#aaa;
+    }
+    .ck_sjxq{
+        position:absolute;
+        right:0;
+        bottom:0;
+        border-radius:50%;
+        width: 2rem;
+        height: 2rem;
+        background:#e90000;
+        text-align:center;
+        line-height:1;
+        padding:0.5rem;
+        color:#fff;
+        z-index: 1;
+    }
+    .sj_xinxi img{
+        width: 4.2rem;
+        height:4.2rem;
+        display: inline-block;
+        position:absolute;
+        left:5%;
+        bottom:0;
+    }
+    .sj_name{
+        font-size:16px;
+
+        line-height:1.5;
+    }
+    .banner{
+        width: 20rem;
+        height: 20rem;
+        margin: 0 auto;
+    }
+    .img_box img{
+        height: 20rem;
+        width: 20rem;
+        display: block;
+        margin: 0 auto;
+    }
+    .sect{
+        overflow-y:scroll ;
+        height: 100%;
+    }
+    #star img{
+        width: 14%;
+    }
+</style>
 <body>
 <div class="local_box guding">
     <div class="local_cont_box">
@@ -82,6 +153,43 @@
 
 <!--商家-->
 <ul class="viewbox change clf">
+	<li class="clf sj_xqimg bor_b_1_9">
+        <a href=""></a>
+        <div class="lunbo">
+            <div class="banner swiper-container">
+                <div class="swiper-wrapper sjxq_imgbox">
+<!--                <div class="swiper-slide img_box"><img src="img/text1.jpg" alt=""></div>
+                    <div class="swiper-slide img_box"><img src="img/test/test2.jpg" alt=""></div>
+                    <div class="swiper-slide img_box"><img src="img/test/test3.jpg" alt=""></div>
+                    <div class="swiper-slide img_box"><img src="img/test/test4.jpg" alt=""></div> -->
+                </div>
+            </div>
+
+            <!--<div class="sj_xinxi">-->
+                <!--<img src="img/4.jpg" alt="" class="sj_img">-->
+				<!--<span class="sj_title sj_title_font">-->
+					<!--<span class="sj_name">-->
+						<!--湘阴七匹狼专卖店-->
+					<!--</span>-->
+					<!--<br/>-->
+					<!--<span>4.6分&nbsp; 已售1234单</span>-->
+				<!--</span>-->
+            <!--</div>-->
+            <div class="ck_sjxq">
+		    	<span>
+		    		查看<br/>详情
+		    	</span>
+            </div>
+        </div>
+
+
+        <div class="swiper-container">
+            <div class="swiper-wrapper sjxq_imgbox">
+
+            </div>
+        </div>
+    </li>
+
     <li class="sj_tit_inf clf">
         <div>
             <img src="" alt="" class="sj_img">
@@ -120,18 +228,11 @@
         <div class="sj_gg" style="padding-left: 8%;"></div>
         <div class="sj_market"></div>
     </li>
-    <li class="link_goin sj_xqimg">
+<!--     <li class="link_goin sj_xqimg">
         <span>商家详情</span>
         <span><img src="img/goin.png" alt=""></span>
-    </li>
-    <li class="clf sj_xqimg bor_b_1_9">
-        <a href=""></a>
-        <div class="swiper-container">
-            <div class="swiper-wrapper sjxq_imgbox">
+    </li> -->
 
-            </div>
-        </div>
-    </li>
     <li class="link_goin sj_yyzz bor_b_1_9">
         <span>营业执照</span>
         <span><img src="img/goin.png" alt=""></span>
@@ -149,7 +250,7 @@
         <ul class="sjtuijian ccyc">
 
         </ul>
-    </li>
+    </li> 
 </ul>
 <!--评价-->
 <ul class="viewbox pingjia_cont change">

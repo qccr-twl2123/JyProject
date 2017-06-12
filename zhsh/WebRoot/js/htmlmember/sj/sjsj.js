@@ -128,19 +128,19 @@ function sj_inf(){
             var onemark_type=market[m].marketing_type;
             var onegrantrule=market[m].grantrule;
             if(onemark_type == "1"){
-                onemarkstr+="<p><span class='zeng tit_bg_box'>满赠</span>";
+                onemarkstr+="<p><span class='zeng tit_bg_box' style='margin:0;'>满赠</span>";
             }else if(onemark_type == "2"){
-                onemarkstr+="<p><span class='jian tit_bg_box'>立减</span>";
+                onemarkstr+="<p><span class='jian tit_bg_box' style='margin:0;'>立减</span>";
             }else if(onemark_type == "3"){
-                onemarkstr+="<p><span class='shi tit_bg_box'>时段</span>";
+                onemarkstr+="<p><span class='shi tit_bg_box' style='margin:0;'>时段</span>";
             }else if(onemark_type == "4"){
-                onemarkstr+="<p><span class='song tit_bg_box'>立减</span>";
+                onemarkstr+="<p><span class='song tit_bg_box' style='margin:0;'>立减</span>";
             }else if(onemark_type == "5"){
-                onemarkstr+="<p><span class='song tit_bg_box'>累计</span>";
+                onemarkstr+="<p><span class='song tit_bg_box' style='margin:0;'>累计</span>";
             }else if(onemark_type == "6"){
-                onemarkstr+="<p><span class='ji tit_bg_box'>积分</span>";
+                onemarkstr+="<p><span class='ji tit_bg_box' style='margin:0;'>积分</span>";
             }else if(onemark_type == "7"){
-                onemarkstr+="<p><span class='zhe tit_bg_box '>折扣</span>";
+                onemarkstr+="<p><span class='zhe tit_bg_box ' style='margin:0;'>折扣</span>";
             }
             onemarkstr+=onegrantrule+"<p/>";
         }
