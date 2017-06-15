@@ -1149,13 +1149,15 @@ public class AppShouyeController extends BaseController {
 	
 	/**
 	 * 推荐好友注册
-	 * 魏汉文20160623
-	 */
+	 * app_shouye/tuijianRegister.do
+	 * 
+	 * 
+	 * 
+ 	 */
 	@RequestMapping(value="/tuijianRegister")
 	@ResponseBody
 	public Object tuijianRegister() throws Exception{
-//		logBefore(logger, "推荐好友注册");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
  		String result = "1";
 		String message="推荐等待确认中";
 		PageData pd = new PageData();
@@ -1166,22 +1168,29 @@ public class AppShouyeController extends BaseController {
 			String be_phone=pd.getString("be_phone");
 			pd.put("phone", be_phone);
  			///判断是否注册过
-			PageData xx = appMemberService.detailByPhone(pd);
-			if(xx != null){
+ 			if(appMemberService.detailByPhone(pd) != null){
 				map.put("result", "0");
-				map.put("message", "当前推荐手机号已注册，请重新选择");
+				map.put("message", "当前推荐手机号已注册，请重新填写");
 				map.put("data", "");
  		 		return map;
 			}
+ 			pd.remove("phone");
  			pd.put("member_id", member_id);
-			PageData e=appMemberService.findById(pd);
-			if(e != null){
-				SmsUtil.TjFrinendSave(be_phone, e.getString("phone"),content);
-				//魅力值：0-50一星会员 50-99 二星会员 100-199 三星会员 200-499  四星会员 500-999 五星会员 1000-2000 一钻会员
-				TongYong.charm_numberAdd(member_id, Const.charm_number[2]);
- 	 			//将邀请信息存入数据库中
-				pd.put("type", "2");
-				appMemberService.saveTuiJian(pd);
+ 			if(appMemberService.findById(pd) != null){
+ 				//判断是否已经推荐过
+ 				if(appMemberService.findDetailTuiJian(pd) == null){
+ 					SmsUtil.TjFrinendSave(be_phone, appMemberService.findById(pd).getString("phone"),content);
+ 					//魅力值：0-50一星会员 50-99 二星会员 100-199 三星会员 200-499  四星会员 500-999 五星会员 1000-2000 一钻会员
+ 					TongYong.charm_numberAdd(member_id, Const.charm_number[2]);
+ 	 	 			//将邀请信息存入数据库中
+ 					pd.put("type", "2");
+ 					appMemberService.saveTuiJian(pd);
+ 				} 
+ 			}else{
+				map.put("result", "0");
+				map.put("message", "请先前往登录，再推荐好友注册");
+				map.put("data", "");
+ 		 		return map;
 			}
  		}catch(Exception e){
 			 result = "0";

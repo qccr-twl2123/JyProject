@@ -392,6 +392,9 @@ public class ChatRedController extends BaseController{
 	
 	/**
 	 * 帮客户注册会员 
+	 * storeapp_chaRed/member.do
+	 * 
+	 * phone 手机号码
 	 */
 	@RequestMapping(value="/member")
 	@ResponseBody
@@ -408,13 +411,13 @@ public class ChatRedController extends BaseController{
 				map.put("result", "0");
 				map.put("message", "手机号码不能为空");
 				map.put("data", "");
-		 		return AppUtil.returnObject(pd, map);
+		 		return map;
 			}
 			//判断是否注册过
 			pd = appMemberService.detailByPhone(pd);
 			if(pd != null){
 				map.put("result", "0");
-				map.put("message", "当前手机已注册，请前往登陆");
+				map.put("message", "当前推荐手机号已注册，请重新填写");
 				map.put("data", "");
 		 		return map;
 			}else{

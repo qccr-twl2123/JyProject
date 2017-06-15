@@ -694,52 +694,6 @@
  	
 	
 	
-	<!-- 新增推荐信息魏汉文20160630-->
-	<insert id="saveTuiJian" parameterType="pd">
-		insert into tb_tuijian(
- 			id,	
-			be_phone,
-			type,
-			content
-		) values (
- 			#{id},			
-			#{be_phone},
- 			#{type},
- 			#{content}
-		)
-	</insert>
-	
-	<!-- 推荐人列表魏汉文 2016.06.29 -->
-	<select id="listAllTuiJian" parameterType="pd" resultType="pd">
-		select
-				distinct
-				id,
-				type
-		from 
-				tb_tuijian
-		where
-				be_phone=#{be_phone}
- 	</select>
- 	
- 	<!-- 推荐人添加 2016.07.25 -->
-	<insert id="saveTuijian" parameterType="pd">
-		insert into tb_tuijian
-		(
-		tuijian_id,
-		id,
-		be_phone,
-		type,
-		content
-		)
-		values
-		(
-		#{tuijian_id},
-		#{id},
-		#{be_phone},
-		#{type},
-		#{content}
-		)
- 	</insert>
 
  	
  	<!-- 前往个人中心魏汉文20160620 -->
@@ -1147,7 +1101,30 @@
 	</select>
 	
 	
-	
+	<!-- 推荐关系 -->
+  	<!-- 新增推荐信息魏汉文20160630-->
+	<insert id="saveTuiJian" parameterType="pd">
+		insert into tb_tuijian(
+ 			id,	 be_phone, type, content
+		) values (
+ 			#{id},	 #{be_phone}, #{type}, #{content}
+		)
+	</insert>
+ 	<!-- 推荐人列表魏汉文 2016.06.29 -->
+	<select id="listAllTuiJian" parameterType="pd" resultType="pd">
+		select distinct id, type
+		from  tb_tuijian
+		where be_phone=#{be_phone}
+ 	</select>
+  	<!-- 推荐详情 -->
+	<select id="findDetailTuiJian" parameterType="pd" resultType="pd">
+		select id, be_phone, type
+		from  tb_tuijian
+		where be_phone=#{be_phone} and id=#{id}
+		limit 1
+ 	</select>
+ 	
+ 	 
 	
 	
 	

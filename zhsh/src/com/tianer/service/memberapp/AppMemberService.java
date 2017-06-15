@@ -281,23 +281,31 @@ public class AppMemberService {
 	*/
 	public void deleteVIPTwo(PageData pd)throws Exception{
  		dao.delete("LQVIPMapper.deleteVIPTwo", pd);//删除我的vip
-    	}
+    }
 	
+	//======================推荐人存储的关系表=====================================
 	/*
 	 *获取推荐我的人的电话
 	 */
 	public List<PageData> listAllTuiJian(PageData pd)throws Exception{
 		return (List<PageData>)dao.findForList("AppMemberMapper.listAllTuiJian", pd);
 	}
-	
-
-	
+	/*
+	 *推荐人详情
+	 */
+	public PageData findDetailTuiJian(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("AppMemberMapper.findDetailTuiJian", pd);
+	}
+ 	
 	/*
 	 * 新增推荐信息魏汉文20160630
 	 */
 	public void saveTuiJian(PageData pd)throws Exception{
 		dao.save("AppMemberMapper.saveTuiJian", pd);
  	}
+	
+	//=====================================================================================
+	
 	
  	
 	/*
