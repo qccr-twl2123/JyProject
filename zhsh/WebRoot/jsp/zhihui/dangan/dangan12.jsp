@@ -77,7 +77,7 @@
  	        <div class="dangan_d1">
 	          <span class="dangan_d1_sp1">详细地址</span>
 	          <input type="text" class="dangan_d1_ipt1 ipt3" name="address" id="address" value="${pd.address }"/>
- 	          <span class="dangan_d1_btn1" onclick="dingwei('${pd.store_id}','${pd.province_name}${pd.city_name}${pd.area_name}${pd.address}')">重新定位</span>
+ 	          <span class="dangan_d1_btn1" onclick="dingwei('${pd.store_id}','${pd.province_name}${pd.city_name}${pd.area_name}${pd.address}','${pd.longitude}','${pd.latitude}')">重新定位</span>
  	        </div>
  	        <div >
 	          <span class="dangan_d1_sp1">经营项目</span>
@@ -637,11 +637,11 @@
 		
 		
 		//点击寄送
- 		function dingwei(store_id,address){
+ 		function dingwei(store_id,address,lng,lat){
   			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="点击定位";
-			 diag.URL = 'zhihuiz_store_file/dingwei.do?store_id='+store_id+'&address='+address;
+			 diag.URL = 'zhihuiz_store_file/dingwei.do?store_id='+store_id+'&address='+address+'&lng='+lng+'&lat='+lat;
 			 diag.Width = 1000;
 			 diag.Height = 800;
 			 diag.CancelEvent = function(){ //关闭事件

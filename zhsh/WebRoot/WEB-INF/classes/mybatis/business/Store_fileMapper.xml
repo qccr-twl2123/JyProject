@@ -201,7 +201,9 @@
 			c.password,
 			c.merchant_level,
 			c.registertel_phone,
-			c.withdraw_rate
+			c.withdraw_rate,
+			c.longitude,
+			c.latitude
 		from 
 			tb_store_file a 
 			left join tb_store c on a.store_id=c.store_id

@@ -38,24 +38,28 @@
        var address="";
 	    // 百度地图API功能
 	   	var map = new BMap.Map("allmap",{enableMapClick:false});
-	   	var point = new BMap.Point(116.331398,39.897445);
-	   	map.centerAndZoom(point,19);
-	   	map.enableScrollWheelZoom(true);
-	   	// 创建地址解析器实例
-	   	var myGeo = new BMap.Geocoder();
-	   	// 将地址解析结果显示在地图上,并调整地图视野
-	   	myGeo.getPoint("${pd.address}", function(point){
-	   		if (point) {
-	   			map.centerAndZoom(point, 19);
-	   			map.addOverlay(new BMap.Marker(point));
-	   		}else{
-	   			alert("您选择地址没有解析到结果!");
-	   		}
-	   	}, "北京市");
-	   	
+		map.enableScrollWheelZoom(true);
+	    if("${pd.lng}" != ""){
+	    	var point = new BMap.Point("${pd.lng}","${pd.lat}");
+		   	map.centerAndZoom(point,19);
+ 		   	map.addOverlay(new BMap.Marker(point));
+	    }else{
+	    	// 创建地址解析器实例
+		   	// 将地址解析结果显示在地图上,并调整地图视野
+		   	  var myGeo = new BMap.Geocoder();
+	 	   	myGeo.getPoint("${pd.address}", function(point){
+		   		if (point) {
+		   			map.centerAndZoom(point, 19);
+		   			map.addOverlay(new BMap.Marker(point));
+		   		}else{
+		   			alert("您选择地址没有解析到结果!");
+		   		}
+		   	}, "北京市"); 
+	    }
+ 	   	
 	    
-   	  //单击获取点击的经纬度 ，获取当前地址
-     map.addEventListener("click", function(e){  
+   	 	 //单击获取点击的经纬度 ，获取当前地址
+     	map.addEventListener("click", function(e){  
  			var pt = e.point;
 			window.lng=pt.lng;
 			window.lat=pt.lat;
