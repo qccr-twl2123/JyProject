@@ -724,32 +724,36 @@ public class ChatRedController extends BaseController{
 	@RequestMapping(value="/tuijianRegister")
 	@ResponseBody
 	public Object tuijianRegister() throws Exception{
-		//logBefore(logger, "推荐好友注册");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
  		String result = "1";
 		String message="推荐等待确认中";
 		PageData pd = new PageData();
 		try{ 
 			pd = this.getPageData();
-			String store_id=pd.getString("id");
-			String be_phone=pd.getString("be_phone");
-			pd.put("phone", be_phone);
+ 			pd.put("phone", pd.getString("be_phone"));
  			///判断是否注册过
-			PageData xx = appMemberService.detailByPhone(pd);
-			if(xx != null){
+ 			if(appMemberService.detailByPhone(pd) != null){
 				map.put("result", "0");
-				map.put("message", "当前手机已注册，请前往登陆");
+				map.put("message", "当前推荐手机号已注册，请重新填写");
 				map.put("data", "");
 		 		return map;
 			}
-// 			String content=pd.getString("content");
-			pd.put("store_id", store_id);
-			PageData e=appStoreService.findById(pd);
-			SmsUtil.TjFrinendSave(be_phone, e.getString("registertel_phone"),e.getString("store_id"));
-			//将信息存入数据库中
-			pd.put("type", "1");
-			appMemberService.saveTuiJian(pd);
-		}catch(Exception e){
+ 			pd.remove("phone");
+ 			pd.put("store_id", pd.getString("id"));
+ 			if(appStoreService.findById(pd) != null){
+ 				if(appMemberService.findDetailTuiJian(pd) == null){
+ 					SmsUtil.TjFrinendSave(pd.getString("be_phone"), appStoreService.findById(pd).getString("registertel_phone"),pd.getString("id"));
+ 	 				//将信息存入数据库中
+ 	 				pd.put("type", "1");
+ 	 				appMemberService.saveTuiJian(pd);
+ 				}
+ 			}else{
+				map.put("result", "0");
+				map.put("message", "请前往登录，再推荐会员注册");
+				map.put("data", "");
+		 		return map;
+			}
+ 		}catch(Exception e){
 			 result = "0";
 			 message="系统错误";
 			logger.error(e.toString(), e);
