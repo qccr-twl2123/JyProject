@@ -1453,8 +1453,7 @@ public class TongYong extends BaseController{
 	  				leibieList=null;
 	  				//拆分类别（类别ID@金钱@积分率@折扣率）
 	  				String alllei=pd.getString("allleibie");
-	  				//System.out.println("**********"+alllei);
-	  				if(alllei != null && !alllei.equals("") && alllei.contains("@")){
+ 	  				if(alllei != null && !alllei.equals("") && alllei.contains("@")){
 	  							String[] everylei=alllei.split(",");
 	  							int everyleilength=everylei.length;
 	  							for(int i=0;i<everyleilength ; i++){

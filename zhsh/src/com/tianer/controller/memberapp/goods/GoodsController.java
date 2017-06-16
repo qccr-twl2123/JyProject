@@ -241,13 +241,18 @@ public class GoodsController extends BaseController {
 	
 	/**
 	 * 优惠买单，按总金额购买，商家ID，支付金钱,不优惠金额
-	 * 魏汉文20160628
+	 *  
+	 *  app_goods/allMoneyByOne.do
+	 *  
+	 *  paymoney 支付总金额
+	 *  notmoney 不优惠金额
+	 *  store_id 商家ID
+	 *  member_id 会员ID
 	 */
 	@RequestMapping(value="/allMoneyByOne")
 	@ResponseBody
 	public Object allMoneyByOne(){
-//		logBefore(logger, "优惠买单，按总金额购买");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
   		String result = "1";
 		String message="按总金额购买";
 		PageData pd = new PageData();
@@ -299,10 +304,9 @@ public class GoodsController extends BaseController {
 	@Resource(name = "storepc_marketingtypeService")
 	private Storepc_marketingtypeService storepcMarketingTypeService;
 	
-	/**
-	 * 优惠买单，按总类别购买，商家ID，支付金钱
-	 * 魏汉文20160629
-	 */
+	/*
+	 * 优惠买单，按总类别购买，商家ID，支付金钱--不存在分类买单在优惠买单的情况下
+ 	 */
 	@RequestMapping(value="/allMoneyByTwo")
 	@ResponseBody
 	public Object allMoneyByTwo(){
