@@ -68,15 +68,14 @@ public class ZhihuiCity_fileController extends BaseController {
 	/**
 	 * 新增
 	 * 魏汉文20160621
-	 */
+	 */ 
 	@RequestMapping(value="/save")
 	public ModelAndView save() throws Exception{
-//		logBefore(logger, "新增City_file");
-		ModelAndView mv = this.getModelAndView();
+ 		ModelAndView mv = this.getModelAndView();
 		List<PageData> sortlist=new ArrayList<PageData>();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		//查看是否已经注册过
+		//查看是否已经注
 		PageData e=city_fileService.findById(pd);
 		if(e != null){
 			mv.setViewName("redirect:list.do");
@@ -157,8 +156,7 @@ public class ZhihuiCity_fileController extends BaseController {
 	 */
 	@RequestMapping(value="/delete")
 	public void delete(PrintWriter out){
-//		logBefore(logger, "删除City_file");
-		PageData pd = new PageData();
+ 		PageData pd = new PageData();
 		try{
 			pd = this.getPageData();
 			city_fileService.delete(pd);
@@ -342,8 +340,7 @@ public class ZhihuiCity_fileController extends BaseController {
 				twoList=null;
 				e1=null;
 			}
-//			System.out.println(firstList);
-			mv.addObject("firstList", firstList);
+ 			mv.addObject("firstList", firstList);
  			pd.put("currentPage", currentPage);
  			mv.setViewName("zhihui/dangan/dangan3");
 			mv.addObject("msg", "edit");

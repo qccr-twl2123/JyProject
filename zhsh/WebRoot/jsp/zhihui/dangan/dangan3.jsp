@@ -72,9 +72,6 @@
 				          		<input type="hidden"  class="city_file_sort_id" value="${var.city_file_sort_id}">
 					            <span class="dangan3_d3_d2_sp1">
 						              <input class="dangan3_d3_d2_sp1_ms ms" value="${var.sort_name}"  name="${var.city_file_sort_id}sort_name" id="${var.city_file_sort_id}sort_name">
-					 	              <span class="jian">
-						                <img src="../img/jian.png" width="100%">
-						              </span>
 				 	            </span>
 					            <span class="dangan3_d3_d2_sp1"></span>
 					            <span class="dangan3_d3_d2_sp1">

@@ -5,16 +5,16 @@
 	
 	<!-- 新增-->
 	<insert id="save" parameterType="pd">
-		insert into TB_CITY_FILE_SORT(
-			CITY_FILE_SORT_ID,	
-			SORT_NAME,	
-			SORT_IMAGEURL,	
-			SORT_PARENT_ID,	
-			OPEN_STATUS,	
-			SEQUENCE,	
-			CITY_FILE_ID,	
-			SORT_TYPE,	
-			CREATEDATE 
+		insert into tb_city_file_sort(
+			city_file_sort_id,	
+			sort_name,	
+			sort_imageurl,	
+			sort_parent_id,	
+			open_status,	
+			sequence,	
+			city_file_id,	
+			sort_type,	
+			createdate 
 		) values (
 			#{city_file_sort_id},	
 			#{sort_name},	
@@ -31,15 +31,15 @@
 	
 	<!-- 删除-->
 	<delete id="delete" parameterType="pd">
-		delete from TB_CITY_FILE_SORT
+		delete from tb_city_file_sort
 		where 
-			CITY_FILE_SORT_ID = #{city_file_sort_id}
+			city_file_sort_id = #{city_file_sort_id}
 	</delete>
 	
 	
 	<!-- 修改 -->
 	<update id="edit" parameterType="pd">
-		update  TB_CITY_FILE_SORT
+		update  tb_city_file_sort
 			set 
 				<if test=" city_file_sort_id != null and city_file_sort_id != ''">city_file_sort_id = #{city_file_sort_id},</if>
 				<if test=" sort_name != null and sort_name != ''">sort_name = #{sort_name},</if>
@@ -49,9 +49,9 @@
 				<if test=" sequence != null and sequence != ''">sequence = #{sequence},</if>
 				<if test=" city_file_id != null and city_file_id != ''">city_file_id = #{city_file_id},</if>
 				<if test=" sort_type != null and sort_type != ''">sort_type = #{sort_type},</if>
-  				city_file_sort_id = city_file_sort_id
+   				city_file_sort_id = city_file_sort_id
 			where 
-				CITY_FILE_SORT_ID = #{city_file_sort_id}
+				city_file_sort_id = #{city_file_sort_id}
 	</update>
 
 	
