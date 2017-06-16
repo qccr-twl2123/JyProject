@@ -3,6 +3,7 @@
  */
 package com.tianer.controller.storepc.basemanage;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,12 +16,16 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import sun.misc.BASE64Decoder;
@@ -33,10 +38,13 @@ import com.tianer.entity.zhihui.Qx;
 import com.tianer.entity.zhihui.StoreRole;
 import com.tianer.service.memberapp.AppStoreService;
 import com.tianer.service.storepc.liangqin.basemanage.StoreManageService;
+import com.tianer.util.AppUtil;
 import com.tianer.util.Const;
+import com.tianer.util.FileUpload;
 import com.tianer.util.MD5;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
+import com.tianer.util.AddWaterMark.MoreTextMarkService;
 
 /**
  * 类名称: Storepc_StoreManageController 
@@ -81,16 +89,14 @@ public class Storepc_StoreManageController extends BaseController {
  			}
  		} catch (Exception e) {
 			// TODO: handle exception
-			//System.out.println(e.toString());
+			e.printStackTrace();
 		}
  		return modelAndView;
 	}
 	
 	/**
 	 * 去商家信息页面
-	 * 刘耀耀
-	 * 2016.07.09
-	 */
+ 	 */
 	@RequestMapping(value="/goInformation")
 	public ModelAndView goInformation(String id) throws Exception{
 			ModelAndView mv = this.getModelAndView();
@@ -110,6 +116,7 @@ public class Storepc_StoreManageController extends BaseController {
 	  			pd.put("jichushezhi", jichushezhi);
  			} catch (Exception e) {
 				// TODO: handle exception
+ 				e.printStackTrace();
 			}
  			mv.addObject("pd", pd);
  		return mv;
@@ -396,58 +403,126 @@ public class Storepc_StoreManageController extends BaseController {
   			}
 		} catch (Exception e) {
 			// TODO: handle exception
-			//System.out.println(e.toString());
+			e.printStackTrace();
 		}
  		return modelAndView;
 	}
 	
+
 	/**
-	 * 上传图片
+	 * 商家缩略图详情图有关的上传图片
 	 */
-	@RequestMapping(value="/uploadStoreImage")
+	@RequestMapping(value="/uploadheadimageByStore")
 	@ResponseBody
-	public Object uploadheadimage(ServletRequest request, ServletResponse response) throws Exception{
-		//logBefore(logger, "上传图片");
-		Map<String,Object> map = new HashMap<String,Object>();
- 		String result = "1";
+	public Object uploadheadimageByStore(
+				@RequestParam(value="uploanImage",required=false) MultipartFile myfile
+				) throws Exception{
+ 		Map<String,Object> map = new HashMap<String,Object>();
+		String result = "1";
 		String message="上传成功";
 		try {
-   			// 参数序列化
-            JSONObject params = (JSONObject) JSONObject.parse(request.getParameter("params"));
-             String image = params.getString("image");        //拿到字符串格式的图片
-            String subPath="c:/";
-            String PicName=this.getTimeID();
-            //System.out.println(PicName);
-
-            // 只允许jpg
-            String header ="data:image/jpeg;base64,";
- 		    // 去掉头部
-		    image=image.split(",")[1];
-		    //image = image.substring(header.length());
-		    // 写入磁盘
-		    String success = "fail";
-		    BASE64Decoder decoder = new BASE64Decoder();
-		    try{
-		            byte[] decodedBytes = decoder.decodeBuffer(image);        //将字符串格式的image转为二进制流（biye[])的decodedBytes
-		           
-		            String imgFilePath =subPath+PicName;                        //指定图片要存放的位置
-		            FileOutputStream out = new FileOutputStream(imgFilePath);        //新建一个文件输出器，并为它指定输出位置imgFilePath
-		            out.write(decodedBytes); //利用文件输出器将二进制格式decodedBytes输出
-		            out.close();                        //关闭文件输出器
-		            success = "上传文件成功！";
-		            //System.out.println("上传文件成功！");
-		
-		    }catch(Exception e){
-		            success = "上传文件失败！|"+e.getMessage();
-		            e.printStackTrace();
-		    }
+			if(myfile != null){
+				String extName = ".png"; // 扩展名格式：
+				if (myfile.getOriginalFilename().lastIndexOf(".") >= 0){
+					extName = myfile.getOriginalFilename().substring(myfile.getOriginalFilename().lastIndexOf("."));
+				}
+  				CommonsMultipartFile cf= (CommonsMultipartFile)myfile; //这个myfile是MultipartFile的
+		        DiskFileItem fi = (DiskFileItem)cf.getFileItem(); 
+		        File file = fi.getStoreLocation();
+		        String filePath=AppUtil.getuploadRootUrl()+"/storeimage/";//文件上传路径E盘
+ 				String image_name = BaseController.getTimeID()+extName;//带png
+  				//添加水印
+	 			MoreTextMarkService m=new MoreTextMarkService();
+				String url=m.watermark(file, image_name, filePath, filePath);
+				String m_img = AppUtil.getuploadRootUrlIp()+"/storeimage/"+image_name;//IP
+    			map.put("url", m_img);
+	 		}
  		} catch (Exception e) {
 			// TODO: handle exception
-			//System.out.println(e.toString()+"上传照片============");
+ 			e.printStackTrace();
 		}
-		map.put("result", result);
+ 		map.put("result", result);
  		map.put("message", message);
 		return  map;
+	}
+	
+	
+	
+	/**
+	 * 修改商家头像
+ 	 */
+	@RequestMapping(value="/editImgae_url")
+	@ResponseBody
+	public Object EditImgae_url(
+			@RequestParam(value="image_url",required=false) MultipartFile file,
+			@RequestParam  String store_id 
+ 			){
+ 		Map<String,Object> map = new HashMap<String,Object>();
+		String result = "1";
+		String message="新增成功";
+		PageData pd = new PageData();
+		try{
+			pd = this.getPageData();
+			String image_url="";
+			if(file != null){
+ 					String currentPath = AppUtil.getuploadRootUrl(); //获取文件跟补录
+					String filePath = "/userFile";//文件上传路径
+ 					String cityFilename =  FileUpload.fileUp(file, currentPath+filePath,store_id);//字符拼接，上传到服务器上
+				    image_url = AppUtil.getuploadRootUrlIp()+filePath+"/"+cityFilename;
+    	 		}else{
+   	 			result="0";
+   	 			message="上传失败[file]不能为空";
+   	 		}
+			pd.put("store_id", store_id);
+			pd.put("pictrue_url", image_url);
+			appStoreService.edit(pd);
+			map.put("data", image_url);
+		} catch(Exception e){
+			result = "0";
+			logger.error(e.toString(), e);
+		}
+		map.put("result", result);
+		map.put("message", message);
+ 		return AppUtil.returnObject(pd, map);
+	}
+	
+	/**
+	 * 修改商家logo
+ 	 */
+	@RequestMapping(value="/editLogo")
+	@ResponseBody
+	public Object EditLogo(
+			@RequestParam(value="image_url",required=false) MultipartFile file,
+			@RequestParam  String store_id 
+ 			){
+ 		Map<String,Object> map = new HashMap<String,Object>();
+		String result = "1";
+		String message="新增成功";
+		PageData pd = new PageData();
+		try{
+			pd = this.getPageData();
+			String logourl="";
+			if(file != null){
+				 	String storelogo=store_id+"logo"; 
+					String currentPath = AppUtil.getuploadRootUrl(); //获取文件跟补录
+					String filePath = "/userFile";//文件上传路径
+ 					String cityFilename =  FileUpload.fileUp(file, currentPath+filePath,storelogo);//字符拼接，上传到服务器上
+ 					logourl = AppUtil.getuploadRootUrlIp()+filePath+"/"+cityFilename;
+    	 		}else{
+   	 			result="0";
+   	 			message="上传失败[file]不能为空";
+   	 		}
+			pd.put("store_id", store_id);
+			pd.put("logo", logourl);
+			appStoreService.edit(pd);
+			map.put("data", logourl);
+		} catch(Exception e){
+			result = "0";
+			logger.error(e.toString(), e);
+		}
+		map.put("result", result);
+		map.put("message", message);
+ 		return map;
 	}
 	
 	

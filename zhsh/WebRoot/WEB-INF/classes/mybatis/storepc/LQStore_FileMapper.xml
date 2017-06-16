@@ -136,7 +136,8 @@
 	<select id="findByStoreId" parameterType="pd" resultType="pd">
 		select 
 			a.* ,
-			b.pictrue_url
+			b.pictrue_url,
+			b.logo
 		from 
 			tb_store_file a  left join tb_store  b on a.store_id=b.store_id 
 		where 

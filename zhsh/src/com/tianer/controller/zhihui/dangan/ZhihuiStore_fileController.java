@@ -21,7 +21,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tianer.controller.base.BaseController;
@@ -72,8 +74,7 @@ public class ZhihuiStore_fileController extends BaseController {
  	 */
 	@RequestMapping(value="/delete")
 	public void delete(PrintWriter out){
-//		//logBefore(logger, "删除商家档案");
-		PageData pd = new PageData();
+ 		PageData pd = new PageData();
 		try{
 			pd = this.getPageData();
 			store_fileService.delete(pd);
@@ -86,6 +87,30 @@ public class ZhihuiStore_fileController extends BaseController {
 	}
 	
 	/**
+	 * 上传商家营业执照
+	 */
+	@RequestMapping(value="/uploadheadimageByZhiZhao")
+	@ResponseBody
+	public Object uploadheadimageByZhiZhao(
+			@RequestParam(value="uploanImage",required=false) MultipartFile file
+			) throws Exception{
+ 		Map<String,Object> map = new HashMap<String,Object>();
+		String result = "1";
+		String message="上传成功";
+		if(file != null){
+			String currentPath = AppUtil.getuploadRootUrl(); //获取文件跟补录
+			String filePath = "/storezhizhao";//文件上传路径
+			String cityFilename =  FileUpload.fileUp(file, currentPath+filePath, BaseController.getTimeID());//字符拼接，上传到服务器上
+			String m_img = AppUtil.getuploadRootUrlIp()+filePath+"/"+cityFilename;
+ 			map.put("url", m_img);
+		}
+		map.put("result", result);
+		map.put("message", message);
+		return  map;
+	}
+	
+	
+	/**
 	 * 修改
 	 * 魏汉文：20160606
 	 * 
@@ -94,8 +119,7 @@ public class ZhihuiStore_fileController extends BaseController {
 	@RequestMapping(value="/edit")
 	@ResponseBody
 	public Object edit() throws Exception{
-//		//logBefore(logger, "修改商家档案");
-		Map< String , Object> map=new HashMap<>();
+ 		Map< String , Object> map=new HashMap<>();
 		PageData pd = new PageData();
 		String message="修改成功";
 		String result="1";

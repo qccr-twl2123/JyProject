@@ -548,15 +548,14 @@ public class ZhihuiCity_fileController extends BaseController {
 	}
 	
 	/**
-	 * 上传图片
+	 * 上传城市分类的图片
 	 */
 	@RequestMapping(value="/uploadheadimage")
 	@ResponseBody
 	public Object uploadheadimage(
 				@RequestParam(value="uploanImage",required=false) MultipartFile file
 				) throws Exception{
-//		logBefore(logger, "上传图片");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
 		String result = "1";
 		String message="上传成功";
  		if(file != null){
@@ -564,102 +563,17 @@ public class ZhihuiCity_fileController extends BaseController {
 			String filePath = "/cityFile";//文件上传路径
 			String cityFilename =  FileUpload.fileUp(file, currentPath+filePath,BaseController.getTimeID());//字符拼接，上传到服务器上
 			String m_img = AppUtil.getuploadRootUrlIp()+filePath+"/"+cityFilename;
-//			logBefore(logger, DateUtil.getTime().toString()+":上传文件，文件地址是："+m_img);	
-			map.put("url", m_img);
+ 			map.put("url", m_img);
  		}
 		map.put("result", result);
  		map.put("message", message);
 		return  map;
 	}
-	/**
-	 * 上传商品图片
-	 */
-	@RequestMapping(value="/uploadheadimageByGoods")
-	@ResponseBody
-	public Object uploadheadimageByGoods(
-			@RequestParam(value="uploanImage",required=false) MultipartFile file
-			) throws Exception{
-//		logBefore(logger, "上传图片");
-		Map<String,Object> map = new HashMap<String,Object>();
-		String result = "1";
-		String message="上传成功";
-		if(file != null){
-			String currentPath = AppUtil.getuploadRootUrl(); //获取文件跟补录
-			String filePath = "/storegoodsFile";//文件上传路径
-			String cityFilename =  FileUpload.fileUp(file, currentPath+filePath, BaseController.getTimeID());//字符拼接，上传到服务器上
-			String m_img = AppUtil.getuploadRootUrlIp()+filePath+"/"+cityFilename;
-//			logBefore(logger, DateUtil.getTime().toString()+":上传文件，文件地址是："+m_img);	
-			map.put("url", m_img);
-		}
-		map.put("result", result);
-		map.put("message", message);
-		return  map;
-	}
-	
-	/**
-	 * 上传商家营业执照
-	 */
-	@RequestMapping(value="/uploadheadimageByZhiZhao")
-	@ResponseBody
-	public Object uploadheadimageByZhiZhao(
-			@RequestParam(value="uploanImage",required=false) MultipartFile file
-			) throws Exception{
-//		logBefore(logger, "上传图片");
-		Map<String,Object> map = new HashMap<String,Object>();
-		String result = "1";
-		String message="上传成功";
-		if(file != null){
-			String currentPath = AppUtil.getuploadRootUrl(); //获取文件跟补录
-			String filePath = "/storezhizhao";//文件上传路径
-			String cityFilename =  FileUpload.fileUp(file, currentPath+filePath, BaseController.getTimeID());//字符拼接，上传到服务器上
-			String m_img = AppUtil.getuploadRootUrlIp()+filePath+"/"+cityFilename;
-//			logBefore(logger, DateUtil.getTime().toString()+":上传文件，文件地址是："+m_img);	
-			map.put("url", m_img);
-		}
-		map.put("result", result);
-		map.put("message", message);
-		return  map;
-	}
 	
 	
-	/**
-	 * 商家缩略图详情图有关的上传图片
-	 */
-	@RequestMapping(value="/uploadheadimageByStore")
-	@ResponseBody
-	public Object uploadheadimageByStore(
-				@RequestParam(value="uploanImage",required=false) MultipartFile myfile
-				) throws Exception{
-//		logBefore(logger, "上传图片");
-		Map<String,Object> map = new HashMap<String,Object>();
-		String result = "1";
-		String message="上传成功";
-		try {
-			if(myfile != null){
-				String extName = ".png"; // 扩展名格式：
-				if (myfile.getOriginalFilename().lastIndexOf(".") >= 0){
-					extName = myfile.getOriginalFilename().substring(myfile.getOriginalFilename().lastIndexOf("."));
-				}
-  				CommonsMultipartFile cf= (CommonsMultipartFile)myfile; //这个myfile是MultipartFile的
-		        DiskFileItem fi = (DiskFileItem)cf.getFileItem(); 
-		        File file = fi.getStoreLocation();
-		        String filePath=AppUtil.getuploadRootUrl()+"/storeimage/";//文件上传路径E盘
- 				String image_name = BaseController.getTimeID()+extName;//带png
-//  				logBefore(logger, DateUtil.getTime().toString()+":上传文件，文件地址是："+filePath);	
- 				//添加水印
-	 			MoreTextMarkService m=new MoreTextMarkService();
-				String url=m.watermark(file, image_name, filePath, filePath);
-				String m_img = AppUtil.getuploadRootUrlIp()+"/storeimage/"+image_name;//IP
-//				System.out.println(url);
-   				map.put("url", m_img);
-	 		}
- 		} catch (Exception e) {
-			// TODO: handle exception
-		}
- 		map.put("result", result);
- 		map.put("message", message);
-		return  map;
-	}
+	
+	
+	
 	
 	
 	/* ===============================权限================================== */

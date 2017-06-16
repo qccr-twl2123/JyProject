@@ -455,7 +455,7 @@
 				alert("请上传照片gif,png,jpg,jpeg格式");
 			}else{
 				$("#imageForm").ajaxSubmit({  
-				  	url : '<%=basePath%>zhihui_city_file/uploadheadimageByZhiZhao.do?tm='+new Date().getTime(),
+				  	url : '<%=basePath%>zhihuiz_store_file/uploadheadimageByZhiZhao.do?tm='+new Date().getTime(),
 			        type: "POST",//提交类型  
 			      	dataType:"json",
 			      	resetForm:true,

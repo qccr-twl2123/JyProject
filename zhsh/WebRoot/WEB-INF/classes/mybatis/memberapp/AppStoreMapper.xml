@@ -11,6 +11,7 @@
 				<if test="password != null and password != ''">password = #{password},</if>
 				<if test="service_rate != null and service_rate != ''">service_rate = #{service_rate},</if>
 				<if test="store_vip_id != null and store_vip_id != ''">store_vip_id = #{store_vip_id},</if>
+  				<if test="pictrue_url != null and pictrue_url != ''">logo = #{logo},</if>
   				<if test="pictrue_url != null and pictrue_url != ''">pictrue_url = #{pictrue_url},</if>
 				<if test="recharge_times != null and recharge_times != ''">recharge_times = recharge_times+1,</if>
 				<if test="transaction_times =='1'.toString()">transaction_times = transaction_times+1,</if>

@@ -24,7 +24,45 @@
       };
     </script>  
  </head>
+
 <body>
+<style>
+    body,html{
+        position: relative;
+    }
+    .gotopbox{
+        display: none;
+        position: fixed;
+        right: 5%;
+        bottom:4%;
+        width: 50px;
+        height:50px;
+        border:1px solid rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.3);
+    }
+    .gotopbox img{
+        width: 50px;
+        height:50px;
+    }
+</style>
+<!--头部-->
+<div class="gotopbox">
+    <img src="img/gotop.png" alt="">
+</div>
+<script>
+    $(function(){
+        $(".gotopbox").click(function(){
+            $("body").animate({scrollTop: 0}, 700);
+        })
+        $(window).on("scroll", function(){
+             if($("body").scrollTop()>300 ){
+                $(".gotopbox").show()
+            }else{
+            	$(".gotopbox").hide();
+            }
+        });
+    })
+</script>
 <!--头部-->
 <header>
     <div class="top_bar">

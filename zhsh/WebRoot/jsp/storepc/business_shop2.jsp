@@ -870,7 +870,7 @@
 			alert("请上传照片gif,png,jpg,jpeg格式");
 		}else{
 			$("#imageForm").ajaxSubmit({  
-			  	url : '<%=basePath%>zhihui_city_file/uploadheadimageByGoods.do',
+			  	url : '<%=basePath%>storepc_CategoryManageController/uploadheadimageByGoods.do',
 		        type: "POST",//提交类型  
 		      	dataType:"json",
 		   		success:function(result){

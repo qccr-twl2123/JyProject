@@ -125,8 +125,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			alert("请上传照片gif,png,jpg,jpeg格式");
 		}else{
 			var file = obj.files[0];
-			//alert(window.URL.createObjectURL(file));
-	        if (window.FileReader) {
+ 	        if (window.FileReader) {
 	            var reader = new FileReader();
 	            reader.readAsDataURL(file);
 	            //监听文件读取结束后事件
@@ -136,7 +135,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                	alert("宽必须小鱼100");
 	                }else{
 	                	$("#imageForm").ajaxSubmit({  
-	        			  	url : '<%=basePath%>zhihui_city_file/uploadheadimageByStore.do?tm='+new Date().getTime(),
+	        			  	url : '<%=basePath%>storepc_StoreManageController/uploadheadimageByStore.do?tm='+new Date().getTime(),
 	        		        type: "POST",//提交类型  
 	        		      	dataType:"json",
 	        		      	resetForm:true,

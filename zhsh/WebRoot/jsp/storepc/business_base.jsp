@@ -23,13 +23,21 @@
 			<span class="col-red" style="vertical-align: top;">*</span>
 			<span class="inp-s" style="text-align-last:justify;vertical-align: top;">上传头像</span>
 			<span style="vertical-align: top;">：</span>
-			<span style="display:inline-block;border:1px solid #999;width: 100px;height: 100px;">
-				<a style="display:inline-block;width:100px;padding-top:100%;position: relative;" onclick="upload('pictrue_url')">
-					<img  class="pictrue_url" src="${pd.pictrue_url eq ''?'img/sjht_add.png':pd.pictrue_url}"  style="position:absolute;top:0;width:100%;height: 100%;">	
+			<span style="display:inline-block;border:1px solid #999;max-width: 300px;height: 100px;text-align: center;" onclick="upload('pictrue_url')">
+ 					<img  class="pictrue_url" src="${empty pd.pictrue_url ?'img/sjht_add.png':pd.pictrue_url}"  style="height: 100%;">	
 					<input type="text" name="pictrue_url" id="pictrue_url" value="${pd.pictrue_url}" style="display:none;width:1px;height:1px;"/>
-				</a>
-			</span>
-			<span style="color:red;font-size: 12px">注：替换后即马上生效(图片比例：1:1，否则头像显示会变形)</span>
+ 			</span>
+			<span style="color:red;font-size: 12px">注：替换后即马上生效</span>
+		</li>
+		<li style="position: relative;">
+			<span class="col-red" style="vertical-align: top;">*</span>
+			<span class="inp-s" style="text-align-last:justify;vertical-align: top;">上传logo</span>
+			<span style="vertical-align: top;">：</span>
+			<span style="display:inline-block;border:1px solid #999;max-width: 300px;height: 50px;text-align: center;" onclick="upload('logo')">
+ 					<img  class="logo" src="${empty pd.logo ?'img/sjht_add.png':pd.logo}"  style="height: 100%;">	
+					<input type="text" name="logo" id="logo" value="${pd.logo}" style="display:none;width:1px;height:1px;"/>
+ 			</span>
+			<span style="color:red;font-size: 12px">注：替换后即马上生效</span>
 		</li>
 		<li >
 			<span class="col-red">*</span>
@@ -127,8 +135,12 @@
   		if(!validaImage(d)){
 			alert("请上传照片gif,png,jpg,jpeg格式");
 		}else{
+			var url='storepc_StoreManageController/editImgae_url.do?tm='+new Date().getTime();
+			if(classId == "logo" ){
+				url='storepc_StoreManageController/editLogo.do?tm='+new Date().getTime();
+			}
 			$("#imageForm").ajaxSubmit({  
-			  	url : 'storeapp_operator/editImgae_url.do?tm='+new Date().getTime(),
+			  	url :url ,
 		        type: "POST",//提交类型  
 		      	dataType:"json",
 		      	cache:false,
@@ -140,8 +152,8 @@
  				     $("#"+classId).val(url);
     				 $("."+classId).attr("src",url+"?timestamp=" + new Date().getTime() );
 					 classId="";   
-					 //window.location.reload();
-				}
+					 $("#imageForm").reset();  
+ 				}
 			}); 
   		}
  	}	 

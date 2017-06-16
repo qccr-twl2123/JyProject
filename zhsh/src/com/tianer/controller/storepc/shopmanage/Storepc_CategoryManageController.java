@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
@@ -42,7 +43,9 @@ import com.tianer.service.storepc.store_marketing.Storepc_marketingService;
 import com.tianer.service.storepc.store_marketingtype.Storepc_marketingtypeService;
 import com.tianer.service.storepc.store_scoreway.Storepc_scorewayService;
 import com.tianer.service.storepc.stotr.StorepcService;
+import com.tianer.util.AppUtil;
 import com.tianer.util.Const;
+import com.tianer.util.FileUpload;
 import com.tianer.util.ObjectExcelView;
 import com.tianer.util.PageData;
 
@@ -500,6 +503,30 @@ public class Storepc_CategoryManageController extends BaseController {
 		 			logger.error(e.toString(), e);
 				}
  		return modelAndView;
+	}
+	
+	
+	/**
+	 * 上传商品图片
+	 */
+	@RequestMapping(value="/uploadheadimageByGoods")
+	@ResponseBody
+	public Object uploadheadimageByGoods(
+			@RequestParam(value="uploanImage",required=false) MultipartFile file
+			) throws Exception{
+ 		Map<String,Object> map = new HashMap<String,Object>();
+		String result = "1";
+		String message="上传成功";
+		if(file != null){
+			String currentPath = AppUtil.getuploadRootUrl(); //获取文件跟补录
+			String filePath = "/storegoodsFile";//文件上传路径
+			String cityFilename =  FileUpload.fileUp(file, currentPath+filePath, BaseController.getTimeID());//字符拼接，上传到服务器上
+			String m_img = AppUtil.getuploadRootUrlIp()+filePath+"/"+cityFilename;
+ 			map.put("url", m_img);
+		}
+		map.put("result", result);
+		map.put("message", message);
+		return  map;
 	}
 	
 
