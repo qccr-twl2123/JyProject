@@ -36,8 +36,8 @@ public class AppUtil  {
 //		String url = "http://localhost/FileSave/File";//本地的
 //		String url = "http://192.168.5.37:8083/gbx/FileSave/File";
 //		String url = "http://192.168.5.42/FileSave/File";//魏汉文
-		String url = "http://localhost/FileSave/File";//客户公司ip
-//		String url = "https://www.jiuyuvip.com/FileSave/File";//大智慧
+//		String url = "http://localhost/FileSave/File";//客户公司ip
+		String url = "https://www.jiuyuvip.com/FileSave/File";//大智慧
 //		String url = "http://117.135.131.79/FileSave/File";//大智慧测试
  		return url;
 	}	
