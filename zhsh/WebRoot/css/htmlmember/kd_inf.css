@@ -153,8 +153,7 @@
 			width:100%;
 			height:100%;
 			overflow: hidden;
-			display: none;
-		}
+ 		}
 		.back{
 			display:block;
 			width: 3.4rem;
@@ -170,3 +169,26 @@
     		z-index:1;
     		display: none;
 		}
+		.goback {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 44px;
+    height: 44px;
+    text-align: center;
+    line-height: 44px;
+    font-size: 2.7rem;
+}
+
+.goback img{
+    border: 0;
+    line-height: 0;
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    margin: auto;
+    width: initial;
+}

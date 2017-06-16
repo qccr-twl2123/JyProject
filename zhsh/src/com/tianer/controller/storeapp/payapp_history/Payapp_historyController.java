@@ -631,8 +631,7 @@ public class Payapp_historyController extends BaseController{
 	@RequestMapping(value="/allMoneyByOne")
 	@ResponseBody
 	public synchronized Object allMoneyByOne(){
-//		logBefore(logger, "优惠买单，按总金额购买");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
      	List<PageData> noList = new ArrayList<PageData>();//操作员所对应桌号
 		String result = "1";
 		String message="按总金额购买";
@@ -647,17 +646,13 @@ public class Payapp_historyController extends BaseController{
 				if(notmoney == null || notmoney.equals("")){
 					notmoney="0";
 				}
-				double money=Double.parseDouble(paymoney)-Double.parseDouble(notmoney);
-				if(money < 0){
-					money=0;
+				double youhui_money=Double.parseDouble(paymoney)-Double.parseDouble(notmoney);
+				if(youhui_money < 0 || youhui_money < Double.parseDouble(notmoney) ){
+					map.put("result", "0");
+					map.put("message", "不优惠金额不能大总金额的50%");
+					map.put("data", "");
+					return map;
 				}
-//				//判断优惠金额和不优惠金额
-//	  			if(money - Double.parseDouble(notmoney) < 0 ){
-//	  					map.put("result", "0");
-//	  					map.put("message", "不优惠金额不能大于总金额的50%");
-//	  					map.put("data", "");
-//						return map;
-//	  			}
 	  			//操作员登录
 				String store_operator_id = pd.getString("store_operator_id");
 				if(store_operator_id != null && !store_operator_id.trim().equals("")){
@@ -683,7 +678,7 @@ public class Payapp_historyController extends BaseController{
 					}
 				}
 				//优惠买单信息
-				Map<String,Object> yhmdpd=TongYong.youhuimaidan(pd,money,Double.parseDouble(notmoney),"1","store");
+				Map<String,Object> yhmdpd=TongYong.YouHuiMaiDanByTwoForStoreMaiDan(pd, youhui_money, Double.parseDouble(notmoney));
 				yhmdpd.put("noList", noList);
   				map.put("data",yhmdpd);
  				noList=null;
@@ -707,8 +702,7 @@ public class Payapp_historyController extends BaseController{
 	@RequestMapping(value="/allMoneyByTwo")
 	@ResponseBody
 	public synchronized Object allMoneyByTwo(){
-//		logBefore(logger, "优惠买单，按按总类购买");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
       	List<PageData> noList = new ArrayList<PageData>();//操作员所对应桌号
 		String result = "1";
 		String message="按总类购买";
@@ -740,7 +734,7 @@ public class Payapp_historyController extends BaseController{
 				}
 			}
  			//优惠买单信息
-			Map<String,Object> yhmdpd=TongYong.youhuimaidan(pd,0,0,"2","member");
+			Map<String,Object> yhmdpd=TongYong.YouHuiMaiDanByTwoForStoreMaiDan(pd, 0, 0);
 			yhmdpd.put("noList", noList);
    			map.put("data",yhmdpd );
  			noList=null;

@@ -1425,58 +1425,56 @@ public class TongYong extends BaseController{
   	 * 购买的优惠买单买单信息pd,
   	 * youhui_money可优惠的金额(除去不优惠的金额)，
   	 * notyouhui_money 不优惠金额，
-  	 * pay_sort_type 买单类别：1-总金额（提货券/扫一扫优惠买单），2-类别买单
-  	 * appname 在哪一个端member=C端，store=B端
+   	 * pay_sort_type 买单类别：1-总金额（提货券/扫一扫优惠买单），2-类别买单
+   	 * appname    在哪一个端member=C端，store=B端
+  	 * allgoods   购买商品拼接： 1.（商品id@数量@总金额，商品id@数量@总金额） 2.非商品购买的时候传“”空字符串
+  	 * allleibie  类别购买字段拼接：拆分类别 （类别ID@金钱@积分率@折扣率）
   	 * @return
   	 * 
   	 */
-  	public synchronized static Map<String,Object> youhuimaidan(PageData pd,double youhui_money,double notyouhui_money,String pay_sort_type,String appname){
+  	public synchronized static Map<String,Object> youhuimaidan(PageData pd,double youhui_money,double notyouhui_money){
    		Map<String,Object> map = new HashMap<String,Object>();
   		List<PageData> yingxiaoList=new ArrayList<PageData>();//用来存储营销List
   		try {
     		String allgoods=pd.getString("allgoods");
+    		String pay_sort_type=pd.getString("pay_sort_type");
+    		boolean goodsFlag=(allgoods != null  && !allgoods.equals(""));//是否为购物车购买
    			//获取商家的营销规则明细
-			PageData yxpd=markeingAll(pd);
-			map.put("yxpd", yxpd);
-			//
-			double alljifeng=0;
-  			if(pay_sort_type.equals("2")){
- 	  				//判断是否开通类别积分
-	  				PageData ispd=ServiceHelper.getAppStorepc_marketingService().getJfById(pd);
-	  				if(ispd == null || !ispd.getString("change_type").equals("2") ){
- 	  					map.put("message", "暂未开通该通道");
- 	  					return map;
-	  				}
- 	  				yxpd=null;
-	  				List<PageData> leibieList=ServiceHelper.getAppGoodsService().listAllBigSort(pd);
-	  				map.put("sortList", leibieList);
-	  				leibieList=null;
-	  				//拆分类别（类别ID@金钱@积分率@折扣率）
-	  				String alllei=pd.getString("allleibie");
- 	  				if(alllei != null && !alllei.equals("") && alllei.contains("@")){
-	  							String[] everylei=alllei.split(",");
-	  							int everyleilength=everylei.length;
-	  							for(int i=0;i<everyleilength ; i++){
- 	  								  if(everylei[i].split("@")[1] != null && !everylei[i].split("@")[1].equals("") && !everylei[i].split("@")[1].equals("null")){
-	  									  if(everylei[i].split("@")[2] != null && !everylei[i].split("@")[2].equals("null") && !everylei[i].split("@")[2].equals("")){
-	  										  alljifeng+= Double.parseDouble(everylei[i].split("@")[1])*Double.parseDouble(everylei[i].split("@")[2])/100;
-	  										  youhui_money+= Double.parseDouble(everylei[i].split("@")[1]);
-	  									  }
-	  								  }
- 	  							}
-	  				}
- 	  				//积分（获取被选中的积分设置）
-	  				if(alljifeng >= 0){
-	  					PageData jfpd=new PageData();
-	  	 				jfpd.put("content", "分类赠送积分");
-	  	 				jfpd.put("number", "+"+df2.format( alljifeng ));
-	  	 				jfpd.put("type", "6");
-	  	 				jfpd.put("id", ispd.getString("store_scoreway_id"));
-	  					yingxiaoList.add(jfpd);
-	  					jfpd=null;
-	  				}
+ 			map.put("yxpd", markeingAll(pd));
+ 			double alljifeng=0;
+ 			if(pay_sort_type.equals("2")){
+    				//判断是否开通类别积分
+  				if(ServiceHelper.getAppStorepc_marketingService().getJfById(pd) == null || !ServiceHelper.getAppStorepc_marketingService().getJfById(pd).getString("change_type").equals("2") ){
+  					map.put("message", "暂未开通该通道");
+  					return map;
+				}
+  				map.put("sortList", ServiceHelper.getAppGoodsService().listAllBigSort(pd));
+  				//拆分类别（类别ID@金钱@积分率@折扣率）
+				String alllei=pd.getString("allleibie");
+  				if(alllei != null && !alllei.equals("") && alllei.contains("@")){
+							String[] everylei=alllei.split(",");
+							int everyleilength=everylei.length;
+							for(int i=0;i<everyleilength ; i++){
+  								  if(everylei[i].split("@")[1] != null && !everylei[i].split("@")[1].equals("") && !everylei[i].split("@")[1].equals("null")){
+									  if(everylei[i].split("@")[2] != null && !everylei[i].split("@")[2].equals("null") && !everylei[i].split("@")[2].equals("")){
+										  alljifeng+= Double.parseDouble(everylei[i].split("@")[1])*Double.parseDouble(everylei[i].split("@")[2])/100;
+										  youhui_money+= Double.parseDouble(everylei[i].split("@")[1]);
+									  }
+								  }
+  							}
+				}
+  			   //积分（获取被选中的积分设置）
+				if(alljifeng >= 0){
+					PageData jfpd=new PageData();
+	 				jfpd.put("content", "分类赠送积分");
+	 				jfpd.put("number", "+"+df2.format( alljifeng ));
+	 				jfpd.put("type", "6");
+	 				jfpd.put("id", ServiceHelper.getAppStorepc_marketingService().getJfById(pd).getString("store_scoreway_id"));
+					yingxiaoList.add(jfpd);
+					jfpd=null;
+				}
   			}
-  			//1.先获取营销中的折扣设置
+   			//1.先获取营销中的折扣设置
   			PageData typepd=new PageData();
 			typepd.put("marketing_type", "7");
 			typepd.put("store_id", pd.getString("store_id"));
@@ -1484,8 +1482,7 @@ public class TongYong extends BaseController{
 			String zkcontent="";
 			double zkmoney=0;
 			String zkid="";
-			String zktype="";
-			int zklistlength=zklist.size();
+ 			int zklistlength=zklist.size();
 			PageData e=null;
 			for (int zi = 0; zi <zklistlength; zi++) {
  					e=zklist.get(zi);
@@ -1510,8 +1507,7 @@ public class TongYong extends BaseController{
 	 								if(m >= zkmoney ){
 	 									zkcontent=grantrule;
 	 									zkmoney=m;
-	 									zktype=marketing_type;
-	 									zkid=marketing_id;
+ 	 									zkid=marketing_id;
 	 								}
 							}else if(zkpd.getString("discount_type").equals("4")){//满多少折多少
 								String[] str=zkgrantrule.split(",");
@@ -1529,11 +1525,10 @@ public class TongYong extends BaseController{
 	  		 								if(n2*youhui_money >zkmoney && youhui_money >=n1){
 	  		 									zkcontent=str[i];
 			 									zkmoney=n2*youhui_money;
-			 									zktype=marketing_type;
-			 									zkid=marketing_id;
+ 			 									zkid=marketing_id;
 	  		 								}
  	 							}
-							}else if(zkpd.getString("discount_type").equals("2") && appname.equals("member") && allgoods != null ){//按类别折扣
+							}else if(zkpd.getString("discount_type").equals("2") && goodsFlag ){//按类别折扣
    			 								double m=0;
    			 								if(allgoods != null && !allgoods.equals("")){
 	   			 								if(allgoods.contains("@")){
@@ -1567,10 +1562,9 @@ public class TongYong extends BaseController{
 											  if(m >= zkmoney){
 												zkcontent=grantrule;
 			 									zkmoney=m ;
-			 									zktype=marketing_type;
-			 									zkid=marketing_id;
+ 			 									zkid=marketing_id;
 											  }
-							}else if(zkpd.getString("discount_type").equals("3") && pay_sort_type.equals("1") && appname.equals("member") && allgoods != null){//单品设置--购物车
+							}else if(zkpd.getString("discount_type").equals("3") &&  goodsFlag){//单品设置--购物车
   											String[] goods=allgoods.split(",");
   				 	 						double yhmoney=0;
 				 	 						zkcontent=grantrule;
@@ -1635,8 +1629,7 @@ public class TongYong extends BaseController{
  				 	 						}
 				 	 						if(yhmoney >= zkmoney ){
  			 									zkmoney=yhmoney ;
-			 									zktype=marketing_type;
-			 									zkid=marketing_id;
+ 			 									zkid=marketing_id;
 				 	 						}
   							   } 
 					}
@@ -1647,7 +1640,7 @@ public class TongYong extends BaseController{
 				PageData zkpd=new PageData();
 				zkpd.put("content", zkcontent);
 				zkpd.put("id", zkid);
-				zkpd.put("type", zktype);
+				zkpd.put("type", "7");
 				zkpd.put("number", "-"+df2.format(zkmoney));
 				yingxiaoList.add(zkpd);
 			}
@@ -1675,12 +1668,9 @@ public class TongYong extends BaseController{
 			int marketlistlength=marketlist.size();
 			for (int mi = 0; mi <marketlistlength ; mi++) {
 				 			e=marketlist.get(mi);
-   								/*
-								 * *1-满赠，*2-满减，3-时段营销，4-买N减N（针对商品），5-累计次数/购买金额--增,6-积分，7-折扣
-								 */
-								String marketing_type=e.getString("marketing_type");
-//								String change_type=e.getString("change_type");
-		 						String grantrule=e.getString("grantrule");
+   								//1-满赠，*2-满减，3-时段营销，4-买N减N（针对商品），5-累计次数/购买金额--增,6-积分，7-折扣
+ 								String marketing_type=e.getString("marketing_type");
+ 		 						String grantrule=e.getString("grantrule");
 	 							String marketing_id=e.getString("marketing_id");
   	 							if(marketing_type.equals("1")){
  				 							if(youhui_money >= Double.parseDouble(grantrule.substring(grantrule.indexOf("满")+1, grantrule.indexOf("元")))){
@@ -1689,9 +1679,7 @@ public class TongYong extends BaseController{
 					 							zengtype=marketing_type;
 			 								} 
  	  							}else if(marketing_type.equals("2")){
- 	  								
- 	  								
-	  									if(grantrule.contains("折")){
+  	  									if(grantrule.contains("折")){
   		  		 								double n2=0;
 				 								if(grantrule.substring(grantrule.indexOf("打")+1, grantrule.lastIndexOf("折")).length() == 1){
 				 									n2=1-Double.parseDouble(grantrule.substring(grantrule.indexOf("打")+1, grantrule.lastIndexOf("折")))/10;
@@ -1715,10 +1703,9 @@ public class TongYong extends BaseController{
 		  		 								}
 	  									}
 	   							}else if(marketing_type.equals("6") && pay_sort_type.equals("1")){
-	   								isopenjf=true;
-	   								addjfid=marketing_id;
+	   								//肯定有
 	   							}else if(marketing_type.equals("7")){
-	   								//System.out.println("第一步先进行折扣");
+	   								// ("第一步先进行折扣");
 	   							}else if(marketing_type.equals("3")){
 	   							  PageData sdpd=new PageData();
 	   							  sdpd.put("marketing_id", marketing_id);
@@ -1767,10 +1754,7 @@ public class TongYong extends BaseController{
 				   							  }
 	   							  }
 	   							sdpd=null;
-		   							/*
-	   							 * 买N减N（针对商品）
-	   							 */
-	   						}else if(marketing_type.equals("4")  && allgoods != null && !allgoods.equals("") ){
+	   						}else if(marketing_type.equals("4")  && goodsFlag ){//买N减N（针对商品）
 	   							     PageData mnpd=new PageData();
 	   								 mnpd.put("marketing_id", marketing_id);
 	   								 mnpd.put("store_id", pd.getString("store_id"));
@@ -1871,16 +1855,16 @@ public class TongYong extends BaseController{
 				yingxiaoList.add(e2);
 			}
 			e2=null;
-			 int n=yingxiaoList.size();
+			 int yingxiaosize=yingxiaoList.size();
  			 double useredbeforMoney=reducemoney+zkmoney;//使用红包前的总共优惠了的金额
 			 //判断优惠后的金额是否已经是0
-			 String red_id="";
+			 String redpackage_id="";
 			 String redmoney="0";
 			 if(useredbeforMoney < youhui_money+notyouhui_money){
-				    //红包
-					PageData redpd=getMaxStoreRedMoney(pd,youhui_money,n,useredbeforMoney);
+				   //使用红包
+					PageData redpd=getMaxStoreRedMoneyByMember(pd,youhui_money,yingxiaosize,useredbeforMoney);
 		 			if(redpd != null){
-						red_id=redpd.getString("id");
+		 				redpackage_id=redpd.getString("id");
 		 				redmoney=redpd.getString("number");
 						redpd.put("number", "-"+redmoney);
 						redpd.put("type", "0");
@@ -1892,24 +1876,16 @@ public class TongYong extends BaseController{
 			double surepaymoney=youhui_money-reducemoney-Double.parseDouble(redmoney)-zkmoney+notyouhui_money;
 			//总共优惠金额
 			double surehuiyoumoney=reducemoney+Double.parseDouble(redmoney)+zkmoney;
- 			if(isopenjf && pay_sort_type.equals("1")){
-					double redhuiyoumoney=surepaymoney-notyouhui_money;
-					if(redhuiyoumoney < 0){
-						redhuiyoumoney=0;
-					}
-					e=new PageData();
-					e.put("store_scoreway_id", addjfid);
-					e.put("store_id", pd.getString("store_id"));
-					//获取所有启用的积分
-					PageData jfpd=ServiceHelper.getAppStorepc_marketingService().getJfById(e);
+ 			if(pay_sort_type.equals("1")){
+ 					//获取所有启用的积分
+					PageData jfpd=ServiceHelper.getAppStorepc_marketingService().getJfById(pd);
 					if(jfpd != null){ 
-							//整店
-//		 					String jfcontent=jfpd.getString("content");
-//		 					String jfgrantrule=jfpd.getString("grantrule");
-//		  	 				String jftype=jfpd.getString("change_type");
-		 	 				if(jfpd.getString("change_type").equals("1")){
-//		 	 						String zdrate=jfpd.getString("oneback_rate");
-			 	 					if(Double.parseDouble(jfpd.getString("oneback_rate"))/100*redhuiyoumoney >= addjf){
+							double redhuiyoumoney=surepaymoney-notyouhui_money;
+							if(redhuiyoumoney < 0){
+								redhuiyoumoney=0;
+							}
+ 		 	 				if(jfpd.getString("change_type").equals("1")){//整店
+ 			 	 					if(Double.parseDouble(jfpd.getString("oneback_rate"))/100*redhuiyoumoney >= addjf){
 			 	 						addjf=Double.parseDouble(jfpd.getString("oneback_rate"))/100*redhuiyoumoney;
 			 	 						desc=jfpd.getString("grantrule");
 			 	 					}
@@ -1917,22 +1893,15 @@ public class TongYong extends BaseController{
 		 	 							String[] str=jfpd.getString("grantrule").split(",");
 		 	 							int strlength=str.length;
 		 	 							for(int i=0; i<strlength ;i++){
-//		 	 									String content=str[i];
-//		 	 									String number1=str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元"));
-//		  		  								String number2=str[i].substring(str[i].indexOf("送")+1, str[i].lastIndexOf("%"));
-//			  		  							double n1=Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元")));
-			  		  							if(Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元"))) <= redhuiyoumoney){
-//					  		  						double n2=Double.parseDouble(str[i].substring(str[i].indexOf("送")+1, str[i].lastIndexOf("%")))/100.00;
-//			  		 								double n3=Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元")))*Double.parseDouble(str[i].substring(str[i].indexOf("送")+1, str[i].lastIndexOf("%")))/100.00;
-			  		 								if(Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元")))*Double.parseDouble(str[i].substring(str[i].indexOf("送")+1, str[i].lastIndexOf("%")))/100.00 >= addjf ){
+ 			  		  							if(Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元"))) <= redhuiyoumoney){
+ 			  		 								if(Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元")))*Double.parseDouble(str[i].substring(str[i].indexOf("送")+1, str[i].lastIndexOf("%")))/100.00 >= addjf ){
 			  		 									addjf=Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元")))*Double.parseDouble(str[i].substring(str[i].indexOf("送")+1, str[i].lastIndexOf("%")))/100.00;
 		 					 	 						desc=jfpd.getString("grantrule");
 				  		 							}
 			  		  							}
 		 	 							}
 		 	 				}else if(jfpd.getString("change_type").equals("4")){//每单返积分
-//			 	 						String mdjf=jfpd.getString("fourbackintegral_integral");
-				 	 					if(Double.parseDouble(jfpd.getString("fourbackintegral_integral")) >= addjf){
+ 				 	 					if(Double.parseDouble(jfpd.getString("fourbackintegral_integral")) >= addjf){
 				 	 						addjf=Double.parseDouble(jfpd.getString("fourbackintegral_integral"));
 				 	 						desc=jfpd.getString("grantrule");
 				 	 					}
@@ -1942,16 +1911,13 @@ public class TongYong extends BaseController{
 			 	 						double m=0;
 			 	 						int goodslength=goods.length;
 										for(int i=0; i< goodslength ;i++){
-//											String[] str=goods[i].split("@");
-											if(goods[i].split("@").length != 3){
+ 											if(goods[i].split("@").length != 3){
 	 												continue;
 	 										}
 											goodspd.put("goods_id", goods[i].split("@")[0]);
 											goodspd=ServiceHelper.getAppGoodsService().findById(goodspd);
-//											String integral_number=goodspd.getString("integral_number") ;
-											if(goodspd.getString("integral_rate") != null && !goodspd.getString("integral_rate").equals("")){
-//												double integral_rate=Double.parseDouble(goodspd.getString("integral_rate"));
-	 											m+=Double.parseDouble( goods[i].split("@")[2] )*Double.parseDouble(goodspd.getString("integral_rate"))/100.00;
+ 											if(goodspd.getString("integral_rate") != null && !goodspd.getString("integral_rate").equals("")){
+ 	 											m+=Double.parseDouble( goods[i].split("@")[2] )*Double.parseDouble(goodspd.getString("integral_rate"))/100.00;
 											}
  										}
 										goodspd=null;
@@ -1959,21 +1925,19 @@ public class TongYong extends BaseController{
 											addjf=m;
 											desc=jfpd.getString("grantrule");
 										}
-		 	 			  }else if(jfpd.getString("change_type").equals("2") && allgoods != null && !allgoods.equals("")){
+		 	 			  }else if(jfpd.getString("change_type").equals("2") && goodsFlag){
 				 	 				String[] goods=allgoods.split(",");
 		 	 						PageData goodspd=new PageData();
 		 	 						double m=0;
 		 	 						int goodslength=goods.length;
 		 	 						for(int i=0; i< goodslength ;i++){
-//										String[] str=goods[i].split("@");
-										if(goods[i].split("@").length != 3){
+ 										if(goods[i].split("@").length != 3){
 												continue;
 										}
 										goodspd.put("goods_id", goods[i].split("@")[0]);
 										goodspd=ServiceHelper.getAppGoodsService().findById(goodspd);
  										if(goodspd.getString("integral_rate") != null && !goodspd.getString("integral_rate").equals("")){
-//											double integral_rate=Double.parseDouble(goodspd.getString("integral_rate"));
- 											m+=Double.parseDouble( goods[i].split("@")[2] )*Double.parseDouble(goodspd.getString("integral_rate"))/100.00;
+  											m+=Double.parseDouble( goods[i].split("@")[2] )*Double.parseDouble(goodspd.getString("integral_rate"))/100.00;
 										}
 									}
 		 	 						goodspd=null;
@@ -1983,68 +1947,57 @@ public class TongYong extends BaseController{
 									}
 		 	 			  }
 				}
-			}
-			//积分
-			 if(!desc.equals("")){
+				//积分
+				if(!desc.equals("")){
 					e3.put("content", desc);
 					e3.put("number", "+"+df2.format(addjf));
 					e3.put("id", addjfid);
 					e3.put("type", "6");
 					yingxiaoList.add(e3);
+				}
 			}
-			//获取个人财富
-			PageData mpd=ServiceHelper.getAppMemberService().findWealthById(pd);
-			map.put("mpd", mpd);
-			map.put("memberInfor", mpd);
-	 		mpd=null;
-			PageData countpd=new PageData();
+ 			//处理营销
+ 			if(youhui_money+notyouhui_money <= 0){
+	  			map.put("yingxiaoList", new ArrayList<PageData>());
+	  		}else{
+	  			map.put("yingxiaoList", yingxiaoList);
+	  		}
+ 			//参数集中
+  			PageData countpd=new PageData();
 			if(surepaymoney <= 0){
-					countpd.put("paymoney", "0");//优惠后的支付金额
-					countpd.put("reducemoney", df2.format(youhui_money+notyouhui_money));
+				countpd.put("paymoney", "0");//优惠后的支付金额
+				countpd.put("reducemoney", df2.format(youhui_money+notyouhui_money));
 			}else{
 				countpd.put("paymoney", df2.format(surepaymoney));
 				countpd.put("reducemoney", df2.format(surehuiyoumoney));//优惠金额=优惠的金额+红包优惠的金额+折扣的金额
 			}
-			//增红包的集合
-			String allzengId="";
-			if(!zengid.equals("")){
-				allzengId=zengid+","+zengid2;
-			}else{
-				allzengId=zengid2;
-			}
-			countpd.put("zengid", allzengId);
+   			countpd.put("zengid", zengid+","+zengid2);//增红包的集合
  			countpd.put("zengjf", df2.format(addjf+alljifeng));//赠送的积分
- 			countpd.put("red_id", red_id);//使用红包的ID
+ 			countpd.put("red_id", redpackage_id);//使用红包的ID
  			countpd.put("allmoney", df2.format(youhui_money+notyouhui_money));//总金额
  			map.put("countpd", countpd);
  			countpd=null;
-			
-			//判断是否开通类别积分购买的权限
-			PageData ispd=ServiceHelper.getAppStorepc_marketingService().getJfById(pd);
-			if(ispd != null && ispd.getString("change_type").equals("3") ){
-				map.put("issortjf", "3");
-			}else if(ispd != null && ispd.getString("change_type").equals("2") ){
-				map.put("issortjf", "1");
-			} else{
+ 			//获取个人财富
+ 			map.put("mpd", ServiceHelper.getAppMemberService().findWealthById(pd));
+			map.put("memberInfor", ServiceHelper.getAppMemberService().findWealthById(pd));
+ 			//判断是否开通类别积分购买的权限
+			if(ServiceHelper.getAppStorepc_marketingService().getJfById(pd) != null){
+				if(ServiceHelper.getAppStorepc_marketingService().getJfById(pd).getString("change_type").equals("3") ){
+					map.put("issortjf", "3");
+				}else if(ServiceHelper.getAppStorepc_marketingService().getJfById(pd).getString("change_type").equals("2") ){
+					map.put("issortjf", "1");
+				} else{
+					map.put("issortjf", "0");
+				}
+			}else{
 				map.put("issortjf", "0");
 			}
-			ispd=null;
-			//商家名称
-				if(ServiceHelper.getAppStoreService().findById(pd) != null){
-					map.put("store_name", ServiceHelper.getAppStoreService().findById(pd).getString("store_name"));
-				}else{
-					map.put("store_name", "");
-				}
- 		} catch (Exception e) {
-			// TODO: handle exception
- 			(new TongYong()).dayinerro(e);
+ 			//商家名称
+			map.put("store_name", ServiceHelper.getAppStoreService().findById(pd).getString("store_name"));
+  		} catch (Exception e) {
+  			(new TongYong()).dayinerro(e);
 		}
-  		if(youhui_money+notyouhui_money <= 0){
-  			map.put("yingxiaoList", new ArrayList<PageData>());
-  		}else{
-  			map.put("yingxiaoList", yingxiaoList);
-  		}
- 		return map;
+  		return map;
   	}
   	
   	
@@ -2055,12 +2008,14 @@ public class TongYong extends BaseController{
   	
   	/**
 	 * 
-	* 方法名称:：getMaxStoreRedMoney 
-	* 方法描述：获取当前商家最优惠的红包
-	* 创建人：魏汉文
-	* 创建时间：2016年7月5日 下午1:00:58
+	* 方法名称:：getMaxStoreRedMoneyByMember 
+	* 方法描述：会员自动获取当前商家最优惠的红包
+	* 
+	*  youhui_money  参与优惠的总金额
+	*  reducemoney   营销优惠金额
+	*  yingxiaosize  参与营销的次数
 	 */
-	public static  PageData  getMaxStoreRedMoney(PageData pd,double money,int x,double reducemoney){
+	public static  PageData  getMaxStoreRedMoneyByMember(PageData pd,double youhui_money,int yingxiaosize,double reducemoney){
    		PageData _pd=new PageData();
  		try{ 
   			String id="";
@@ -2073,155 +2028,136 @@ public class TongYong extends BaseController{
 			for (int redi = 0; redi < memberredlength;redi++) {
 				e=memredList.get(redi);
 				String redpackage_content=e.getString("redpackage_content");
-// 				String redpackage_type=e.getString("redpackage_type");//1-无要求，21-满XX元 （可一起使用），3-首单，22-满XX元 （不可一起使用（减钱） ）-优惠前打折
-																		//01、21、31表示优惠后折扣（打折） 
-//				String store_redpackage_type=e.getString("store_redpackage_type");//1-现金红包，2-折扣红包，3-优惠现金红包，4-优惠折扣红包,
-																					//51-立减红包（可一起使用）,52-立减红包（不可一起使用）
-//				String srp_usercondition_id=e.getString("srp_usercondition_id");//0-是立减红包。1-无要求。2-满XX元使用 。3-首单 
-				boolean flag=true;
-				if(e.getString("redpackage_type").equals("22") && x==0){//不可一起使用的红包
-					flag=false;
-//					String redpackage_content=e.getString("redpackage_content");
-//					int start=e.getString("redpackage_content").indexOf("减");
-//					int end=e.getString("redpackage_content").lastIndexOf("元") ;
-					double buymoney=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("满")+1, redpackage_content.indexOf("元")));
-					double n=0;
-					if(redpackage_content.contains("折")){
-						String number=redpackage_content.substring(redpackage_content.indexOf("打")+1, redpackage_content.lastIndexOf("折"));
-						int numberlength=number.length();
-						if(number.contains(".")){
-							numberlength=number.substring(0, number.indexOf(".")).length();
-						}
-  						if(numberlength == 1){
-					    	 n=(1-Double.parseDouble(number)/10)*money;
-					    }else if(numberlength == 2){
-					    	 n=(1-Double.parseDouble(number)/100)*money;
-					    }else if(numberlength == 3){
-					    	 n=(1-Double.parseDouble(number)/1000)*money;
-					    }
- 					}else{
-						n=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元")));
- 					}
- 					if(n > maxreduce  && money >=buymoney){
-						maxreduce=n;
-						id=e.getString("redpackage_id");
-						content=redpackage_content;
-					}
-				}  
- 				if(flag && !redpackage_content.contains("null")){
- 						if(redpackage_content.contains("首单")){//首单立减的红包
-							//判断是否在改商店消费过订单
-							int rednumber=ServiceHelper.getAppOrderService().countStoreMember(pd);
-							if(rednumber == 0){
- 									if(redpackage_content.contains("折")){
+// 				redpackage_type//1-无要求，21/2-满XX元 （可一起使用），3-首单，22-满XX元 （不可一起使用（减钱） ）-优惠前打折,01、21、31表示优惠后折扣（打折） 
+ //				store_redpackage_type//1-现金红包，2-折扣红包，3-优惠现金红包，4-优惠折扣红包,51-立减红包（可一起使用）,52-立减红包（不可一起使用）
+ //				srp_usercondition_id//0-是立减红包。1-无要求。2-满XX元使用 。3-首单 
+   				if(redpackage_content !=null && !redpackage_content.equals("") && !redpackage_content.contains("null")){
+   						//判断是否在改商店消费过订单	
+   						if(redpackage_content.contains("首单") && ServiceHelper.getAppOrderService().countStoreMember(pd) == 0){//首单立减的红包
+ 								if(redpackage_content.contains("折")){
+									String number=redpackage_content.substring(redpackage_content.indexOf("打")+1, redpackage_content.indexOf("折"));
+									int numberlength=number.length();
+									if(number.contains(".")){
+										numberlength=number.substring(0, number.indexOf(".")).length();
+									}
+									double zzk=0;
+			  						if(numberlength == 1){
+			  							zzk=(1-Double.parseDouble(number)/10) ;
+								    }else if(numberlength == 2){
+								    	zzk=(1-Double.parseDouble(number)/100) ;
+								    }else if(numberlength == 3){
+								    	zzk=(1-Double.parseDouble(number)/1000) ;
+								    }
+									double n= zzk*youhui_money;
+								if(e.getString("redpackage_type").contains("1")){
+									n=zzk*(youhui_money-reducemoney);
+								}
+								if(n>maxreduce  ){
+									maxreduce=n;
+									id=e.getString("redpackage_id");
+									content=redpackage_content;
+								}
+							}else{
+								if(Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元"))) > maxreduce  ){
+									maxreduce=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元")));
+									id=e.getString("redpackage_id");
+									content=redpackage_content;
+								}
+							}
+ 						}else if(redpackage_content.contains("满") && redpackage_content.contains("件")){//满多少件的红包
+							  //滤过
+						}else if(redpackage_content.contains("满") && redpackage_content.contains("元")){//满多少元的红包
+							double buymoney=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("满")+1, redpackage_content.indexOf("元")));    
+ 						    if(youhui_money >= buymoney){
+ 						    	if(e.getString("redpackage_type").equals("22")){//不可一起使用的红包
+ 						    		if(yingxiaosize == 0){
+ 	 									double n=0;
+ 										if(redpackage_content.contains("折")){
+ 											String number=redpackage_content.substring(redpackage_content.indexOf("打")+1, redpackage_content.lastIndexOf("折"));
+ 											int numberlength=number.length();
+ 											if(number.contains(".")){
+ 												numberlength=number.substring(0, number.indexOf(".")).length();
+ 											}
+ 					  						if(numberlength == 1){
+ 										    	 n=(1-Double.parseDouble(number)/10)*youhui_money;
+ 										    }else if(numberlength == 2){
+ 										    	 n=(1-Double.parseDouble(number)/100)*youhui_money;
+ 										    }else if(numberlength == 3){
+ 										    	 n=(1-Double.parseDouble(number)/1000)*youhui_money;
+ 										    }
+ 					 					}else{
+ 											n=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元")));
+ 					 					}
+ 					 					if(n > maxreduce ){
+ 											maxreduce=n;
+ 											id=e.getString("redpackage_id");
+ 											content=redpackage_content;
+ 										}
+ 						    		}
+ 								}else{
+ 	 								if(redpackage_content.contains("折")){
  										String number=redpackage_content.substring(redpackage_content.indexOf("打")+1, redpackage_content.indexOf("折"));
  										int numberlength=number.length();
  										if(number.contains(".")){
  											numberlength=number.substring(0, number.indexOf(".")).length();
  										}
  										double zzk=0;
- 				  						if(numberlength == 1){
- 				  							zzk=(1-Double.parseDouble(number)/10) ;
- 									    }else if(numberlength == 2){
- 									    	zzk=(1-Double.parseDouble(number)/100) ;
- 									    }else if(numberlength == 3){
- 									    	zzk=(1-Double.parseDouble(number)/1000) ;
- 									    }
- 										double n= zzk*money;
-										if(e.getString("redpackage_type").contains("1")){
-											n=zzk*(money-reducemoney);
-										}
-										if(n>maxreduce  ){
-											maxreduce=n;
-											id=e.getString("redpackage_id");
-											content=redpackage_content;
-										}
-									}else{
- //											int start=redpackage_content.indexOf("减");
-//											int end=redpackage_content.lastIndexOf("元") ;
-//											double n=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元")));
-											if(Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元"))) > maxreduce  ){
-												maxreduce=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元")));
-												id=e.getString("redpackage_id");
-												content=redpackage_content;
-											}
-									}
- 							}
- 							
-						}else if(redpackage_content.contains("满") && redpackage_content.contains("件")){//满多少件的红包
-							  //System.out.println("滤过");
-						}else if(redpackage_content.contains("满") && redpackage_content.contains("元")){//满多少元的红包
-//							    String mmomey=redpackage_content.substring(redpackage_content.indexOf("满")+1, redpackage_content.indexOf("元"));
-							    if(redpackage_content.substring(redpackage_content.indexOf("满")+1, redpackage_content.indexOf("元")) != null && !redpackage_content.substring(redpackage_content.indexOf("满")+1, redpackage_content.indexOf("元")).equals("")){
-//							    	double buymoney=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("满")+1, redpackage_content.indexOf("元")));
-									if(redpackage_content.contains("折")){
-										    String number=redpackage_content.substring(redpackage_content.indexOf("打")+1, redpackage_content.indexOf("折"));
-	 										int numberlength=number.length();
-	 										if(number.contains(".")){
-	 											numberlength=number.substring(0, number.indexOf(".")).length();
-	 										}
-	 										double zzk=0;
-	 				  						if(numberlength == 1){
-	 				  							zzk=(1-Double.parseDouble(number)/10) ;
-	 									    }else if(numberlength == 2){
-	 									    	zzk=(1-Double.parseDouble(number)/100) ;
-	 									    }else if(numberlength == 3){
-	 									    	zzk=(1-Double.parseDouble(number)/1000) ;
-	 									    }
-	 										double n= zzk*money;
-											if(e.getString("redpackage_type").contains("1")){
-												n=zzk*(money-reducemoney);
-											}
-	 										if(n > maxreduce && money >= Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("满")+1, redpackage_content.indexOf("元")))){
-												maxreduce=n;
-												id=e.getString("redpackage_id");
-												content=redpackage_content;
-											}
-									}else {
-//											int start=redpackage_content.indexOf("减");
-//											int end=redpackage_content.lastIndexOf("元") ;
-//											double n=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元")));
-											if( Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元")))  > maxreduce  && money >= Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("满")+1, redpackage_content.indexOf("元")))){
-												maxreduce=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元")));
-												id=e.getString("redpackage_id");
-												content=redpackage_content;
-											}
-					 			   }
-							    }
- 						}else if(redpackage_content.contains("无条件") || redpackage_content.contains("无要求")){//无条件/无要求的红包
-									if(redpackage_content.contains("折")){
-											String number=redpackage_content.substring(redpackage_content.indexOf("打")+1, redpackage_content.indexOf("折"));
-	 										int numberlength=number.length();
-	 										if(number.contains(".")){
-	 											numberlength=number.substring(0, number.indexOf(".")).length();
-	 										}
-	 										double zzk=0;
-	 				  						if(numberlength == 1){
-	 				  							zzk=(1-Double.parseDouble(number)/10) ;
-	 									    }else if(numberlength == 2){
-	 									    	zzk=(1-Double.parseDouble(number)/100) ;
-	 									    }else if(numberlength == 3){
-	 									    	zzk=(1-Double.parseDouble(number)/1000) ;
-	 									    }
- 											double n=zzk*money;
-											if(e.getString("redpackage_type").contains("1")){
-												n=zzk*(money-reducemoney);
-											}
-											if(n>maxreduce){
-												maxreduce=n;
-												id=e.getString("redpackage_id");
-												content=redpackage_content;
-											}
-									}else{
-//											int start=redpackage_content.indexOf("减");
-//											int end=redpackage_content.lastIndexOf("元") ;
-//											double n=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元")));
-											if( Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元"))) >maxreduce ){
-												maxreduce= Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元"))) ;
-												id=e.getString("redpackage_id");
-												content=redpackage_content;
-											}
-					 			}
+ 						  				if(numberlength == 1){
+ 						  					zzk=(1-Double.parseDouble(number)/10) ;
+ 										}else if(numberlength == 2){
+ 											zzk=(1-Double.parseDouble(number)/100) ;
+ 										}else if(numberlength == 3){
+ 											zzk=(1-Double.parseDouble(number)/1000) ;
+ 										}
+ 										double n= zzk*youhui_money;
+ 										if(e.getString("redpackage_type").contains("1")){
+ 											n=zzk*(youhui_money-reducemoney);
+ 										}
+ 										if(n > maxreduce && youhui_money >= Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("满")+1, redpackage_content.indexOf("元")))){
+ 											maxreduce=n;
+ 											id=e.getString("redpackage_id");
+ 											content=redpackage_content;
+ 										}
+ 									}else {
+ 										if( Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元")))  > maxreduce  && youhui_money >= Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("满")+1, redpackage_content.indexOf("元")))){
+ 											maxreduce=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元")));
+ 											id=e.getString("redpackage_id");
+ 											content=redpackage_content;
+ 										}
+ 						 			}
+ 								} 
+ 						    }
+  						}else if(redpackage_content.contains("无条件") || redpackage_content.contains("无要求")){//无条件/无要求的红包
+							if(redpackage_content.contains("折")){
+ 								String number=redpackage_content.substring(redpackage_content.indexOf("打")+1, redpackage_content.indexOf("折"));
+								int numberlength=number.length();
+								if(number.contains(".")){
+									numberlength=number.substring(0, number.indexOf(".")).length();
+								}
+								double zzk=0;
+			  					if(numberlength == 1){
+			  						zzk=(1-Double.parseDouble(number)/10) ;
+								}else if(numberlength == 2){
+								    zzk=(1-Double.parseDouble(number)/100) ;
+								}else if(numberlength == 3){
+								    zzk=(1-Double.parseDouble(number)/1000) ;
+								}
+								double n=zzk*youhui_money;
+								if(e.getString("redpackage_type").contains("1")){
+									n=zzk*(youhui_money-reducemoney);
+								}
+								if(n>maxreduce){
+									maxreduce=n;
+									id=e.getString("redpackage_id");
+									content=redpackage_content;
+								}
+ 							}else{
+   								if( Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元"))) >maxreduce ){
+									maxreduce= Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元"))) ;
+									id=e.getString("redpackage_id");
+									content=redpackage_content;
+								}
+					 		}
 						}
 				}
 				e=null;
@@ -2235,11 +2171,172 @@ public class TongYong extends BaseController{
 				_pd.put("number", df2.format(maxreduce));
 			}
  		} catch(Exception e){
- 			//System.out.println(e.toString());
- 			(new TongYong()).dayinerro(e);
+  			(new TongYong()).dayinerro(e);
  		}
  		return _pd;
 	}
+	
+	/**
+	 * 
+	* 方法名称:：getAllStoreRedMoneyByMember 
+	* 方法描述：会员获取当前所有的未过期未使用的红包列表
+	* 
+	* youhui_money  参与优惠的总金额
+	* reducemoney   营销优惠金额
+	* yingxiaosize  参与营销的次数
+	* 
+	* 返回数据
+	* canuse_red 1-可以使用，99-不可以使用
+  	 */
+	public static  List<PageData>  getAllStoreRedMoneyByMember(PageData pd,double youhui_money,int yingxiaosize,double reducemoney){
+		List<PageData> okredList=new ArrayList<PageData>();
+  		try{ 
+    		//获取当前用户在当前商家可以用的所有红包
+			List<PageData>	memredList =ServiceHelper.getAppMember_redpacketsService().listAllById(pd);
+			PageData e=null;
+			int memberredlength=memredList.size();
+			for (int redi = 0; redi < memberredlength;redi++) {
+				e=memredList.get(redi);
+				e.put("canuse_red", "99");
+				String redpackage_content=e.getString("redpackage_content");
+  				if(!redpackage_content.contains("null")){
+ 						if(redpackage_content.contains("首单")){//首单立减的红包
+							//判断是否在改商店消费过订单
+							int rednumber=ServiceHelper.getAppOrderService().countStoreMember(pd);
+							if(rednumber == 0){ 
+								e.put("canuse_red", "1");
+							} 
+ 						}else if(redpackage_content.contains("满") && redpackage_content.contains("件")){//满多少件的红包
+							  //滤过
+						}else if(redpackage_content.contains("满") && redpackage_content.contains("元")){//满多少元的红包
+							double buymoney=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("满")+1, redpackage_content.indexOf("元")));
+  							if(youhui_money >= buymoney){
+   								if(e.getString("redpackage_type").equals("22")){//不可一起使用的红包
+   									if( yingxiaosize == 0 ){
+   										e.put("canuse_red", "1");
+   									}
+   								}else{
+  									e.put("canuse_red", "1");
+  								}
+ 							} 
+  						}else if(redpackage_content.contains("无条件") || redpackage_content.contains("无要求")){//无条件/无要求的红包
+  							e.put("canuse_red", "1");
+						}
+				}
+  				okredList.add(e);
+				e=null;
+  			}
+  		} catch(Exception e){
+  			(new TongYong()).dayinerro(e);
+ 		}
+ 		return okredList;
+	}
+	
+	/**
+ 	* 方法名称:：getRedPackageInforByID 
+	* 方法描述：会员当前使用红包的信息
+	* 
+ 	*  redpackage_id  红包ID
+ 	*  youhui_money   可以优惠的总金额
+ 	*  reducemoney    优惠金额
+	 */
+	public static  PageData  getRedPackageInforByID(String redpackage_id ,double youhui_money,double reducemoney){
+   		PageData _pd=new PageData();
+ 		try{ 
+ 			_pd.put("type", "0");
+ 			_pd.put("id", redpackage_id);
+ 			_pd.put("redpackage_id", redpackage_id);
+  			PageData e= ServiceHelper.getAppMember_redpacketsService().findById(_pd);
+ 			if( e == null){
+ 				return null;
+ 			}
+ 			_pd.remove("redpackage_id");
+ 			String redpackage_content=e.getString("redpackage_content");
+ 			_pd.put("content", redpackage_content);
+  			if(redpackage_content !=null && !redpackage_content.equals("") && !redpackage_content.contains("null")){
+					if(redpackage_content.contains("首单")){//首单立减的红包
+						if(redpackage_content.contains("折")){
+								String number=redpackage_content.substring(redpackage_content.indexOf("打")+1, redpackage_content.indexOf("折"));
+								int numberlength=number.length();
+								if(number.contains(".")){
+									numberlength=number.substring(0, number.indexOf(".")).length();
+								}
+								double zzk=0;
+		  						if(numberlength == 1){
+		  							zzk=(1-Double.parseDouble(number)/10) ;
+							    }else if(numberlength == 2){
+							    	zzk=(1-Double.parseDouble(number)/100) ;
+							    }else if(numberlength == 3){
+							    	zzk=(1-Double.parseDouble(number)/1000) ;
+							    }
+								double jianmoney= zzk*youhui_money;
+								if(e.getString("redpackage_type").contains("1")){//包含1表示优惠后折扣
+									jianmoney=zzk*(youhui_money-reducemoney);
+								}
+								_pd.put("number", df2.format(jianmoney));
+ 						}else{
+ 							double jianmoney=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元")));
+ 							_pd.put("number", df2.format(jianmoney));
+						}
+							
+					}else if(redpackage_content.contains("满") && redpackage_content.contains("件")){//满多少件的红包
+						  //滤过
+					}else if(redpackage_content.contains("满") && redpackage_content.contains("元")){//满多少元的红包
+						double jianmoney=0;
+						if(redpackage_content.contains("折")){
+							String number=redpackage_content.substring(redpackage_content.indexOf("打")+1, redpackage_content.lastIndexOf("折"));
+							int numberlength=number.length();
+							if(number.contains(".")){
+								numberlength=number.substring(0, number.indexOf(".")).length();
+							}
+	  						if(numberlength == 1){
+	  							jianmoney=(1-Double.parseDouble(number)/10)*youhui_money;
+						    }else if(numberlength == 2){
+						    	jianmoney=(1-Double.parseDouble(number)/100)*youhui_money;
+						    }else if(numberlength == 3){
+						    	jianmoney=(1-Double.parseDouble(number)/1000)*youhui_money;
+						    }
+	 					}else{
+	 						jianmoney=Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元")));
+	 					}
+						_pd.put("number", df2.format(jianmoney));
+					}else if(redpackage_content.contains("无条件") || redpackage_content.contains("无要求")){//无条件/无要求的红包
+						double jianmoney=0;		
+						if(redpackage_content.contains("折")){
+								String number=redpackage_content.substring(redpackage_content.indexOf("打")+1, redpackage_content.indexOf("折"));
+ 								int numberlength=number.length();
+ 								if(number.contains(".")){
+ 									numberlength=number.substring(0, number.indexOf(".")).length();
+ 								}
+ 								double zzk=0;
+ 				  				if(numberlength == 1){
+ 				  					zzk=(1-Double.parseDouble(number)/10) ;
+ 				  				}else if(numberlength == 2){
+ 									zzk=(1-Double.parseDouble(number)/100) ;
+ 								}else if(numberlength == 3){
+ 									zzk=(1-Double.parseDouble(number)/1000) ;
+ 								}
+ 				  				jianmoney=zzk*youhui_money;
+								if(e.getString("redpackage_type").contains("1")){
+									jianmoney=zzk*(youhui_money-reducemoney);
+								}
+ 						}else{
+ 								jianmoney= Double.parseDouble(redpackage_content.substring(redpackage_content.indexOf("减")+1, redpackage_content.lastIndexOf("元"))) ;
+ 				 		}
+						_pd.put("number", df2.format(jianmoney));
+					}else{
+						return null;
+					}
+			}else{
+				return null;
+			}
+			e=null;
+  		} catch(Exception e){
+  			(new TongYong()).dayinerro(e);
+ 		}
+ 		return _pd;
+	}
+	
 	
 	
 	
@@ -4915,6 +5012,973 @@ public class TongYong extends BaseController{
 		}
   		return pd;
   	}
+  	
+  	
+  	
+	
+  	/**
+  	 * YouHuiMaiDanByTwoForMember  6月16更新的代码专属C端以及公众号
+  	 * 
+  	 * 购买的优惠买单买单信息  pd,
+  	 * youhui_money可优惠的金额(除去不优惠的金额)，
+  	 * notyouhui_money 不优惠金额，
+     * allgoods   购买商品拼接： 1.（商品id@数量@总金额，商品id@数量@总金额） 2.非商品购买的时候传“”空字符串
+   	 * 
+  	 */
+  	public synchronized static Map<String,Object> YouHuiMaiDanByTwoForMember(PageData pd,double youhui_money,double notyouhui_money){
+   		Map<String,Object> map = new HashMap<String,Object>();
+  		List<PageData> yingxiaoList=new ArrayList<PageData>();//用来存储营销List
+  		try {
+    		String allgoods=pd.getString("allgoods");
+    		boolean goodsFlag=(allgoods != null  && !allgoods.equals(""));//是否为购物车购买
+  			double alljifeng=0;
+   			//1.先获取营销中的折扣设置
+  			PageData typepd=new PageData();
+			typepd.put("marketing_type", "7");
+			typepd.put("store_id", pd.getString("store_id"));
+			List<PageData> zklist=ServiceHelper.getAppStorepc_marketingService().listAllById(typepd);
+			String zkcontent="";
+			double zkmoney=0;
+			String zkid="";
+ 			int zklistlength=zklist.size();
+			PageData e=null;
+			for (int zi = 0; zi <zklistlength; zi++) {
+ 					e=zklist.get(zi);
+ 					String grantrule=e.getString("grantrule");
+					String marketing_id=e.getString("marketing_id");
+					e.put("store_discountway_id", marketing_id);
+					//获取所有启用的折扣
+ 					PageData zkpd=ServiceHelper.getAppStorepc_marketingService().getZKById(e);
+					if(zkpd != null){
+							String zkgrantrule=zkpd.getString("grantrule");
+							if(zkpd.getString("discount_type").equals("1")){//整店折扣
+ 									double n=0;
+									if(zkpd.getString("onealldiscount_rate").length() == 1){
+										n=1-Double.parseDouble(zkpd.getString("onealldiscount_rate"))/10.0;
+									}else if(zkpd.getString("onealldiscount_rate").length() == 2){
+										n=1-Double.parseDouble(zkpd.getString("onealldiscount_rate"))/100;
+									}else if(zkpd.getString("onealldiscount_rate").length() == 3){
+										n=1-Double.parseDouble(zkpd.getString("onealldiscount_rate"))/1000;
+									}
+	 								double m=n*youhui_money;
+	 								if(m >= zkmoney ){
+	 									zkcontent=grantrule;
+	 									zkmoney=m;
+ 	 									zkid=marketing_id;
+	 								}
+							}else if(zkpd.getString("discount_type").equals("4")){//满多少折多少
+								String[] str=zkgrantrule.split(",");
+								int strlength=str.length;
+ 	 							for(int i=0; i< strlength ;i++){ 
+ 	  		 								double n1=Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元")));
+	  		 								double n2=0;
+											if(str[i].substring(str[i].indexOf("打")+1, str[i].lastIndexOf("折")).length() == 1){
+												n2=1-Double.parseDouble(str[i].substring(str[i].indexOf("打")+1, str[i].lastIndexOf("折")))/10.0;
+											}else if(str[i].substring(str[i].indexOf("打")+1, str[i].lastIndexOf("折")).length() == 2){
+												n2=1-Double.parseDouble(str[i].substring(str[i].indexOf("打")+1, str[i].lastIndexOf("折")))/100;
+											}else if(str[i].substring(str[i].indexOf("打")+1, str[i].lastIndexOf("折")).length() == 3){
+												n2=1-Double.parseDouble(str[i].substring(str[i].indexOf("打")+1, str[i].lastIndexOf("折")))/1000;
+											}
+	  		 								if(n2*youhui_money >zkmoney && youhui_money >=n1){
+	  		 									zkcontent=str[i];
+			 									zkmoney=n2*youhui_money;
+ 			 									zkid=marketing_id;
+	  		 								}
+ 	 							}
+							}else if(zkpd.getString("discount_type").equals("2") && goodsFlag  ){//按类别折扣
+   			 								double m=0;
+   			 								if(allgoods != null && !allgoods.equals("")){
+	   			 								if(allgoods.contains("@")){
+		   			 								String[] goods=allgoods.split(",");
+				   			 							//循环所有商品
+	   			 										for(int i=0 ; i<goods.length ; i++){
+	   			 												PageData e6=new PageData();
+	   			 											    String[] str1=goods[i].split("@");
+		   			 											if(str1.length != 3){
+		 			 												continue;
+		 			 											}
+ 	   			 												e6.put("goods_id", str1[0]);
+	   			 												e6=ServiceHelper.getAppGoodsService().goodsSortById(e6);
+	   			 												if(e6 != null ){
+ 				   			 											if(e6.getString("zk_rate").length() == 1){
+				   			 												double zkrate=1-Double.parseDouble(e6.getString("zk_rate"))/10.0;
+				   			 												m+=zkrate*Double.parseDouble(str1[2]);
+			   			 												}else if(e6.getString("zk_rate").length() == 2){
+				   			 												double zkrate=1-Double.parseDouble(e6.getString("zk_rate"))/100;
+				   			 												m+=zkrate*Double.parseDouble(str1[2]);
+			   			 												}else if(e6.getString("zk_rate").length() ==3){
+				   			 												double zkrate=1-Double.parseDouble(e6.getString("zk_rate"))/1000;
+				   			 												m+=zkrate*Double.parseDouble(str1[2]);
+			   			 												}
+	   			 												}
+	   			 												e6=null;
+		   			 										}
+		   			 							}
+   			 								}
+											  //判断总金钱折扣是否最大
+											  if(m >= zkmoney){
+												zkcontent=grantrule;
+			 									zkmoney=m ;
+ 			 									zkid=marketing_id;
+											  }
+							}else if(zkpd.getString("discount_type").equals("3") && goodsFlag){//单品设置--购物车
+  											String[] goods=allgoods.split(",");
+  				 	 						double yhmoney=0;
+				 	 						zkcontent=grantrule;
+				 	 						String danpingcontent="";
+ 				 	 						for(int i=0; i<goods.length ;i++){
+				 	 									PageData goodspd=new PageData();
+ 			 											String[] str=goods[i].split("@");
+ 			 											if(str.length != 3){
+ 			 												continue;
+ 			 											}
+			 											goodspd.put("goods_id", str[0]);
+			 											double buymoney=Double.parseDouble(str[2]);
+			 											double buynumber=Double.parseDouble(str[1]);
+			 											goodspd=ServiceHelper.getAppGoodsService().findById(goodspd);
+			 											if(goodspd != null){
+			 															//对时间进行判断
+			 												 			long l1=new Date().getTime();
+					 					   							  	long l2=DateUtil.fomatDate1(goodspd.get("starttime").toString()).getTime();
+					 					   							  	long l3=DateUtil.fomatDate1(goodspd.get("endtime").toString()).getTime();
+					 					   							  	boolean flag= l2<l1 && l3>l1 ;
+					 					   							  	String goods_name=goodspd.getString("goods_name");
+  						 												String promotion_type=goodspd.getString("promotion_type");
+							 											String promotion_content=goodspd.getString("promotion_content");
+ 								 										if(!promotion_type.equals("0") && flag){//0-无促销，1-满减，2-单品折扣，3-买N件减1,4-送物品
+	 							 											    if(promotion_type.equals("1")){
+   													  		 								if(Double.parseDouble(promotion_content.substring(promotion_content.indexOf("减")+1, promotion_content.lastIndexOf("元"))) >=zkmoney && buymoney >= Double.parseDouble(promotion_content.substring(promotion_content.indexOf("满")+1, promotion_content.indexOf("元")))){
+													  		 									yhmoney+=Double.parseDouble(promotion_content.substring(promotion_content.indexOf("减")+1, promotion_content.lastIndexOf("元")));
+													  		 									danpingcontent+=goods_name+promotion_content+",";
+													  		 								}
+								 												}else if(promotion_type.equals("2")){
+ 										 													double n1=0;
+										 													if(promotion_content.substring(0, promotion_content.indexOf("折")).length() == 1){
+										 														n1=1-Double.parseDouble(promotion_content.substring(0, promotion_content.indexOf("折")))/10.0;
+										 													}else if(promotion_content.substring(0, promotion_content.indexOf("折")).length() == 2){
+										 														n1=1-Double.parseDouble(promotion_content.substring(0, promotion_content.indexOf("折")))/100;
+										 													}else if(promotion_content.substring(0, promotion_content.indexOf("折")).length() == 3){
+										 														n1=1-Double.parseDouble(promotion_content.substring(0, promotion_content.indexOf("折")))/1000;
+										 													}
+											 												double n2=buymoney*n1;
+										 													if(n2 >=zkmoney){
+										 														yhmoney+=n2;
+										 														danpingcontent+=goods_name+promotion_content+",";
+													  		 								}
+									 										   }else if(promotion_type.equals("3")){
+ 									 													if(buynumber >= Double.parseDouble(promotion_content.substring(promotion_content.indexOf("买")+1, promotion_content.indexOf("件")))){
+									 														 double n2=buymoney/buynumber;
+		 								 													 if(n2 >zkmoney){
+		 								 														 	yhmoney+=n2;
+		 								 														 	danpingcontent+=goods_name+promotion_content+",";
+														  		 							 }
+									 													}
+								 												}else{
+								 													danpingcontent+=goods_name+promotion_content+",";
+								 												}
+							 											}
+			 											}
+			 											goodspd=null;
+	 										}
+ 				 	 						//是否进行了单品折扣
+ 				 	 						if(!danpingcontent.equals("")){
+ 				 	 							zkcontent=danpingcontent.substring(0,danpingcontent.length()-1);
+ 				 	 						}
+				 	 						if(yhmoney >= zkmoney ){
+ 			 									zkmoney=yhmoney ;
+ 			 									zkid=marketing_id;
+				 	 						}
+  							   } 
+					}
+					e=null;
+			}
+			//折扣设置的折扣
+			if(!zkcontent.equals("") && zkmoney>0 ){
+				PageData zkpd=new PageData();
+				zkpd.put("content", zkcontent);
+				zkpd.put("id", zkid);
+				zkpd.put("type", "7");
+				zkpd.put("number", "-"+df2.format(zkmoney));
+				yingxiaoList.add(zkpd);
+			}
+ 			//2.获取其他的营销规则
+			List<PageData> marketlist=ServiceHelper.getAppStorepc_marketingService().listAllById(pd);
+			PageData e1=new PageData();
+			PageData e2=new PageData();
+  			//优惠内容
+			String zengcontent="";
+			String zengid="";
+			String zengtype="";
+			String zengcontent2="";
+			String zengid2="";
+			String zengtype2="";
+			String jiancontent="";
+			String jiantype="";
+			String jianid="";
+			double reducemoney=0;
+			int marketlistlength=marketlist.size();
+			for (int mi = 0; mi <marketlistlength ; mi++) {
+ 	 				e=marketlist.get(mi);
+					/*
+					 * *1-满赠，*2-满减，3-时段营销，4-买N减N（针对商品），5-累计次数/购买金额--增,6-积分，7-折扣
+					 */
+					String marketing_type=e.getString("marketing_type");
+					String grantrule=e.getString("grantrule");
+					String marketing_id=e.getString("marketing_id");
+					if(marketing_type.equals("1")){
+		 				if(youhui_money >= Double.parseDouble(grantrule.substring(grantrule.indexOf("满")+1, grantrule.indexOf("元")))){
+		 						zengcontent=grantrule;
+		 						zengid=marketing_id;
+		 						zengtype=marketing_type;
+ 						} 
+					}else if(marketing_type.equals("2")){
+						if(grantrule.contains("折")){
+		 					double n2=0;
+		 					if(grantrule.substring(grantrule.indexOf("打")+1, grantrule.lastIndexOf("折")).length() == 1){
+	 							n2=1-Double.parseDouble(grantrule.substring(grantrule.indexOf("打")+1, grantrule.lastIndexOf("折")))/10;
+	 						}else if(grantrule.substring(grantrule.indexOf("打")+1, grantrule.lastIndexOf("折")).length() == 2){
+	 							n2=1-Double.parseDouble(grantrule.substring(grantrule.indexOf("打")+1, grantrule.lastIndexOf("折")))/100;
+	 						}else if(grantrule.substring(grantrule.indexOf("打")+1, grantrule.lastIndexOf("折")).length() == 3){
+	 							n2=1-Double.parseDouble(grantrule.substring(grantrule.indexOf("打")+1, grantrule.lastIndexOf("折")))/1000;
+	 						}
+		 					if(n2*youhui_money >reducemoney && youhui_money >= Double.parseDouble(grantrule.substring(grantrule.indexOf("满")+1, grantrule.indexOf("元")))){
+		 						jiancontent=grantrule;
+		 						reducemoney=n2*youhui_money;
+		 						jiantype=marketing_type;
+		 						jianid=marketing_id;
+		 					}
+						}else{
+							if(Double.parseDouble(grantrule.substring(grantrule.indexOf("减")+1, grantrule.lastIndexOf("元"))) >reducemoney && youhui_money >= Double.parseDouble(grantrule.substring(grantrule.indexOf("满")+1, grantrule.indexOf("元")))){
+		 						jiancontent=grantrule;
+		 						reducemoney=Double.parseDouble(grantrule.substring(grantrule.indexOf("减")+1, grantrule.lastIndexOf("元")));
+		 						jiantype=marketing_type;
+		 						jianid=marketing_id;
+		 					}
+						}
+					}else if(marketing_type.equals("6") ){
+						//必须开启
+					}else if(marketing_type.equals("7")){
+						//("第一步先进行折扣");
+					}else if(marketing_type.equals("3")){
+						 PageData sdpd=new PageData();
+						 sdpd.put("marketing_id", marketing_id);
+						 sdpd.put("store_id", pd.getString("store_id"));
+						 sdpd=ServiceHelper.getStorepc_marketingtypeService().findById(sdpd);
+						 if(sdpd != null){
+ 								long l1=new Date().getTime();
+		   						long l2=DateUtil.fomatDate1(DateUtil.getDay()+" "+sdpd.get("starttime").toString()).getTime();
+		   						long l3=DateUtil.fomatDate1(DateUtil.getDay()+" "+sdpd.get("endtime").toString()).getTime();
+		   						if(  Double.parseDouble(sdpd.getString("threeachieve_money")) <= youhui_money &&  l1 > l2 && l1 < l3 ){
+		   							if(sdpd.getString("marketsmall_type").equals("1")){//折
+		   								if(sdpd.getString("threediscount_rate").length() == 1){
+		   									double mm=youhui_money*(1-Double.parseDouble(sdpd.getString("threediscount_rate"))/10.0);
+								  	        if(  mm > reducemoney){
+ 	   								  	        jiancontent=grantrule;
+	  		 									reducemoney=mm;
+	  		 									jiantype=marketing_type;
+	  		 									jianid=marketing_id;
+ 								  	        }
+		   								}else  if(sdpd.getString("threediscount_rate").length() == 2){
+    								  		 double mm=youhui_money*(1-Double.parseDouble(sdpd.getString("threediscount_rate"))/100);
+   								  	         if(  mm > reducemoney){
+ 		   								  	        jiancontent=grantrule;
+		  		 									reducemoney=mm;
+		  		 									jiantype=marketing_type;
+		  		 									jianid=marketing_id;
+    								  	         }
+		   								}else  if(sdpd.getString("threediscount_rate").length() == 3){
+    								  		 double mm=youhui_money*(1-Double.parseDouble(sdpd.getString("threediscount_rate"))/1000);
+   								  	         if(  mm > reducemoney){
+				   								  	        jiancontent=grantrule;
+				  		 									reducemoney=mm;
+				  		 									jiantype=marketing_type;
+				  		 									jianid=marketing_id;
+   								  	         }
+							  		 	 
+		   								} 
+			   					}else{
+ 							  		  double mm= Double.parseDouble(sdpd.getString("threereduce_money"));
+	   								  if( mm> reducemoney){
+  								  	        jiancontent=grantrule;
+		 									reducemoney= Double.parseDouble(sdpd.getString("threereduce_money"));
+		 									jiantype=marketing_type;
+		 									jianid=marketing_id;
+ 	   								  }
+  			   					}
+		   					}
+ 						 }
+						sdpd=null;
+					}else if(marketing_type.equals("4")  && goodsFlag  ){//买N减N（针对商品）
+						     PageData mnpd=new PageData();
+							 mnpd.put("marketing_id", marketing_id);
+							 mnpd.put("store_id", pd.getString("store_id"));
+							 mnpd=ServiceHelper.getStorepc_marketingtypeService().findById(mnpd);
+							 if(mnpd != null){
+	   								  long l1=new Date().getTime();
+			   						  long l2=DateUtil.fomatDate1(DateUtil.getDay()+" "+mnpd.get("starttime").toString()).getTime();
+		   							  long l3=DateUtil.fomatDate1(DateUtil.getDay()+" "+mnpd.get("endtime").toString()).getTime();
+		   							  if(  l1 > l2 && l1 < l3 ){
+		   								  	 String[] goods=allgoods.split(",");
+		   								  	 double m=0;
+		   								  	 double buynumber=0;
+		   								  	 double minmoney=0;
+			   								 for(int i=0; i<goods.length ;i++){
+			   									 String[] str=goods[i].split("@");//所有商品：商品id@数量@总金额 
+			   									if(str.length != 3){
+		 												continue;
+		 											}
+			   									if(mnpd.getString("goods_id").contains(str[0])){
+			   										 buynumber+=Double.parseDouble(str[1]);
+			   										 if(Double.parseDouble(str[2] ) / Double.parseDouble(str[1]) < minmoney){
+			   											   minmoney=Double.parseDouble(str[2] ) / Double.parseDouble(str[1]);
+			   										 }
+			   									 }
+			   									 if( Double.parseDouble(mnpd.getString("fourachieve_number")) <= buynumber){
+			   										 m=minmoney;
+			   									 }
+				   								 }
+			   								 if(m > reducemoney){
+				   									jiancontent=grantrule;
+		  		 									reducemoney= m;
+		  		 									jiantype=marketing_type;
+		  		 									jianid=marketing_id;
+			   								 }
+			   							  }
+							 }
+							mnpd=null;
+					}else if(marketing_type.equals("5")){
+   						PageData ljpd=new PageData();
+   						ljpd.put("marketing_id", marketing_id);
+   						ljpd.put("store_id", pd.getString("store_id"));
+   						ljpd=ServiceHelper.getStorepc_marketingtypeService().findById(ljpd);
+		   				if(ljpd != null){
+		   					  long l1=new Date().getTime();
+		   					  long l2=DateUtil.fomatDate1(DateUtil.getDay()+" "+ljpd.get("starttime").toString()).getTime();
+ 							  long l3=DateUtil.fomatDate1(DateUtil.getDay()+" "+ljpd.get("endtime").toString()).getTime();
+ 							  if(  l1 > l2 && l1 < l3 ){
+	   								PageData orderpd=new PageData();
+			   						orderpd.put("starttime", DateUtil.getDay()+" "+ljpd.get("starttime").toString());
+			   						orderpd.put("endtime", DateUtil.getDay()+" "+ljpd.get("endtime").toString());
+			   						orderpd.put("store_id", pd.getString("store_id"));
+			   						orderpd.put("member_id", pd.getString("member_id"));
+		   							orderpd=ServiceHelper.getAppOrderService().listhistoryNumberByStore(orderpd);
+		   							String number=orderpd.getString("number");
+		   							String sumsale_money="0";
+			   						if(orderpd.get("sumsale_money") != null){
+		   								sumsale_money=orderpd.get("sumsale_money").toString();
+		   							};
+		   							if(Integer.parseInt(number)%Integer.parseInt(ljpd.getString("fiveachieve_number")) == 0 && Double.parseDouble(sumsale_money)%Double.parseDouble(ljpd.getString("fiveachieve_money")) >= 0 && Double.parseDouble(sumsale_money)%Double.parseDouble(ljpd.getString("fiveachieve_money")) < 1){
+		   									//判断哪个红包适合
+		   								zengcontent2=grantrule;
+	 									zengid2=marketing_id;
+	 									zengtype2=marketing_type;
+		   							}
+		   							orderpd=null;
+	   						}
+ 		   				}
+ 					}
+					e=null;
+ 			}
+			marketlist=null;
+			//满赠
+			if(!zengcontent.equals("")){
+				e1.put("content", zengcontent);e1.put("number", "");e1.put("id", zengid);e1.put("type", zengtype);
+				yingxiaoList.add(e1);
+			}
+			e1=null;
+			//累计次数
+			PageData ldpd=new PageData();
+			if(!zengcontent2.equals("")){
+				ldpd.put("content", zengcontent2);ldpd.put("number", "");ldpd.put("id", zengid2);ldpd.put("type", zengtype2);
+				yingxiaoList.add(ldpd);
+			}
+			ldpd=null;
+			//满减
+			if(!jiancontent.equals("") && reducemoney>0 ){
+				e2.put("content", jiancontent);e2.put("id", jianid);e2.put("type", jiantype);e2.put("number", "-"+df2.format(reducemoney));
+				yingxiaoList.add(e2);
+			}
+			 e2=null;
+			 int yingxiaosize=yingxiaoList.size();
+ 			 double useredbeforMoney=reducemoney+zkmoney;//使用红包前的总共优惠了的金额
+			 //判断优惠后的金额是否已经是0
+			 String redpackage_id=(pd.getString("redpackage_id") == null?"":pd.getString("redpackage_id"));
+			 String redmoney="0";
+			 List<PageData> canUseRedList=null;
+			 PageData canUsePd=null;
+			 String discount_content="";
+			 if(useredbeforMoney < youhui_money+notyouhui_money){
+				 	/**
+				 	 * 1先判断有red_id表示使用某个红包，2:如果没有则获取可使用的红包列表
+				 	 */
+				    if(redpackage_id.equals("")){
+				    	canUseRedList=getAllStoreRedMoneyByMember(pd, notyouhui_money, yingxiaosize, reducemoney);
+  				    }else{
+				    	canUsePd=getRedPackageInforByID(redpackage_id, notyouhui_money, reducemoney);
+				    	if(canUsePd == null){
+				    		canUsePd=new PageData();
+				    	}else{
+				    		discount_content=canUsePd.getString("content")+"@"+canUsePd.getString("id")+"@"+canUsePd.getString("number")+"@"+canUsePd.getString("type")+",";
+				    	}
+				    }
+ 			 }
+			 map.put("canUseRedList", canUseRedList);
+			 map.put("canUsePd", canUsePd);
+ 			//使用红包后的优惠后的实际应该支付的金额为
+			double surepaymoney=youhui_money-reducemoney-Double.parseDouble(redmoney)-zkmoney+notyouhui_money;
+			//总共优惠金额
+			double surehuiyoumoney=reducemoney+Double.parseDouble(redmoney)+zkmoney;
+			//获得积分
+ 			double addjf=0;
+ 			//获取所有启用的积分
+			PageData jfpd=ServiceHelper.getAppStorepc_marketingService().getJfById(pd);
+ 			PageData e3=new PageData();
+			if(jfpd != null){
+				double redhuiyoumoney=surepaymoney-notyouhui_money;
+				if(redhuiyoumoney < 0){
+					redhuiyoumoney=0;
+				}
+	 	 		if(jfpd.getString("change_type").equals("1")){//整店
+	 	 			if(Double.parseDouble(jfpd.getString("oneback_rate"))/100*redhuiyoumoney >= addjf){
+ 	 					addjf=Double.parseDouble(jfpd.getString("oneback_rate"))/100*redhuiyoumoney;
+  	 				}
+	 	 		}else if(jfpd.getString("change_type").equals("5")){//满多少送多少积分
+	 					String[] str=jfpd.getString("grantrule").split(",");
+	 					int strlength=str.length;
+	 					for(int i=0; i<strlength ;i++){
+	  		  				if(Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元"))) <= redhuiyoumoney){
+  		 					if(Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元")))*Double.parseDouble(str[i].substring(str[i].indexOf("送")+1, str[i].lastIndexOf("%")))/100.00 >= addjf ){
+  		 						addjf=Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元")))*Double.parseDouble(str[i].substring(str[i].indexOf("送")+1, str[i].lastIndexOf("%")))/100.00;
+ 	  		 				}
+  		  				}
+	 					 }
+	 			}else if(jfpd.getString("change_type").equals("4")){//每单返积分
+		 	 		if(Double.parseDouble(jfpd.getString("fourbackintegral_integral")) >= addjf){
+	 	 				addjf=Double.parseDouble(jfpd.getString("fourbackintegral_integral"));
+ 	 	 			}
+	 			}else if(jfpd.getString("change_type").equals("3")  && goodsFlag){//单品送积分
+ 	 				String[] goods=allgoods.split(",");
+ 	 				PageData goodspd=new PageData();
+ 	 				double m=0;
+ 	 				int goodslength=goods.length;
+					for(int i=0; i< goodslength ;i++){
+						if(goods[i].split("@").length != 3){
+							continue;
+						}
+						goodspd.put("goods_id", goods[i].split("@")[0]);
+						goodspd=ServiceHelper.getAppGoodsService().findById(goodspd);
+						if(goodspd.getString("integral_rate") != null && !goodspd.getString("integral_rate").equals("")){
+								m+=Double.parseDouble( goods[i].split("@")[2] )*Double.parseDouble(goodspd.getString("integral_rate"))/100.00;
+						}
+					}
+					goodspd=null;
+					if(m >= addjf){
+						addjf=m;
+ 					}
+	 			}else if(jfpd.getString("change_type").equals("2") && goodsFlag){//类别送积分
+	 	 			String[] goods=allgoods.split(",");
+	 				PageData goodspd=new PageData();
+	 				double m=0;
+	 				int goodslength=goods.length;
+	 				for(int i=0; i< goodslength ;i++){
+	 					if(goods[i].split("@").length != 3){
+							continue;
+						}
+						goodspd.put("goods_id", goods[i].split("@")[0]);
+						goodspd=ServiceHelper.getAppGoodsService().findById(goodspd);
+							if(goodspd.getString("integral_rate") != null && !goodspd.getString("integral_rate").equals("")){
+								m+=Double.parseDouble( goods[i].split("@")[2] )*Double.parseDouble(goodspd.getString("integral_rate"))/100.00;
+						}
+					}
+	 				goodspd=null;
+	 				if(m >= addjf){
+	 					addjf=m;
+ 					}
+	 			}else{
+	 				  //无
+	 			}
+	 	 		//积分
+	 	 		e3.put("content", jfpd.getString("grantrule")); e3.put("number", "+"+df2.format(addjf)); e3.put("id", jfpd.getString("store_scoreway_id")); e3.put("type", "6");
+	 	 		yingxiaoList.add(e3);
+ 			}
+   			//处理营销
+			if(youhui_money+notyouhui_money <= 0){
+ 	  			map.put("yingxiaoList", new ArrayList<PageData>());
+ 	  		}else{
+ 	  			map.put("yingxiaoList", yingxiaoList);
+ 	  		}
+			for (PageData dispd : yingxiaoList) {
+ 				discount_content+=dispd.getString("content")+"@"+dispd.getString("id")+"@"+dispd.getString("number")+"@"+dispd.getString("type")+",";
+			}
+    		PageData countpd=new PageData();//总统计消费金额以及使用红包情况
+   			countpd.put("zengid", zengid2+","+zengid);//增红包的集合
+ 			countpd.put("zengjf", df2.format(addjf+alljifeng));//赠送的积分
+ 			countpd.put("red_id", redpackage_id);//使用红包的ID
+  			countpd.put("allmoney", df2.format(youhui_money+notyouhui_money));//总金额
+ 			if(surepaymoney <= 0){
+				countpd.put("paymoney", "0");//优惠后的支付金额
+				countpd.put("reducemoney", df2.format(youhui_money+notyouhui_money));
+			}else{
+				countpd.put("paymoney", df2.format(surepaymoney));
+				countpd.put("reducemoney", df2.format(surehuiyoumoney));//优惠金额=优惠的金额+红包优惠的金额+折扣的金额
+			}
+ 			countpd.put("discount_content", discount_content);//优惠内容
+ 			map.put("countpd", countpd);
+ 			countpd=null;
+ 			//获取个人财富
+ 			map.put("memberInfor", ServiceHelper.getAppMemberService().findWealthById(pd));
+			//判断是否开通类别积分购买的权限
+ 			if(ServiceHelper.getAppStorepc_marketingService().getJfById(pd) != null){
+ 				if( ServiceHelper.getAppStorepc_marketingService().getJfById(pd).getString("change_type").equals("3") ){
+ 					map.put("issortjf", "3");
+ 				}else if( ServiceHelper.getAppStorepc_marketingService().getJfById(pd).getString("change_type").equals("2") ){
+ 					map.put("issortjf", "1");
+ 				} else{
+ 					map.put("issortjf", "0");
+ 				}
+ 			}
+ 			//商家名称
+ 			map.put("store_name", ServiceHelper.getAppStoreService().findById(pd).getString("store_name"));
+ 			//获取商家的营销规则明细
+ 			map.put("yxpd", markeingAll(pd));
+  		} catch (Exception e) {
+			// TODO: handle exception
+ 			(new TongYong()).dayinerro(e);
+ 			return null;
+		}
+  		return map;
+  	}
+  	
+  	
+
+  	/**
+  	 * YouHuiMaiDanByTwoForStoreMaiDan
+  	 * 购买的优惠买单买单信息pd,
+  	 * youhui_money可优惠的金额(除去不优惠的金额)，
+  	 * notyouhui_money 不优惠金额，
+   	 * pay_sort_type 买单类别：1-总金额（提货券/扫一扫优惠买单），2-类别买单
+     * allleibie  类别购买字段拼接：拆分类别 （类别ID@金钱@积分率@折扣率）
+  	 * @return
+  	 * 
+  	 */
+  	public synchronized static Map<String,Object> YouHuiMaiDanByTwoForStoreMaiDan(PageData pd,double youhui_money,double notyouhui_money){
+   		Map<String,Object> map = new HashMap<String,Object>();
+  		List<PageData> yingxiaoList=new ArrayList<PageData>();//用来存储营销List
+  		try {
+ 			String alllei=pd.getString("allleibie");
+			String pay_sort_type=pd.getString("pay_sort_type");
+  			double alljifeng=0;
+  			if(pay_sort_type.equals("2")){//充值总支付金额
+ 	  			if(ServiceHelper.getAppStorepc_marketingService().getJfById(pd) == null || !ServiceHelper.getAppStorepc_marketingService().getJfById(pd).getString("change_type").equals("2") ){
+	  					map.put("message", "暂未开通该通道");
+	  					return map;
+  				}
+  				PageData ispd=ServiceHelper.getAppStorepc_marketingService().getJfById(pd);
+	  				map.put("sortList", ServiceHelper.getAppGoodsService().listAllBigSort(pd));//类别集合
+	  				if(alllei != null && !alllei.equals("") && alllei.contains("@")){
+  							String[] everylei=alllei.split(",");
+  							int everyleilength=everylei.length;
+  							for(int i=0;i<everyleilength ; i++){
+	  								  if(everylei[i].split("@")[1] != null && !everylei[i].split("@")[1].equals("") && !everylei[i].split("@")[1].equals("null")){
+  									  if(everylei[i].split("@")[2] != null && !everylei[i].split("@")[2].equals("null") && !everylei[i].split("@")[2].equals("")){
+  										  alljifeng+= Double.parseDouble(everylei[i].split("@")[1])*Double.parseDouble(everylei[i].split("@")[2])/100;
+  										  youhui_money+= Double.parseDouble(everylei[i].split("@")[1]);
+  									  }
+  								  }
+	  							}
+  				}
+	  			//积分（获取被选中的积分设置）
+  				if(alljifeng >= 0){
+  					PageData jfpd=new PageData(); jfpd.put("content", "分类赠送积分"); jfpd.put("number", "+"+df2.format( alljifeng ));
+  	 				jfpd.put("type", "6"); jfpd.put("id", ispd.getString("store_scoreway_id"));
+  					yingxiaoList.add(jfpd);
+  					jfpd=null;
+  				}
+   			}
+   			//1.先获取营销中的折扣设置
+  			PageData typepd=new PageData();
+			typepd.put("marketing_type", "7");
+			typepd.put("store_id", pd.getString("store_id"));
+			List<PageData> zklist=ServiceHelper.getAppStorepc_marketingService().listAllById(typepd);
+			String zkcontent="";
+			double zkmoney=0;
+			String zkid="";
+ 			int zklistlength=zklist.size();
+			PageData e=null;
+			for (int zi = 0; zi <zklistlength; zi++) {
+ 					e=zklist.get(zi);
+ 					String grantrule=e.getString("grantrule");
+					String marketing_id=e.getString("marketing_id");
+					e.put("store_discountway_id", marketing_id);
+					//获取所有启用的折扣
+ 					PageData zkpd=ServiceHelper.getAppStorepc_marketingService().getZKById(e);
+					if(zkpd != null){
+							String zkgrantrule=zkpd.getString("grantrule");
+							if(zkpd.getString("discount_type").equals("1")){//整店折扣
+ 									double n=0;
+									if(zkpd.getString("onealldiscount_rate").length() == 1){
+										n=1-Double.parseDouble(zkpd.getString("onealldiscount_rate"))/10.0;
+									}else if(zkpd.getString("onealldiscount_rate").length() == 2){
+										n=1-Double.parseDouble(zkpd.getString("onealldiscount_rate"))/100;
+									}else if(zkpd.getString("onealldiscount_rate").length() == 3){
+										n=1-Double.parseDouble(zkpd.getString("onealldiscount_rate"))/1000;
+									}
+	 								double m=n*youhui_money;
+	 								if(m >= zkmoney ){
+	 									zkcontent=grantrule;
+	 									zkmoney=m;
+ 	 									zkid=marketing_id;
+	 								}
+							}else if(zkpd.getString("discount_type").equals("4")){//满多少折多少
+								String[] str=zkgrantrule.split(",");
+								int strlength=str.length;
+ 	 							for(int i=0; i< strlength ;i++){ 
+ 	  		 								double n1=Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元")));
+	  		 								double n2=0;
+											if(str[i].substring(str[i].indexOf("打")+1, str[i].lastIndexOf("折")).length() == 1){
+												n2=1-Double.parseDouble(str[i].substring(str[i].indexOf("打")+1, str[i].lastIndexOf("折")))/10.0;
+											}else if(str[i].substring(str[i].indexOf("打")+1, str[i].lastIndexOf("折")).length() == 2){
+												n2=1-Double.parseDouble(str[i].substring(str[i].indexOf("打")+1, str[i].lastIndexOf("折")))/100;
+											}else if(str[i].substring(str[i].indexOf("打")+1, str[i].lastIndexOf("折")).length() == 3){
+												n2=1-Double.parseDouble(str[i].substring(str[i].indexOf("打")+1, str[i].lastIndexOf("折")))/1000;
+											}
+	  		 								if(n2*youhui_money >zkmoney && youhui_money >=n1){
+	  		 									zkcontent=str[i];
+			 									zkmoney=n2*youhui_money;
+ 			 									zkid=marketing_id;
+	  		 								}
+ 	 							}
+							}else if(zkpd.getString("discount_type").equals("2") && pay_sort_type.equals("2") ){//按类别折扣
+   			 					double m=0;
+ 	 							if(alllei != null && alllei.contains("@")){
+ 		  							String[] everylei=alllei.split(",");
+ 		  							int everyleilength=everylei.length;
+  		  							for(int i=0;i<everyleilength ; i++){
+ 		  								if(everylei[i].split("@")[1] != null && !everylei[i].split("@")[1].equals("") && !everylei[i].split("@")[1].equals("null")){
+		  									  if(everylei[i].split("@")[3] != null && !everylei[i].split("@")[3].equals("null") && !everylei[i].split("@")[3].equals("")){
+		  										  if(everylei[i].split("@")[3].length() == 2){
+		  											  m+= Double.parseDouble(everylei[i].split("@")[1])*Double.parseDouble(everylei[i].split("@")[3])/100;
+		  										  }else{
+		  											  m+= Double.parseDouble(everylei[i].split("@")[1])*Double.parseDouble(everylei[i].split("@")[3])/10;
+		  										  }
+		  										  
+ 		  									  }
+		  								}
+  	 	  							}
+ 	 							}
+ 								//判断总金钱折扣是否最大
+								 if(m >= zkmoney){
+									zkcontent=grantrule;
+			 						zkmoney=m ;
+ 			 						zkid=marketing_id;
+								}
+							}else{ 
+								//单品设置
+							} 
+					}
+					e=null;
+			}
+			//折扣设置的折扣
+			if(!zkcontent.equals("") && zkmoney>0 ){
+				PageData zkpd=new PageData();
+				zkpd.put("content", zkcontent);
+				zkpd.put("id", zkid);
+				zkpd.put("type", "7");
+				zkpd.put("number", "-"+df2.format(zkmoney));
+				yingxiaoList.add(zkpd);
+			}
+ 			//2.获取其他的营销规则
+			List<PageData> marketlist=ServiceHelper.getAppStorepc_marketingService().listAllById(pd);
+			PageData e1=new PageData();
+			PageData e2=new PageData();
+			PageData e3=new PageData();
+			//获得积分
+ 			double addjf=0;
+			String desc="";
+			String addjfid="";
+			//优惠内容
+			String zengcontent="";
+			String zengid="";
+			String zengtype="";
+			String zengcontent2="";
+			String zengid2="";
+			String zengtype2="";
+			String jiancontent="";
+			String jiantype="";
+			String jianid="";
+			double reducemoney=0;
+			int marketlistlength=marketlist.size();
+			for (int mi = 0; mi <marketlistlength ; mi++) {
+				 			e=marketlist.get(mi);
+   								/*
+								 * *1-满赠，*2-满减，3-时段营销，4-买N减N（针对商品），5-累计次数/购买金额--增,6-积分，7-折扣
+								 */
+								String marketing_type=e.getString("marketing_type");
+//								String change_type=e.getString("change_type");
+		 						String grantrule=e.getString("grantrule");
+	 							String marketing_id=e.getString("marketing_id");
+  	 							if(marketing_type.equals("1")){
+ 				 							if(youhui_money >= Double.parseDouble(grantrule.substring(grantrule.indexOf("满")+1, grantrule.indexOf("元")))){
+					 							zengcontent=grantrule;
+					 							zengid=marketing_id;
+					 							zengtype=marketing_type;
+			 								} 
+ 	  							}else if(marketing_type.equals("2")){
+ 	  								
+ 	  								
+	  									if(grantrule.contains("折")){
+  		  		 								double n2=0;
+				 								if(grantrule.substring(grantrule.indexOf("打")+1, grantrule.lastIndexOf("折")).length() == 1){
+				 									n2=1-Double.parseDouble(grantrule.substring(grantrule.indexOf("打")+1, grantrule.lastIndexOf("折")))/10;
+				 								}else if(grantrule.substring(grantrule.indexOf("打")+1, grantrule.lastIndexOf("折")).length() == 2){
+				 									n2=1-Double.parseDouble(grantrule.substring(grantrule.indexOf("打")+1, grantrule.lastIndexOf("折")))/100;
+				 								}else if(grantrule.substring(grantrule.indexOf("打")+1, grantrule.lastIndexOf("折")).length() == 3){
+				 									n2=1-Double.parseDouble(grantrule.substring(grantrule.indexOf("打")+1, grantrule.lastIndexOf("折")))/1000;
+				 								}
+		  		 								if(n2*youhui_money >reducemoney && youhui_money >= Double.parseDouble(grantrule.substring(grantrule.indexOf("满")+1, grantrule.indexOf("元")))){
+		  		 									jiancontent=grantrule;
+		  		 									reducemoney=n2*youhui_money;
+		  		 									jiantype=marketing_type;
+		  		 									jianid=marketing_id;
+		  		 								}
+	  									}else{
+		  										if(Double.parseDouble(grantrule.substring(grantrule.indexOf("减")+1, grantrule.lastIndexOf("元"))) >reducemoney && youhui_money >= Double.parseDouble(grantrule.substring(grantrule.indexOf("满")+1, grantrule.indexOf("元")))){
+		  		 									jiancontent=grantrule;
+		  		 									reducemoney=Double.parseDouble(grantrule.substring(grantrule.indexOf("减")+1, grantrule.lastIndexOf("元")));
+		  		 									jiantype=marketing_type;
+		  		 									jianid=marketing_id;
+		  		 								}
+	  									}
+	   							}else if(marketing_type.equals("6") && pay_sort_type.equals("1")){
+	   								//肯定有
+ 	   							}else if(marketing_type.equals("7")){
+	   								//("第一步先进行折扣");
+	   							}else if(marketing_type.equals("3")){
+	   							  PageData sdpd=new PageData();
+	   							  sdpd.put("marketing_id", marketing_id);
+	   							  sdpd.put("store_id", pd.getString("store_id"));
+	   							  sdpd=ServiceHelper.getStorepc_marketingtypeService().findById(sdpd);
+	   							  if(sdpd != null){
+	   								  		  long l1=new Date().getTime();
+				   							  long l2=DateUtil.fomatDate1(DateUtil.getDay()+" "+sdpd.get("starttime").toString()).getTime();
+				   							  long l3=DateUtil.fomatDate1(DateUtil.getDay()+" "+sdpd.get("endtime").toString()).getTime();
+				   							  if(  Double.parseDouble(sdpd.getString("threeachieve_money")) <= youhui_money &&  l1 > l2 && l1 < l3 ){
+				   								  	 if(sdpd.getString("marketsmall_type").equals("1")){//折
+				   								  		 	 if(sdpd.getString("threediscount_rate").length() == 1){
+						   								  		 	double mm=youhui_money*(1-Double.parseDouble(sdpd.getString("threediscount_rate"))/10.0);
+						   								  	         if(  mm > reducemoney){
+										   								  	        jiancontent=grantrule;
+										  		 									reducemoney=mm;
+										  		 									jiantype=marketing_type;
+										  		 									jianid=marketing_id;
+						   								  	         }
+				   								  		 	 }else  if(sdpd.getString("threediscount_rate").length() == 2){
+						   								  		 	double mm=youhui_money*(1-Double.parseDouble(sdpd.getString("threediscount_rate"))/100);
+						   								  	         if(  mm > reducemoney){
+										   								  	        jiancontent=grantrule;
+										  		 									reducemoney=mm;
+										  		 									jiantype=marketing_type;
+										  		 									jianid=marketing_id;
+						   								  	         }
+				   								  		 	 }else  if(sdpd.getString("threediscount_rate").length() == 3){
+						   								  		 	double mm=youhui_money*(1-Double.parseDouble(sdpd.getString("threediscount_rate"))/1000);
+						   								  	         if(  mm > reducemoney){
+										   								  	        jiancontent=grantrule;
+										  		 									reducemoney=mm;
+										  		 									jiantype=marketing_type;
+										  		 									jianid=marketing_id;
+						   								  	         }
+				   								  		 	 } 
+					   								  	}else{//钱
+				   								  		   double mm= Double.parseDouble(sdpd.getString("threereduce_money"));
+						   								  	if( mm> reducemoney){
+								   								  	        jiancontent=grantrule;
+								  		 									reducemoney= Double.parseDouble(sdpd.getString("threereduce_money"));
+								  		 									jiantype=marketing_type;
+								  		 									jianid=marketing_id;
+													  	         }
+				   								  	 }
+				   							  }
+	   							  }
+	   							sdpd=null;
+ 	   						} else if(marketing_type.equals("5")){
+			   						PageData ljpd=new PageData();
+			   						ljpd.put("marketing_id", marketing_id);
+			   						ljpd.put("store_id", pd.getString("store_id"));
+			   						ljpd=ServiceHelper.getStorepc_marketingtypeService().findById(ljpd);
+					   				if(ljpd != null){
+				   								  long l1=new Date().getTime();
+		 	 			   						  long l2=DateUtil.fomatDate1(DateUtil.getDay()+" "+ljpd.get("starttime").toString()).getTime();
+					   							  long l3=DateUtil.fomatDate1(DateUtil.getDay()+" "+ljpd.get("endtime").toString()).getTime();
+					   							  if(  l1 > l2 && l1 < l3 ){
+						   								PageData orderpd=new PageData();
+				 	 			   						orderpd.put("starttime", DateUtil.getDay()+" "+ljpd.get("starttime").toString());
+				 	 			   						orderpd.put("endtime", DateUtil.getDay()+" "+ljpd.get("endtime").toString());
+				 	 			   						orderpd.put("store_id", pd.getString("store_id"));
+				 	 			   						orderpd.put("member_id", pd.getString("member_id"));
+			 				   							orderpd=ServiceHelper.getAppOrderService().listhistoryNumberByStore(orderpd);
+			 				   							String number=orderpd.getString("number");
+			 				   							String sumsale_money="0";
+				 				   						if(orderpd.get("sumsale_money") != null){
+							   								sumsale_money=orderpd.get("sumsale_money").toString();
+							   							};
+							   							if(Integer.parseInt(number)%Integer.parseInt(ljpd.getString("fiveachieve_number")) == 0 && Double.parseDouble(sumsale_money)%Double.parseDouble(ljpd.getString("fiveachieve_money")) >= 0 && Double.parseDouble(sumsale_money)%Double.parseDouble(ljpd.getString("fiveachieve_money")) < 1){
+		 				   									//判断哪个红包适合
+			 				   								zengcontent2=grantrule;
+						 									zengid2=marketing_id;
+						 									zengtype2=marketing_type;
+							   							}
+							   							orderpd=null;
+						   						}
+					   				}
+				   					 
+		   						}
+ 	 							e=null;
+		}
+			marketlist=null;
+			//满赠
+			if(!zengcontent.equals("")){
+				e1.put("content", zengcontent);
+				e1.put("number", "");
+				e1.put("id", zengid);
+				e1.put("type", zengtype);
+				yingxiaoList.add(e1);
+			}
+			e1=null;
+			//累计次数
+			PageData ldpd=new PageData();
+			if(!zengcontent2.equals("")){
+				ldpd.put("content", zengcontent2);
+				ldpd.put("number", "");
+				ldpd.put("id", zengid2);
+				ldpd.put("type", zengtype2);
+				yingxiaoList.add(ldpd);
+			}
+			ldpd=null;
+			//满减
+			if(!jiancontent.equals("") && reducemoney>0 ){
+				e2.put("content", jiancontent);
+				e2.put("id", jianid);
+				e2.put("type", jiantype);
+				e2.put("number", "-"+df2.format(reducemoney));
+				yingxiaoList.add(e2);
+			}
+			e2=null;
+			 int yingxiaosize=yingxiaoList.size();
+ 			 double useredbeforMoney=reducemoney+zkmoney;//使用红包前的总共优惠了的金额
+			 //判断优惠后的金额是否已经是0
+			 String redpackage_id="";
+			 String redmoney="0";
+			 if(useredbeforMoney < youhui_money+notyouhui_money){
+				   //使用红包
+					PageData redpd=getMaxStoreRedMoneyByMember(pd,youhui_money,yingxiaosize,useredbeforMoney);
+		 			if(redpd != null){
+		 				redpackage_id=redpd.getString("id");
+		 				redmoney=redpd.getString("number");
+						redpd.put("number", "-"+redmoney);
+						redpd.put("type", "0");
+						yingxiaoList.add(redpd);
+					} 
+					redpd=null;
+			 }
+ 			//使用红包后的优惠后的实际应该支付的金额为
+			double surepaymoney=youhui_money-reducemoney-Double.parseDouble(redmoney)-zkmoney+notyouhui_money;
+			//总共优惠金额
+			double surehuiyoumoney=reducemoney+Double.parseDouble(redmoney)+zkmoney;
+ 			if(pay_sort_type.equals("1")){
+					double redhuiyoumoney=surepaymoney-notyouhui_money;
+					if(redhuiyoumoney < 0){
+						redhuiyoumoney=0;
+					}
+					e=new PageData();
+					e.put("store_scoreway_id", addjfid);
+					e.put("store_id", pd.getString("store_id"));
+					//获取所有启用的积分
+					PageData jfpd=ServiceHelper.getAppStorepc_marketingService().getJfById(e);
+					if(jfpd != null){ 
+  		 	 				if(jfpd.getString("change_type").equals("1")){//整店
+ 			 	 					if(Double.parseDouble(jfpd.getString("oneback_rate"))/100*redhuiyoumoney >= addjf){
+			 	 						addjf=Double.parseDouble(jfpd.getString("oneback_rate"))/100*redhuiyoumoney;
+			 	 						desc=jfpd.getString("grantrule");
+			 	 					}
+		 	 				}else if(jfpd.getString("change_type").equals("5")){//满多少送多少积分
+		 	 							String[] str=jfpd.getString("grantrule").split(",");
+		 	 							int strlength=str.length;
+		 	 							for(int i=0; i<strlength ;i++){
+ 			  		  							if(Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元"))) <= redhuiyoumoney){
+  			  		 								if(Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元")))*Double.parseDouble(str[i].substring(str[i].indexOf("送")+1, str[i].lastIndexOf("%")))/100.00 >= addjf ){
+			  		 									addjf=Double.parseDouble(str[i].substring(str[i].indexOf("满")+1, str[i].indexOf("元")))*Double.parseDouble(str[i].substring(str[i].indexOf("送")+1, str[i].lastIndexOf("%")))/100.00;
+		 					 	 						desc=jfpd.getString("grantrule");
+				  		 							}
+			  		  							}
+		 	 							}
+		 	 				}else if(jfpd.getString("change_type").equals("4")){//每单返积分
+ 				 	 					if(Double.parseDouble(jfpd.getString("fourbackintegral_integral")) >= addjf){
+				 	 						addjf=Double.parseDouble(jfpd.getString("fourbackintegral_integral"));
+				 	 						desc=jfpd.getString("grantrule");
+				 	 					}
+		 	 				}else{ 
+		 	 					//无
+		 	 				}
+				}
+				//积分
+				if(!desc.equals("")){
+					e3.put("content", desc);e3.put("number", "+"+df2.format(addjf));e3.put("id", addjfid);e3.put("type", "6");
+					yingxiaoList.add(e3);
+			 	}
+ 			}
+ 			//优惠集合处理
+ 			if(youhui_money+notyouhui_money <= 0){
+ 	  			map.put("yingxiaoList", new ArrayList<PageData>());
+ 	  		}else{
+ 	  			map.put("yingxiaoList", yingxiaoList);
+ 	  		}
+  			PageData countpd=new PageData();
+			if(surepaymoney <= 0){
+					countpd.put("paymoney", "0");//优惠后的支付金额
+					countpd.put("reducemoney", df2.format(youhui_money+notyouhui_money));
+			}else{
+				countpd.put("paymoney", df2.format(surepaymoney));
+				countpd.put("reducemoney", df2.format(surehuiyoumoney));//优惠金额=优惠的金额+红包优惠的金额+折扣的金额
+			}
+			//增红包的集合
+			String allzengId="";
+			if(!zengid.equals("")){
+				allzengId=zengid+","+zengid2;
+			}else{
+				allzengId=zengid2;
+			}
+			countpd.put("zengid", allzengId);
+ 			countpd.put("zengjf", df2.format(addjf+alljifeng));//赠送的积分
+ 			countpd.put("red_id", redpackage_id);//使用红包的ID
+ 			countpd.put("allmoney", df2.format(youhui_money+notyouhui_money));//总金额
+ 			map.put("countpd", countpd);
+ 			countpd=null;
+ 			//获取个人财富
+ 			map.put("mpd", ServiceHelper.getAppMemberService().findWealthById(pd));
+			map.put("memberInfor", ServiceHelper.getAppMemberService().findWealthById(pd));
+  			//判断是否开通类别积分购买的权限
+ 			if(ServiceHelper.getAppStorepc_marketingService().getJfById(pd) != null){
+ 				if( ServiceHelper.getAppStorepc_marketingService().getJfById(pd).getString("change_type").equals("3") ){
+ 					map.put("issortjf", "3");
+ 				}else if( ServiceHelper.getAppStorepc_marketingService().getJfById(pd).getString("change_type").equals("2") ){
+ 					map.put("issortjf", "1");
+ 				} else{
+ 					map.put("issortjf", "0");
+ 				}
+ 			}
+ 			//商家名称
+ 			map.put("store_name", ServiceHelper.getAppStoreService().findById(pd).getString("store_name"));
+     		//获取商家的营销规则明细
+ 			map.put("yxpd", markeingAll(pd));
+ 		} catch (Exception e) {
+  			(new TongYong()).dayinerro(e);
+		}
+  		return map;
+  	}
+  	
+  	
+  	
   	
   	
   	

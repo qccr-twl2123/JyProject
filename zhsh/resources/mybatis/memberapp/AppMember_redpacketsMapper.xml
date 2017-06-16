@@ -60,6 +60,7 @@
 				a.redpackage_content,
 				a.enddate,
 				a.set_id,
+				a.set_type,
 				b.redpackage_type as store_redpackage_type,
 				b.srp_usercondition_id
 			from 
@@ -69,10 +70,12 @@
 				a.member_id=#{member_id}
  				and a.isguoqi='0'
  				and a.isshiyong='0'
-  				<if test="store_id != null and store_id != ''">
- 				and a.set_id=#{store_id}
- 				</if>
- 		 	order by cast(a.redpackage_money  as decimal(10,2))
+ 				and (
+ 					(a.set_type = '1' <if test="store_id != null and store_id != ''"> and a.set_id=#{store_id} </if>)
+ 					or
+ 					(a.set_type = '2')
+ 				)
+  		 	order by cast(a.redpackage_money  as decimal(10,2))
  	</select>
 	
  

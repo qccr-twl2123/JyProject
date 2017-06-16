@@ -56,8 +56,14 @@ public class GoodsController extends BaseController {
 	@Resource(name = "tablerNumberService")
 	private TablerNumberService tablerNumberService;
 	
- 
+	@Resource(name="appOrderService")
+	private AppOrderService appOrderService;
 	
+	 
+	@Resource(name="appShopCarService")
+	private AppShopCarService appShopCarService;
+	
+ 	
 	@Resource(name="appStoreService")
 	private AppStoreService appStoreService;
 	
@@ -72,14 +78,12 @@ public class GoodsController extends BaseController {
 	@RequestMapping(value="goStoreGoods")
 	@ResponseBody
 	public Object goStoreGoods(){
-//		logBefore(logger, " 前往商店商品页面");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
    		List<PageData> allList=new ArrayList<PageData>();//用来存储营销List
   		List<PageData> all =new ArrayList<PageData>();//用来存储营销List
 		List<PageData> redList =new ArrayList<PageData>( );	//列出红包列表	
 		List<PageData> varList =new ArrayList<PageData>( );	//列出红包列表	
-		DecimalFormat   df   = new DecimalFormat("######0.00"); 
-   		String result = "1";
+    	String result = "1";
 		String message=" 前往商店商品页面";
 		PageData pd = new PageData();
 		try{ 
@@ -99,7 +103,7 @@ public class GoodsController extends BaseController {
 				boolean flag=(boolean) map1.get("flag");
 				varList=(List<PageData>) map1.get("varList");
 				if(!flag){
-//					System.out.println("当前商家红包不存在");
+//					 ("当前商家红包不存在");
 				}else{
 					 for(PageData e : varList){
  					 			PageData redpd=new PageData();
@@ -110,7 +114,7 @@ public class GoodsController extends BaseController {
 								int redpackage_number=Integer.parseInt(e.getString("redpackage_number"));//总红包
 								int overget_number=Integer.parseInt(e.getString("overget_number"));//已领红包个数
 								if(redpackage_number-overget_number==1){
-											redpd.put("money", df.format(money-overget_money ));
+											redpd.put("money", TongYong.df2.format(money-overget_money ));
 											redpd.put("redpackage_content", e.getString("name"));
 											redpd.put("store_redpackets_id", e.getString("store_redpackets_id"));
 											redpd.put("redpackage_type", e.getString("type"));
@@ -123,7 +127,7 @@ public class GoodsController extends BaseController {
 								}else{
 									if(redpackage_type.equals("1")){
 											if(choice_type.equals(Const.redtwo_type)){//平均
-												redpd.put("money", df.format(money/redpackage_number));
+												redpd.put("money", TongYong.df2.format(money/redpackage_number));
 												redpd.put("redpackage_content", e.getString("name"));
 												redpd.put("store_redpackets_id", e.getString("store_redpackets_id"));
 												redpd.put("redpackage_type", redpackage_type);
@@ -137,7 +141,7 @@ public class GoodsController extends BaseController {
 													double minpjmoney=pjmoney/2;
 													double maxpjmoney=pjmoney/2+pjmoney;
 													double suijimoney=StringUtil.getSuiJi(minpjmoney, maxpjmoney);
-													redpd.put("money", df.format(suijimoney));
+													redpd.put("money", TongYong.df2.format(suijimoney));
 													redpd.put("redpackage_content", e.getString("name"));
 													redpd.put("store_redpackets_id", e.getString("store_redpackets_id"));
 													redpd.put("redpackage_type",redpackage_type);
@@ -238,6 +242,10 @@ public class GoodsController extends BaseController {
 	@Resource(name="appMemberService")
 	private AppMemberService appMemberService;
 	
+
+	@Resource(name = "storepc_marketingtypeService")
+	private Storepc_marketingtypeService storepcMarketingTypeService;
+	
 	
 	/**
 	 * 优惠买单，按总金额购买，商家ID，支付金钱,不优惠金额
@@ -260,25 +268,25 @@ public class GoodsController extends BaseController {
 				pd = this.getPageData();
    				//营销开始：先判断折扣设置，折扣完的金额计算积分值，接下来是判断折扣后的金额是否满足红包及其它优惠条件；最后的金额是本次应买单的金额；
 				String paymoney=pd.getString("paymoney");
- 				if(paymoney == null || paymoney.equals("")){
-					paymoney="0";
+				if(paymoney == null || paymoney.equals("") || Double.parseDouble(paymoney) <= 0){
+ 					map.put("result", "0");
+ 					map.put("message", "支付总金额必须大于0");
+ 					map.put("data", "");
+ 			 		return map;
 				}
 				String notmoney=pd.getString("notmoney");
 				if(notmoney == null || notmoney.equals("")){
 					notmoney="0";
 				}
-				double money=Double.parseDouble(paymoney)-Double.parseDouble(notmoney);
-				if(money < 0){
-					money=0;
-				}
-				if(money - Double.parseDouble(notmoney) < 0 ){
-  					map.put("result", "0");
-  					map.put("message", "不优惠金额不能大总金额的50%");
-  					map.put("data", "");
+				double youhui_money=Double.parseDouble(paymoney)-Double.parseDouble(notmoney);
+				if(youhui_money < 0 || youhui_money < Double.parseDouble(notmoney) ){
+					map.put("result", "0");
+					map.put("message", "不优惠金额不能大总金额的50%");
+					map.put("data", "");
 					return map;
-				} 
+				}
 				//优惠买单信息
-				Map<String,Object> yhmdpd=TongYong.youhuimaidan(pd,money,Double.parseDouble(notmoney),"1","member");
+				Map<String,Object> yhmdpd=TongYong.youhuimaidan(pd,youhui_money,Double.parseDouble(notmoney));
 				//--------------
 				//获取改商家桌号
 				List<PageData> tableNumberList = ServiceHelper.getTablerNumberService().listAll(pd);
@@ -298,27 +306,29 @@ public class GoodsController extends BaseController {
 		map.put("message", message);
  		return map;
 	}
+	  
 	
 	
 	
-	@Resource(name = "storepc_marketingtypeService")
-	private Storepc_marketingtypeService storepcMarketingTypeService;
 	
-	/*
+	
+	
+	
+	
+	/**
 	 * 优惠买单，按总类别购买，商家ID，支付金钱--不存在分类买单在优惠买单的情况下
  	 */
 	@RequestMapping(value="/allMoneyByTwo")
 	@ResponseBody
 	public Object allMoneyByTwo(){
-//		logBefore(logger, "优惠买单，按按总类购买");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
   		String result = "1";
 		String message="按总类购买";
 		PageData pd = new PageData();
 		try{ 
 			pd = this.getPageData();
  			//优惠买单信息
-			Map<String,Object> yhmdpd=TongYong.youhuimaidan(pd,0,0,"2","member");
+			Map<String,Object> yhmdpd=TongYong.youhuimaidan(pd,0,0);
  			//获取改商家桌号
 			List<PageData> tableNumberList = ServiceHelper.getTablerNumberService().listAll(pd);
 			yhmdpd.put("tableNumberList", tableNumberList);
@@ -341,26 +351,11 @@ public class GoodsController extends BaseController {
 	
 	
 	public static void main(String[] args){
-		String a="20";
-		String[] s=a.split(",");
-		System.out.println(s[0]);
-	}
-	
- 
-	@InitBinder
-	public void initBinder(WebDataBinder binder){
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
-	}
-	
-	
-	@Resource(name="appOrderService")
-	private AppOrderService appOrderService;
-	
 	 
-	@Resource(name="appShopCarService")
-	private AppShopCarService appShopCarService;
+	}
 	
+  
+
 	
   	 
 	/**
@@ -511,19 +506,7 @@ public class GoodsController extends BaseController {
 			 						ServiceHelper.getYouXuanService().editGoods(xpd);
 			 				  }
  						} 
-// 						 //判断商家的赠送积分是否充足
-// 		 				String goods_jfrate=goodspd.getString("goods_jfrate");
-// 	 	 				String sale_money=goodspd.getString("sale_money");
-// 		 				double money=(shop_number+caozuo_number)*Double.parseDouble(sale_money);//总金额
-// 		 				double storesendjf=Double.parseDouble(TongYong.df3.format(money*Double.parseDouble(goods_jfrate)/100));
-// 						double storeintegral=storesendjf+storesendjf*Const.orderShouyiMoney[0];//赠送积分+赠送系统积分
-// 						double isnow_wealth=Double.parseDouble(ServiceHelper.getAppStoreService().sumStoreWealth(goodspd));
-// 						System.out.println(isnow_wealth-storeintegral);
-// 						if(isnow_wealth-storeintegral  < 0){
-// 							result="0";
-// 		  					message=ServiceHelper.getAppStoreService().findById(goodspd).getString("store_name")+"-的积分余额不足，请等待商家充值后再购买";	
-// 	 					}
-	 				}
+ 	 				}
    				}else{
   					result="0";
   					message="商品不存在";
@@ -549,82 +532,111 @@ public class GoodsController extends BaseController {
 		pd=null;
 		return map;
 	}
+ 
 	
-//	/**
-//	 *  判断库存以及商家的积分够不够支付
-//	 * goods_id,caozuo_number,goods_type ，member_id
-//	 */
-//	@RequestMapping(value="/isGoDetailOrder")
-//	@ResponseBody
-//	public Object isGoDetailOrder(){
-//		Map<String,Object> map = new HashMap<String,Object>();
-//		String result = "1";
-//		String message="操作成功";
-//		String nownumber="0";
-//		PageData pd = new PageData();
-//		try{
-//			pd = this.getPageData();
-// 			String goods_type=pd.getString("goods_type");
-//			String member_id=pd.getString("member_id");
-//			String goods_id=pd.getString("goods_id");
-//			String caozuo_number=pd.getString("caozuo_number");
-// 			if(goods_type == null || goods_type.equals("")){
-//				goods_type="1";
-//			}
-//			if(appMemberService.findById(pd) == null){
-//					map.put("result", "0");
-//					map.put("message", "请先前往登录");
-//					map.put("data", "1");
-//					return map;
-//			}
-//			int number=Integer.parseInt(caozuo_number);
-//			if(goods_type.equals("2")){
-//				//判断下库存
-//				pd.put("goods_id", goods_id);
-//				pd.put("goods_number", caozuo_number);
-//				pd.put("goods_type", "2");
-//				PageData isokpd=YouXuanController.iskuncun(pd);
-//				if(isokpd.getString("result").equals("0")){
-//					map.put("result","0");
-//					map.put("message", isokpd.getString("message"));
-//					map.put("data", isokpd.getString("data"));
-//			    	return map;
-//				}
-//				PageData ggpd=new PageData();
-//				ggpd.put("youxuangg_id", goods_id);
-//				ggpd=ServiceHelper.getYouXuanService().finddetailgg(ggpd);
-//				if(ggpd == null ){
-//					map.put("result", "0");
-//					map.put("message", "当前商品不存在");
-//					map.put("data", "");
-//			    	return map;
-//				}
-//	   			String goods_jfrate=ggpd.getString("goods_jfrate");
-//	  			String sale_money=ggpd.getString("sale_money");
-//	 			double money=number*Double.parseDouble(sale_money);//总金额
-//	 			//判断商家的赠送积分是否充足
-//	 			double storesendjf=Double.parseDouble(TongYong.df3.format(money*Double.parseDouble(goods_jfrate)/100));
-//	 			double storeintegral=storesendjf+storesendjf*Const.orderShouyiMoney[0];//赠送积分+赠送系统积分
-//				double isnow_wealth=Double.parseDouble(appStoreService.sumStoreWealth(ggpd));
-//				if(isnow_wealth-storeintegral  < 0){
-//					map.put("result", "0");
-//					map.put("message", "商家"+appStoreService.findById(ggpd).getString("store_name")+"积分余额不足，请商家充值后再购买");
-//					map.put("data", "");
-//			    	return map;
-//				}
-//			}else{
-//				
-//			}
-//  		} catch(Exception e){
-//			result="0";
-//			message="获取异常";
-//			logger.error(e.toString(), e);
-//		}
-//		map.put("result", result);
-//		map.put("message",message);
-//		map.put("data",nownumber);
-//		pd=null;
-//		return map;
-//	}
-//	
+	/**
+	 *  扫一扫优惠买单渠道进入购买
+ 	 *  app_goods/saoYiSaoShopBuyGoods.do
+ 	 *  
+	 *  paymoney  支付总金额
+	 *  notmoney  不优惠金额
+ 	 *  store_id  商家ID
+	 *  member_id 会员ID
+	 *  redpackage_id  红包ID
+	 */
+	@RequestMapping(value="/saoYiSaoShopBuyGoods")
+	@ResponseBody
+	public Object SaoYiSaoShopBuyGoods(){
+ 		Map<String,Object> map = new HashMap<String,Object>();
+  		String result = "1";
+		String message="扫一扫优惠买单购买";
+		PageData pd = new PageData();
+		try{ 
+			pd = this.getPageData();
+ 			String paymoney=pd.getString("paymoney");
+ 			if(paymoney == null || paymoney.equals("") || Double.parseDouble(paymoney) <= 0){
+				map.put("result", "0");
+				map.put("message", "支付总金额必须大于0");
+				map.put("data", "");
+			 	return map;
+			}
+			String notmoney=pd.getString("notmoney");
+			if(notmoney == null || notmoney.equals("")){
+				notmoney="0";
+			}
+			double youhui_money=Double.parseDouble(paymoney)-Double.parseDouble(notmoney);
+			if(youhui_money < 0 || youhui_money < Double.parseDouble(notmoney) ){
+				map.put("result", "0");
+				map.put("message", "不优惠金额不能大总金额的50%");
+				map.put("data", "");
+				return map;
+			}
+ 			//优惠买单信息
+			Map<String,Object> yhmdpd=TongYong.YouHuiMaiDanByTwoForMember(pd, youhui_money, Double.parseDouble(notmoney));
+			//--------------
+			//获取改商家桌号
+			List<PageData> tableNumberList = ServiceHelper.getTablerNumberService().listAll(pd);
+			yhmdpd.put("tableNumberList", tableNumberList);
+			//商家名称
+			yhmdpd.put("store_name", ServiceHelper.getAppStoreService().findById(pd).getString("store_name"));
+			map.put("data",yhmdpd );
+			yhmdpd=null;
+ 			tableNumberList=null;
+ 	} catch(Exception e){
+    		map.put("data","");
+			result = "0";
+			message="系统错误";
+			logger.error(e.toString(), e);
+		}
+		map.put("result", result);
+		map.put("message", message);
+ 		return map;
+	}
+	
+	
+	
+	/**
+	 *  通过购物车进入渠道
+ 	 *  app_goods/catShopBuyGoods.do
+ 	 *  
+	 *  paymoney  支付总金额
+ 	 *  allgoods  购买商品拼接： 1.（ 商品id@数量@总金额，商品id@数量@总金额 ） 2.非商品购买的时候传“”空字符串
+	 *  store_id  商家ID
+	 *  member_id 会员ID
+	 *  redpackage_id  红包ID
+	 */
+	@RequestMapping(value="/catShopBuyGoods")
+	@ResponseBody
+	public Object CatShopBuyGoods(){
+ 		Map<String,Object> map = new HashMap<String,Object>();
+  		String result = "1";
+		String message="按购物车购买";
+		PageData pd = new PageData();
+		try{ 
+				pd = this.getPageData();
+   				//营销开始：先判断折扣设置，折扣完的金额计算积分值，接下来是判断折扣后的金额是否满足红包及其它优惠条件；最后的金额是本次应买单的金额；
+				String paymoney=pd.getString("paymoney");
+ 				if(paymoney == null || paymoney.equals("") || Double.parseDouble(paymoney) <= 0){
+ 					map.put("result", "0");
+ 					map.put("message", "支付总金额必须大于0");
+ 					map.put("data", "");
+ 			 		return map;
+				}
+				double youhui_money=Double.parseDouble(paymoney);
+ 				//优惠买单信息
+				Map<String,Object> yhmdpd=TongYong.YouHuiMaiDanByTwoForMember(pd, youhui_money, 0);
+ 				//商家名称
+				yhmdpd.put("store_name", ServiceHelper.getAppStoreService().findById(pd).getString("store_name"));
+				map.put("data",yhmdpd );
+				yhmdpd=null;
+      	} catch(Exception e){
+    		map.put("data","");
+			result = "0";
+			message="系统错误";
+			logger.error(e.toString(), e);
+		}
+		map.put("result", result);
+		map.put("message", message);
+ 		return map;
+	}
 }

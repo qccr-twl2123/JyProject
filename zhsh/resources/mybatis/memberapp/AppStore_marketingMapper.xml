@@ -101,7 +101,20 @@
 	<!-- 获取所有商家设置的积分手段魏汉文20160628-->
 	<select id="getJfById" parameterType="pd" resultType="pd">
 		select 
-				*
+				store_scoreway_id,
+				store_id,
+				change_type,
+				selected_status,
+				content,
+				oneback_rate,
+				threemin_rate,
+				threemax_rate,
+				fourbackintegral_integral,
+				fiveconsumer_money,
+				fivesendintegral_rate,
+				grantrule,
+				isguoqi
+
 		from 
 				tb_store_scoreway
 		where 

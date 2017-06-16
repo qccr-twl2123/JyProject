@@ -196,6 +196,44 @@ function addsearcharea(obj){
 		goback.style="display:none";
 		mapbox.style="display:block";
 		$(".back").show();
+			//地图定位
+		    var lng="";
+		    var lat="";
+	       var province_name="";
+	       var city_name="";
+	       var area_name="";
+	       var address="";
+	       // 百度地图API功能（定位到当前位置）
+	  	    window.map = new BMap.Map("allmap",{enableMapClick:false});
+	  	  	window.point = new BMap.Point(116.331398,39.897445);
+		   	map.centerAndZoom(point,15);
+		    map.enableScrollWheelZoom(true);
+	  		var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+	 		map.addControl(top_left_navigation);  //添加放大缩小的按钮
+	 		//微信定位
+  		    wxdingwei();
+  		   //单击获取点击的经纬度 ，获取当前地址
+  	   		var geoc = new BMap.Geocoder();   
+  	   		map.addEventListener("click", function(e){        
+  				var pt = e.point;
+  				lng=pt.lng;
+  				lat=pt.lat;
+  		 		geoc.getLocation(pt, function(rs){
+  					var addComp = rs.addressComponents;
+  					province_name=addComp.province;
+  					city_name=addComp.city;
+  					area_name=addComp.district;
+  					address=addComp.city+addComp.district+addComp.street+addComp.streetNumber;
+  					//文本显示
+  					var opts = {
+  					  width : 100,     // 信息窗口宽度
+  					  height: 50     // 信息窗口高度
+  			  		};
+  					point = new BMap.Point(lng,lat);
+  	 				var infoWindow = new BMap.InfoWindow("<a onclick=\"sureStore()\" class=\"dingwei_w\">标注为当前位置</a>", opts);  // 创建信息窗口对象 
+  					map.openInfoWindow(infoWindow,point); //开启信息窗口
+  	 	 		});  
+  	 		});
 	}
 	function fanhui(){
 		inf.style="display:block";
@@ -262,24 +300,7 @@ function addsearcharea(obj){
  	    		}
  	   });
     
-    //地图定位
-       var lng="";
-       var lat="";
-       var province_name="";
-       var city_name="";
-       var area_name="";
-       var address="";
-       // 百度地图API功能（定位到当前位置）
-  	    var map = new BMap.Map("allmap",{enableMapClick:false});
-  		var point = new BMap.Point(116.331398,39.897445);
-	   	map.centerAndZoom(point,15);
-	    map.enableScrollWheelZoom(true);
-  		var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
- 		map.addControl(top_left_navigation);  //添加放大缩小的按钮
-		if(true){
-			  //微信定位
-  		    wxdingwei();
-       }
+    
  		
  	  //获取到的经纬度
       function pcd(lng,lat){
@@ -291,28 +312,7 @@ function addsearcharea(obj){
  		  	map.addOverlay(marker);              // 将标注添加到地图中
 			map.panTo(new_point); 
        }
-   		//单击获取点击的经纬度 ，获取当前地址
-   		var geoc = new BMap.Geocoder();   
-   		map.addEventListener("click", function(e){        
-			var pt = e.point;
-			lng=pt.lng;
-			lat=pt.lat;
-	 		geoc.getLocation(pt, function(rs){
-				var addComp = rs.addressComponents;
-				province_name=addComp.province;
-				city_name=addComp.city;
-				area_name=addComp.district;
-				address=addComp.city+addComp.district+addComp.street+addComp.streetNumber;
-				//文本显示
-				var opts = {
-				  width : 100,     // 信息窗口宽度
-				  height: 50     // 信息窗口高度
-		  		};
-				point = new BMap.Point(lng,lat);
- 				var infoWindow = new BMap.InfoWindow("<a onclick=\"sureStore()\" class=\"dingwei_w\">标注为当前位置</a>", opts);  // 创建信息窗口对象 
-				map.openInfoWindow(infoWindow,point); //开启信息窗口
- 	 		});  
- 		});
+   		
     		
    	
    	 	
