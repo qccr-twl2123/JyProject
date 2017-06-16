@@ -129,8 +129,8 @@ $(function(){
 				
 			  {
 			  	name:"营销控台",
-			  	listitem:["消费及支付方式","折扣设置","积分方式（必选）","红包","满赠","满减","时段营销","买N减一","累计次数/金额营销","管理我的营销","效果分析"],
-			  	linkitem:["storepc_marketing/goZhifu.do?store_id=${storepd.store_id}","storepc_marketing/goDiscount.do?store_id=${storepd.store_id}&type=0","storepc_marketing/goIntegral.do?store_id=${storepd.store_id}","storepc_redpackets/list.do?store_id=${storepd.store_id}","storepc_marketing/goGive.do?store_id=${storepd.store_id}","storepc_marketingtype/list.do?marketing_type=2&store_id=${storepd.store_id}","storepc_marketingtype/list.do?marketing_type=3&store_id=${storepd.store_id}","storepc_marketingtype/list.do?marketing_type=4&store_id=${storepd.store_id}","storepc_marketingtype/list.do?marketing_type=5&store_id=${storepd.store_id}","storepc_marketing/list.do?store_id=${storepd.store_id}","storepc_marketingeffect/list.do?store_id=${storepd.store_id}"],
+			  	listitem:["消费及支付方式","折扣设置","积分方式（必选）","红包","满赠","满减","时段营销",/* "买N减一", */"累计次数/金额营销","管理我的营销","效果分析"],
+			  	linkitem:["storepc_marketing/goZhifu.do?store_id=${storepd.store_id}","storepc_marketing/goDiscount.do?store_id=${storepd.store_id}&type=0","storepc_marketing/goIntegral.do?store_id=${storepd.store_id}","storepc_redpackets/list.do?store_id=${storepd.store_id}","storepc_marketing/goGive.do?store_id=${storepd.store_id}","storepc_marketingtype/list.do?marketing_type=2&store_id=${storepd.store_id}","storepc_marketingtype/list.do?marketing_type=3&store_id=${storepd.store_id}",/* "storepc_marketingtype/list.do?marketing_type=4&store_id=${storepd.store_id}", */"storepc_marketingtype/list.do?marketing_type=5&store_id=${storepd.store_id}","storepc_marketing/list.do?store_id=${storepd.store_id}","storepc_marketingeffect/list.do?store_id=${storepd.store_id}"],
 			  	num:1},
 			  {
 			  	name:"商品管理",
