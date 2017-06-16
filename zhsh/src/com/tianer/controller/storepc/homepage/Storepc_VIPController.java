@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.tianer.controller.storepc.liangqin.homepage;
+package com.tianer.controller.storepc.homepage;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

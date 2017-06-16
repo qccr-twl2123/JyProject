@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.tianer.controller.storepc.liangqin.shopmanage;
+package com.tianer.controller.storepc.shopmanage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1068,22 +1068,22 @@ public class Storepc_CategoryManageController extends BaseController {
  		return map;
 	}
 	
-	@RequestMapping(value="/ExportExcel")
-	@ResponseBody
-	public ModelAndView ExportExcel(Page page, HttpServletRequest request, HttpServletResponse response) throws Exception{
-		ModelAndView mv = this.getModelAndView();
-		PageData pd=this.getPageData();
-		try {
-			pd=this.getPageData();
-			ExcelTest et = new ExcelTest();
-			List list = categoryManageService.findAllEach(page);
-			et.exportExcel(list, response, request);
-			mv.setViewName("/storepc/business_success");
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
- 		return mv;
-	}
+//	@RequestMapping(value="/ExportExcel")
+//	@ResponseBody
+//	public ModelAndView ExportExcel(Page page, HttpServletRequest request, HttpServletResponse response) throws Exception{
+//		ModelAndView mv = this.getModelAndView();
+//		PageData pd=this.getPageData();
+//		try {
+//			pd=this.getPageData();
+//			ExcelTest et = new ExcelTest();
+//			List list = categoryManageService.findAllEach(page);
+//			et.exportExcel(list, response, request);
+//			mv.setViewName("/storepc/business_success");
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+// 		return mv;
+//	}
 
 	
 

@@ -1,7 +1,7 @@
 ﻿/**
  * 
  */
-package com.tianer.controller.storepc.liangqin.basemanage;
+package com.tianer.controller.storepc.basemanage;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;

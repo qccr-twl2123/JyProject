@@ -1,4 +1,4 @@
-package com.tianer.controller.storepc.liangqin.homepage;
+package com.tianer.controller.storepc.homepage;
 
 import javax.annotation.Resource;
 
