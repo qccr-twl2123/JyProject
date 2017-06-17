@@ -195,12 +195,7 @@ public class AppStoreService {
 		return (List<PageData>)dao.findForList("AppStoreMapper.getStoreList", pd);
 	}
 	
-//	/*
-//	 *带分页的
-//	 */
-//	public List<PageData> getStorelistPage(Page page)throws Exception{
-//		return (List<PageData>)dao.findForList("AppStoreMapper.getStorelistPage", page);
-//	}
+	
 	
 	
 	/*
@@ -444,6 +439,24 @@ public class AppStoreService {
 	public List<PageData> listPasswordStoreOparator(PageData pd)throws Exception{
 		return (List<PageData>)dao.findForList("AppStoreMapper.listPasswordStoreOparator", pd);
 	}
+	
+	
+	
+	
+	/**
+	 *   617以下接口开始更新
+	 */
+  	/*
+	 *带分页的商家
+	 */
+	public List<PageData> getStorelistPage(Page page)throws Exception{
+		return (List<PageData>)dao.findForList("AppStoreMapper.getStorelistPage", page);
+	}
+	
+	
+	
+	
+	
 
 }
 

@@ -92,5 +92,30 @@ public class AppGoodsService {
 	public List<PageData> getGoodsIdByOrder(PageData  pd)throws Exception{
 		return (List<PageData>)dao.findForList("AppGoodsMapper.getGoodsIdByOrder", pd);
 	}
+	
+	
+	/**
+	 * ==================================20170617开始的新接口===================================
+	 */
+
+	/*
+	 *商品列表筛选分页
+	 */
+	public List<PageData> getGoodslistPage(Page  page)throws Exception{
+		return (List<PageData>)dao.findForList("AppGoodsMapper.getGoodslistPage", page);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
 

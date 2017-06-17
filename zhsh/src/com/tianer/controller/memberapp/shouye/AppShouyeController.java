@@ -13,13 +13,12 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tianer.controller.base.BaseController;
 import com.tianer.controller.memberapp.tongyongUtil.TongYong;
+import com.tianer.entity.Page;
 import com.tianer.service.business.app_advert.App_advertService;
 import com.tianer.service.business.cm_all.Cm_allService;
 import com.tianer.service.business.menu_text.Menu_textService;
@@ -90,8 +89,7 @@ public class AppShouyeController extends BaseController {
 	@RequestMapping(value="/kjListGoods")
 	@ResponseBody
 	public Object kjListGoods(){
-//		logBefore(logger, "首页商品列表列表");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
 		Map<String,Object> map1= new HashMap<String,Object>();
 		List<PageData> redpackageList=new ArrayList<PageData>();//用来存储红包list
 		List<PageData> allstoreList=new ArrayList<PageData>();//用来存储商家List
@@ -100,8 +98,7 @@ public class AppShouyeController extends BaseController {
 		PageData pd = new PageData();
 		try{
 			pd=this.getPageData();
-			//System.out.println(pd.toString());
- 			//更新当前用户的位置：经度纬度，省市区
+  			//更新当前用户的位置：经度纬度，省市区
 			try {
 				//获取省
 				if(pd.getString("province_name") == null || pd.getString("province_name").equals("")){
@@ -117,13 +114,15 @@ public class AppShouyeController extends BaseController {
 			 PageData _pd=new PageData();
   			 _pd=appMemberService.findById(pd);//会员的详细信息
 			//获取经度纬度与所有商家距离进行比较
-			double distance=Const.appdistance;//先显示3Km范围内
+//			double distance=Const.appdistance;//先显示3Km范围内
 			double  longitude1=0;//用户经度
 			double latitude1=0;//用户纬度
 			//判断是否定位了
 			boolean isdingwei=true;
 			if(pd.getString("longitude") == null || pd.getString("latitude") == null|| pd.getString("longitude").equals("") || pd.getString("latitude").equals("")){
 				isdingwei=false;
+				pd.put("longitude", "120");
+				pd.put("latitude", "30");
 			}else{
 				longitude1=Double.parseDouble(pd.getString("longitude"));
 	 			latitude1=Double.parseDouble(pd.getString("latitude"));
@@ -532,16 +531,12 @@ public class AppShouyeController extends BaseController {
 	@RequestMapping(value="/listAllCitySort")
 	@ResponseBody
 	public Object listAllCitySort() throws Exception{
-//		logBefore(logger, "获得一级二级的分类信息");
 		Map<String,Object> map = new HashMap<String,Object>();
 		String result = "1";
 		String message="获取成功";
 		PageData pd = new PageData();
 		try{
 			pd = this.getPageData();
-//			System.out.println(pd.toString());
-//			int n=0;
-//			int m=0;
  			//获得一级分类
 			pd.put("sort_parent_id", "0");
 			pd.put("sort_type", "1");
@@ -608,16 +603,13 @@ public class AppShouyeController extends BaseController {
 		PageData pd = new PageData();
 		try{ 
 			pd = this.getPageData();
-    			double  longitude1=0;
-			double latitude1=0;
-			//判断是否定位了
+  			//判断是否定位了
 			boolean isdingwei=true;
 			if(pd.getString("longitude") == null || pd.getString("longitude").equals("") || pd.getString("longitude").equals("0.000000")  || pd.getString("latitude") == null || pd.getString("latitude").equals("") || pd.getString("latitude").equals("0.000000") ){
 				isdingwei=false;
-			}else{
-				longitude1=Double.parseDouble(pd.getString("longitude"));//用户经度
-	 			latitude1=Double.parseDouble(pd.getString("latitude"));//用户纬度
-			}
+				pd.put("longitude", "120");
+				pd.put("latitude", "30");
+			} 
 			String now_page=pd.getString("page");
     		pd.put("endnumber", 10);
  			if(now_page == null || now_page.equals("") || now_page.equals("0")){
@@ -660,24 +652,6 @@ public class AppShouyeController extends BaseController {
 							e=null;
  			}
   			storeList=null;
-// 			if( isdingwei && pd.getString("paixu") != null && pd.getString("paixu").equals("2")){//距离排序
-//  				//已排序分值排序近到远
-// 				Collections.sort(allstoreList,new Comparator<PageData>(){  
-// 		            @Override
-//					public int compare(PageData  arg0, PageData arg1) {  
-// 		            	String distance1=arg1.getString("distance");
-// 		            	String distance2=arg0.getString("distance");
-// 		            	int n1=distance1.length();
-// 		            	int n2=distance2.length();
-// 		            	if(n2 > n1){
-// 		            		distance1=StringUtil.buZero(distance1, n2-n1);
-// 		            	}else if(n1>n2){
-// 		            		distance2=StringUtil.buZero(distance2, n1-n2);
-// 		            	}
-// 		                return distance2.compareTo(distance1);  
-// 		            }  
-// 		        });  
-// 			}
  			map.put("data", allstoreList);
  			allstoreList=null;
  			//设置筛选集合
@@ -1019,8 +993,7 @@ public class AppShouyeController extends BaseController {
 	@RequestMapping(value="/textDesc")
 	@ResponseBody
 	public Object textDesc() throws Exception{
-//		logBefore(logger, "各种文本说明");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
  		String result = "1";
 		String message="获取成功";
 		PageData pd = new PageData();
@@ -1044,16 +1017,12 @@ public class AppShouyeController extends BaseController {
 	
 	
 	/**
-	 * 领取现金折扣红包针对--商家详情红包，附近红包
-	 * 魏汉文20160623
-	 * 
-	 * member_id
-	 * store_redpackets_id
-	 * money
-	 * 
+	 * 领取现金/折扣红包针对--商家详情红包，附近红包
 	 * app_shouye/getRedPackage.do
 	 * 
-	 * 
+	 * member_id  会员ID
+	 * store_redpackets_id 商家发的红包ID
+	 * money  领取金额/折扣
 	 */
 	@RequestMapping(value="/getRedPackage")
 	@ResponseBody
@@ -1151,8 +1120,9 @@ public class AppShouyeController extends BaseController {
 	 * 推荐好友注册
 	 * app_shouye/tuijianRegister.do
 	 * 
-	 * 
-	 * 
+	 * id 当前用户ID
+	 * content 推荐内容
+	 * be_phone 被推荐人的手机号码
  	 */
 	@RequestMapping(value="/tuijianRegister")
 	@ResponseBody
@@ -1212,8 +1182,7 @@ public class AppShouyeController extends BaseController {
 	@RequestMapping(value="/storePay")
 	@ResponseBody
 	public Object gostorePay(){
-//		logBefore(logger, "扫一扫二维码");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
 		Map<String,Object> map1= new HashMap<String,Object>();
  		List<PageData> yingxiaoList=new ArrayList<PageData>();//用来存储商家List
 		String result = "1";
@@ -1228,10 +1197,6 @@ public class AppShouyeController extends BaseController {
  				List<PageData> marketlist=appStorepc_marketingService.listAllById(pd);
   				String add="";
  				String reduce="";
-// 				String time="";
-// 				String n="";
-// 				String number="";
-// 				String score="";
  				String zk="";
  				for(PageData e2 : marketlist){
 							/*
@@ -1318,49 +1283,6 @@ public class AppShouyeController extends BaseController {
 		pd=null;
 		return map;
 	}
-	
-	 
-	
-	
-	public static void main(String[] str){
-		 
-	}
-
-	@InitBinder
-	public void initBinder(WebDataBinder binder){
-		  
-	}
-	
-	
-
-	
-	
-	/**
-	 * 
-	 * 魏汉文20160623
-	 */
-	@RequestMapping(value="/a")
-	@ResponseBody
-	public Object a() throws Exception{
-		logBefore(logger, "获得所有商家");
-		Map<String,Object> map = new HashMap<String,Object>();
-//		List<PageData> allstoreList=new ArrayList<PageData>();//用来存储商家List
-		String result = "1";
-		String message="获取成功";
-//		PageData pd = new PageData();
-		try{ 
-//			pd = this.getPageData();
-		
-		}catch(Exception e){
-			 result = "0";
-			 message="系统错误";
-			logger.error(e.toString(), e);
-		}
- 		map.put("result", result);
-		map.put("message", message);
-  		return map;
-	}
-	
-	
+ 
 	
 }

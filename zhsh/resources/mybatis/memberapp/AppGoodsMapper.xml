@@ -216,4 +216,15 @@
 					a.order_id=#{order_id} 
 	</select>
 	
+	<!--    ===================================20170617开始的新接口=======================                  -->
+	<!-- app接口商品列表筛选分页  -->
+	<select id="getGoodslistPage" parameterType="page" resultType="pd">
+		select
+				 a.*
+		from 
+				tb_goods a
+				left join tb_store b on a.store_id=b.store_id  
+		 
+	</select>
+	
 </mapper>
