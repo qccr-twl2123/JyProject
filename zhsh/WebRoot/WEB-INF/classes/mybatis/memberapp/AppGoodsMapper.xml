@@ -216,15 +216,67 @@
 					a.order_id=#{order_id} 
 	</select>
 	
-	<!--    ===================================20170617开始的新接口=======================                  -->
+	
+	<!-- 修改商品的销售数量 （没完成一笔订单更新一次当前商品的销售数量） -->
+	<update id="updateGoodsConsumption_number" parameterType="pd">
+		update tb_goods
+		set  consumption_number=( select  sum(a.shop_number)
+								  from 	tb_order_goods a  left join tb_order b on a.order_id=b.order_id 
+								  where b.order_status='1' and b.tihuo_status='1' and a.goods_id=#{goods_id} )
+		where goods_id=#{goods_id}
+ 	</update>
+ 
+	<!--    ===================================20170617开始的新接口===============================             -->
 	<!-- app接口商品列表筛选分页  -->
 	<select id="getGoodslistPage" parameterType="page" resultType="pd">
 		select
-				 a.*
+				a.goods_id,
+				a.goods_category_id,
+				a.goods_name,
+				a.image_url,
+				a.market_money,
+				a.retail_money,
+				a.integral_rate,
+				a.stock_number,
+				a.consumption_number,
+				a.goods_status,
+				a.sales_status,
+				a.starttime,
+				a.endtime,
+				a.charm_number,
+				a.store_id,
+				a.sort,
+				a.promotion_type,
+				a.promotion_content,
+				a.createdate,
+				a.integral_number,
+				a.company,
+				a.deletestatus,
+				b.complex_score 
 		from 
 				tb_goods a
 				left join tb_store b on a.store_id=b.store_id  
-		 
-	</select>
+				left join tb_store_file c on a.store_id=c.store_id  
+				left join tb_city_file_sort d on c.city_sort_one=d.city_file_sort_id 
+				left join tb_city_file_sort e on c.city_sort_two=e.city_file_sort_id 
+				left join tb_city_file_sort f on c.city_sort_three=f.city_file_sort_id 
+ 		where 
+				a.deletestatus='0'
+				and b.check_status='1'
+				and b.merchant_status != '4'
+				and c.open_status='1'
+				and c.biaozhun_status='1'
+				<if test="pd.sort_type != null and pd.sort_type != '' and pd.city_file_sort_id != null and pd.city_file_sort_id != ''">
+						<choose>
+							<when test="pd.sort_type =='1'.toString()">and (d.sort_parent_id=#{pd.city_file_sort_id} or e.sort_parent_id=#{pd.city_file_sort_id} or f.sort_parent_id=#{pd.city_file_sort_id})</when>
+							<when test="pd.sort_type =='2'.toString()">and (c.city_sort_one=#{pd.city_file_sort_id} or c.city_sort_two=#{pd.city_file_sort_id} or c.city_sort_three=#{pd.city_file_sort_id})</when>
+						</choose>
+				</if>
+		<choose>
+  			<when test="pd.goodspx_number == '2'.toString()">order by cast(a.retail_money as as decimal(10,2)) desc, cast(b.complex_score as decimal(10,1) ) desc , b.registertime </when>
+  			<when test="pd.goodspx_number == '3'.toString()">order by cast(a.retail_money as as decimal(10,2)) , cast(b.complex_score as decimal(10,1) ) desc , b.registertime </when>
+ 			<otherwise>order by cast(a.consumption_number as signed ) desc ,cast(b.complex_score as decimal(10,1) ) desc , b.registertime </otherwise>
+ 		</choose>
+ 	</select>
 	
 </mapper>

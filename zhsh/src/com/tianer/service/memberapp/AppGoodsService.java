@@ -93,6 +93,13 @@ public class AppGoodsService {
 		return (List<PageData>)dao.findForList("AppGoodsMapper.getGoodsIdByOrder", pd);
 	}
 	
+	/*
+	 * 修改商品的销售数量 （没完成一笔订单更新一次当前商品的销售数量）-goods_id
+	*/
+	public void updateGoodsConsumption_number(PageData pd)throws Exception{
+		dao.update("AppGoodsMapper.updateGoodsConsumption_number", pd);
+	}
+	
 	
 	/**
 	 * ==================================20170617开始的新接口===================================

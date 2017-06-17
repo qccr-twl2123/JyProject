@@ -981,10 +981,10 @@
 					and b.area_name=#{pd.area_name}
 					</if>
   		<choose>
-  			<when test="pd.px_number == '2'.toString() and pd.latitude != null and pd.latitude != ''">order by round( 6378.138 * 2 * asin( sqrt( pow( sin(( abs(a.latitude  * pi() / 180 - #{pd.latitude} * pi() / 180) ) / 2 ), 2 ) + cos(a.latitude  * pi() / 180) * cos( #{pd.latitude} * pi() / 180) * pow( sin(( abs(a.longitude * pi() / 180 - #{pd.longitude}  * pi() / 180) ) / 2 ), 2 ))) ,3),cast(a.complex_score as decimal(10,1) ) desc , a.registertime </when>
-  			<when test="pd.px_number == '3'.toString()">order by cast(a.comment_score as decimal(10,1) ) desc, cast(a.complex_score as decimal(10,1) ) desc ,a.registertime </when>
- 			<when test="pd.px_number == '4'.toString()">order by cast(a.integral_rate as decimal(10,2) ) desc, cast(a.complex_score as decimal(10,1) ) desc , a.registertime </when>
- 			<when test="pd.px_number == '5'.toString()">order by cast(f.ordernumber as signed) desc, cast(a.complex_score as decimal(10,1) ) desc , a.registertime </when>
+  			<when test="pd.storepx_number == '2'.toString() and pd.latitude != null and pd.latitude != ''">order by round( 6378.138 * 2 * asin( sqrt( pow( sin(( abs(a.latitude  * pi() / 180 - #{pd.latitude} * pi() / 180) ) / 2 ), 2 ) + cos(a.latitude  * pi() / 180) * cos( #{pd.latitude} * pi() / 180) * pow( sin(( abs(a.longitude * pi() / 180 - #{pd.longitude}  * pi() / 180) ) / 2 ), 2 ))) ,3),cast(a.complex_score as decimal(10,1) ) desc , a.registertime </when>
+  			<when test="pd.storepx_number == '3'.toString()">order by cast(a.comment_score as decimal(10,1) ) desc, cast(a.complex_score as decimal(10,1) ) desc ,a.registertime </when>
+ 			<when test="pd.storepx_number == '4'.toString()">order by cast(a.integral_rate as decimal(10,2) ) desc, cast(a.complex_score as decimal(10,1) ) desc , a.registertime </when>
+ 			<when test="pd.storepx_number == '5'.toString()">order by cast(f.ordernumber as signed) desc, cast(a.complex_score as decimal(10,1) ) desc , a.registertime </when>
  			<otherwise>order by cast(a.complex_score as decimal(10,1) ) desc , a.registertime </otherwise>
  		</choose>
  	</select> 

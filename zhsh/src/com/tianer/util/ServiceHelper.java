@@ -1,5 +1,6 @@
 package com.tianer.util;
 
+import com.tianer.service.business.app_advert.App_advertService;
 import com.tianer.service.business.city_file.City_fileService;
 import com.tianer.service.business.city_marketing.City_marketingService;
 import com.tianer.service.business.clerk_file.Clerk_fileService;
@@ -63,6 +64,11 @@ public final class ServiceHelper {
 	}
 	
 	//--------------------获取指定service方法---------------------------------
+	
+	public static App_advertService getApp_advertService(){
+		return (App_advertService) getService("app_advertService");
+	}
+	
 	
 	public static TYAllSortService getTYAllSortService(){
 		return (TYAllSortService) getService("tYAllSortService");

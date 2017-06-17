@@ -716,21 +716,19 @@ public class TongYong extends BaseController{
 				}
 	       		//通用的PageDATA（);
 				PageData moneypd=new PageData();
-//				double no_youhui_money=Double.parseDouble(no_discount_money);
+				double no_youhui_money=Double.parseDouble(no_discount_money);
 				double acmoney=Double.parseDouble(actual_money);
 				double user_jifen=Double.parseDouble(user_integral);
 				double user_yue=Double.parseDouble(user_balance);
 				boolean isTihuo=(!comeon_type.equals("3") && !comeon_type.equals("5") && iszeroorder);
  				if(isTihuo){//不包括提货券
-					saveMemberHistory(pd, mpd, spd);//新增会员的历史记录
+					saveMemberHistory(pd, mpd, spd);//新增会员的历史记录，删除会员使用的红包
 				} 
- 	 			//新增用户积分获赠记录,删除会员使用的红包
-   				double membershouyi_jifen=Double.parseDouble(get_integral);
+    			double membershouyi_jifen=Double.parseDouble(get_integral);
  				if(membershouyi_jifen >0 ){
-     				pd=renmaiJf(pd,spd,mpd, membershouyi_jifen);
+     				pd=renmaiJf(pd,spd,mpd, membershouyi_jifen);//新增用户积分获赠记录,人脉积分获赠记录
    				}
-   				//统计商家财富
- 				String now_wealth=ServiceHelper.getAppStoreService().sumStoreWealth(spd);
+ 				String now_wealth=ServiceHelper.getAppStoreService().sumStoreWealth(spd);//统计商家财富
 				moneypd.clear();
 				if(comeon_type.equals("1")){ 
    					moneypd.put("now_wealth", df2.format(Double.parseDouble(now_wealth)+user_jifen+user_yue));//n-会员使用积分，m-会员使用余额
@@ -767,7 +765,6 @@ public class TongYong extends BaseController{
 	   			moneypd.put("last_wealth", ServiceHelper.getAppStoreService().sumStoreWealth(spd));
 	   			moneypd.put("store_wealthhistory_id",order_id);
  	   			ServiceHelper.getAppStoreService().saveWealthhistory(moneypd);
-//  			//System.out.println("新增消费获得的红包--》更新会员红包数量=====================================");
 				if(store_redpackets_id != null && !store_redpackets_id.equals("")){
 					 String[] str=store_redpackets_id.split(",");
  					 for (int i = 0; i < str.length; i++) {
@@ -800,44 +797,35 @@ public class TongYong extends BaseController{
 					 					}
 					 				 
 					}
-// 					 //System.out.println("新增消费获得的红包--》更新会员红包数量=====================================");
- 				}
-//    			//System.out.println("更新/新增订单信息=====================================comeon_type="+comeon_type+"&channel="+channel+"&order_status="+order_status);
-   				pd.put("channel",channel);
+  				}
+    			pd.put("channel",channel);
     			//comeon_type 1-收银，2-优惠买单，3-提货卷 ,4-购买一元夺宝 ,5-优选
    				 if(comeon_type.equals("1") || (isTihuo && acmoney == 0)){
- 	   				//System.out.println("新增订单信息支付金额为0或是收银订单");
-	    			pd.put("order_status", "1");
+ 	    			pd.put("order_status", "1");
 	    			pd.put("tihuo_status", "1");
- 	  				ServiceHelper.getAppOrderService().saveOrder(pd);
+ 	  				ServiceHelper.getAppOrderService().saveOrder(pd);//新增订单信息支付金额为0或是收银订单
    				 }else if(comeon_type.equals("2")){
-    				//System.out.println("更新优惠买单状态");
-   					pd.put("order_status", "1");
+    				pd.put("order_status", "1");
    					pd.put("tihuo_status", "1");
-    				ServiceHelper.getPayapp_historyService().editOrderStatus(pd);
+    				ServiceHelper.getPayapp_historyService().editOrderStatus(pd);//更新提货状态记录
    				 }else if(comeon_type.equals("3")){
-    				//System.out.println("更新提货券状态 ");
-   					pd.put("order_status", "1");
+    					pd.put("order_status", "1");
    					pd.put("tihuo_status", "1");
-    				ServiceHelper.getPayapp_historyService().editOrderStatus(pd);
-    				//更新提货状态记录
-			   		PageData wapd=new PageData();
+    				ServiceHelper.getPayapp_historyService().editOrderStatus(pd);//更新提货券状态
+ 			   		PageData wapd=new PageData();
 			   		wapd.put("waterrecord_id", order_id);
 			   		wapd.put("pay_status", "1");
 			   		ServiceHelper.getWaterRecordService().editWaterRecord(wapd);
 			   		wapd=null;
-   				 }else if(comeon_type.equals("4")){
-    				//System.out.println("一元购");
-    				pd.put("order_status", "1");
-    				pd.put("tihuo_status", "1");
-     				ServiceHelper.getPayapp_historyService().editOrderStatus(pd);
-    			 }else if(comeon_type.equals("5")){
-    				//System.out.println("优选");
+   				 }else if(comeon_type.equals("4")){//一元购
      				pd.put("order_status", "1");
+    				pd.put("tihuo_status", "1");
+     				ServiceHelper.getPayapp_historyService().editOrderStatus(pd);//更新提货状态记录
+    			 }else if(comeon_type.equals("5")){//优选
+      				pd.put("order_status", "1");
      				pd.put("tihuo_status", "1");
-      				ServiceHelper.getPayapp_historyService().editOrderStatus(pd);
-      				//更新提货状态记录
-			   		PageData wapd=new PageData();
+      				ServiceHelper.getPayapp_historyService().editOrderStatus(pd);//更新提货状态记录
+ 			   		PageData wapd=new PageData();
 			   		wapd.put("waterrecord_id", order_id);
 			   		wapd.put("pay_status", "1");
 			   		ServiceHelper.getWaterRecordService().editWaterRecord(wapd);
@@ -847,13 +835,10 @@ public class TongYong extends BaseController{
 				PageData over_pd=new PageData();
 				over_pd.put("member_id", mpd.getString("member_id"));
 				over_pd.put("store_id", spd.getString("store_id"));
-//				//System.out.println("更新商家营销记录表====================================="); 
-				YingXiao(pd);
-//	   	   		//System.out.println("更新会员个人消费次数、消费金额信息=====================================");
-	   	   		over_pd.put("salemoney", df2.format(acmoney+user_yue+user_jifen));
-	   	   		ServiceHelper.getAppMemberService().updateMemberById(over_pd); 
-//	   	   		//System.out.println("更新商家的综合分值=====================================");
-	   	   		double zengcomplex_score=0;//赠送的综合分
+ 				YingXiao(pd);//更新商家营销记录表
+ 	   	   		over_pd.put("salemoney", df2.format(acmoney+user_yue+user_jifen));
+	   	   		ServiceHelper.getAppMemberService().updateMemberById(over_pd); //更新会员个人消费次数、消费金额信息
+ 	   	   		double zengcomplex_score=0;
 				if( membershouyi_jifen<=5 ){
 			   			zengcomplex_score=Double.parseDouble( Const.complexscore[4]);
 		   		}else if(5< membershouyi_jifen  && membershouyi_jifen<= 10){
@@ -866,19 +851,15 @@ public class TongYong extends BaseController{
 		   				zengcomplex_score=Double.parseDouble( Const.complexscore[8]);
 		   		}
 	   	   		double complex_score=Double.parseDouble(spd.getString("complex_score"))+Double.parseDouble(Const.complexscore[1])+zengcomplex_score;
-	   	   		complex_scoreAdd(over_pd.getString("store_id"),df0.format(complex_score));
-// 	   			//System.out.println("更新商家的订单交易次数=====================================");
- 	   			over_pd.put("transaction_times", "1");
- 	   			ServiceHelper.getAppStoreService().edit(over_pd);
-//	  			//System.out.println("更新会员指定商家的vip内容=====================================");
-	  			over_pd.put("sale_money", sale_money);
-	  			ServiceHelper.getAppMemberService().updateStoreVipById(over_pd);
-//	  			//System.out.println("新增会员的魅力值=====================================");
-	  			charm_numberAdd(over_pd.getString("member_id"), Const.charm_number[5]); 
+	   	   		complex_scoreAdd(over_pd.getString("store_id"),df0.format(complex_score));//更新商家的综合分值
+  	   			over_pd.put("transaction_times", "1");
+ 	   			ServiceHelper.getAppStoreService().edit(over_pd);//更新商家的订单交易次数
+ 	  			over_pd.put("sale_money", sale_money);
+	  			ServiceHelper.getAppMemberService().updateStoreVipById(over_pd);//更新会员指定商家的vip内容
+ 	  			charm_numberAdd(over_pd.getString("member_id"), Const.charm_number[5]); //新增会员的魅力值
    				//针对提货券
       			if(!isTihuo){ 
-//      			//System.out.println("开始删除购物车=====================================");
- 					//获取商品信息
+  					//获取商品信息
 					List<PageData> goodsList=ServiceHelper.getAppGoodsService().getGoodsIdByOrder(pd);
 					PageData gpd=new PageData();
 					PageData goodspd=null;
@@ -893,6 +874,7 @@ public class TongYong extends BaseController{
 							gpd.put("ok_number", goodspd.getString("shop_number"));
 							gpd.put("goods_id", goodspd.getString("goods_id"));
 							ServiceHelper.getAppGoodsService().updateGoodsBuyNumber(gpd);
+							ServiceHelper.getAppGoodsService().updateGoodsConsumption_number(gpd);//更新当前商品的销售数量
 						}
 						goodspd.put("member_id", pd.getString("member_id"));
 						//清空购物车
