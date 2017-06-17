@@ -248,8 +248,7 @@
 				a.sort,
 				a.promotion_type,
 				a.promotion_content,
-				a.createdate,
-				a.integral_number,
+ 				a.integral_number,
 				a.company,
 				a.deletestatus,
 				b.complex_score 

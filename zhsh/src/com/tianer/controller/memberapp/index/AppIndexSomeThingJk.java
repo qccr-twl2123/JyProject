@@ -2,8 +2,7 @@ package com.tianer.controller.memberapp.index;
 
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,15 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tianer.controller.base.BaseController;
-import com.tianer.controller.memberapp.tongyongUtil.TongYong;
-import com.tianer.entity.Page;
-import com.tianer.util.Const;
-import com.tianer.util.DateUtil;
-import com.tianer.util.Distance;
-import com.tianer.util.PageData;
+ import com.tianer.entity.Page;
+   import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
-import com.tianer.util.StringUtil;
-
+ 
 /** 
  * 类名称：AppShouyeController
  * 创建人：魏汉文(首页所需的接口)
@@ -129,6 +123,7 @@ public class AppIndexSomeThingJk extends BaseController {
 		try { 
  			String nowpage=(pd.getString("nowpage") == null?"1":pd.getString("nowpage"));
 			page.setCurrentPage(Integer.parseInt(nowpage));
+			page.setPd(pd);
 			if(pd.getString("change_type") == null || pd.getString("change_type").equals("1")){
 				allstoreList=ServiceHelper.getAppStoreService().getStorelistPage(page);
  			}else{
@@ -156,19 +151,23 @@ public class AppIndexSomeThingJk extends BaseController {
 	 	        paixupd.put("storepx_number", "1");
 	 	        paixupd.put("name", "智能排序");
 		        paixuList.add(paixupd);
-		        paixupd.clear();
+		        paixupd=null;
+		        paixupd=new PageData();
 		        paixupd.put("storepx_number", "2");
 		        paixupd.put("name", "距离从近到远");
 		        paixuList.add(paixupd);
-		        paixupd.clear();
+		        paixupd=null;
+		        paixupd=new PageData();
 		        paixupd.put("storepx_number", "3");
 		        paixupd.put("name", "人气从高到低");
 		        paixuList.add(paixupd);
-		        paixupd.clear();
+		        paixupd=null;
+		        paixupd=new PageData();
 		        paixupd.put("storepx_number", "4");
 		        paixupd.put("name", "积分率从高到低");
 		        paixuList.add(paixupd);
-		        paixupd.clear();
+		        paixupd=null;
+		        paixupd=new PageData();
 		        paixupd.put("storepx_number", "5");
 		        paixupd.put("name", "销售量从高到低");
 		        paixuList.add(paixupd);
@@ -180,11 +179,13 @@ public class AppIndexSomeThingJk extends BaseController {
 	 	        paixupd.put("goodspx_number", "1");
 	 	        paixupd.put("name", "销售数量");
 		        paixuList.add(paixupd);
-		        paixupd.clear();
+		        paixupd=null;
+		        paixupd=new PageData();
 		        paixupd.put("goodspx_number", "2");
 		        paixupd.put("name", "价格从高到底");
 		        paixuList.add(paixupd);
-		        paixupd.clear();
+		        paixupd=null;
+		        paixupd=new PageData();
 		        paixupd.put("goodspx_number", "3");
 		        paixupd.put("name", "价格从低到高");
 		        paixuList.add(paixupd);
@@ -240,7 +241,7 @@ public class AppIndexSomeThingJk extends BaseController {
  			for(PageData e1 : firstList){
  				sslist.add(e1);
 			}
-			map1.put("data", sslist);
+			map1.put("fenleiList", sslist);
 			sslist=null;
 			firstList=null;
 			flpd1=null;

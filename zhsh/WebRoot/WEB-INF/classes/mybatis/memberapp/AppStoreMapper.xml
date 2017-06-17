@@ -944,7 +944,7 @@
  					a.longitude,
 					a.latitude ,
 					a.store_id,
-					cast((cast(round( 6378.138 * 2 * asin( sqrt( pow( sin(( abs(a.latitude  * pi() / 180 - ifnull(#{latitude},'30') * pi() / 180) ) / 2 ), 2 ) + cos(a.latitude  * pi() / 180) * cos( ifnull(#{latitude},'30') * pi() / 180) * pow( sin(( abs(a.longitude * pi() / 180 - ifnull(#{longitude},'120')  * pi() / 180) ) / 2 ), 2 ))) ,3) as  decimal(10,1))) as char) as distance,
+					cast((cast(round( 6378.138 * 2 * asin( sqrt( pow( sin(( abs(a.latitude  * pi() / 180 - ifnull(#{pd.latitude},'30') * pi() / 180) ) / 2 ), 2 ) + cos(a.latitude  * pi() / 180) * cos( ifnull(#{pd.latitude},'30') * pi() / 180) * pow( sin(( abs(a.longitude * pi() / 180 - ifnull(#{pd.longitude},'120')  * pi() / 180) ) / 2 ), 2 ))) ,3) as  decimal(10,1))) as char) as distance,
  					a.merchant_level
 		from 
 					tb_store a 
