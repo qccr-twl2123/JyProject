@@ -107,6 +107,13 @@ public class Storepc_wealthhistoryService {
 	}
 	
 	/*
+	 *财富记录详情
+	 */
+	public PageData findByWealthId(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("XJTStoreWealthhistoryMapper.findByWealthId", pd);
+	}
+	
+	/*
 	 *统计当前页的总和
 	 */
 	public PageData sumNowPageWeath(Page page)throws Exception{

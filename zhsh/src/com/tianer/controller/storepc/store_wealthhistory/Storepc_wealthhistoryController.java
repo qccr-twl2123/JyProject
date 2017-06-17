@@ -31,6 +31,7 @@ import com.tianer.util.Const;
 import com.tianer.util.DateUtil;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
+import com.tianer.util.SmsUtil;
 
 /** 
  * 
@@ -277,10 +278,27 @@ public class Storepc_wealthhistoryController extends BaseController {
 			if(e == null){
 				e=new PageData();
 			}else{
- 	 			 if(e.getString("tihuo_id") != null && !e.getString("tihuo_id").equals("")){
+				//优惠项
+ 	 			List<PageData> discountList =new ArrayList<PageData>();
+ 	 			String discount_content=e.getString("discount_content");
+ 	 			if(discount_content != null && discount_content.contains(",")){
+ 	 				String[] str=discount_content.split(",");
+ 	 				PageData  dispd=null;
+ 	 				for(int i=0;i<str.length ; i++){
+	   					dispd=new PageData();
+	   					if(str[i].contains("@")){
+	   						dispd.put("content", str[i].split("@")[0]);
+	   						dispd.put("number", str[i].split("@")[2]);
+ 	   						discountList.add(dispd);
+	   					}
+ 		   				dispd=null;
+	 	 			}
+ 	 			}	
+ 	 			e.put("discountList", discountList);
+ 	 			if(e.getString("tihuo_id") != null && !e.getString("tihuo_id").equals("")){
 	 					String s=e.getString("tihuo_id").substring(0, 2)+"****"+e.getString("tihuo_id").substring(6, 10);
 	 					e.put("tihuo_id", s);
-	 			 }
+	 			}
 	 			String user_type=e.getString("user_type");
 	 			if(user_type == null){
 	 				e.put("show_id","不存在");
@@ -490,6 +508,36 @@ public class Storepc_wealthhistoryController extends BaseController {
 		}finally{
 			out.write("success");
 			out.close();
+		}
+ 	}
+	
+	
+	/**
+	 * 提现申请撤回
+	 */
+	@RequestMapping(value="/txReturn")
+	public void TxReturn(PrintWriter out){
+ 		PageData pd = new PageData();
+		try{
+			pd = this.getPageData();
+			//处理为处理的的提现申请数据
+			pd.put("process_status", "0");
+			PageData weathpd=storepc_wealthhistoryService.findByWealthId(pd);
+			pd.put("store_id", weathpd.getString("store_id"));
+			double now_wealth=Double.parseDouble(ServiceHelper.getAppStoreService().sumStoreWealth(pd))-Double.parseDouble(weathpd.getString("number"));
+			pd.put("now_wealth", TongYong.df2.format(now_wealth));
+			appStoreService.editWealthById(pd);	
+			//更新提现信息
+ 			pd.put("tixian_money", TongYong.df2.format(Double.parseDouble(weathpd.getString("tixian_money"))+Double.parseDouble(weathpd.getString("number"))));
+ 			appStoreService.edit(pd);
+			//删除订单 
+			pd.put("waterrecord_id", weathpd.getString("store_wealthhistory_id"));
+			ServiceHelper.getStorepc_wealthhistoryService().deleteThis(pd);
+			ServiceHelper.getWaterRecordService().deleteWater(pd);
+  			out.write("success");
+			out.close();
+		} catch(Exception e){
+			logger.error(e.toString(), e);
 		}
  	}
 	

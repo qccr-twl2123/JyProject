@@ -4353,9 +4353,9 @@ public class TongYong extends BaseController{
   	 */
   	public static PageData getGoodsListByOrder(PageData pd){
    		try {
-  				if(pd == null){
-  					return new PageData();
-  				}
+	  				if(pd == null){
+	  					return new PageData();
+	  				}
  					List<PageData> goodsList=ServiceHelper.getTYAllSortService().listAllGoodsByOrder(pd);
 					double shenmoney=0;//节省金额
 					int goods_number=0;//总购买数量
@@ -4485,14 +4485,17 @@ public class TongYong extends BaseController{
  	 			String discount_content=pd.getString("discount_content");
  	 			if(discount_content != null && discount_content.contains(",")){
  	 					String[] str=discount_content.split(",");
+ 	 					 PageData  dispd=null;
 	   					for(int i=0;i<str.length ; i++){
-	   					    	 PageData  dispd=new PageData();
-	   						  	 String[] str1=str[i].split("@");
-		   						 dispd.put("content", str1[0]);
-		   						 dispd.put("number", str1[2]);
-		   						 dispd.put("all", str1[0]+str1[2]);
-		   						 discountListone.add(dispd);
-		   						 dispd=null;
+	   						dispd=new PageData();
+	   					    if(str[i].contains("@")){
+	   					    	String[] str1=str[i].split("@");
+			   					dispd.put("content", str1[0]);
+			   					dispd.put("number", str1[2]);
+			   					dispd.put("all", str1[0]+str1[2]);
+			   					discountListone.add(dispd);
+	   					    }
+ 		   					dispd=null;
 	 	 			 }
  	 			}	
  	 			pd.put("discountList", discountListone);
@@ -5399,14 +5402,14 @@ public class TongYong extends BaseController{
 				yingxiaoList.add(e2);
 			}
 			 e2=null;
+			 String discount_content="";
 			 int yingxiaosize=yingxiaoList.size();
- 			 double useredbeforMoney=reducemoney+zkmoney;//使用红包前的总共优惠了的金额
 			 //判断优惠后的金额是否已经是0
 			 String redpackage_id=(pd.getString("redpackage_id") == null?"":pd.getString("redpackage_id"));
 			 String redmoney="0";
-			 List<PageData> canUseRedList=null;
+			 List<PageData> canUseRedList=getAllStoreRedMoneyByMember(pd, notyouhui_money, yingxiaosize, reducemoney);
+			 double useredbeforMoney=reducemoney+zkmoney;//使用红包前的总共优惠了的金额
 			 PageData canUsePd=null;
-			 String discount_content="";
 			 if(useredbeforMoney < youhui_money+notyouhui_money){
 				 	/**
 				 	 * 1先判断有red_id表示使用某个红包，2:如果没有则获取可使用的红包列表
@@ -5414,7 +5417,7 @@ public class TongYong extends BaseController{
 				    if(redpackage_id.equals("")){
 				    	canUseRedList=getAllStoreRedMoneyByMember(pd, notyouhui_money, yingxiaosize, reducemoney);
   				    }else{
-				    	canUsePd=getRedPackageInforByID(redpackage_id, notyouhui_money, reducemoney);
+				    	canUsePd=getRedPackageInforByID(redpackage_id, youhui_money, reducemoney);
 				    	if(canUsePd == null){
 				    		canUsePd=new PageData();
 				    	}else{
@@ -5422,7 +5425,7 @@ public class TongYong extends BaseController{
 				    	}
 				    }
  			 }
-			 map.put("canUseRedList", canUseRedList);
+			 map.put("canUseRedList", canUseRedList);//可以使用的红包集合
 			 map.put("canUsePd", canUsePd);
  			//使用红包后的优惠后的实际应该支付的金额为
 			double surepaymoney=youhui_money-reducemoney-Double.parseDouble(redmoney)-zkmoney+notyouhui_money;
@@ -5507,20 +5510,21 @@ public class TongYong extends BaseController{
  	  		}else{
  	  			map.put("yingxiaoList", yingxiaoList);
  	  		}
-			for (PageData dispd : yingxiaoList) {
+ 			for (PageData dispd : yingxiaoList) {
  				discount_content+=dispd.getString("content")+"@"+dispd.getString("id")+"@"+dispd.getString("number")+"@"+dispd.getString("type")+",";
 			}
     		PageData countpd=new PageData();//总统计消费金额以及使用红包情况
-   			countpd.put("zengid", zengid2+","+zengid);//增红包的集合
+   			countpd.put("store_redpackets_id", zengid2+","+zengid);//增红包,id的集合
  			countpd.put("zengjf", df2.format(addjf+alljifeng));//赠送的积分
- 			countpd.put("red_id", redpackage_id);//使用红包的ID
+ 			countpd.put("redpackage_id", redpackage_id);//使用红包的ID
   			countpd.put("allmoney", df2.format(youhui_money+notyouhui_money));//总金额
+  			countpd.put("notmoney", df2.format(notyouhui_money));//不优惠金额
  			if(surepaymoney <= 0){
 				countpd.put("paymoney", "0");//优惠后的支付金额
-				countpd.put("reducemoney", df2.format(youhui_money+notyouhui_money));
+				countpd.put("reducemoney", df2.format(youhui_money+notyouhui_money));//优惠金额=优惠的金额+红包优惠的金额+折扣的金额
 			}else{
 				countpd.put("paymoney", df2.format(surepaymoney));
-				countpd.put("reducemoney", df2.format(surehuiyoumoney));//优惠金额=优惠的金额+红包优惠的金额+折扣的金额
+				countpd.put("reducemoney", df2.format(surehuiyoumoney));
 			}
  			countpd.put("discount_content", discount_content);//优惠内容
  			map.put("countpd", countpd);
@@ -5556,7 +5560,7 @@ public class TongYong extends BaseController{
   	 * 购买的优惠买单买单信息pd,
   	 * youhui_money可优惠的金额(除去不优惠的金额)，
   	 * notyouhui_money 不优惠金额，
-   	 * pay_sort_type 买单类别：1-总金额（提货券/扫一扫优惠买单），2-类别买单
+   	 * pay_sort_type 买单类别：1-总金额，2-类别买单
      * allleibie  类别购买字段拼接：拆分类别 （类别ID@金钱@积分率@折扣率）
   	 * @return
   	 * 
@@ -5934,24 +5938,18 @@ public class TongYong extends BaseController{
  	  			map.put("yingxiaoList", yingxiaoList);
  	  		}
   			PageData countpd=new PageData();
-			if(surepaymoney <= 0){
-					countpd.put("paymoney", "0");//优惠后的支付金额
-					countpd.put("reducemoney", df2.format(youhui_money+notyouhui_money));
+  			countpd.put("store_redpackets_id", zengid+","+zengid2);//增红包的集合
+ 			countpd.put("zengjf", df2.format(addjf+alljifeng));//赠送的积分
+ 			countpd.put("redpackage_id", redpackage_id);//使用红包的ID
+ 			countpd.put("allmoney", df2.format(youhui_money+notyouhui_money));//总金额
+ 			countpd.put("notmoney", df2.format(youhui_money+notyouhui_money));//不优惠金额
+ 			if(surepaymoney <= 0){
+				countpd.put("paymoney", "0");//优惠后的支付金额
+				countpd.put("reducemoney", df2.format(youhui_money+notyouhui_money));
 			}else{
 				countpd.put("paymoney", df2.format(surepaymoney));
 				countpd.put("reducemoney", df2.format(surehuiyoumoney));//优惠金额=优惠的金额+红包优惠的金额+折扣的金额
 			}
-			//增红包的集合
-			String allzengId="";
-			if(!zengid.equals("")){
-				allzengId=zengid+","+zengid2;
-			}else{
-				allzengId=zengid2;
-			}
-			countpd.put("zengid", allzengId);
- 			countpd.put("zengjf", df2.format(addjf+alljifeng));//赠送的积分
- 			countpd.put("red_id", redpackage_id);//使用红包的ID
- 			countpd.put("allmoney", df2.format(youhui_money+notyouhui_money));//总金额
  			map.put("countpd", countpd);
  			countpd=null;
  			//获取个人财富

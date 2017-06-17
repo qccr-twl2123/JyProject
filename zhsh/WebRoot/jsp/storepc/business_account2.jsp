@@ -18,6 +18,24 @@
          	.moneyred{color:red;}
          	.moneyblue{color:blue;}
          	.moneygreen{color:green;}
+         	.alert_xg {
+         		max-width: 900px;
+         	}
+         	.one{
+         		padding-top: 4px;
+         	}
+         	.al_body tr td{
+         		line-height: 1.8;
+         	}
+         	.al_body li {
+			        box-sizing: border-box;
+				    width: 100%;
+				    display: inline-block;
+				    line-height: 0;
+				    padding-top: 0;
+				    text-align: left;
+				    padding-left: 152px;
+			}
     </style>
 </head>
 <body>
@@ -35,45 +53,44 @@
 	        <div class="al_body onedetail">
 				<table cellspacing="0" cellpadding="0" style="width:96%;padding:10px 3%;border:0;">
 					<tr>
-						<td style="width:50%">支付时间：<span id="detail_createdate" class="qingkong"></span></td>
+						<td >支付时间：<span id="detail_createdate" class="qingkong"></span></td>
 						<td>订单号：<span id="detail_store_wealthhistory_id" class="qingkong"></span></td>
-					</tr>
-					<tr>
 						<td>用户类型：<span id="detail_user_type" class="qingkong"></span></td>
-						<td>用户名称：<span id="detail_user_name" class="qingkong"></span></td>
 					</tr>
 					<tr>
+						
+						<td>用户名称：<span id="detail_user_name" class="qingkong"></span></td>
 						<td>用户ID：<span id="detail_show_id" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width: 189px;display: block;float: right;" class="qingkong"></span></td>
 						<td>款项类型：<span id="detail_profit_name" class="qingkong"></span></td>
 					</tr>
 					<tr>
 						<td>发生金额：<span id="detail_sale_money" class="qingkong"></span></td>
 						<td>优惠金额：<span id="detail_discount_money" class="qingkong"></span></td>
+						<td>不优惠金额： <span id="detail_no_discount_money" class="qingkong"></span></td>
 					</tr>
 					<tr>
-						<td>不优惠金额： <span id="detail_no_discount_money" class="qingkong"></span></td>
 						<td>实际金额： <span id="detail_discount_after_money" class="col-blue qingkong"></span></td>
-  					</tr>
-					<tr>
 						<td id="detail_remittance_type_name" class="qingkong"></td>
 						<td>积分支付：<span  id="detail_user_integral" class="qingkong"></span> </td>
- 					</tr>
+  					</tr>
 					<tr>
 						<td>余额支付：<span  id="detail_user_balance"  class="qingkong"></span></td>
 						<td>支付类型：<span id="detail_jiaoyi_type_name" class="qingkong"></span></td>
- 					</tr>
-					<tr>
 						<td>支付渠道：<span id="detail_application_channel_name" class="qingkong"></span></td>
-						<td>推广积分：<span id="detail_sendxitong_integral" class="qingkong"></span></td>
  					</tr>
 					<tr>
+						<td>推广积分：<span id="detail_sendxitong_integral" class="qingkong"></span></td>
 						<td>赠送积分：<span id="detail_get_integral" class="qingkong"></span></td>
  						<td>结余：<span id="detail_last_wealth" class="qingkong"></span></td>
-					</tr>
+ 					</tr>
 					<tr>
 						<td>操作员：<span id="detail_operator_name" class="qingkong"></span></td>
  					</tr>
 				</table>
+				<ul style="width:100%" id="detailyouhui">
+					<p style="padding-left: 8.3%;box-sizing: border-box;">优惠明细</p>
+					<!-- <li class="liremove">1.231321a3sd22a3s</li> -->
+  				</ul>
 	        </div> 
 	        <div class="al_body twodetail">
 				<table cellspacing="0" cellpadding="0" style="width:96%;padding:10px 3%;border:0;">
@@ -326,6 +343,16 @@
             			$("#detail_sendxitong_integral").html(pd.sendxitong_integral);
             			$("#detail_get_integral").html(pd.get_integral);
             			$("#detail_last_wealth").html(pd.last_wealth);
+        			}
+        			$(".liremove").remove();
+        			var discountList=pd.discountList;
+        			for (var i = 0; i < discountList.length; i++) {
+        				$("#detailyouhui").append("<li class='liremove'>"+(i+1)+"："+discountList[i].content+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-------------------------&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+discountList[i].number+"</li>");
+					}
+        			if(pd.profit_type == "3"){
+        				$("#detailyouhui").show();
+        			}else{
+        				$("#detailyouhui").hide();
         			}
           		}else{
         			alert(data.message);

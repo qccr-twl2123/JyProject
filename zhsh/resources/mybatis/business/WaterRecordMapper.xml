@@ -771,5 +771,11 @@
 		where 
 			a.waterrecord_id = #{waterrecord_id} and a.pay_status='1'
  	</select>
+ 	
+ 	<!--  删除制定订单 -->
+	<delete id="deleteWater"  parameterType="pd">
+		delete from tb_waterrecord
+		where waterrecord_id = #{waterrecord_id}
+	</delete>
 	
 </mapper>

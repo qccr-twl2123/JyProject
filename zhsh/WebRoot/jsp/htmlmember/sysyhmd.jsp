@@ -150,90 +150,16 @@
  			</div>
             <!-- 优惠买单新位置 -->
             <div class="tc" >
-                    <form action="" name="sortbuyForm" id="sortbuyForm" method="post">
-                    <input type="hidden" name="session_orderid" value="${session_orderid}">
-                    <input type="hidden" name="pay_type" value="2"/>
-                    <input type="hidden" name="member_id" value="${pd.member_id}"/>
-                    <input type="hidden" name="pay_sort_type" value="2"/>
-                    <input type="hidden" name="allgoodsid" value=""/>
-                    <input type="hidden" name="desk_no" id="sortdesk_no" value="${pd.desk_no}"/>
-                    <input type="hidden" name="no_discount_money" value="0"/>
-                    <input type="hidden" name="sale_money" id="sortsale_money" value="0"/>
-                    <input type="hidden" name="redpackage_id" id="sortredpackage_id" value=""/>
-                    <input type="hidden" name="store_redpackets_id" id="sortstore_redpackets_id" value=""/>
-                    <input type="hidden" name="store_id" value="${pa.store_id}"/>
-                    <input type="hidden" name="discount_content" id="sortdiscount_content" value=""/>
-                    <input type="hidden" name="get_integral" id="sortget_integral" value=""/>
-                    <input type="hidden" name="discount_money" id="sortdiscount_money" value=""/>
-                    <input type="hidden" name="actual_money" id="sortactual_money"  value=""/>
-                    <div id="flpay" >
-	                    <div class="yh-content clearfix">
-							<p class="store_name" style="font-size: 24px;"></p>
-							<ul id="flgoodssort">
-							    <c:forEach items="${bigsortList}" var="var">
-			                     	<li class="flsort">
-										<span><span class="green">${var.name}</span>消费金额  :</span>
-										<span class="red"><input type="text" value="" id="${var.goods_category_id}" oninput="leibietwo()" onkeyup="value=value.replace(/[^\d\.]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))"  />元</span>
-										<span class="fr gay">积分率：${var.back_rate}%</span>
-										<input type="hidden"  class="goods_category_id" value="${var.goods_category_id}">
-			                            <input type="hidden"  class="${var.goods_category_id}jf" value="${var.back_rate}">
-			                            <input type="hidden"  class="${var.goods_category_id}zk" value="${var.zk_rate}">
-									</li>
-		                     	</c:forEach>
-								<li>
-									<span>桌号：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${pd.desk_no}</span>
-								</li>
- 								<li id="flyhmx" style="font-size:14px;">
-									<p class="fourteen-px">优惠明细：</p>
-									<span class="sortyouhui">
-			                            	<c:forEach items="${marketlist }" var="var">
-			                            		<p class="gay fr_1">
-													<span>${var.grantrule}</span>
-													<span class="blue fr_1"></span>
-												</p>
- 			                            	</c:forEach>
-			                        </span>
-				  				</li>
-								<li>
-									<span class="fr_1 gay">已优惠<span class="sortdiscount_money" style="color:red"> </span>元</span>
-									<span class="fr_1 gay">赠送积分<span class="sortget_integral" style="color:red"> </span>分</span>
- 								</li>
-								<li>
-  									<div class="fourteen-px center"><b>实付金额：<span class="sortactual_money" style="font-size: 20px;color:red"> </span>元</b></div>    
-								</li>
-								<li>
-										<span class="height ">
-											余额支付：<input type="text" name="user_balance" id="sortuser_balance" oninput="isOk('1',this,'sort')" value="" onkeyup="value=value.replace(/[^\d\.]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))"  />元 
-										</span>
-										<span class="fr height gay">余额<fmt:formatNumber type="number" value="${mpd.now_money}" pattern="0.00" maxFractionDigits="2"/>元</span>
-								</li>
-								<li>
-										<span class="height ">
-											积分支付：
- 											<input type="text" name="user_integral"  id="sortuser_integral" oninput="isOk('2',this,'sort')" value="" onkeyup="value=value.replace(/[^\d\.]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))"  />分 
-										</span>
-										<span class="fr height gay">积分<fmt:formatNumber type="number" value="${mpd.now_integral}" pattern="0.00" maxFractionDigits="2"/>分</span>
-								</li>
-							</ul>
-				 		</div>
-                        <div class="yhm-footer">
- 							<a class="fr zeropaymoney" onclick="gopay('2')">
-								<p>在线支付 <span class="sortlastpay_money"></span></p>
-					 		</a>
-						</div> 
-                     </div>
-                    </form>
                      <!-- 按总金额 -->
                     <form action="" name="allbuyForm" id="allbuyForm" method="post">
                     <input type="hidden" name="session_orderid" value="${session_orderid}">
                     <input type="hidden" name="pay_type" value="2"/>
-                    <input type="hidden" name="member_id" value="${pd.member_id}"/>
-                    <input type="hidden" name="pay_sort_type" value="1"/>
+                     <input type="hidden" name="pay_sort_type" value="1"/>
                     <input type="hidden" name="allgoodsid" value=""/>
                     <input type="hidden" name="desk_no" value="${pd.desk_no}"/>
                     <input type="hidden" name="redpackage_id" id="allredpackage_id" value=""/>
                     <input type="hidden" name="store_redpackets_id" id="allstore_redpackets_id" value=""/>
-                    <input type="hidden" name="store_id" value="${pa.store_id}"/>
+                    <input type="hidden" name="sk_shop" value="${pd.new_store_id}"/>
                     <input type="hidden" name="discount_content" id="alldiscount_content" value=""/>
                     <input type="hidden" name="get_integral" id="allget_integral" value=""/>
                     <input type="hidden" name="discount_money" id="alldiscount_money" value=""/>
@@ -316,18 +242,12 @@
  		<script src="js/jquery.form.js"  type="text/javascript"></script>
 		<script src="js/ping/pingpp.js" type="text/javascript"></script>
         <script type="text/javascript">
-           var member_id="${pd.member_id}";
-           //0-只开通总金额买单，1-只开通类别买单，3-都不开通
+            //0-只开通总金额买单，1-只开通类别买单，3-都不开通
            var issortjf="${issortjf}";
-       	   if(issortjf == "0"){
+       	   if(issortjf == "0" || issortjf == "1"){
        		 $("#allpay").show();
        		 $(".whwall").css("color","#ff0600");
-       	   }
-       	  /*  else if(issortjf == "1"){
-       		 $("#flpay").show();
-       		 $(".whwfl").css("color","#ff0600");
-       	   } */
-       	   else{
+       	   }else{
        		 $("#showym").show();
        		 $(".tc").hide();
            }
@@ -339,39 +259,10 @@
     		
 	        //前往商家详情
 	 		function back_url(){
-	 			window.location.href="html_member/goStoreDetail.do?store_id=${pd.store_id}";
+	 			window.location.href="html_member/goStoreDetail.do?sk_shop=${pd.new_store_id}";
 	 		}
 	      
-			/* //展示
-			function show(value,obj){
-				$(".whwall").css("color","#000000");
-				$(".whwfl").css("color","#000000");
-				$(obj).css("color","#ff0600");
-				if(value == "0"){
-					if(issortjf == value){
-						$("#allpay").show();
-						$("#flpay").hide();
-						$("#showym").hide();
-					}else{
-						$("#allpay").hide();
-						$("#flpay").hide();
-						$("#showym").show();
-					}
-				}else if(value == "1"){
-					if(issortjf == value){
-						$("#allpay").hide();
-						$("#flpay").show();
-						$("#showym").hide();
-					}else{
-						$("#allpay").hide();
-						$("#flpay").hide();
-						$("#showym").show();
-					}
-			 	}
-			}
-   		 */
-   		 
-   		 
+		 
    		//判断是否为数字
    		function isNumber(obj){
    			if (isNaN($(obj).val())) { 
@@ -469,14 +360,14 @@
    				}
     	  		//获取营销信息
    	 			$.ajax({
-   					url:"<%=basePath%>app_goods/allMoneyByOne.do",
+   					url:"<%=basePath%>app_goods/saoYiSaoShopBuyGoods.do",
    					type:"post",
    					dataType:"json",
    					data:{
-   						"member_id":"${pd.member_id}",
-   						"store_id":"${pa.store_id}",
-   						"paymoney":sale_money,
+    					"sk_shop":"${pd.new_store_id}",
+   						"allmoney":sale_money,
    						"notmoney":no_discount_money},
+   						"redpackage_id":""
    					success:function(data){ 
    						var countpd=data.data.countpd;
    						var yingxiaoList=data.data.yingxiaoList;
@@ -488,86 +379,25 @@
    	   						$(".alldiscount_money").html(parseFloat(countpd.reducemoney).toFixed(2));
    	   	 					$("#allget_integral").val(countpd.zengjf);
    	   						$(".allget_integral").html(parseFloat(countpd.zengjf).toFixed(2));
-   	   						$("#allredpackage_id").val(countpd.red_id);
-   	   						$("#allstore_redpackets_id").val(countpd.zengid);
+   	   						$("#allredpackage_id").val(countpd.redpackage_id);
+   	   						$("#allstore_redpackets_id").val(countpd.store_redpackets_id);
+   	   						$("#alldiscount_content").val(countpd.discount_content);
    						}
-     	 				var discount_content="";
-   	 					$(".allyouhui").empty();
+    	 				$(".allyouhui").empty();
    	  					for(var n=0; n<yingxiaoList.length ; n++){
    	  						var s1=yingxiaoList[n].content;
    	  						var s2=yingxiaoList[n].id;
    	  						var s3=yingxiaoList[n].number;
    	  						var s4=yingxiaoList[n].type;
-   	   						var s=s1+"@"+s2+"@"+s3+"@"+s4;
-   	  						discount_content+=s+",";
-   	  						var sspan="<p class='gay fr_1 '> <span>"+s1+"</span> <span class='blue fr_1'>"+s3+"</span> </p> ";
+     	  					var sspan="<p class='gay fr_1 '> <span>"+s1+"</span> <span class='blue fr_1'>"+s3+"</span> </p> ";
    	  						$(".allyouhui").append(sspan);
    	  					}
-   	  					$("#alldiscount_content").val(discount_content );
+    	  				/* $("#alldiscount_content").val(discount_content ); */
    	 				}
    				});
    							
    			}
-   	 		
-   			
-   			//获取类别的优惠信息
-   			function leibietwo(){
-   				if(member_id == null || member_id == ""){
-   					alert("请先前往登录");
-   					return;
-   				}
-   				var allleibie="";
-   				var xxx=0;//总金额
-   				$(".goods_category_id").each(function(n,o){
-   					var id=$(o).val();
-   					isNumber($("#"+id));
-     				var s2=$("#"+id).val();
-   					var s1=id;
-   	 				var s3=$("."+id+"jf").val();
-   					var s4=$("."+id+"zk").val();
-     	  			if(s2 != null && s2 != "" ){
-   	 					var s=s1+"@"+s2+"@"+s3+"@"+s4;
-   						allleibie+=s+",";
-   						xxx+=parseFloat(s2).toFixed(2);
-   					}
-   	 			});
-    	 	    $.ajax({
-   					url:"<%=basePath%>app_goods/allMoneyByTwo.do",
-   					type:"post",
-   					dataType:"json",
-   					data:{"allleibie":allleibie,"member_id":"${pd.member_id}","store_id":"${pa.store_id}"},
-   					success:function(data){ 
-   						var countpd=data.data.countpd;
-   						var yingxiaoList=data.data.yingxiaoList;
-   						if(countpd != null){
-   							$("#sortsale_money").val(xxx);
-   	   	 					$(".sortactual_money").html(parseFloat(countpd.paymoney).toFixed(2));
-   	   	 					$(".sortlastpay_money").html(parseFloat(countpd.paymoney).toFixed(2));
-   	   	 					$("#sortactual_money").val(countpd.paymoney);
-   	   						$("#sortdiscount_money").val(countpd.reducemoney);
-   	   						$(".sortdiscount_money").html(parseFloat(countpd.reducemoney).toFixed(2));
-   	   	 					$("#sortget_integral").val(countpd.zengjf);
-   	   						$(".sortget_integral").html(parseFloat(countpd.zengjf).toFixed(2));
-   	   						$("#sortredpackage_id").val(countpd.red_id);
-   	   						$("#sortstore_redpackets_id").val(countpd.zengid);
-   						}
-     	 				var discount_content="";
-   	 					$(".sortyouhui").empty();
-   	  					for(var n=0; n<yingxiaoList.length ; n++){
-   	  						var s1=yingxiaoList[n].content;
-   	  						var s2=yingxiaoList[n].id;
-   	  						var s3=yingxiaoList[n].number;
-   	  						var s4=yingxiaoList[n].type;
-   	   						var s=s1+"@"+s2+"@"+s3+"@"+s4;
-   	  						discount_content+=s+",";
-     	  					var sspan="<p class='gay fr_1 '> <span>"+s1+"</span> <span class='blue fr_1'>"+s3+"</span> </p> ";
-   	  						$(".sortyouhui").append(sspan);
-   	  					}
-   	  					$("#sortdiscount_content").val(discount_content );
-   	 				}
-   				});
-   							
-   			}	
+   	 	 
    			
    			var flag=true;
    			
@@ -600,26 +430,7 @@
    	        		}
    	       			zuihouyibu_money=paymoney;
    	       			$("#allactual_money").val(paymoney);
-   	        	}else{
-   	        		if($("#sortsale_money").val() == "" || parseFloat($("#sortsale_money").val())<= 0){
-   	       				return;
-   	       			}
-   	       			var acmoney=$("#sortactual_money").val();
-   	       			var usermoney=$("#sortuser_balance").val();
-   	       			var userintegral=$("#sortuser_integral").val();
-   	       			if(usermoney == ""){
-   	       				usermoney="0";
-   	        		}
-   	        		if(userintegral == ""){
-   	        			userintegral="0";
-   	        		}
-   	       			var paymoney=parseFloat(acmoney)-parseFloat(usermoney)-parseFloat(userintegral);
-   	       			if(paymoney <0){
-   	       				paymoney="0";
-   	        		}
-   	       			zuihouyibu_money=paymoney;
-   	       			$("#sortactual_money").val(paymoney);
-   	        	}
+   	        	} 
    	       		$(".zuihouyibu_money").html(zuihouyibu_money.toFixed(2));
    	       		$("#pay_sort").val(value);
    	       		if(zuihouyibu_money == 0){
@@ -636,9 +447,7 @@
    				flag=false;
    	   		    $(".zeropaymoney").css("background","#a4a4a4");
  		    	var formup="";
-		    	if(value == "2"){
-		    	    	formup="sortbuyForm";
-		    	}else if(value == "1"){
+		    	if(value == "1"){
 		    	    	formup="allbuyForm";
 		    	}else{
 		    			flag=true;
@@ -650,7 +459,9 @@
 				  	url : '<%=basePath%>app_pay_history/thirdPartyPay.do',
 			        type: "POST",//提交类型  
 			      	data:{ 
-			      			"pay_way":"nowpay","url":url,"in_jiqi":"5"
+			      			"pay_way":"nowpay",
+			      			"url":url,
+			      			"in_jiqi":"5"
 			      	},  
 			      	dataType:"json",
 			   		success:function(data){ 
@@ -679,9 +490,7 @@
 	   	   		    $(".readypaymoney").css("background","#a4a4a4");
    		    	    var sort=$("#pay_sort").val();
    		    	    var formup="";
-   		    	    if(sort == "2"){
-   		    	    	formup="sortbuyForm";
-   		    	    }else if(sort == "1"){
+   		    	    if(sort == "1"){
    		    	    	formup="allbuyForm";
    		    	    }else{
    		    	    	flag=true;
@@ -720,25 +529,15 @@
 	   					   		   	   		    $(".readypaymoney").css("background","#e4393c");
 	   	 								        // charge 不正确或者微信公众账号支付失败时会在此处返回
 		   					   		   	   		$(".zeropaymoney").css("background","#ffb900");
-						   		   	   			if(sort == "1"){
-						   		   	   				var n=parseFloat($("#allactual_money").val())+parseFloat($(".zuihouyibu_money").html());
-						   		   	   				$("#allactual_money").val(n.toFixed(2));
-						   		   	   			}else{
-						   		   	   				var n=parseFloat($("#sortactual_money").val())+parseFloat($(".zuihouyibu_money").html());
-			   		   	   							$("#sortactual_money").val(n.toFixed(2));
-						   		   	   			}
+				   					   		   	var n=parseFloat($("#allactual_money").val())+parseFloat($(".zuihouyibu_money").html());
+					   		   	   				$("#allactual_money").val(n.toFixed(2));
 	   									    } else if (result == "cancel") {
  	   									        // 微信公众账号支付取消支付
 	   									    	flag=true;
 	   					   		   	   		    $(".readypaymoney").css("background","#e4393c");
 	   					   		   	   			$(".zeropaymoney").css("background","#ffb900");
-	   					   		   	   			if(sort == "1"){
-	   					   		   	   				var n=parseFloat($("#allactual_money").val())+parseFloat($("#zuihouyibu_money").html());
-	   					   		   	   				$("#allactual_money").val(n.toFixed(2));
-	   					   		   	   			}else{
-	   					   		   	   				var n=parseFloat($("#sortactual_money").val())+parseFloat($("#zuihouyibu_money").html());
-				   		   	   						$("#sortactual_money").val(n.toFixed(2));
-	   					   		   	   			}
+	   					   		   	   			var n=parseFloat($("#allactual_money").val())+parseFloat($("#zuihouyibu_money").html());
+				   		   	   					$("#allactual_money").val(n.toFixed(2));
 	   									    }
 	   									});
 	   						   		} 	     

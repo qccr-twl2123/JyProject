@@ -1195,6 +1195,8 @@ public class HtmlMemberController extends BaseController {
 				}else{
 					pd.put("issortjf", "0");
 				}
+//				pd.remove("store_id");
+	   			pd.remove("member_id");
   		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -2334,49 +2336,45 @@ public class HtmlMemberController extends BaseController {
 			//判断是否为H5页面
 			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
 				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+				 //防止表单重复提交
+				 Session session = SecurityUtils.getSubject().getSession();	
+				 if(session.getAttribute(Const.SESSION_ORDER) == null ){
+						String session_orderid=BaseController.getTimeID();
+						session.setAttribute(Const.SESSION_ORDER, session_orderid);
+						String sessionid =String.valueOf(session.getId());
+						mv.addObject("session_orderid ", sessionid );
+	 			}else{
+	 					mv.addObject("session_orderid", String.valueOf(session.getAttribute(Const.SESSION_ORDER)));
+				}
+				//获取个人财富
+				 mv.addObject("mpd", ServiceHelper.getAppMemberService().findWealthById(pd));
+	 	  		//判断是否开通类别积分购买的权限
+		 		if(ServiceHelper.getAppStorepc_marketingService().getJfById(pd) != null){
+		 				if( ServiceHelper.getAppStorepc_marketingService().getJfById(pd).getString("change_type").equals("3") ){
+		 					mv.addObject("issortjf", "3");
+		 				}else if( ServiceHelper.getAppStorepc_marketingService().getJfById(pd).getString("change_type").equals("2") ){
+		 					mv.addObject("issortjf", "1");
+		 				} else{
+		 					mv.addObject("issortjf", "0");
+		 				}
+		 			}
+		 		//商家名称
+		 		mv.addObject("store_name", ServiceHelper.getAppStoreService().findById(pd).getString("store_name"));
+				//获取营销规则
+				List<PageData> marketlist=appStorepc_marketingService.listAllById(pd);
+	   			mv.addObject("marketlist", marketlist); 
+	   			pd.put("new_store_id",BaseController.get4ZMSZ()+EbotongSecurity.ebotongEncrypto(pd.getString("store_id")));
+	   			mv.setViewName("htmlmember/sysyhmd");
+	   			pd.remove("store_id");
+	   			pd.remove("member_id");
+			}else{
+				mv.setViewName("redirect:toLoginWx.do");
 			}
-			 //防止表单重复提交
-			 Session session = SecurityUtils.getSubject().getSession();	
-			 if(session.getAttribute(Const.SESSION_ORDER) == null ){
-					String session_orderid=BaseController.getTimeID();
-					session.setAttribute(Const.SESSION_ORDER, session_orderid);
-					String sessionid =String.valueOf(session.getId());
-					mv.addObject("session_orderid ", sessionid );
- 			}else{
- 					mv.addObject("session_orderid", String.valueOf(session.getAttribute(Const.SESSION_ORDER)));
-			}
-  			//判断是否开通类别积分购买的权限
-			PageData ispd=appStorepc_marketingService.getJfById(pd);
-			if(ispd != null && ispd.getString("change_type").equals("3") ){
-				mv.addObject("issortjf", "3");
-			}else if(ispd != null && ispd.getString("change_type").equals("2") ){
-				mv.addObject("issortjf", "1");
-			} else{
-				mv.addObject("issortjf", "0");
-			}
-			ispd=null;
-			//获取用户个人详情
-			PageData mpd=appMemberService.findById(pd);
-			if(mpd == null){
-				mpd=new PageData();
-			}
-			mv.addObject("mpd",mpd);
- 			//获取商家的大类
-			List<PageData> bigsortList = ServiceHelper.getAppGoodsService().listAllBigSort(pd);
-			mv.addObject("bigsortList", bigsortList);
-			bigsortList=null;
-  			//获取商家信息
-			PageData pa = ServiceHelper.getAppStoreService().findById(pd);
-			mv.addObject("pa", pa);
-			//获取营销规则
-			List<PageData> marketlist=appStorepc_marketingService.listAllById(pd);
-   			mv.addObject("marketlist", marketlist); 
-    	} catch(Exception e){
+     	} catch(Exception e){
 			logger.error(e.toString(), e);
  		}
   		mv.addObject("pd", pd); 
-  		mv.setViewName("htmlmember/sysyhmd");
-		return mv;
+ 		return mv;
  	}
 	
 	

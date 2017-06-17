@@ -12,8 +12,6 @@
 	<title>商品销售明细</title>
 	<base href="<%=basePath%>">
  	<link rel="stylesheet" href="css/pcstore/zhxx_lsmx.css">
-	<script src="js/jquery-1.8.0.min.js"></script>
-	<script src="My97DatePicker/WdatePicker.js"></script>
 	<style type="text/css">
 	.al_body {
 	    height: 69%;
@@ -209,114 +207,114 @@
 		</ul>
 	 	</form>
 	</c:if>
-  	<script type="text/javascript" src="js/bootbox.min.js"></script><!-- 确认窗口 -->
-	<script type="text/javascript">
-		 
- 		//提交
-		function select(){
-			 $("#Form").submit();
+<script src="js/jquery-1.8.0.min.js"></script>
+<script src="My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="js/bootbox.min.js"></script><!-- 确认窗口 -->
+<script type="text/javascript">
+
+//提交
+function select(){
+ $("#Form").submit();
+}
+
+
+//确认备注
+function ok(id,remark){
+	var rem = $("#"+remark).val().trim();
+	if(rem == ""){
+		return;
+	}
+	$.ajax({
+			type:"post",
+			url:"storepc_wealthhistory/updRemark.do",
+			data:"remark="+rem+"&order_id="+id,
+			success:function(data){
+				window.location.reload();
+			}
+	});
+}
+
+
+//查看订单详情
+function findOrderDetail(order_id){
+$("#thgoods").empty();
+	//获取提货信息
+	$.ajax({
+	url:'<%=basePath%>storepc_wealthhistory/findOrderDetail.do',
+	type:"post",
+	dataType:"json",
+	data:{"order_id":order_id},
+	success:function(data){
+		if(data.result == '1'){
+				//显示出信息
+				var pd=data.data;
+			order_id=pd.order_id;
+			$("#thname").text(pd.name);
+			$("#thid").text(pd.tihuo_id);
+			$("#thphone").text(pd.phone);
+			$("#thtime").text(pd.startdate+"-"+pd.enddate);
+			var goodsList=pd.goodsList;
+			for(var i=0;i<goodsList.length;i++){
+				$("#thgoods").append("<li>"+goodsList[i].goods_name+"x"+goodsList[i].shop_number+"</li>");
+			}
+		}else{
+			alert(data.message);
 		}
-	
-	  
-	    //确认备注
-    	function ok(id,remark){
-    		var rem = $("#"+remark).val().trim();
-    		if(rem == ""){
-    			return;
-    		}
-    		$.ajax({
-					type:"post",
-					url:"storepc_wealthhistory/updRemark.do",
-					data:"remark="+rem+"&order_id="+id,
-					success:function(data){
-						window.location.reload();
-					}
-			});
-    	}
-	   
-		
-		//查看订单详情
-		function findOrderDetail(order_id){
-			$("#thgoods").empty();
-				//获取提货信息
- 			$.ajax({
-				url:'<%=basePath%>storepc_wealthhistory/findOrderDetail.do',
-				type:"post",
-				dataType:"json",
-				data:{"order_id":order_id},
-				success:function(data){
-					if(data.result == '1'){
- 						//显示出信息
- 						var pd=data.data;
-						order_id=pd.order_id;
-						$("#thname").text(pd.name);
-						$("#thid").text(pd.tihuo_id);
-						$("#thphone").text(pd.phone);
-						$("#thtime").text(pd.startdate+"-"+pd.enddate);
-						var goodsList=pd.goodsList;
-						for(var i=0;i<goodsList.length;i++){
-							$("#thgoods").append("<li>"+goodsList[i].goods_name+"x"+goodsList[i].shop_number+"</li>");
-						}
-					}else{
-						alert(data.message);
-					}
-  				}
-			});
 		}
-	  
- 	</script>
-</body>
-<script>
-	$(function(){     /*遮罩部分*/
-		function tianjia(){
-			$(".dask").css({"display":"block"})
-			$(".alert_xg").css({"display":"block"})
+});
+}
+
+$(function(){     /*遮罩部分*/
+function tianjia(){
+	$(".dask").css({"display":"block"})
+	$(".alert_xg").css({"display":"block"})
+}
+function guanbi(){
+	$(".dask").css({"display":"none"})
+	$(".alert_xl").css({"display":"none"})
+}
+$(".chakan").click(function(){
+	tianjia()
+})
+$(".close").click(function(){
+	guanbi()
+})
+$(".anniu-m").click(function(){
+	guanbi()
+});
+//退款  
+$(".wth_box").mouseenter(function(e){
+	add_remove(e)
+})
+
+	function add_remove(e){
+	$(".wth_box div").remove()
+		var ev=e||window.event
+		var elem=ev.target||ev.srcElement
+		//console.log(elem)
+		if (elem.nodeName=="TD") {
+			 if ($(elem)[0].childNodes.length==1) {
+				var div=document.createElement("div")
+				div.innerHTML="退款"
+				div.className="closeto"
+				div.onclick=function(){$(".tk_box").css("display","block");window.th_order_id=$(elem).attr("order_id");}
+				div.onmouseout=function(e){$(e.target).remove();$(".wth_box  div").remove();}
+				$(elem).append(div)
+			 }
+		}			
+}
+
+//确认退款
+$(".qd").click(function(){
+	var url = "<%=basePath%>/storepc_wealthhistory/returnBackOrder.do?order_id="+th_order_id+"&tm="+new Date().getTime();
+	$.get(url,function(data){
+		if(data=="success"){
+			nextPage(${page.currentPage});
 		}
-		function guanbi(){
-			$(".dask").css({"display":"none"})
-			$(".alert_xl").css({"display":"none"})
-		}
-		$(".chakan").click(function(){
-			tianjia()
-		})
-		$(".close").click(function(){
-			guanbi()
-		})
-		$(".anniu-m").click(function(){
-			guanbi()
-		});
-		//退款  
-		$(".wth_box").mouseenter(function(e){
-			add_remove(e)
-		})
-		
- 		function add_remove(e){
-			$(".wth_box div").remove()
-				var ev=e||window.event
-				var elem=ev.target||ev.srcElement
-				//console.log(elem)
-				if (elem.nodeName=="TD") {
-					 if ($(elem)[0].childNodes.length==1) {
-						var div=document.createElement("div")
-						div.innerHTML="退款"
-						div.className="closeto"
-						div.onclick=function(){$(".tk_box").css("display","block");window.th_order_id=$(elem).attr("order_id");}
-						div.onmouseout=function(e){$(e.target).remove();$(".wth_box  div").remove();}
-						$(elem).append(div)
-					 }
-				}			
-		}
-		
-		//确认退款
-		$(".qd").click(function(){
-			var url = "<%=basePath%>/storepc_wealthhistory/returnBackOrder.do?order_id="+th_order_id+"&tm="+new Date().getTime();
-			$.get(url,function(data){
-				if(data=="success"){
-					nextPage(${page.currentPage});
-				}
-			});
-		})
-		
-	})
+	});
+})
+
+})
 </script>
+</body>
 </html>

@@ -678,6 +678,7 @@ public class Payapp_historyController extends BaseController{
 					}
 				}
 				//优惠买单信息
+				pd.put("pay_sort_type", "1");
 				Map<String,Object> yhmdpd=TongYong.YouHuiMaiDanByTwoForStoreMaiDan(pd, youhui_money, Double.parseDouble(notmoney));
 				yhmdpd.put("noList", noList);
   				map.put("data",yhmdpd);
@@ -733,6 +734,7 @@ public class Payapp_historyController extends BaseController{
 					noList = tablerNumberService.listAll(pd);
 				}
 			}
+			pd.put("pay_sort_type", "2");
  			//优惠买单信息
 			Map<String,Object> yhmdpd=TongYong.YouHuiMaiDanByTwoForStoreMaiDan(pd, 0, 0);
 			yhmdpd.put("noList", noList);

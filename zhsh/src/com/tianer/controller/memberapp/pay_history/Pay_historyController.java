@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.SecurityUtils;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import com.pingplusplus.model.Webhooks;
 import com.tianer.controller.base.BaseController;
 import com.tianer.controller.memberapp.tongyongUtil.TongYong;
 import com.tianer.controller.zhihui.payMoney.ChargeExample;
+import com.tianer.entity.html.HtmlUser;
 import com.tianer.entity.zhihui.StoreFeeTihuoTask;
 import com.tianer.service.business.city_file.City_fileService;
 import com.tianer.service.business.clerk_file.Clerk_fileService;
@@ -48,6 +50,7 @@ import com.tianer.service.storepc.store_redpackets.Storepc_redpacketsService;
 import com.tianer.service.storepc.store_scoreway.Storepc_scorewayService;
 import com.tianer.util.Const;
 import com.tianer.util.DateUtil;
+import com.tianer.util.EbotongSecurity;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
 import com.tianer.util.StringUtil;
@@ -91,14 +94,21 @@ public class Pay_historyController extends BaseController {
 	@RequestMapping(value="/thirdPartyPay")
 	@ResponseBody
 	public synchronized  Object thirdPartyPay(HttpServletRequest request) throws Exception{
-//					System.out.println("==============================进入thirdPartyPay ");
- 					Map<String, Object> map = new HashMap<String, Object>();
+  					Map<String, Object> map = new HashMap<String, Object>();
 					Map<String, Object> map1 = new HashMap<String, Object>();
  			  		String result="1";
 					String message="支付成功";
   					PageData pd=new PageData();
 					try{
  						pd = this.getPageData();
+ 						//判断是否为H5页面
+ 						if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+ 							pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+ 							//商家ID解密
+ 							String sk_shop=pd.getString("sk_shop");
+ 							String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
+ 							pd.put("store_id", store_id);
+ 						}
 						String in_jiqi=pd.getString("in_jiqi");
  						if(in_jiqi == null || in_jiqi.equals("")){
  							in_jiqi="1";
@@ -213,118 +223,122 @@ public class Pay_historyController extends BaseController {
 		// type代表支付方式
 		PageData pd=new PageData();
 		try{
-						pd = this.getPageData();
-						String in_jiqi=pd.getString("in_jiqi");
- 						if(in_jiqi == null || in_jiqi.equals("")){
- 							in_jiqi="1";
- 							pd.put("in_jiqi", "1");
- 						}
-  						PageData mpd=new PageData();
-			 			mpd=appMemberService.findById(pd);//用户详情
-			 			if(mpd == null){
-			 				map.put("result", "0");
-			 				map.put("message", "用户id不能为空");
-			 				map.put("data", "");
-			 		    	return map;
-			 			}
-			 			String waterrecord_id=BaseController.getCZUID(mpd.getString("show_lookid"));
-			 			String openid=mpd.getString("wxopen_id");//微信支付的专用openid
-						String pay_way=pd.getString("pay_way");//支付方式
-						String url=pd.getString("url");//跳转地址
- 						String money=pd.getString("money");//当前金钱
-						String ip=getIp(request);//当前用户所在IP地址
-						if(money == null || money.equals("")){
-			 				map.put("result", "0");
-			 				map.put("message", "money不能为空");
-			 				map.put("data", "");
-			 		    	return map;
-			 			}
-						//判断金钱是否符合
-						if(!StringUtil.checkMoney(money) ){
-							map.put("result", "0");
-							map.put("message", "金钱格式有误");
-							map.put("data", "");
-					    	return map;
-						}
- 						System.out .println("新增充值记录waterrecord_id========================");
-						PageData waterpd=new PageData();
-	    				waterpd.put("pay_status","0");
-	    	   			waterpd.put("waterrecord_id",waterrecord_id);
-	   					waterpd.put("user_id", mpd.getString("member_id"));
-	   					waterpd.put("user_type", "2");
-	    				waterpd.put("withdraw_rate","0");
-	   					waterpd.put("money_type","1");
-	   	 				waterpd.put("money", money);
-	   	 				waterpd.put("reduce_money","0");
- 	   					waterpd.put("arrivalmoney",  money);
-	   					waterpd.put("nowuser_money","0");
-	   					waterpd.put("application_channel",in_jiqi);
-		   				if(pay_way.contains("wx")){
-			   				waterpd.put("remittance_name",Const.payjiqi[4] );
-		   					waterpd.put("remittance_type","4" );
-		   					waterpd.put("wx_money",  money );
-						}else if(pay_way.contains("alipay")){
-							waterpd.put("remittance_name", Const.payjiqi[3]);
-		   					waterpd.put("remittance_type","3" );
-		   					waterpd.put("alipay_money",  money );
-						}else{
-							waterpd.put("remittance_name", Const.payjiqi[3]);
-		   					waterpd.put("remittance_type","1" );
-		   					waterpd.put("bank_money",  money );
-						}
-	   					waterpd.put("remittance_number",mpd.getString("phone"));//支付人的支付账号
-	    				waterpd.put("createtime",DateUtil.getTime());
-	   					waterpd.put("over_time",DateUtil.getTime());
-	   	  				waterpd.put("jiaoyi_type","0");
-	   					waterpd.put("payee_number",Const.jiuyunumber);
- 	    	 			waterpd.put("order_tn", waterrecord_id );
-	   					waterpd.put("province_name", mpd.getString("province_name"));
-	   					waterpd.put("city_name", mpd.getString("city_name"));
-	   					waterpd.put("area_name", mpd.getString("area_name"));
-	    				ServiceHelper.getWaterRecordService().saveWaterRecord(waterpd);
-	    				waterpd=null;
- 					/*
-					 * 支付方式pay_type:
-					 * alipay:支付宝手机支付
-						alipay_wap:支付宝手机网页支付
-						alipay_qr:支付宝扫码支付
-						alipay_pc_direct:支付宝 PC 网页支付
-						bfb:百度钱包移动快捷支付
-						bfb_wap:百度钱包手机网页支付
-						upacp:银联全渠道支付（2015 年 1 月 1 日后的银联新商户使用。若有疑问，请与 Ping++ 或者相关的收单行联系）
-						upacp_wap:银联全渠道手机网页支付（2015 年 1 月 1 日后的银联新商户使用。若有疑问，请与 Ping++ 或者相关的收单行联系）
-						upacp_pc:银联 PC 网页支付
-						cp_b2b:银联企业网银支付
-						wx:微信支付
-						wx_pub:微信公众账号支付
-						wx_pub_qr:微信公众账号扫码支付
-						yeepay_wap:易宝手机网页支付
-						jdpay_wap:京东手机网页支付
-						cnp_u:应用内快捷支付（银联）
-						cnp_f:应用内快捷支付（外卡）
-						applepay_upacp:Apple Pay
-						fqlpay_wap:分期乐支付
-						qgbc_wap:量化派支付
-						cmb_wallet:招行一网通
-					 */
-					//2.获取charge对象
- 					Charge charge = null;
-					if(in_jiqi.equals("1")){
-						charge = ChargeExample.getPay(waterrecord_id, Double.parseDouble(money)*100,ip,pay_way,"11","消费");
-					}else if(in_jiqi.equals("5")){
-						if(pay_way.equals("wx_pub")){
-							charge = ChargeExample.getPayThree(waterrecord_id, Double.parseDouble(money)*100,ip,pay_way,"11","消费",openid);
-						}else if(pay_way.equals("alipay_wap")){
-							charge = ChargeExample.getPayTwo(waterrecord_id, Double.parseDouble(money)*100,ip,pay_way,"11","消费",url);
-						}
-					}
- 					if(charge == null ){
-						result="0";
-						message="支付失败，charge出错";
-						map.put("data", "");
-					}else{
-						map.put("data", charge);
- 					}
+ 			pd = this.getPageData();
+			//判断是否为H5页面
+			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+			}
+			String in_jiqi=pd.getString("in_jiqi");
+			if(in_jiqi == null || in_jiqi.equals("")){
+				in_jiqi="1";
+				pd.put("in_jiqi", "1");
+			}
+			PageData mpd=new PageData();
+ 			mpd=appMemberService.findById(pd);//用户详情
+ 			if(mpd == null){
+ 				map.put("result", "0");
+ 				map.put("message", "用户id不能为空");
+ 				map.put("data", "");
+ 		    	return map;
+ 			}
+ 			String waterrecord_id=BaseController.getCZUID(mpd.getString("show_lookid"));
+ 			String openid=mpd.getString("wxopen_id");//微信支付的专用openid
+			String pay_way=pd.getString("pay_way");//支付方式
+			String url=pd.getString("url");//跳转地址
+			String money=pd.getString("money");//当前金钱
+			String ip=getIp(request);//当前用户所在IP地址
+			if(money == null || money.equals("")){
+ 				map.put("result", "0");
+ 				map.put("message", "money不能为空");
+ 				map.put("data", "");
+ 		    	return map;
+ 			}
+			//判断金钱是否符合
+			if(!StringUtil.checkMoney(money) ){
+				map.put("result", "0");
+				map.put("message", "金钱格式有误");
+				map.put("data", "");
+		    	return map;
+			}
+			System.out .println("新增充值记录waterrecord_id========================");
+			PageData waterpd=new PageData();
+			waterpd.put("pay_status","0");
+   			waterpd.put("waterrecord_id",waterrecord_id);
+			waterpd.put("user_id", mpd.getString("member_id"));
+			waterpd.put("user_type", "2");
+			waterpd.put("withdraw_rate","0");
+			waterpd.put("money_type","1");
+			waterpd.put("money", money);
+			waterpd.put("reduce_money","0");
+			waterpd.put("arrivalmoney",  money);
+			waterpd.put("nowuser_money","0");
+			waterpd.put("application_channel",in_jiqi);
+			if(pay_way.contains("wx")){
+				waterpd.put("remittance_name",Const.payjiqi[4] );
+				waterpd.put("remittance_type","4" );
+				waterpd.put("wx_money",  money );
+			}else if(pay_way.contains("alipay")){
+				waterpd.put("remittance_name", Const.payjiqi[3]);
+				waterpd.put("remittance_type","3" );
+				waterpd.put("alipay_money",  money );
+			}else{
+				waterpd.put("remittance_name", Const.payjiqi[3]);
+				waterpd.put("remittance_type","1" );
+				waterpd.put("bank_money",  money );
+			}
+			waterpd.put("remittance_number",mpd.getString("phone"));//支付人的支付账号
+			waterpd.put("createtime",DateUtil.getTime());
+			waterpd.put("over_time",DateUtil.getTime());
+ 			waterpd.put("jiaoyi_type","0");
+			waterpd.put("payee_number",Const.jiuyunumber);
+	 		waterpd.put("order_tn", waterrecord_id );
+			waterpd.put("province_name", mpd.getString("province_name"));
+			waterpd.put("city_name", mpd.getString("city_name"));
+			waterpd.put("area_name", mpd.getString("area_name"));
+			ServiceHelper.getWaterRecordService().saveWaterRecord(waterpd);
+			waterpd=null;
+			/*
+		 * 支付方式pay_type:
+		 * alipay:支付宝手机支付
+			alipay_wap:支付宝手机网页支付
+			alipay_qr:支付宝扫码支付
+			alipay_pc_direct:支付宝 PC 网页支付
+			bfb:百度钱包移动快捷支付
+			bfb_wap:百度钱包手机网页支付
+			upacp:银联全渠道支付（2015 年 1 月 1 日后的银联新商户使用。若有疑问，请与 Ping++ 或者相关的收单行联系）
+			upacp_wap:银联全渠道手机网页支付（2015 年 1 月 1 日后的银联新商户使用。若有疑问，请与 Ping++ 或者相关的收单行联系）
+			upacp_pc:银联 PC 网页支付
+			cp_b2b:银联企业网银支付
+			wx:微信支付
+			wx_pub:微信公众账号支付
+			wx_pub_qr:微信公众账号扫码支付
+			yeepay_wap:易宝手机网页支付
+			jdpay_wap:京东手机网页支付
+			cnp_u:应用内快捷支付（银联）
+			cnp_f:应用内快捷支付（外卡）
+			applepay_upacp:Apple Pay
+			fqlpay_wap:分期乐支付
+			qgbc_wap:量化派支付
+			cmb_wallet:招行一网通
+		 */
+		//2.获取charge对象
+			Charge charge = null;
+			if(in_jiqi.equals("1")){
+				charge = ChargeExample.getPay(waterrecord_id, Double.parseDouble(money)*100,ip,pay_way,"11","消费");
+			}else if(in_jiqi.equals("5")){
+				if(pay_way.equals("wx_pub")){
+					charge = ChargeExample.getPayThree(waterrecord_id, Double.parseDouble(money)*100,ip,pay_way,"11","消费",openid);
+				}else if(pay_way.equals("alipay_wap")){
+					charge = ChargeExample.getPayTwo(waterrecord_id, Double.parseDouble(money)*100,ip,pay_way,"11","消费",url);
+				}
+			}
+			if(charge == null ){
+				result="0";
+				message="支付失败，charge出错";
+				map.put("data", "");
+			}else{
+				map.put("data", charge);
+			}
  		}catch(Exception e){
 			result="0";
 			message="系统异常";

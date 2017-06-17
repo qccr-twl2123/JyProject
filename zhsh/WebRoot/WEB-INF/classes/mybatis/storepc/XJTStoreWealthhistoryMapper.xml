@@ -646,6 +646,7 @@
 					cast( ifnull(d.sendxitong_integral,'') as decimal(10,2)) sendxitong_integral,	
 					cast( ifnull(d.get_integral,'') as decimal(10,2)) get_integral,
 					cast( ifnull(d.store_renmai_money,'') as decimal(10,2)) store_renmai_money,
+					ifnull(d.discount_content,'') as discount_content,
    		    		ifnull(d.tihuo_id,'') as tihuo_id,
   		    		ifnull(d.tihuo_status,'') as tihuo_status,
   		    		ifnull(d.pay_sort_type,'1') as pay_sort_type,
@@ -666,6 +667,17 @@
 					 
 	</select>
 	
+	
+	<!-- 数据详情 -->
+	<select id="findByWealthId" parameterType="pd" resultType="pd">
+		 select 
+					a.store_wealthhistory_id, a.wealth_type, a.number, a.profit_type, a.store_id, a.process_status ,
+ 					b.tixian_money 
+ 		  from      tb_store_wealthhistory a left join tb_store b on a.store_id=b.store_id
+   		  where 	a.store_wealthhistory_id=#{store_wealthhistory_id}
+					<if test="process_status != null and process_status != '' ">and process_status=#{process_status}</if>
+					 
+	</select>
 	
 	
 	

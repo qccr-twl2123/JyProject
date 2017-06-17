@@ -13,6 +13,7 @@ import java.util.Timer;
 
 import javax.annotation.Resource;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tianer.controller.base.BaseController;
 import com.tianer.controller.memberapp.tongyongUtil.TongYong;
+import com.tianer.entity.html.HtmlUser;
 import com.tianer.entity.zhihui.YouXuanShop;
 import com.tianer.service.memberapp.AppGoodsService;
 import com.tianer.service.memberapp.AppMemberService;
@@ -35,6 +37,7 @@ import com.tianer.service.storepc.liangqin.shopmanage.CategoryManageService;
 import com.tianer.service.storepc.store_marketingtype.Storepc_marketingtypeService;
 import com.tianer.service.storepc.tableNumber.TablerNumberService;
 import com.tianer.util.Const;
+import com.tianer.util.EbotongSecurity;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
 import com.tianer.util.StringUtil;
@@ -538,7 +541,7 @@ public class GoodsController extends BaseController {
 	 *  扫一扫优惠买单渠道进入购买
  	 *  app_goods/saoYiSaoShopBuyGoods.do
  	 *  
-	 *  paymoney  支付总金额
+	 *  allmoney  支付总金额
 	 *  notmoney  不优惠金额
  	 *  store_id  商家ID
 	 *  member_id 会员ID
@@ -553,8 +556,16 @@ public class GoodsController extends BaseController {
 		PageData pd = new PageData();
 		try{ 
 			pd = this.getPageData();
- 			String paymoney=pd.getString("paymoney");
- 			if(paymoney == null || paymoney.equals("") || Double.parseDouble(paymoney) <= 0){
+			//判断是否为H5页面
+			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+				//商家ID解密
+				String sk_shop=pd.getString("sk_shop");
+				String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
+				pd.put("store_id", store_id);
+			}
+ 			String allmoney=pd.getString("allmoney");
+ 			if(allmoney == null || allmoney.equals("") || Double.parseDouble(allmoney) <= 0){
 				map.put("result", "0");
 				map.put("message", "支付总金额必须大于0");
 				map.put("data", "");
@@ -564,7 +575,7 @@ public class GoodsController extends BaseController {
 			if(notmoney == null || notmoney.equals("")){
 				notmoney="0";
 			}
-			double youhui_money=Double.parseDouble(paymoney)-Double.parseDouble(notmoney);
+			double youhui_money=Double.parseDouble(allmoney)-Double.parseDouble(notmoney);
 			if(youhui_money < 0 || youhui_money < Double.parseDouble(notmoney) ){
 				map.put("result", "0");
 				map.put("message", "不优惠金额不能大总金额的50%");
@@ -574,15 +585,11 @@ public class GoodsController extends BaseController {
  			//优惠买单信息
 			Map<String,Object> yhmdpd=TongYong.YouHuiMaiDanByTwoForMember(pd, youhui_money, Double.parseDouble(notmoney));
 			//--------------
-			//获取改商家桌号
-			List<PageData> tableNumberList = ServiceHelper.getTablerNumberService().listAll(pd);
-			yhmdpd.put("tableNumberList", tableNumberList);
 			//商家名称
 			yhmdpd.put("store_name", ServiceHelper.getAppStoreService().findById(pd).getString("store_name"));
 			map.put("data",yhmdpd );
 			yhmdpd=null;
- 			tableNumberList=null;
- 	} catch(Exception e){
+		} catch(Exception e){
     		map.put("data","");
 			result = "0";
 			message="系统错误";
@@ -599,11 +606,11 @@ public class GoodsController extends BaseController {
 	 *  通过购物车进入渠道
  	 *  app_goods/catShopBuyGoods.do
  	 *  
-	 *  paymoney  支付总金额
+	 *  allmoney  支付总金额
  	 *  allgoods  购买商品拼接： 1.（ 商品id@数量@总金额，商品id@数量@总金额 ） 2.非商品购买的时候传“”空字符串
 	 *  store_id  商家ID
 	 *  member_id 会员ID
-	 *  redpackage_id  红包ID
+	 *  redpackage_id 红包ID
 	 */
 	@RequestMapping(value="/catShopBuyGoods")
 	@ResponseBody
@@ -614,15 +621,23 @@ public class GoodsController extends BaseController {
 		PageData pd = new PageData();
 		try{ 
 				pd = this.getPageData();
+				//判断是否为H5页面
+				if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+					pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+					//商家ID解密
+					String sk_shop=pd.getString("sk_shop");
+					String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
+					pd.put("store_id", store_id);
+				}
    				//营销开始：先判断折扣设置，折扣完的金额计算积分值，接下来是判断折扣后的金额是否满足红包及其它优惠条件；最后的金额是本次应买单的金额；
-				String paymoney=pd.getString("paymoney");
- 				if(paymoney == null || paymoney.equals("") || Double.parseDouble(paymoney) <= 0){
+				String allmoney=pd.getString("allmoney");
+ 				if(allmoney == null || allmoney.equals("") || Double.parseDouble(allmoney) <= 0){
  					map.put("result", "0");
  					map.put("message", "支付总金额必须大于0");
  					map.put("data", "");
  			 		return map;
 				}
-				double youhui_money=Double.parseDouble(paymoney);
+				double youhui_money=Double.parseDouble(allmoney);
  				//优惠买单信息
 				Map<String,Object> yhmdpd=TongYong.YouHuiMaiDanByTwoForMember(pd, youhui_money, 0);
  				//商家名称
@@ -639,4 +654,9 @@ public class GoodsController extends BaseController {
 		map.put("message", message);
  		return map;
 	}
+	
+	 
+	
+	
+	
 }

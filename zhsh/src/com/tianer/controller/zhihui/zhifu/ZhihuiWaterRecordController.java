@@ -900,8 +900,7 @@ public class ZhihuiWaterRecordController extends BaseController {
 	@RequestMapping(value="/updateById")
 	@ResponseBody
 	public Object updateById() {
-//		logBefore(logger, " 异常数据，通过或是驳回 ");
-		PageData pd = new PageData();	
+ 		PageData pd = new PageData();	
 		DecimalFormat    df   = new DecimalFormat("######0.00"); 
 		//shiro管理的session
 		Subject currentUser = SecurityUtils.getSubject();  
@@ -929,32 +928,28 @@ public class ZhihuiWaterRecordController extends BaseController {
 		 			 		PageData e=new PageData();
 		 					if(user_type.equals("1")){
 			 		 				//获取商家的财富
-			 						e.put("wealth_type", "1");
-			 						e.put("store_id", user_id);
-			 						e=appStoreService.findWealthById(e);
-			 						if(e != null ){
-			 							if( pay_status.equals("99")){
-			 								double now_wealth=Double.parseDouble(e.getString("now_wealth"));
-			 								//减少商家积分余额
-			 								double n=now_wealth-Double.parseDouble(money);
-			 								e.put("now_wealth", df.format(n));
-			 								appStoreService.editWealthById(e);
-			 								//修改状态
-			 								pd.put("process_status", "99");
-			 								appStoreService.editWealthHistoryStatusTwo(pd);
-			 								//更新提现信息
-			 	 							String tixian_money=e.getString("tixian_money");
-			 	 							if(Double.parseDouble(tixian_money)+Double.parseDouble(money) <= 0){
-			 	 								e.put("tixian_money", "0");
-			 	 							}else{
-			 	 								e.put("tixian_money", df.format(Double.parseDouble(tixian_money)+Double.parseDouble(money)));
-			 	 							}
-			 	 							appStoreService.edit(e);
-			 								//驳回发送消息
-			 								SmsUtil.TixianNotPass(appStoreService.findById(e).getString("registertel_phone"), pd.getString("chuli_remark"));
-			 	 						} 
-			 						}
-			 					}else if(user_type.equals("2")){
+ 			 						e.put("store_id", user_id);
+ 		 							if( pay_status.equals("99")){
+		 								double now_wealth=Double.parseDouble(ServiceHelper.getAppStoreService().sumStoreWealth(e));
+			 							//减少商家积分余额
+		 								double n=now_wealth-Double.parseDouble(money);
+		 								e.put("now_wealth", df.format(n));
+		 								appStoreService.editWealthById(e);
+		 								//修改状态
+		 								pd.put("process_status", "99");
+		 								appStoreService.editWealthHistoryStatusTwo(pd);
+		 								//更新提现信息
+		 	 							String tixian_money=ServiceHelper.getAppStoreService().findById(e).getString("tixian_money");
+		 	 							if(Double.parseDouble(tixian_money)+Double.parseDouble(money) <= 0){
+		 	 								e.put("tixian_money", "0");
+		 	 							}else{
+		 	 								e.put("tixian_money", df.format(Double.parseDouble(tixian_money)+Double.parseDouble(money)));
+		 	 							}
+		 	 							appStoreService.edit(e);
+		 								//驳回发送消息
+		 								SmsUtil.TixianNotPass(ServiceHelper.getAppStoreService().findById(e).getString("registertel_phone"), pd.getString("chuli_remark"));
+		 	 						} 
+ 			 				}else if(user_type.equals("2")){
 				 						e.put("member_id", user_id);
 				 						e=appMemberService.findById(e);
 				 						if(e != null ){
@@ -1031,8 +1026,7 @@ public class ZhihuiWaterRecordController extends BaseController {
 	 */
 	@RequestMapping(value="/Alipayexcel")
 	public ModelAndView Alipayexcel( ){
-//		logBefore(logger, "支付宝支付导出到excel");
-		ModelAndView mv = new ModelAndView();
+ 		ModelAndView mv = new ModelAndView();
  		PageData pd = new PageData();
 		pd = this.getPageData();
 		try{

@@ -836,8 +836,11 @@
 				<if test="process_status != null and process_status != ''">process_status = #{process_status},</if>
 				store_wealthhistory_id=store_wealthhistory_id
 			where 
-				store_wealthhistory_id = #{waterrecord_id}
-	</update>
+				<choose>
+					<when test="waterrecord_id != null and waterrecord_id != ''">store_wealthhistory_id = #{waterrecord_id}</when>
+					<otherwise>store_wealthhistory_id = #{store_wealthhistory_id}</otherwise>
+				</choose>
+ 	</update>
 	
 	
 	<!-- 获取商家的银行卡汉文20160701 -->

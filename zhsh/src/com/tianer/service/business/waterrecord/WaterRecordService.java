@@ -38,6 +38,13 @@ public class WaterRecordService {
 		dao.delete("WaterRecordMapper.deleteStatusZero", pd);
 	}
 	
+	/**
+	 *  删除指定订单
+	 */
+	public void deleteWater(PageData pd)throws Exception{
+		dao.delete("WaterRecordMapper.deleteWater", pd);
+	}
+	
  	
  	/**
  	 * 获取当前记录的详情

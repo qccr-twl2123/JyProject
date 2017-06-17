@@ -10,12 +10,16 @@
 	<meta charset="UTF-8">
 	<title>充值提现汇总</title>
 	<base href="<%=basePath%>">
-	<link rel="stylesheet" href="css/pcstore/zhxx_txhz.css">
-	<script src="js/jquery-1.8.0.min.js"></script>
-	<script src="My97DatePicker/WdatePicker.js"></script>
-	<style type="text/css">
-	table tr:last-child td {
+ 	<link rel="stylesheet" href="css/pcstore/zhxx_txhz.css">
+	<link href="css/bootstrap.min.css" rel="stylesheet" />
+  	<style type="text/css">
+	table tr:last-child td { 
 	        border-bottom: 1px solid #a4a4a4;
+	}
+	.pagination ul>li>a{
+		border: 0;
+		line-height:1.2;
+		padding:0;
 	}
  	</style>
 </head>
@@ -39,7 +43,7 @@
             <span class="anniu-s" onclick="select()"> 搜索 </span>
 		</li>
 		<li >
-			<table cellspacing="0" cellpadding="0"  style="white-space: nowrap;min-width:1760px;border:1px solid #999; line-height:1.7;">
+			<table cellspacing="0" cellpadding="0"  style="white-space: nowrap;border:1px solid #999; ">
 			<thead>
 				<tr>
 					<td>订单号</td>
@@ -72,10 +76,10 @@
 	                    	<td>${var.remittance_name}--${var.kh}</td>
 	                    	<td>${var.last_wealth}</td>
 	                    	<td> 
-	                    		<c:if test="${var.process_status eq '0' and var.profit_type eq '1'}">正在审核</c:if>
+	                    		<c:if test="${var.process_status eq '0' and var.profit_type eq '1'}">正在审核 <span  style="color:blue;cursor: pointer;" onclick="chehui('${var.store_wealthhistory_id}')">撤回申请</span></c:if>
 	                    		<c:if test="${var.process_status eq '0' and var.profit_type eq '2'}">无效订单（凌晨自动删除）</c:if>
 	                    		<c:if test="${var.process_status eq '1' }">审核通过，请注意短信</c:if>
-	                    		<c:if test="${var.process_status eq '99' }">被驳回，请注意短信</c:if>
+	                    		<c:if test="${var.process_status eq '99' }">当前订单已驳回/已撤回</c:if>
 	                    	</td>
 	                    	<td>${var.createdate}</td>
 	                </tr>
@@ -105,12 +109,30 @@
 	</ul>
 </form>
 </c:if>
+<script src="js/jquery-1.8.0.min.js"></script>
+<script src="My97DatePicker/WdatePicker.js"></script>
+<!--引入弹窗组件start-->
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/bootbox.min.js"></script><!-- 确认窗口 -->
 <script type="text/javascript">
-			//提交
-			function select(){
-				 $("#Form").submit();
+	//提交
+	function select(){
+		$("#Form").submit();
+	}
+	//撤回申请
+	function chehui(store_wealthhistory_id){
+		bootbox.confirm("确定撤回吗?", function(result) {
+			if(result) {
+				var url = "storepc_wealthhistory/txReturn.do?store_wealthhistory_id="+store_wealthhistory_id;
+				$.get(url,function(data){
+					if(data=="success"){
+						nextPage(${page.currentPage});
+					}
+				});
 			}
+		});
+ 	}
 		
-		</script>
+</script>
 </body>
 </html>
