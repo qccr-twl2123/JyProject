@@ -293,9 +293,8 @@
 	<script type="text/javascript">
         var base_inf={
         	base_herf:"<%=basePath%>",
-    	    store_id:"${pd.store_id}",
-    	    member_id:"${pd.member_id}"
-    	};
+        	sk_shop:"${pd.sk_shop}",
+     	};
     </script>
     <script src="js/htmlmember/library/jquery-1.12.4.min.js"></script>
     <script src="js/htmlmember/library/swiper.min.js"></script>

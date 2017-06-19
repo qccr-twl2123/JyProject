@@ -251,6 +251,14 @@ public class BaseController {
 	}
 	
 	/**
+	 * 得到4位的随机数的整数
+	 */
+	public static int get4Integer(){
+			int n=(int)((Math.random()*9+1)*1000);
+		return n;
+	}
+	
+	/**
 	 * 获取密码
 	 */
 	public static String getMiMaNumber(){
@@ -265,7 +273,7 @@ public class BaseController {
 	
 	//主函数
 	public static void main(String[] msg){
-		System.out.println(getCZUID("33391593"));;
+		System.out.println(get4Integer( ));;
   	}
 	
 	/**

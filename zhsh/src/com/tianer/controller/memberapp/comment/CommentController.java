@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tianer.controller.base.BaseController;
 import com.tianer.controller.memberapp.tongyongUtil.TongYong;
 import com.tianer.entity.Page;
+import com.tianer.entity.html.HtmlUser;
 import com.tianer.service.business.store.StoreService;
 import com.tianer.service.memberapp.AppCommentService;
 import com.tianer.service.memberapp.AppMemberService;
@@ -32,6 +34,7 @@ import com.tianer.service.memberapp.AppStoreService;
 import com.tianer.util.AppUtil;
 import com.tianer.util.Const;
 import com.tianer.util.DateUtil;
+import com.tianer.util.EbotongSecurity;
 import com.tianer.util.FileUpload;
 import com.tianer.util.PageData;
 
@@ -60,8 +63,7 @@ public class CommentController extends BaseController {
 	@RequestMapping(value="/listAll")
 	@ResponseBody
 	public Object listAll(Page page){
-//		logBefore(logger, "列表Comment");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
  		DecimalFormat    df   = new DecimalFormat("######0.00"); 
 		String result = "1";
 		String message="查询成功";
@@ -69,8 +71,16 @@ public class CommentController extends BaseController {
 		PageData _pd=new PageData();
 		try{
 			pd = this.getPageData();
+			//判断是否为H5页面
+			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+					pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+					//商家ID解密
+					String sk_shop=pd.getString("sk_shop");
+					String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
+					pd.put("store_id", store_id);
+			}
  			String allstore=appStoreService.countStore();
-			 //获取商家ID
+			//获取商家ID
 			pd=appStoreService.findById(pd);
 			if(pd != null){
 				String score=pd.getString("comment_score");

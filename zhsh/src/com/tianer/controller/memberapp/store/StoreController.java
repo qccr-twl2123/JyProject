@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tianer.controller.base.BaseController;
 import com.tianer.controller.memberapp.tongyongUtil.TongYong;
+import com.tianer.entity.html.HtmlUser;
 import com.tianer.service.memberapp.AppMemberService;
 import com.tianer.service.memberapp.AppOrderService;
 import com.tianer.service.memberapp.AppStoreService;
@@ -31,6 +33,7 @@ import com.tianer.service.storepc.store_wealthhistory.Storepc_wealthhistoryServi
 import com.tianer.service.storepc.stotr.StorepcService;
 import com.tianer.util.AppUtil;
 import com.tianer.util.Const;
+import com.tianer.util.EbotongSecurity;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
 
@@ -55,14 +58,21 @@ public class StoreController extends BaseController {
 	 */
 	@RequestMapping(value="/getVipForStore")
 	@ResponseBody
-	public Object edit() {
-//		logBefore(logger, "修改成为会员");
-		Map<String,Object> map = new HashMap<String,Object>();
+	public Object getVipForStore() {
+ 		Map<String,Object> map = new HashMap<String,Object>();
 		String result = "1";
 		String message="领取VIP成功";
 		PageData pd = new PageData();
 		try {
 			pd = this.getPageData();
+			//判断是否为H5页面
+			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+				//商家ID解密
+				String sk_shop=pd.getString("sk_shop");
+				String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
+				pd.put("store_id", store_id);
+			}
 			if(pd.getString("member_id") == null || pd.getString("member_id").equals("")){
   					map.put("result", "0");
 					map.put("message", "请前往登陆");
@@ -119,6 +129,14 @@ public class StoreController extends BaseController {
 		PageData pd = new PageData();
  		try{
 				pd = this.getPageData();
+				//判断是否为H5页面
+				if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+					pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+					//商家ID解密
+					String sk_shop=pd.getString("sk_shop");
+					String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
+					pd.put("store_id", store_id);
+				}
 				//处理导流
 //				pd=TongYong.DaoliuClickFee(pd);
  				String member_id=pd.getString("member_id");
@@ -408,40 +426,47 @@ public class StoreController extends BaseController {
 	@RequestMapping(value="/iscolloctByMS")
 	@ResponseBody
 	public Object iscolloctByMS() {
-//		logBefore(logger, "收藏");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
 		String result = "1";
 		String message="操作成功";
 		PageData pd = new PageData();
 		String collect_id="";
 		try {
-			pd=this.getPageData();	
-			//判断是否有当前会员
- 			if(appMemberService.findById(pd) == null){
-				map.put("result", "0");
-				map.put("message", "请前往登陆");
-				map.put("data", "");
-				return map;
-			}
- 			//
- 			PageData  collectpd=appStoreService.getCollectionById(pd);
- 			if(collectpd != null ){
-  					appStoreService.deleteCollect(pd);
-  					appStoreService.editCollectNumber(pd);
-  					message="取消收藏成功";
-  					map.put("data", "0");
- 			}else{
-					collect_id= BaseController.getTimeID();
-					pd.put("collect_id",collect_id);
-	 				appStoreService.saveCollect(pd);
-	 				appStoreService.editCollectNumber(pd);
-	 				message="收藏成功";
-	 				map.put("data", "1");
-			}
- 		} catch (Exception e) {
-			result="0";
- 			message="系统失败";
-			e.printStackTrace();
+				pd=this.getPageData();	
+				//判断是否为H5页面
+				if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+					pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+					//商家ID解密
+					String sk_shop=pd.getString("sk_shop");
+					String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
+					pd.put("store_id", store_id);
+				}
+				//判断是否有当前会员
+	 			if(appMemberService.findById(pd) == null){
+					map.put("result", "0");
+					map.put("message", "请前往登陆");
+					map.put("data", "");
+					return map;
+				}
+	 			//
+	 			PageData  collectpd=appStoreService.getCollectionById(pd);
+	 			if(collectpd != null ){
+	  					appStoreService.deleteCollect(pd);
+	  					appStoreService.editCollectNumber(pd);
+	  					message="取消收藏成功";
+	  					map.put("data", "0");
+	 			}else{
+						collect_id= BaseController.getTimeID();
+						pd.put("collect_id",collect_id);
+		 				appStoreService.saveCollect(pd);
+		 				appStoreService.editCollectNumber(pd);
+		 				message="收藏成功";
+		 				map.put("data", "1");
+				}
+	 	} catch (Exception e) {
+				result="0";
+	 			message="系统失败";
+				e.printStackTrace();
 		}
 		map.put("result", result);
 		map.put("message", message);

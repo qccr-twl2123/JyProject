@@ -18,6 +18,7 @@ import com.tianer.util.AppUtil;
 import com.tianer.util.Const;
 import com.tianer.util.DateUtil;
 import com.tianer.util.Distance;
+import com.tianer.util.EbotongSecurity;
 import com.tianer.util.FileUpload;
 import com.tianer.util.JPushClientUtil;
 import com.tianer.util.MD5;
@@ -3299,9 +3300,10 @@ public class TongYong extends BaseController{
  			PageData daoliupd=null;
  			for (int i = 0; i < n ; i++) {
 				daoliupd=storeList.get(i);
-				daoliupd.put("daoliurecord_id", 1);
+				daoliupd.put("daoliurecord_id", BaseController.get4Integer());
 				daoliupd.put("zhu_store_id", pd.getString("store_id"));
 				daoliupd.put("ci_store_id", daoliupd.getString("store_id"));
+				daoliupd.put("sk_shop",BaseController.get4ZMSZ()+EbotongSecurity.ebotongEncrypto(daoliupd.getString("store_id")));
  	 	 		if(ServiceHelper.getStoreService().findById(daoliupd) != null){
 	 	 			daoliupd.put("sort_name", "经营类别："+ServiceHelper.getStoreService().findById(daoliupd).getString("sort_name"));
 	 	 			daoliupd.put("store_name", ServiceHelper.getStoreService().findById(daoliupd).getString("store_name"));

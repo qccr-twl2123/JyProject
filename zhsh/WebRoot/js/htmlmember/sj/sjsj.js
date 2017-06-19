@@ -14,7 +14,7 @@ function golink(go_link,fun){
 
 //商家信息
 function sj_inf(){
-    var go_link=base_inf.base_herf+"app_store/findById.do?store_id="+base_inf.store_id+"&member_id="+base_inf.member_id
+    var go_link=base_inf.base_herf+"app_store/findById.do?sk_shop="+base_inf.sk_shop;
     golink(go_link,load_sj_inf);
     function load_sj_inf(data){
         var data_inf=data.data;
@@ -49,9 +49,9 @@ function sj_inf(){
                     markstr+="<span class='zhe tit_bg_box '>折扣</span>";
                 }
             }
-            sjtj_str ='<li shop_id='+daoliu_data[k].ci_store_id+'><div class="sjtj_img_box"><img src='+daoliu_data[k].pictrue_url+' alt=""></div><div class="sjtj_text ccyc"><span>'+daoliu_data[k].store_name+'</span>'+markstr+'</div><div class="sjtj_text ccyc"><span>'+daoliu_data[k].sort_name+'</span></div><div class="sjtj_text ccyc"><span id="star'+daoliu_data[k].ci_store_id+'" starnum="'+daoliu_data[k].comment_score+'"></span><span>已售'+daoliu_data[k].transaction_times+'</span></div></li>';
+            sjtj_str ="<li sk_shop='"+daoliu_data[k].sk_shop+"' onclick='goStoreDetail(this)'><div class='sjtj_img_box'><img src='"+daoliu_data[k].pictrue_url+"' ></div><div class='sjtj_text ccyc'><span>'"+daoliu_data[k].store_name+"'</span>'"+markstr+"'</div><div class='sjtj_text ccyc'><span>'"+daoliu_data[k].sort_name+"'</span></div><div class='sjtj_text ccyc'><span id='star'"+daoliu_data[k].daoliurecord_id+"' starnum='"+daoliu_data[k].comment_score+"'></span><span>已售'"+daoliu_data[k].transaction_times+"'</span></div></li>";
             $(".sjtuijian").append(sjtj_str);
-            var star_Str="#star"+daoliu_data[k].ci_store_id;
+            var star_Str="#star"+daoliu_data[k].daoliurecord_id;
             $(star_Str).raty({ readOnly:true,score:daoliu_data[k].comment_score,half:true,space:false,size:10});
             var size=$("body").css("font-size");
             $(star_Str).find("img").width(size)
@@ -173,7 +173,7 @@ function sj_inf(){
         }
 
         $(".sj_xqimg").click(function(){
-            var xq_link=base_inf.base_herf+"html_member/goStoreInforByH5.do?store_id="+base_inf.store_id;
+            var xq_link=base_inf.base_herf+"html_member/goStoreInforByH5.do?sk_shop="+base_inf.sk_shop;
             $(".sj_xqimg a").attr("href",xq_link);
             $(".sj_xqimg a")[0].click();
         })
@@ -199,7 +199,7 @@ function sj_inf(){
 
 //评价加载
 function pingjia_load(){
-        var pj_link=base_inf.base_herf+"app_comment/listAll.do?store_id="+base_inf.store_id;
+        var pj_link=base_inf.base_herf+"app_comment/listAll.do?sk_shop="+base_inf.sk_shop;
         golink(pj_link,pj_list);
         //评价
         function pj_list(data){
@@ -271,7 +271,7 @@ function pingjia_load(){
 function get_sp_list(){
     $(".list_box").children().remove();
     $(".sp_list_box").children().remove();
-    var go_link=base_inf.base_herf+"app_goods/goStoreGoods.do?" + "store_id="+base_inf.store_id+"&member_id="+base_inf.member_id;
+    var go_link=base_inf.base_herf+"app_goods/goStoreGoods.do?sk_shop="+base_inf.sk_shop;
     golink(go_link,sp_load)
     function sp_load(data){
          var inf=data.data;
@@ -401,7 +401,7 @@ function get_sp_list(){
 
 //操作商品数量
 function goodsNum(num,goods){
-      var go_link=base_inf.base_herf+"app_goods/caozuoShopCar.do?&member_id="+base_inf.member_id+"&caozuo_number="+num+"&goods_id="+goods;
+      var go_link=base_inf.base_herf+"app_goods/caozuoShopCar.do?caozuo_number="+num+"&goods_id="+goods;
     golink(go_link,numChange)
      function numChange(data){
         var message=data.message;
@@ -426,7 +426,7 @@ function hd_lq(redpacket_id,money){
 		alert("请先前往登录");
 		return ;
 	}
-    var go_link=base_inf.base_herf+"app_shouye/getRedPackage.do?store_redpackets_id="+redpacket_id+"&money="+money+"&member_id="+base_inf.member_id
+    var go_link=base_inf.base_herf+"app_shouye/getRedPackage.do?store_redpackets_id="+redpacket_id+"&money="+money;
     golink(go_link,get_redpack)
     function get_redpack(data){
     	
@@ -454,11 +454,7 @@ function reDoCash(ele,flag){
 }
 //vip卡片会员 验证
 function hy_yz(){
-	if(base_inf.member_id == ""){
-		alert("请先前往登录");
-		return ;
-	}
-    var go_link=base_inf.base_herf+"app_store/getVipForStore.do?store_id="+base_inf.store_id+"&member_id="+base_inf.member_id
+     var go_link=base_inf.base_herf+"app_store/getVipForStore.do?sk_shop="+base_inf.sk_shop;
     golink(go_link,yz_hygz)
     function yz_hygz(data){
     	alert(data.message);
@@ -466,11 +462,7 @@ function hy_yz(){
 }
 //关注验证
 function iscollect(e) {
-	if(base_inf.member_id == ""){
-		alert("请先前往登录");
-		return ;
-	}
-    var go_link=base_inf.base_herf+"app_store/iscolloctByMS.do?store_id="+base_inf.store_id+"&member_id="+base_inf.member_id
+     var go_link=base_inf.base_herf+"app_store/iscolloctByMS.do?sk_shop="+base_inf.sk_shop;
     golink(go_link, changeimg)
     function changeimg(data) {
          alert(data.message);
@@ -488,17 +480,17 @@ function back_url(){
 
 //前往结算页面
 function jiesuan(){
-	if(base_inf.member_id == ""){
-		alert("请先前往登录");
-		return ;
-	}
-	var total = $(".allCash").text();
+ 	var total = $(".allCash").text();
 	if(total == 0.00 || total == 0 || total == 0.0){
 		alert("您还没有选择你要购买的商品！");
 		return ;
 	}else {
-		window.location.href=base_inf.base_herf+"html_member/goStoreGoodsOverBuy.do?store_id="+base_inf.store_id+"&member_id="+base_inf.member_id+"&paymoney="+total;
+		window.location.href=base_inf.base_herf+"html_member/goStoreGoodsOverBuy.do?sk_shop="+base_inf.sk_shop+"&paymoney="+total;
 	}
+}
+
+function goStoreDetail(obj){
+	 	window.location.href=base_inf.base_herf+"html_member/goStoreDetail.do?sk_shop="+$(obj).attr("sk_shop");
 }
 
 
@@ -575,5 +567,6 @@ $(function(){
 
   //初始化
   $(".sx_nav li")[0].click();
- //     sj_inf();
+
+
 });

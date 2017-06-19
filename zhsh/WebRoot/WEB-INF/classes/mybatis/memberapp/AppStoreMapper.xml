@@ -932,6 +932,8 @@
 	<!-- 所有商家位置分页列表魏汉文20160621 20160623-->
 	 <select id="getStorelistPage" parameterType="page" resultType="pd">
 		select
+					a.only_store_id,
+					a.store_id,
 					a.store_name,
 					ifnull(a.pictrue_url,"") pictrue_url,	
 					a.integral_rate,
@@ -943,8 +945,7 @@
  					a.check_status,		
  					a.longitude,
 					a.latitude ,
-					a.store_id,
-					cast((cast(round( 6378.138 * 2 * asin( sqrt( pow( sin(( abs(a.latitude  * pi() / 180 - ifnull(#{pd.latitude},'30') * pi() / 180) ) / 2 ), 2 ) + cos(a.latitude  * pi() / 180) * cos( ifnull(#{pd.latitude},'30') * pi() / 180) * pow( sin(( abs(a.longitude * pi() / 180 - ifnull(#{pd.longitude},'120')  * pi() / 180) ) / 2 ), 2 ))) ,3) as  decimal(10,1))) as char) as distance,
+ 					cast((cast(round( 6378.138 * 2 * asin( sqrt( pow( sin(( abs(a.latitude  * pi() / 180 - ifnull(#{pd.latitude},'30') * pi() / 180) ) / 2 ), 2 ) + cos(a.latitude  * pi() / 180) * cos( ifnull(#{pd.latitude},'30') * pi() / 180) * pow( sin(( abs(a.longitude * pi() / 180 - ifnull(#{pd.longitude},'120')  * pi() / 180) ) / 2 ), 2 ))) ,3) as  decimal(10,1))) as char) as distance,
  					a.merchant_level
 		from 
 					tb_store a 

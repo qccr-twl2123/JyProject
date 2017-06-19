@@ -16,6 +16,7 @@ import com.tianer.service.business.subsidiary.SubsidiaryService;
 import com.tianer.service.business.waterrecord.WaterRecordService;
 import com.tianer.service.htmlwx.HtmlWxService;
 import com.tianer.service.memberapp.AppCity_fileService;
+import com.tianer.service.memberapp.AppCommentService;
 import com.tianer.service.memberapp.AppFriendService;
 import com.tianer.service.memberapp.AppGoodsService;
 import com.tianer.service.memberapp.AppMemberService;
@@ -67,6 +68,10 @@ public final class ServiceHelper {
 	
 	public static App_advertService getApp_advertService(){
 		return (App_advertService) getService("app_advertService");
+	}
+	
+	public static AppCommentService getAppCommentService(){
+		return (AppCommentService) getService("appCommentService");
 	}
 	
 	

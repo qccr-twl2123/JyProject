@@ -91,6 +91,14 @@ public class GoodsController extends BaseController {
 		PageData pd = new PageData();
 		try{ 
 				pd=this.getPageData();	
+				//判断是否为H5页面
+				if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+						pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+						//商家ID解密
+						String sk_shop=pd.getString("sk_shop");
+						String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
+						pd.put("store_id", store_id);
+				}
 //				//获取我的购物车内容
 //				pd = this.getPageData();
 //				pd.put("goods_type", "1");
@@ -400,6 +408,10 @@ public class GoodsController extends BaseController {
 		PageData pd = new PageData();
 		try{
 			pd = this.getPageData();
+			//判断是否为H5页面
+			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+  			}
  			String goods_type=pd.getString("goods_type");
 			String member_id=pd.getString("member_id");
 			String time=Const.youxuangoods_times;

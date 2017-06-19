@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tianer.controller.base.BaseController;
 import com.tianer.controller.memberapp.tongyongUtil.TongYong;
 import com.tianer.entity.Page;
+import com.tianer.entity.html.HtmlUser;
 import com.tianer.service.business.app_advert.App_advertService;
 import com.tianer.service.business.cm_all.Cm_allService;
 import com.tianer.service.business.menu_text.Menu_textService;
@@ -34,6 +36,7 @@ import com.tianer.service.storepc.store_wealthhistory.Storepc_wealthhistoryServi
 import com.tianer.util.Const;
 import com.tianer.util.DateUtil;
 import com.tianer.util.Distance;
+import com.tianer.util.EbotongSecurity;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
 import com.tianer.util.SmsUtil;
@@ -1033,6 +1036,10 @@ public class AppShouyeController extends BaseController {
 		PageData pd = new PageData();
 		try{ 
 				pd = this.getPageData();
+				//判断是否为H5页面
+				if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+					pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+ 				}
   				if(pd.getString("member_id") == null || pd.getString("member_id").equals("")){
 					map.put("result", "0");
 					map.put("message", "请先前往登录");

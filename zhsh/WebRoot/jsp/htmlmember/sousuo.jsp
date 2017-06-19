@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="css/htmlmember/labary/predefine.css">
     <link rel="stylesheet" href="css/htmlmember/search.css">
 	<link rel="stylesheet" href="css/htmlmember/main.css">
+	 <link rel="stylesheet" href="css/htmlmember/wx_index.css">
  </head>
 
 <body>
@@ -117,7 +118,7 @@ function golink(go_link,fun){//链接，跳转地址
 }
 //商家载入;
 function shangjiazairu(data) {
-	 var storelist=data.data;
+	 var storelist=data.storeList;
 	 if(base_inf.nowpage == "1"){
 		 $(".sj_list").empty();
 	 }
