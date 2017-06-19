@@ -396,8 +396,7 @@ public class Payapp_historyController extends BaseController{
 		PageData pd = new PageData();
 		try{
 				//生成新的session
-				Subject currentUser = SecurityUtils.getSubject();  
-				Session session = currentUser.getSession();	
+ 				Session session = SecurityUtils.getSubject().getSession();	
 				String session_orderid=BaseController.getTimeID();
 				session.setAttribute(Const.SESSION_ORDER, session_orderid);
 				map.put("session_orderid", session_orderid);
@@ -753,89 +752,5 @@ public class Payapp_historyController extends BaseController{
 	}
 	
 	
-	
-//	
-//	/**
-//	 * 
-//	* 方法名称:：markeingAll 
-//	* 方法描述：获取营销规则
-//	* 创建人：魏汉文
-//	* 创建时间：2016年7月21日 上午10:48:06
-//	 */
-//	public PageData markeingAll(PageData pd){
-//				PageData yxpd=new PageData();
-//				yxpd.put("mz", "" );
-//				yxpd.put("mj", "" );
-//				yxpd.put("sdyx", "" );
-//				yxpd.put("mnjn", "" );
-//				yxpd.put("gmcs", "" );
-//				yxpd.put("jfsy", "" );
-//				yxpd.put("zk", "" );
-//				try{
-//					//获取营销规则
-////			 		   PageData e = new PageData();
-//						List<PageData> marketlist=appStorepc_marketingService.listAllById(pd);
-//						String add="";
-//						String reduce="";
-//						String time="";
-//						String n="";
-//						String number="";
-//						String score="";
-//						String zk="";
-//  						for(PageData e2 : marketlist){
-//									/*
-//									 * 1-满赠，2-满减，3-时段营销，4-买N减N，5-购买次数,6-积分，7折扣
-//									 */
-//									String marketing_type=e2.getString("marketing_type");
-////									String marketing_id=e2.getString("marketing_id");
-//									String grantrule=e2.getString("grantrule");
-//									if(marketing_type.equals("1")){
-//										add+=grantrule+",";
-//									}else if(marketing_type.equals("2")){
-//										reduce+=grantrule+",";
-//									}else if(marketing_type.equals("3")){
-//										time+=grantrule+",";
-//									}else if(marketing_type.equals("4")){
-//										n+=grantrule+",";
-//									}else if(marketing_type.equals("5")){
-//										number+=grantrule+",";
-//									}else if(marketing_type.equals("6")){ 
-//										score+=grantrule+",";
-//									}else if(marketing_type.equals("7")){
-//			 							zk+=grantrule+",";
-//			 						}
-//						}
-//  						if(!add.equals("")){
-//  							add=add.substring(0, add.length()-1);
-//  						}
-//  						if(!reduce.equals("")){
-//  							reduce=reduce.substring(0, reduce.length()-1);
-//  						}
-//  						if(!time.equals("")){
-//  							time=time.substring(0, time.length()-1);
-//  						}
-//  						if(!n.equals("")){
-//  							n=n.substring(0, n.length()-1);
-//  						}
-//  						if(!number.equals("")){
-//  							number=number.substring(0, number.length()-1);
-//  						}
-//  						if(!score.equals("")){
-//  							score=score.substring(0, score.length()-1);
-//  						}
-//  						if(!zk.equals("")){
-//  							zk=zk.substring(0, zk.length()-1);
-//  						}
-//						yxpd.put("mz", add );
-//						yxpd.put("mj", reduce );
-//						yxpd.put("sdyx", time );
-//						yxpd.put("mnjn", n );
-//						yxpd.put("gmcs", number );
-//						yxpd.put("jfsy", score );
-//						yxpd.put("zk", zk );
-//				}catch(Exception e){
-//					logger.error(e.toString());
-//				}
-// 			return yxpd;
-//	}
+ 
  }

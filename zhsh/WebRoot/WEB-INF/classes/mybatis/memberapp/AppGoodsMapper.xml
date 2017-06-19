@@ -58,12 +58,12 @@
  				ifnull(a.company,"") company,		
  				a.goods_id
 		from 
-				tb_goods a
-				right  join tb_goods_tj d on d.goods_id=a.goods_id 
+				tb_goods a  right join tb_goods_tj d on d.goods_id=a.goods_id 
 		where  
 				a.store_id=#{store_id}
+				and a.goods_type='1'
 				and a.deletestatus='0'
-				and a.goods_status != '1'
+				and a.goods_status = '0'
 		order by cast(a.retail_money as decimal(10,2)) 
 		limit 0,10		
  </select>
@@ -87,18 +87,18 @@
  				ifnull(a.company,"") company,	
 				a.goods_id
 		from 
-				tb_goods a
-				right  join tb_goods_rq d on d.goods_id=a.goods_id 
+				tb_goods a right join tb_goods_rq d on d.goods_id=a.goods_id 
 		where 
 				a.store_id=#{store_id}
 				and a.deletestatus='0'
-				and a.goods_status != '1'
+				and a.goods_type='2'
+				and a.goods_status = '0'
 		order by cast(a.retail_money as decimal(10,2)) 		
 		limit 0,10
 </select>
 
 
-	<!-- 魏汉文20160630所有指定类别商品列表-->
+	<!-- 所有指定类别商品列表  不包括今日特价商品以及人气版商品  -->
 	<select id="listAllGoodsBySortId" parameterType="pd" resultType="pd">
 			select
 					a.goods_category_id,	
@@ -124,8 +124,9 @@
 					left join tb_goods_category b on a.goods_category_id=b.goods_category_id and b.store_id=#{store_id} 
 			where  
 					a.store_id=#{store_id}
+					and a.goods_type='0'
 					and a.deletestatus='0'
-					and a.goods_status != '1'
+					and a.goods_status = '0'
 					and a.goods_category_id=#{goods_category_id}
 			order by cast(a.retail_money as decimal(10,2)) 	
 	</select>
@@ -175,6 +176,7 @@
 				ifnull(a.integral_rate,"") integral_rate,
 				ifnull(a.stock_number,"10000") stock_number,
 				ifnull(a.consumption_number,"0") consumption_number,
+ 				ifnull(a.goods_type,"0") goods_type,
  				ifnull(a.goods_status,"") goods_status,
 				ifnull(a.sales_status,"") sales_status,
 				date_format(ifnull(a.starttime,date_sub(now(),interval 1 day) ) ,'%Y-%m-%d %H:%i:%s') starttime,

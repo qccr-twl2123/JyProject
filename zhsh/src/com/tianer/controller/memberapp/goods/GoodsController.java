@@ -257,6 +257,7 @@ public class GoodsController extends BaseController {
 	 *  
 	 *  paymoney 支付总金额
 	 *  notmoney 不优惠金额
+	 *  allgoods  购买商品拼接： 1.（ 商品id@数量@总金额，商品id@数量@总金额 ） 2.非商品购买的时候传“”空字符串
 	 *  store_id 商家ID
 	 *  member_id 会员ID
 	 */
@@ -269,13 +270,11 @@ public class GoodsController extends BaseController {
 		PageData pd = new PageData();
 		try{ 
 				pd = this.getPageData();
+				pd.put("pay_sort_type", "1");
    				//营销开始：先判断折扣设置，折扣完的金额计算积分值，接下来是判断折扣后的金额是否满足红包及其它优惠条件；最后的金额是本次应买单的金额；
 				String paymoney=pd.getString("paymoney");
-				if(paymoney == null || paymoney.equals("") || Double.parseDouble(paymoney) <= 0){
- 					map.put("result", "0");
- 					map.put("message", "支付总金额必须大于0");
- 					map.put("data", "");
- 			 		return map;
+				if(paymoney == null || paymoney.equals("") ){
+					paymoney="0";
 				}
 				String notmoney=pd.getString("notmoney");
 				if(notmoney == null || notmoney.equals("")){
@@ -288,8 +287,33 @@ public class GoodsController extends BaseController {
 					map.put("data", "");
 					return map;
 				}
-				//优惠买单信息
-				Map<String,Object> yhmdpd=TongYong.youhuimaidan(pd,youhui_money,Double.parseDouble(notmoney));
+				double notyouhui_money=Double.parseDouble(notmoney);
+				//判断是否为购物车购买
+				if(pd.getString("allgoods") != null && !pd.getString("allgoods").equals("")){
+					//营销开始：先判断折扣设置，折扣完的金额计算积分值，接下来是判断折扣后的金额是否满足红包及其它优惠条件；最后的金额是本次应买单的金额；
+	  				youhui_money=0;
+	  				notyouhui_money=0;
+	 				//处理allgoods
+					List<PageData> goodsList=new ArrayList<PageData>();
+					String[] goodsstr=pd.getString("allgoods").split(",");
+					PageData goodspd=null;
+					for (int i = 0; i < goodsstr.length; i++) {
+	 					goodspd=new PageData();
+						goodspd.put("goods_id", goodsstr[i].split("@")[0]);
+						if(ServiceHelper.getAppGoodsService().findById(goodspd).getString("goods_type").equals("1")){//今日特价商品不参与优惠--相当于不优惠金额
+							notyouhui_money+=Double.parseDouble(goodsstr[i].split("@")[2]);
+						}else{
+							youhui_money+=Double.parseDouble(goodsstr[i].split("@")[2]);
+						}
+						goodspd.put("goods_name", ServiceHelper.getAppGoodsService().findById(goodspd).getString("goods_name"));
+						goodspd.put("shop_number", goodsstr[i].split("@")[1]);
+						goodspd.put("summoney", goodsstr[i].split("@")[2]);
+						goodsList.add(goodspd);
+						goodspd=null;
+					}
+				}
+ 				//优惠买单信息
+				Map<String,Object> yhmdpd=TongYong.youhuimaidan(pd,youhui_money,notyouhui_money);
 				//--------------
 				//获取改商家桌号
 				List<PageData> tableNumberList = ServiceHelper.getTablerNumberService().listAll(pd);
@@ -330,6 +354,7 @@ public class GoodsController extends BaseController {
 		PageData pd = new PageData();
 		try{ 
 			pd = this.getPageData();
+			pd.put("pay_sort_type", "2");
  			//优惠买单信息
 			Map<String,Object> yhmdpd=TongYong.youhuimaidan(pd,0,0);
  			//获取改商家桌号
@@ -556,6 +581,7 @@ public class GoodsController extends BaseController {
 		PageData pd = new PageData();
 		try{ 
 			pd = this.getPageData();
+			pd.put("pay_sort_type", "1");
 			//判断是否为H5页面
 			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
 				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
@@ -565,11 +591,8 @@ public class GoodsController extends BaseController {
 				pd.put("store_id", store_id);
 			}
  			String allmoney=pd.getString("allmoney");
- 			if(allmoney == null || allmoney.equals("") || Double.parseDouble(allmoney) <= 0){
-				map.put("result", "0");
-				map.put("message", "支付总金额必须大于0");
-				map.put("data", "");
-			 	return map;
+ 			if(allmoney == null || allmoney.equals("") ){
+ 				allmoney="0";
 			}
 			String notmoney=pd.getString("notmoney");
 			if(notmoney == null || notmoney.equals("")){
@@ -584,10 +607,7 @@ public class GoodsController extends BaseController {
 			}
  			//优惠买单信息
 			Map<String,Object> yhmdpd=TongYong.YouHuiMaiDanByTwoForMember(pd, youhui_money, Double.parseDouble(notmoney));
-			//--------------
-			//商家名称
-			yhmdpd.put("store_name", ServiceHelper.getAppStoreService().findById(pd).getString("store_name"));
-			map.put("data",yhmdpd );
+ 			map.put("data",yhmdpd );
 			yhmdpd=null;
 		} catch(Exception e){
     		map.put("data","");
@@ -606,7 +626,7 @@ public class GoodsController extends BaseController {
 	 *  通过购物车进入渠道
  	 *  app_goods/catShopBuyGoods.do
  	 *  
-	 *  allmoney  支付总金额
+	 *  allmoney  支付总金额（===可传可不传======）
  	 *  allgoods  购买商品拼接： 1.（ 商品id@数量@总金额，商品id@数量@总金额 ） 2.非商品购买的时候传“”空字符串
 	 *  store_id  商家ID
 	 *  member_id 会员ID
@@ -630,31 +650,30 @@ public class GoodsController extends BaseController {
 					String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
 					pd.put("store_id", store_id);
 				}
-    				//营销开始：先判断折扣设置，折扣完的金额计算积分值，接下来是判断折扣后的金额是否满足红包及其它优惠条件；最后的金额是本次应买单的金额；
-				String allmoney=pd.getString("allmoney");
- 				if(allmoney == null || allmoney.equals("") || Double.parseDouble(allmoney) <= 0){
- 					map.put("result", "0");
- 					map.put("message", "支付总金额必须大于0");
- 					map.put("data", "");
- 			 		return map;
-				}
-				double youhui_money=Double.parseDouble(allmoney);
- 				//优惠买单信息
-				Map<String,Object> yhmdpd=TongYong.YouHuiMaiDanByTwoForMember(pd, youhui_money, 0);
-				//处理allgoods
+    			//营销开始：先判断折扣设置，折扣完的金额计算积分值，接下来是判断折扣后的金额是否满足红包及其它优惠条件；最后的金额是本次应买单的金额；
+  				double youhui_money=0;
+ 				double notyouhui_money=0;
+ 				//处理allgoods
 				List<PageData> goodsList=new ArrayList<PageData>();
 				String[] goodsstr=pd.getString("allgoods").split(",");
 				PageData goodspd=null;
 				for (int i = 0; i < goodsstr.length; i++) {
  					goodspd=new PageData();
 					goodspd.put("goods_id", goodsstr[i].split("@")[0]);
+					if(ServiceHelper.getAppGoodsService().findById(goodspd).getString("goods_type").equals("1")){//今日特价商品不参与优惠--相当于不优惠金额
+						notyouhui_money+=Double.parseDouble(goodsstr[i].split("@")[2]);
+					}else{
+						youhui_money+=Double.parseDouble(goodsstr[i].split("@")[2]);
+					}
 					goodspd.put("goods_name", ServiceHelper.getAppGoodsService().findById(goodspd).getString("goods_name"));
 					goodspd.put("shop_number", goodsstr[i].split("@")[1]);
 					goodspd.put("summoney", goodsstr[i].split("@")[2]);
 					goodsList.add(goodspd);
 					goodspd=null;
 				}
-  				yhmdpd.put("goodsList", goodsList);
+   				//优惠买单信息
+				Map<String,Object> yhmdpd=TongYong.YouHuiMaiDanByTwoForMember(pd, youhui_money, notyouhui_money);
+   				yhmdpd.put("goodsList", goodsList);
 				map.put("data",yhmdpd );
 				yhmdpd=null;
       	} catch(Exception e){

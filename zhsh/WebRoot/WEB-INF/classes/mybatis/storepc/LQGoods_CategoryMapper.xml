@@ -265,9 +265,9 @@
 					and c.endtime  &lt; #{pd.endtime}
 					</if>
 					<choose>
-						<!-- 大类排序 --><when test="pd.paixu_w =='2'.toString() ">order by a.sort</when>
-						<!-- 销售排序 --><when test="pd.paixu_w =='1'.toString()">order by  cast(c.consumption_number as signed) desc</when>
-						<!-- 创建时间排序 --><otherwise>order by cast(a.sort as signed), c.createdate desc</otherwise>
+						<!-- 大类排序 --><when test="pd.paixu_w =='2'.toString() ">order by a.sort , c.createdate desc</when>
+						<!-- 销售排序 --><when test="pd.paixu_w =='1'.toString()">order by  cast(c.consumption_number as signed) desc, c.createdate desc</when>
+						<!-- 创建时间排序 --><otherwise>order by c.createdate desc</otherwise>
 					</choose>		 
 	</select>
 	
@@ -300,7 +300,7 @@
 					<if test="pd.endtime != null and pd.endtime != '' ">
 						and d.createdate  &lt; #{pd.endtime}
 					</if>
-					order by d.createdate DESC
+					order by d.createdate desc
 	</select>
 	
 	<select id="tejialistPage" parameterType="Page" resultType="pd">
@@ -346,18 +346,6 @@
 	</select>
 	
 	
-	<delete id="delRenqi" parameterType="pd">
-		delete from tb_goods_rq
-		where
-		goods_rq_id = #{goods_rq_id}
-	</delete>
-	
-	<delete id="delTejia" parameterType="pd">
-		delete from tb_goods_tj
-		where
-		goods_tj_id = #{goods_tj_id}
-	</delete>
-	
 	<!-- 获取所有的商品 -->
 	<select id="findEachAllGoods" parameterType="pd" resultType="pd">
 			select 
@@ -375,6 +363,7 @@
 					<if test="ww_goods_category_id != null and ww_goods_category_id != ''">
 					and a.goods_category_id=#{ww_goods_category_id}
 					</if>
+			order
  	</select>
 	
 	<!-- 获取小类列表-->

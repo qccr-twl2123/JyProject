@@ -10,13 +10,13 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>人气榜</title>
+	<title>今日特价</title>
 	<base href="<%=basePath%>">
 	<link rel="stylesheet" href="css/pcstore/predefine.css">
 	<script src="js/jquery-1.8.0.min.js"></script>
 	<style type="text/css">
 	body, html {
-   	 height: 480px;
+   	 	height: 480px;
  	}
 	</style>
 </head>
@@ -69,7 +69,7 @@
 								</c:if>
 							</td>
 							<td>${slist.company}</td>
-							<td><a  class="col-blue del"   href="<%=basePath%>storepc_CategoryManageController/delTejia.do?goods_tj_id=${slist.goods_tj_id}">删除</a></td>
+							<td><a  class="col-blue del"   href="<%=basePath%>storepc_CategoryManageController/delTejia.do?goods_id=${slist.goods_id}&goods_tj_id=${slist.goods_tj_id}">删除</a></td>
 						</tr>
 					</c:forEach>
 				</tbody>

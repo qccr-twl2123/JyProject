@@ -163,7 +163,19 @@ public class CategoryManageService {
 	 */
 	public void deleteGoods(PageData pd)throws Exception{
 		dao.update("LQGoodsMapper.deleteGoods", pd);
+		//====
+		dao.delete("LQGoodsMapper.delRenqi", pd);
+		dao.delete("LQGoodsMapper.delTejia", pd);
+ 	}
+ 	public void delRenqi(PageData pd)throws Exception{
+		dao.delete("LQGoodsMapper.delRenqi", pd);
 	}
+ 	public void delTejia(PageData pd)throws Exception{
+		dao.delete("LQGoodsMapper.delTejia", pd);
+	}
+ 	
+ 	
+ 	
 	/*
 	 * 统计商品
 	 */
@@ -209,6 +221,8 @@ public class CategoryManageService {
  	public String countTejia(PageData  pd) throws Exception {
  		return (String)dao.findForObject("LQGoods_CategoryMapper.countTejia",pd);
  	}
+ 	
+ 	
  	/**
  	 * 人气榜数据
  	 * @param page
@@ -228,21 +242,15 @@ public class CategoryManageService {
  	public List<PageData> tejiaList(Page page) throws Exception {
 		return (List<PageData>)dao.findForList("LQGoods_CategoryMapper.tejialistPage", page);
 	}
- 	
- 	public void delRenqi(PageData pd)throws Exception{
-		dao.delete("LQGoods_CategoryMapper.delRenqi", pd);
-	}
- 	
- 	public void delTejia(PageData pd)throws Exception{
-		dao.delete("LQGoods_CategoryMapper.delTejia", pd);
-	}
- 	
+
 	/**
 	 * 根据大类名称查找对应的大类ID
 	 */
 	public Goods_Category findBigIdByName(String name) throws Exception{
 		return (Goods_Category) dao.findForObject("LQGoods_CategoryMapper.findBigIdByName", name);
 	}
+	
+	
 	/**
 	 * 将新建的小类存入goods_category里面
 	 */

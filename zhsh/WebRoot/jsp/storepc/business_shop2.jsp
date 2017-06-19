@@ -56,6 +56,7 @@
 					<td>积分值</td>
 					<td>单品销售状态</td>
 					<td>单位</td>
+					<td>所属类别</td>
 					<td>操作</td>
 				</thead>
 				<tbody>
@@ -85,6 +86,17 @@
 									</c:if>
 								</td>
 								<td>${slist.company}</td>
+								<td>
+									<c:if test="${slist.goods_type eq '0'}">
+									正常商品
+									</c:if>
+									<c:if test="${slist.goods_type eq '1'}">
+									今日特价商品
+									</c:if>
+									<c:if test="${slist.goods_type eq '2'}">
+									人气版商品
+									</c:if>
+ 								</td>
 								<td class="blue">
 	 								<c:if test="${storeqx.edit eq '1'}"><span class="xiugai change" onclick="editGoods('${slist.goods_id}')">修改</span></c:if>
 									<c:if test="${storeqx.delete eq '1'}"><span class="xiugai" onclick="delgoods('${slist.goods_id}','${slist.store_id}')">删除</span></c:if>
@@ -320,15 +332,14 @@
 					goods_ids:ch
 				},
 				success:function(data){
-   					if(data.result == "0"){
-						alert("添加失败，请联系管理员！");
-	 				}else if(data.result == "1"){
+   					 if(data.result == "1"){
 	 					alert(data.message);
-	 					//window.location.reload();
+	 					window.location.reload();
 	 				}else if(data.result == "2"){
 	 					alert(data.message);
-	 					//window.location.reload();
-	 				}
+ 	 				}else{
+ 	 					alert("添加失败，请联系管理员！");
+ 	 				}
 				}
 			});
 		}
@@ -355,14 +366,13 @@
 						goods_ids:ch
 					},
 					success:function(data){
-	   					if(data.result == "0"){
-							alert("添加失败，请联系管理员！");
-		 				}else if(data.result == "1"){
+	   					if(data.result == "1"){
 		 					alert(data.message);
-		 					//window.location.reload();
+		 					 window.location.reload();
 		 				}else if(data.result == "2"){
 		 					alert(data.message);
-		 					//window.location.reload();
+ 		 				}else{
+		 					alert("添加失败，请联系管理员！");
 		 				}
 				}
 			});

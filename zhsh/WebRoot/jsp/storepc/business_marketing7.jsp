@@ -302,6 +302,8 @@
  					$(now_obj).css("background","#1187e2");
  					return;
  				}
+ 				//在这个位置添加loading
+ 				
 				 $.ajax({
 						type:"post",
 						url:"<%=basePath%>storepc_redpackets/save.do",
@@ -319,6 +321,9 @@
  					$(now_obj).css("background","#1187e2");
  					return;
  				}
+				//在这个位置添加loading
+				
+				
 				 $.ajax({
 						type:"post",
 						url:"<%=basePath%>storepc_redpackets/save.do",

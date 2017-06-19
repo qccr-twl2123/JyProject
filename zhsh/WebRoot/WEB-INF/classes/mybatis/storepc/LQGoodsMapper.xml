@@ -54,6 +54,7 @@
 			set 
 				<if test="goods_category_id != null and goods_category_id != '' ">	goods_category_id = #{goods_category_id},</if>
 				<if test="goods_name != null and goods_name != '' ">	goods_name = #{goods_name},</if>
+				<if test="goods_type != null and goods_type != '' ">	goods_type = #{goods_type},</if>
 				<if test="image_url != null and image_url != '' ">	image_url = #{image_url},</if>
 				<if test="market_money != null and market_money != '' ">	market_money = #{market_money},</if>
 				<if test="retail_money != null and retail_money != '' ">	retail_money = #{retail_money},</if>
@@ -81,13 +82,15 @@
 	</update>
 	
 	
-	<!-- 删除-->
+	<!-- 删除商品-->
 	<update id="deleteGoods" parameterType="pd">
 		update  tb_goods
 		set deletestatus = '1'
 		where 
 			goods_id = #{goods_id}
 	</update>
+<!-- 删除人气版商品 --><delete id="delRenqi" parameterType="pd">delete from tb_goods_rq where goods_id = #{goods_id}</delete>
+<!-- 删除今日特价商品 --><delete id="delTejia" parameterType="pd">delete from tb_goods_tj where goods_id = #{goods_id}</delete>
 	
 		
 	<!-- 统计商品 -->

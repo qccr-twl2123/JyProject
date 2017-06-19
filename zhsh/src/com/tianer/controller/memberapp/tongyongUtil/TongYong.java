@@ -1419,12 +1419,14 @@ public class TongYong extends BaseController{
   		List<PageData> yingxiaoList=new ArrayList<PageData>();//用来存储营销List
   		try {
     		String allgoods=pd.getString("allgoods");
-    		String pay_sort_type=pd.getString("pay_sort_type");
-    		boolean goodsFlag=(allgoods != null  && !allgoods.equals(""));//是否为购物车购买
+    		String allleibie=pd.getString("allleibie");
+     		boolean goodsFlag=(allgoods != null  && !allgoods.equals(""));//是否为购物车购买
+    		boolean leibieFlag=(allleibie != null  && !allleibie.equals(""));//是否为分类购买
+    		//goodsFlag 和 leibieFlag 都为false的时候则为按总金额买单
    			//获取商家的营销规则明细
  			map.put("yxpd", markeingAll(pd));
  			double alljifeng=0;
- 			if(pay_sort_type.equals("2")){
+ 			if(leibieFlag){
     				//判断是否开通类别积分
   				if(ServiceHelper.getAppStorepc_marketingService().getJfById(pd) == null || !ServiceHelper.getAppStorepc_marketingService().getJfById(pd).getString("change_type").equals("2") ){
   					map.put("message", "暂未开通该通道");
@@ -1468,7 +1470,7 @@ public class TongYong extends BaseController{
 			PageData e=null;
 			for (int zi = 0; zi <zklistlength; zi++) {
  					e=zklist.get(zi);
- 					String marketing_type=e.getString("marketing_type");
+// 					String marketing_type=e.getString("marketing_type");
 					String grantrule=e.getString("grantrule");
 					String marketing_id=e.getString("marketing_id");
 					e.put("store_discountway_id", marketing_id);
@@ -1626,6 +1628,11 @@ public class TongYong extends BaseController{
 				zkpd.put("number", "-"+df2.format(zkmoney));
 				yingxiaoList.add(zkpd);
 			}
+			//是否为购物车购买的--今日特价商品只是不参与折扣优惠其他照常参加
+			if(goodsFlag){
+				youhui_money=youhui_money+notyouhui_money;
+				notyouhui_money=0;
+			}
  			//2.获取其他的营销规则
 			List<PageData> marketlist=ServiceHelper.getAppStorepc_marketingService().listAllById(pd);
 			PageData e1=new PageData();
@@ -1684,7 +1691,7 @@ public class TongYong extends BaseController{
 		  		 									jianid=marketing_id;
 		  		 								}
 	  									}
-	   							}else if(marketing_type.equals("6") && pay_sort_type.equals("1")){
+	   							}else if(marketing_type.equals("6")){
 	   								//肯定有
 	   							}else if(marketing_type.equals("7")){
 	   								// ("第一步先进行折扣");
@@ -1858,7 +1865,7 @@ public class TongYong extends BaseController{
 			double surepaymoney=youhui_money-reducemoney-Double.parseDouble(redmoney)-zkmoney+notyouhui_money;
 			//总共优惠金额
 			double surehuiyoumoney=reducemoney+Double.parseDouble(redmoney)+zkmoney;
- 			if(pay_sort_type.equals("1")){
+ 			if(!leibieFlag){
  					//获取所有启用的积分
 					PageData jfpd=ServiceHelper.getAppStorepc_marketingService().getJfById(pd);
 					if(jfpd != null){ 
@@ -1887,7 +1894,7 @@ public class TongYong extends BaseController{
 				 	 						addjf=Double.parseDouble(jfpd.getString("fourbackintegral_integral"));
 				 	 						desc=jfpd.getString("grantrule");
 				 	 					}
-		 	 				} else if(jfpd.getString("change_type").equals("3")  && allgoods != null && !allgoods.equals("")){//单品送积分
+		 	 				} else if(jfpd.getString("change_type").equals("3")  &&  goodsFlag){//单品送积分
 			 	 						String[] goods=allgoods.split(",");
 			 	 						PageData goodspd=new PageData();
 			 	 						double m=0;
@@ -5186,6 +5193,11 @@ public class TongYong extends BaseController{
 				zkpd.put("number", "-"+df2.format(zkmoney));
 				yingxiaoList.add(zkpd);
 			}
+			//是否为购物车购买的--今日特价商品只是不参与折扣优惠其他照常参加
+			if(goodsFlag){
+				youhui_money=youhui_money+notyouhui_money;
+				notyouhui_money=0;
+			}
  			//2.获取其他的营销规则
 			List<PageData> marketlist=ServiceHelper.getAppStorepc_marketingService().listAllById(pd);
 			PageData e1=new PageData();
@@ -5392,23 +5404,30 @@ public class TongYong extends BaseController{
 			 List<PageData> canUseRedList=getAllStoreRedMoneyByMember(pd, notyouhui_money, yingxiaosize, reducemoney);
 			 double useredbeforMoney=reducemoney+zkmoney;//使用红包前的总共优惠了的金额
 			 PageData canUsePd=null;
+			 String redMessage="暂无可使用红包";
 			 if(useredbeforMoney < youhui_money+notyouhui_money){
 				 	/**
 				 	 * 1先判断有red_id表示使用某个红包，2:如果没有则获取可使用的红包列表
 				 	 */
 				    if(redpackage_id.equals("")){
 				    	canUseRedList=getAllStoreRedMoneyByMember(pd, notyouhui_money, yingxiaosize, reducemoney);
+				    	canUsePd=new PageData();
+				    	if(canUseRedList.size() >0 ){
+				    		redMessage="有可用红包";
+				    	}
   				    }else{
 				    	canUsePd=getRedPackageInforByID(redpackage_id, youhui_money, reducemoney);
 				    	if(canUsePd == null){
 				    		canUsePd=new PageData();
 				    	}else{
+				    		redMessage=canUsePd.getString("content");
 				    		discount_content=canUsePd.getString("content")+"@"+canUsePd.getString("id")+"@"+canUsePd.getString("number")+"@"+canUsePd.getString("type")+",";
 				    	}
 				    }
  			 }
 			 map.put("canUseRedList", canUseRedList);//可以使用的红包集合
 			 map.put("canUsePd", canUsePd);
+			 map.put("redMessage", redMessage);//显示红包的信息
  			//使用红包后的优惠后的实际应该支付的金额为
 			double surepaymoney=youhui_money-reducemoney-Double.parseDouble(redmoney)-zkmoney+notyouhui_money;
 			//总共优惠金额
@@ -5513,7 +5532,7 @@ public class TongYong extends BaseController{
  			countpd=null;
  			//获取个人财富
  			map.put("memberInfor", ServiceHelper.getAppMemberService().findWealthById(pd));
-			//判断是否开通类别积分购买的权限
+			//判断是否开通类别积分购买的权限：0-总金额/分类买单都没开通，1-开通了总金额买单，3-开通了类别买单
  			if(ServiceHelper.getAppStorepc_marketingService().getJfById(pd) != null){
  				if( ServiceHelper.getAppStorepc_marketingService().getJfById(pd).getString("change_type").equals("3") ){
  					map.put("issortjf", "3");
@@ -5551,18 +5570,18 @@ public class TongYong extends BaseController{
    		Map<String,Object> map = new HashMap<String,Object>();
   		List<PageData> yingxiaoList=new ArrayList<PageData>();//用来存储营销List
   		try {
- 			String alllei=pd.getString("allleibie");
-			String pay_sort_type=pd.getString("pay_sort_type");
-  			double alljifeng=0;
-  			if(pay_sort_type.equals("2")){//充值总支付金额
+ 			String allleibie=pd.getString("allleibie");
+ 			boolean leibieFlag=(allleibie != null  && !allleibie.equals(""));//是否为分类购买
+   			double alljifeng=0;
+  			if(leibieFlag){//充值总支付金额
  	  			if(ServiceHelper.getAppStorepc_marketingService().getJfById(pd) == null || !ServiceHelper.getAppStorepc_marketingService().getJfById(pd).getString("change_type").equals("2") ){
 	  					map.put("message", "暂未开通该通道");
 	  					return map;
   				}
   				PageData ispd=ServiceHelper.getAppStorepc_marketingService().getJfById(pd);
 	  				map.put("sortList", ServiceHelper.getAppGoodsService().listAllBigSort(pd));//类别集合
-	  				if(alllei != null && !alllei.equals("") && alllei.contains("@")){
-  							String[] everylei=alllei.split(",");
+	  				if(leibieFlag  && allleibie.contains("@")){
+  							String[] everylei=allleibie.split(",");
   							int everyleilength=everylei.length;
   							for(int i=0;i<everyleilength ; i++){
 	  								  if(everylei[i].split("@")[1] != null && !everylei[i].split("@")[1].equals("") && !everylei[i].split("@")[1].equals("null")){
@@ -5634,10 +5653,10 @@ public class TongYong extends BaseController{
  			 									zkid=marketing_id;
 	  		 								}
  	 							}
-							}else if(zkpd.getString("discount_type").equals("2") && pay_sort_type.equals("2") ){//按类别折扣
+							}else if(zkpd.getString("discount_type").equals("2") && leibieFlag ){//按类别折扣
    			 					double m=0;
- 	 							if(alllei != null && alllei.contains("@")){
- 		  							String[] everylei=alllei.split(",");
+ 	 							if(allleibie != null && allleibie.contains("@")){
+ 		  							String[] everylei=allleibie.split(",");
  		  							int everyleilength=everylei.length;
   		  							for(int i=0;i<everyleilength ; i++){
  		  								if(everylei[i].split("@")[1] != null && !everylei[i].split("@")[1].equals("") && !everylei[i].split("@")[1].equals("null")){
@@ -5735,7 +5754,7 @@ public class TongYong extends BaseController{
 		  		 									jianid=marketing_id;
 		  		 								}
 	  									}
-	   							}else if(marketing_type.equals("6") && pay_sort_type.equals("1")){
+	   							}else if(marketing_type.equals("6")){
 	   								//肯定有
  	   							}else if(marketing_type.equals("7")){
 	   								//("第一步先进行折扣");
@@ -5871,7 +5890,7 @@ public class TongYong extends BaseController{
 			double surepaymoney=youhui_money-reducemoney-Double.parseDouble(redmoney)-zkmoney+notyouhui_money;
 			//总共优惠金额
 			double surehuiyoumoney=reducemoney+Double.parseDouble(redmoney)+zkmoney;
- 			if(pay_sort_type.equals("1")){
+ 			if(!leibieFlag){
 					double redhuiyoumoney=surepaymoney-notyouhui_money;
 					if(redhuiyoumoney < 0){
 						redhuiyoumoney=0;
@@ -5920,10 +5939,12 @@ public class TongYong extends BaseController{
  	  			map.put("yingxiaoList", yingxiaoList);
  	  		}
   			PageData countpd=new PageData();
-  			countpd.put("store_redpackets_id", zengid+","+zengid2);//增红包的集合
+  			countpd.put("zengid", zengid+","+zengid2);//增红包的集合
+//  		countpd.put("store_redpackets_id", zengid+","+zengid2);//增红包的集合
  			countpd.put("zengjf", df2.format(addjf+alljifeng));//赠送的积分
- 			countpd.put("redpackage_id", redpackage_id);//使用红包的ID
- 			countpd.put("allmoney", df2.format(youhui_money+notyouhui_money));//总金额
+ 			countpd.put("red_id", redpackage_id);//使用红包的ID
+//   		countpd.put("redpackage_id", redpackage_id);//使用红包的ID
+  			countpd.put("allmoney", df2.format(youhui_money+notyouhui_money));//总金额
  			countpd.put("notmoney", df2.format(youhui_money+notyouhui_money));//不优惠金额
  			if(surepaymoney <= 0){
 				countpd.put("paymoney", "0");//优惠后的支付金额

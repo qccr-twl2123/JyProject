@@ -363,8 +363,7 @@ public class Storepc_CategoryManageController extends BaseController {
   						PageData pd = new PageData();
  						try {
  							pd=this.getPageData();
- 							//System.out.println("======"+pd+"==========");
-							if(obj != null){
+ 							if(obj != null){
 			 					StoreRole slogin=(StoreRole)session.getAttribute(Const.SESSION_STORE_USER);
 				 				if(slogin != null){
 				 					String store_id=slogin.getStore_id();
@@ -460,7 +459,7 @@ public class Storepc_CategoryManageController extends BaseController {
   							}
 						} catch (Exception e) {
 							// TODO: handle exception
-							//System.out.println(e.toString());
+							e.printStackTrace();
 						}
 		 				modelAndView.setViewName("/storepc/business_shop2");
 		 				pd=null;
@@ -789,7 +788,7 @@ public class Storepc_CategoryManageController extends BaseController {
 	/**
 	 * 
 	* 方法名称:：showShop4
-	* 方法描述：人气版
+	* 方法描述：删除人气版商品
 	 */
 	@RequestMapping(value = "/delRenqi")
 	public ModelAndView delRenqi() throws Exception {
@@ -802,6 +801,9 @@ public class Storepc_CategoryManageController extends BaseController {
 		try {
 			pd = this.getPageData();
 			categoryManageService.delRenqi(pd);
+			//=====更改为正常商品
+			pd.put("goods_type", "0");
+			categoryManageService.editGoods(pd);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -813,19 +815,21 @@ public class Storepc_CategoryManageController extends BaseController {
 	/**
 	 * 
 	* 方法名称:：showShop4
-	* 方法描述：人气版
+	* 方法描述：删除特价商品
 	 */
 	@RequestMapping(value = "/delTejia")
 	public ModelAndView delTejia() throws Exception {
 		ModelAndView mv = new ModelAndView();
 		PageData pd = new PageData();
-		Subject currentUser = SecurityUtils.getSubject();  
-		Session session = currentUser.getSession();	
+ 		Session session = SecurityUtils.getSubject().getSession();	
 		StoreRole slogin=(StoreRole)session.getAttribute(Const.SESSION_STORE_USER);
 		String store_id=slogin.getStore_id();
 		try {
 			pd = this.getPageData();
 			categoryManageService.delTejia(pd);
+			//=====更改为正常商品
+			pd.put("goods_type", "0");
+			categoryManageService.editGoods(pd);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1019,6 +1023,7 @@ public class Storepc_CategoryManageController extends BaseController {
 			String goods_ids = pd.getString("goods_ids");
 			if(goods_ids != null && !goods_ids.equals("")){
 				String listGoods_ids[] = goods_ids.split(",");
+				pd.put("goods_type", "1");
 				for (int i = 0; i < listGoods_ids.length; i++) {
 					//获取今日特价的数据总数
 					String countTj = categoryManageService.countTejia(pd);
@@ -1032,6 +1037,8 @@ public class Storepc_CategoryManageController extends BaseController {
 							categoryManageService.savetejia(pd);
 						}
 						pg=null;
+						//修改商品为今日特价商品
+						categoryManageService.editGoods(pd);
 					}else {
 						result="2";
 						message="最多添加10条，还可以添加"+(int)(10-countTejia);
@@ -1060,24 +1067,27 @@ public class Storepc_CategoryManageController extends BaseController {
 		String result="1";
  		String message="新增成功";
 		pd = this.getPageData();
-		
-		try {
+ 		try {
 			String goods_ids = pd.getString("goods_ids");
 			if(goods_ids != null && !goods_ids.equals("")){
 				String listGoods_ids[] = goods_ids.split(",");
+				PageData pg =null;
+				pd.put("goods_type", "2");
 				for (int i = 0; i < listGoods_ids.length; i++) {
 					//获取今日特价的数据总数
 					String countRq = categoryManageService.countRenqi(pd);
 					double countRenqi = Double.parseDouble(countRq);
 					if(countRenqi < 10){
 						pd.put("goods_id", listGoods_ids[i]);
-						PageData pg = new PageData();
-						pg = categoryManageService.findRenqi(pd);
+  						pg = categoryManageService.findRenqi(pd);
 						if(pg == null){
 							pd.put("goods_tj_id", BaseController.getTimeID());
 							categoryManageService.saverenqi(pd);
+						}else{
+							pg=null;
 						}
-						pg=null;
+						//修改商品为人气版商品
+						categoryManageService.editGoods(pd);
 					}else {
 						result="2";
 						message="最多添加10条，还可以添加"+(int)(10-countRenqi);

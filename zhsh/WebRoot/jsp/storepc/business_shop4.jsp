@@ -74,7 +74,7 @@
 								</c:if>
 							</td>
 							<td>${slist.company}</td>
-							<td><a  class="col-blue del"   href="<%=basePath%>storepc_CategoryManageController/delRenqi.do?goods_rq_id=${slist.goods_rq_id}">删除</a></td>
+							<td><a  class="col-blue del"   href="<%=basePath%>storepc_CategoryManageController/delRenqi.do?goods_id=${slist.goods_id}&goods_rq_id=${slist.goods_rq_id}">删除</a></td>
 						</tr>
 					</c:forEach>
 				</tbody>
