@@ -5192,6 +5192,7 @@ public class TongYong extends BaseController{
 				zkpd.put("content", zkcontent);
 				zkpd.put("id", zkid);
 				zkpd.put("type", "7");
+				zkpd.put("name", "折扣");
 				zkpd.put("number", "-"+df2.format(zkmoney));
 				yingxiaoList.add(zkpd);
 			}
@@ -5206,14 +5207,15 @@ public class TongYong extends BaseController{
 			PageData e2=new PageData();
   			//优惠内容
 			String zengcontent="";
-			String zengid="";
+ 			String zengid="";
 			String zengtype="";
 			String zengcontent2="";
 			String zengid2="";
-			String zengtype2="";
+ 			String zengtype2="";
 			String jiancontent="";
 			String jiantype="";
 			String jianid="";
+			String jianname="";
 			double reducemoney=0;
 			int marketlistlength=marketlist.size();
 			for (int mi = 0; mi <marketlistlength ; mi++) {
@@ -5229,7 +5231,7 @@ public class TongYong extends BaseController{
 		 						zengcontent=grantrule;
 		 						zengid=marketing_id;
 		 						zengtype=marketing_type;
- 						} 
+  						} 
 					}else if(marketing_type.equals("2")){
 						if(grantrule.contains("折")){
 		 					double n2=0;
@@ -5245,6 +5247,7 @@ public class TongYong extends BaseController{
 		 						reducemoney=n2*youhui_money;
 		 						jiantype=marketing_type;
 		 						jianid=marketing_id;
+		 						jianname="立减";
 		 					}
 						}else{
 							if(Double.parseDouble(grantrule.substring(grantrule.indexOf("减")+1, grantrule.lastIndexOf("元"))) >reducemoney && youhui_money >= Double.parseDouble(grantrule.substring(grantrule.indexOf("满")+1, grantrule.indexOf("元")))){
@@ -5252,6 +5255,7 @@ public class TongYong extends BaseController{
 		 						reducemoney=Double.parseDouble(grantrule.substring(grantrule.indexOf("减")+1, grantrule.lastIndexOf("元")));
 		 						jiantype=marketing_type;
 		 						jianid=marketing_id;
+		 						jianname="立减";
 		 					}
 						}
 					}else if(marketing_type.equals("6") ){
@@ -5276,6 +5280,7 @@ public class TongYong extends BaseController{
 	  		 									reducemoney=mm;
 	  		 									jiantype=marketing_type;
 	  		 									jianid=marketing_id;
+	  		 									jianname="时段";
  								  	        }
 		   								}else  if(sdpd.getString("threediscount_rate").length() == 2){
     								  		 double mm=youhui_money*(1-Double.parseDouble(sdpd.getString("threediscount_rate"))/100);
@@ -5284,14 +5289,16 @@ public class TongYong extends BaseController{
 		  		 									reducemoney=mm;
 		  		 									jiantype=marketing_type;
 		  		 									jianid=marketing_id;
+		  		 									jianname="时段";
     								  	         }
 		   								}else  if(sdpd.getString("threediscount_rate").length() == 3){
     								  		 double mm=youhui_money*(1-Double.parseDouble(sdpd.getString("threediscount_rate"))/1000);
    								  	         if(  mm > reducemoney){
-				   								  	        jiancontent=grantrule;
-				  		 									reducemoney=mm;
-				  		 									jiantype=marketing_type;
-				  		 									jianid=marketing_id;
+				   								  	jiancontent=grantrule;
+				   								  	reducemoney=mm;
+				  		 							jiantype=marketing_type;
+				  		 							jianid=marketing_id;
+				  		 							jianname="时段";
    								  	         }
 							  		 	 
 		   								} 
@@ -5302,6 +5309,7 @@ public class TongYong extends BaseController{
 		 									reducemoney= Double.parseDouble(sdpd.getString("threereduce_money"));
 		 									jiantype=marketing_type;
 		 									jianid=marketing_id;
+		 									jianname="时段";
  	   								  }
   			   					}
 		   					}
@@ -5341,6 +5349,7 @@ public class TongYong extends BaseController{
 		  		 									reducemoney= m;
 		  		 									jiantype=marketing_type;
 		  		 									jianid=marketing_id;
+		  		 									jianname="立减";
 			   								 }
 			   							  }
 							 }
@@ -5381,20 +5390,20 @@ public class TongYong extends BaseController{
 			marketlist=null;
 			//满赠
 			if(!zengcontent.equals("")){
-				e1.put("content", zengcontent);e1.put("number", "");e1.put("id", zengid);e1.put("type", zengtype);
+				e1.put("name", "满赠");e1.put("content", zengcontent);e1.put("number", "");e1.put("id", zengid);e1.put("type", zengtype);
 				yingxiaoList.add(e1);
 			}
 			e1=null;
 			//累计次数
 			PageData ldpd=new PageData();
 			if(!zengcontent2.equals("")){
-				ldpd.put("content", zengcontent2);ldpd.put("number", "");ldpd.put("id", zengid2);ldpd.put("type", zengtype2);
+				ldpd.put("name", "累积");ldpd.put("content", zengcontent2);ldpd.put("number", "");ldpd.put("id", zengid2);ldpd.put("type", zengtype2);
 				yingxiaoList.add(ldpd);
 			}
 			ldpd=null;
 			//满减
 			if(!jiancontent.equals("") && reducemoney>0 ){
-				e2.put("content", jiancontent);e2.put("id", jianid);e2.put("type", jiantype);e2.put("number", "-"+df2.format(reducemoney));
+				e2.put("name", jianname);e2.put("content", jiancontent);e2.put("id", jianid);e2.put("type", jiantype);e2.put("number", "-"+df2.format(reducemoney));
 				yingxiaoList.add(e2);
 			}
 			 e2=null;
@@ -5505,6 +5514,7 @@ public class TongYong extends BaseController{
 	 			}
 	 	 		//积分
 	 	 		e3.put("content", jfpd.getString("grantrule")); e3.put("number", "+"+df2.format(addjf)); e3.put("id", jfpd.getString("store_scoreway_id")); e3.put("type", "6");
+	 	 		e3.put("name", "积分");
 	 	 		yingxiaoList.add(e3);
  			}
    			//处理营销
