@@ -98,7 +98,7 @@ var load_flag=0
 //商家载入;
 function shangjiazairu(data) {
 	 load_flag=0;
- 	 var storelist=data.data;
+ 	 var storelist=data.storeList;
 	 if(base_inf.nowpage == "1"){
 		 $(".sj_list").find("li").remove();
 		 $(".sj_list").scrollTop(0);

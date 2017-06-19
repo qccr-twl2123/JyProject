@@ -83,12 +83,14 @@ public class AppIndexSomeThingJk extends BaseController {
 	 * 获得所有商家/商品
 	 * app_index/nSySxSG.do
 	 * 
-	 * city_file_sort_id 分类类别ID
-	 * sort_type  类别（1-大类，2-小类）
+	 * city_file_sort_id:  分类类别ID
+	 * sort_type:  类别（1-大类，2-小类）
  	 * storepx_number:  (商家) 1-智能排序（综合分值为基数的），2-距离近到远，3-人气高到低，4-积分率从高到底，5-销售量从高到底
- 	 * goodspx_number	(商品) 1-销售量高到底（默认）  2-价格从高到底，3-价格从低到高 
+ 	 * goodspx_number:	(商品) 1-销售量高到底（默认）  2-价格从高到底，3-价格从低到高 
  	 * change_type: 1-商家/2-商品（默认商家）
- 	 * nowpage 分页参数（默认从1开始）
+ 	 * nowpage: 分页参数（默认从1开始）
+ 	 * 
+ 	 * 
  	 */
 	@RequestMapping(value="/nSySxSG")
 	@ResponseBody
@@ -101,6 +103,7 @@ public class AppIndexSomeThingJk extends BaseController {
 		try{ 
 			pd = this.getPageData();
 			map1=getStoreOrGoods(map1, pd, page);
+			map1=getShaiXuan(map1,pd.getString("change_type"));//获取筛选集合
 		}catch(Exception e){
 			 result = "0";
 			 message="系统错误";

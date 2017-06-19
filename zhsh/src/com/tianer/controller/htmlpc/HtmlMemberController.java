@@ -569,13 +569,56 @@ public class HtmlMemberController extends BaseController {
      	String result="1";
   		String message="获取成功";
 		PageData pd = new PageData();
-		try{
-			pd = this.getPageData();
-			map=GetStoreList(pd, page);
-    	} catch(Exception e){
-			logger.error(e.toString(), e);
+ 		List<PageData> allstoreList=new ArrayList<PageData>();//用来存储商家List
+		List<PageData> allgoodsList=new ArrayList<PageData>();//用来存储商品List
+		try { 
+ 			String nowpage=(pd.getString("nowpage") == null?"1":pd.getString("nowpage"));
+			page.setCurrentPage(Integer.parseInt(nowpage));
+			page.setPd(pd);
+			if(pd.getString("change_type") == null || pd.getString("change_type").equals("1")){
+				allstoreList=ServiceHelper.getAppStoreService().getStorelistPage(page);
+				PageData e=null;
+				int n=allstoreList.size();
+	  			for(int i=0 ; i< n  ;i++){
+	 							e=allstoreList.get(i);
+								//判断是否开通zk
+	 							if(ServiceHelper.getAppStorepc_marketingService().getZKById(e) == null){
+									e.put("zkstatus", "0");
+								}else{
+									e.put("zkstatus", "1");
+								}
+								//判断是否有红包
+								pd.put("store_id", e.getString("store_id"));
+								Map<String,Object> redmap=TongYong.storeAndMemberByRed(pd);//包括会员id和商家id
+								boolean flag=(boolean) redmap.get("flag");//判断是否还有符合的红包
+								if(flag){
+									e.put("haveRed", "1");
+								}else{
+									e.put("haveRed", "0");
+								}
+								//定位处理
+								if(Double.parseDouble(e.getString("distance") )-Const.maxjuli > 0 ){
+									e.put("distance", Const.maxjuli+"km+");
+								}else{
+									e.put("distance", e.getString("distance")+"km");
+								}
+	  							//获取营销规则
+								List<PageData> marketlist=ServiceHelper.getAppStorepc_marketingService().listAllMarketing(e);
+								e.put("marketlist", marketlist);
+								e.put("new_store_id",BaseController.get4ZMSZ()+EbotongSecurity.ebotongEncrypto(e.getString("store_id")));
+	 			}
+ 			}else{
+ 				allgoodsList=ServiceHelper.getAppGoodsService().getGoodslistPage(page);
+			}
+			map.put("storeList", allstoreList);
+			map.put("allgoodsList", allgoodsList);
+			//原版
+//			map=GetStoreList(pd, page);
+ 		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
-		map.put("result", result);
+ 		map.put("result", result);
 		map.put("message", message);
  		return map;
 	}
@@ -631,14 +674,15 @@ public class HtmlMemberController extends BaseController {
 							e.put("marketlist", marketlist);
 							e.put("new_store_id",BaseController.get4ZMSZ()+EbotongSecurity.ebotongEncrypto(e.getString("store_id")));
  			}
-  			map.put("data", storeList);
+  			map.put("storeList", storeList);
     		storeList=null;
  		} catch (Exception e) {
 			// TODO: handle exception
+ 			e.printStackTrace();
 		}
 		return map;
 	}
-
+ 
 	
 	/**
 	 *  去获取区
@@ -2557,7 +2601,7 @@ public class HtmlMemberController extends BaseController {
  					member_id=pd.getString("member_id");
  				} else{
  					result="0";
- 					message="系统繁忙，稍等一会再试试";
+ 					message="系统繁忙，请重进进入页面";
  				}
  			}else{
  				member_id= appMemberService.detailByPhone(pd).getString("member_id");

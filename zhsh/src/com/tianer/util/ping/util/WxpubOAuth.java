@@ -44,7 +44,7 @@ public class WxpubOAuth {
     public static String getOpenId(String appId, String appSecret, String code) throws UnsupportedEncodingException {
          String url = WxpubOAuth.createOauthUrlForOpenid(appId, appSecret, code);
          String ret = WxpubOAuth.httpGet(url);
-         System.out.println(ret.toString());
+//         System.out.println(ret.toString());
          JsonParser jp = new JsonParser();
          JsonObject respJson = jp.parse(ret).getAsJsonObject();
          if(respJson.get("errcode") != null && FileUtil.readTxtFile("C:\\openid_errcode.txt").contains(String.valueOf(respJson.get("errcode")))){

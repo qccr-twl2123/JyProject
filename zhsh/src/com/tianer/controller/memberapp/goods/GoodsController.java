@@ -611,6 +611,7 @@ public class GoodsController extends BaseController {
 	 *  store_id  商家ID
 	 *  member_id 会员ID
 	 *  redpackage_id 红包ID
+	 *  
 	 */
 	@RequestMapping(value="/catShopBuyGoods")
 	@ResponseBody
@@ -629,7 +630,7 @@ public class GoodsController extends BaseController {
 					String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
 					pd.put("store_id", store_id);
 				}
-   				//营销开始：先判断折扣设置，折扣完的金额计算积分值，接下来是判断折扣后的金额是否满足红包及其它优惠条件；最后的金额是本次应买单的金额；
+    				//营销开始：先判断折扣设置，折扣完的金额计算积分值，接下来是判断折扣后的金额是否满足红包及其它优惠条件；最后的金额是本次应买单的金额；
 				String allmoney=pd.getString("allmoney");
  				if(allmoney == null || allmoney.equals("") || Double.parseDouble(allmoney) <= 0){
  					map.put("result", "0");
@@ -640,8 +641,20 @@ public class GoodsController extends BaseController {
 				double youhui_money=Double.parseDouble(allmoney);
  				//优惠买单信息
 				Map<String,Object> yhmdpd=TongYong.YouHuiMaiDanByTwoForMember(pd, youhui_money, 0);
- 				//商家名称
-				yhmdpd.put("store_name", ServiceHelper.getAppStoreService().findById(pd).getString("store_name"));
+				//处理allgoods
+				List<PageData> goodsList=new ArrayList<PageData>();
+				String[] goodsstr=pd.getString("allgoods").split(",");
+				PageData goodspd=null;
+				for (int i = 0; i < goodsstr.length; i++) {
+ 					goodspd=new PageData();
+					goodspd.put("goods_id", goodsstr[i].split("@")[0]);
+					goodspd.put("goods_name", ServiceHelper.getAppGoodsService().findById(goodspd).getString("goods_name"));
+					goodspd.put("shop_number", goodsstr[i].split("@")[1]);
+					goodspd.put("summoney", goodsstr[i].split("@")[2]);
+					goodsList.add(goodspd);
+					goodspd=null;
+				}
+  				yhmdpd.put("goodsList", goodsList);
 				map.put("data",yhmdpd );
 				yhmdpd=null;
       	} catch(Exception e){
