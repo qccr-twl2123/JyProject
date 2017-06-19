@@ -16,6 +16,35 @@
 	 <script src="js/jquery-1.8.0.min.js"></script>
 	  <script src="My97DatePicker/WdatePicker.js"></script>
 </head>
+<style>
+	html,body{
+		position: relative;
+	}
+
+	.loading{
+		transition: all 0.5s;
+		width: 100%;							 
+		height: 100%;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		margin: auto;
+		background: rgba(5, 5, 5, 0.5);     
+		position: absolute;
+		z-index: 2;
+		display:none;
+	}
+	.loading img{                           /* 图片未限制大小 不要放太大的图  */ 
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		margin: auto;
+		opacity: 0.7;
+	}
+</style>
 <body>
     <c:if test="${storeqx.look eq '1'}">
 	<ul>
@@ -61,7 +90,7 @@
                 		 <option value = "${srp.type}">${srp.name}</option>
                 	</c:forEach> 
             </select>
-			<span class="xx">请输入金额：<input type="text" name="usermoney" id="usermoney" value="" onchange="moneydayumoeny()"/><span style="  font-size: 6px; ">*金额必须 &gt;= 红包总金额/个数*2  *</span></span>
+			<span class="xx" style="display:none;">请输入金额：<input type="text" name="usermoney" id="usermoney" value="" onchange="moneydayumoeny()"/><span style="  font-size: 6px; ">*金额必须 &gt;= 红包总金额/个数*2  *</span></span>
  		</li>
  
 		<li style="padding-left:8%;line-height:3;">
@@ -166,6 +195,9 @@
 		</li>
 	 </c:forEach>   
 	</ul>
+	<div class="loading" >
+		<img src="img/loading.gif" alt="">
+	</div>
 	</c:if>
 	<script type="text/javascript">
 	//清空文本框
@@ -175,10 +207,9 @@
 		$("#ge2").val("");
 		$(".every_money").html("");
 	}
-	
-	
-	
-	//显示平均金额
+	 
+ 
+ 	//显示平均金额
 	function showevery_money(){
 		  var xianjin_money=$("#yuan1").val();
 		  if(xianjin_money == ""){
@@ -231,8 +262,7 @@
 	
 	
 		//新增红包
-    	$(".xx").hide();
-    	function save(now_obj){
+     	function save(now_obj){
     		$(now_obj).attr("onclick","");
     		$(now_obj).css("background","#ccc");
      		var yuan1 = $("#yuan1").val().trim();
@@ -303,16 +333,16 @@
  					return;
  				}
  				//在这个位置添加loading
- 				
-				 $.ajax({
+ 				$(".loading").show();
+ 				 $.ajax({
 						type:"post",
 						url:"<%=basePath%>storepc_redpackets/save.do",
 						data:"money="+yuan1+"&redpackage_number="+ge1+"&redpackage_type="+1+
 	    				"&srp_usercondition_id="+tiaojian+"&starttime="+startdate+"&endtime="+enddate+"&tiaojiantext="+tiaojiantext+
 	    				"&srp_opentype_id="+fw+"&choice_type="+money+"&store_id="+"${storepd.store_id}"+"&usermoney="+$("#usermoney").val()+"&mystore_id="+$("#mystore_id").val(),
-						success:function(data){
+ 						success:function(data){
  							window.location.reload();
-						}
+ 						}
 					});
  			}else if(checked2  ==  1){
 				if(ge2 =="" || ge2 =="0"){
@@ -322,17 +352,16 @@
  					return;
  				}
 				//在这个位置添加loading
-				
-				
-				 $.ajax({
+				$(".loading").show();
+ 				 $.ajax({
 						type:"post",
 						url:"<%=basePath%>storepc_redpackets/save.do",
 						data:"money="+yuan2+"&redpackage_number="+ge2+"&redpackage_type="+2+
 	    				"&srp_usercondition_id="+tiaojian+"&starttime="+startdate+"&endtime="+enddate+"&tiaojiantext="+tiaojiantext+
 	    				"&srp_opentype_id="+fw+"&choice_type="+zhekou+"&store_id="+"${storepd.store_id}"+"&usermoney="+$("#usermoney").val(),
-						success:function(data){
+ 						success:function(data){
 							window.location.reload();
-						}
+ 						}
 					}); 
 			
 			}
@@ -348,17 +377,7 @@
     		}
     	}
     
-    //多选框单选		
-    $(function(){ 
-		$(':checkbox[name=juli]').each(function(){ 
-			$(this).click(function(){ 
-				if($(this).attr('checked')){ 
-					$(':checkbox[name=juli]').removeAttr('checked'); 
-					$(this).attr('checked','checked'); 
-				} 
-			}); 
-		}); 
-	}); 
+   
 	
     
     //删除红包
@@ -379,18 +398,22 @@
 				}
 			}); 
 	}
-    </script>
-</body>
-<script src="js/jquery-1.12.4.min.js"></script>
-<script>
-	$(function(){
+    
+	 //多选框单选		
+    $(function(){ 
+		$(':checkbox[name=juli]').each(function(){ 
+			$(this).click(function(){ 
+				if($(this).attr('checked')){ 
+					$(':checkbox[name=juli]').removeAttr('checked'); 
+					$(this).attr('checked','checked'); 
+				} 
+			}); 
+		}); 
+		
 		$(".xuanzhong").click(function(e){   /*点击汉字选择input*/
 			$(e.target).prev().prop("checked",!($(e.target).prev()[0].checked))
 		})
-		 /*删除按钮*/
-		/* $(".del_item").click(function(e){  
-			$(e.target).parent().remove()
-		}) */
-	})
-</script>
+	}); 
+    </script>
+</body>
 </html>
