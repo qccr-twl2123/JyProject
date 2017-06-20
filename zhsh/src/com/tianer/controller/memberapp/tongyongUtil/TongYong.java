@@ -2176,10 +2176,14 @@ public class TongYong extends BaseController{
 	* yingxiaosize  参与营销的次数
 	* 
 	* 返回数据
-	* canuse_red 1-可以使用，99-不可以使用
+	* canuse_red  1-可以使用，99-不可以使用
+	* isready_use 0-未选中，1-已选中
   	 */
-	public static  List<PageData>  getAllStoreRedMoneyByMember(PageData pd,double youhui_money,int yingxiaosize,double reducemoney){
+	public static  PageData  getAllStoreRedMoneyByMember(PageData pd,double youhui_money,int yingxiaosize,double reducemoney){
+		PageData useredpd=new PageData();
+		List<PageData> alluseList=new ArrayList<PageData>();
 		List<PageData> okredList=new ArrayList<PageData>();
+		List<PageData> notokredList=new ArrayList<PageData>();
   		try{ 
   			String redpackage_id=(pd.getString("redpackage_id") == null?"":pd.getString("redpackage_id"));//当前是否有使用红包
     		//获取当前用户在当前商家可以用的所有红包
@@ -2222,13 +2226,21 @@ public class TongYong extends BaseController{
   							e.put("canuse_red", "1");
 						}
 				}
-   				okredList.add(e);
-				e=null;
+  				if(e.getString("canuse_red").equals("99")){
+  					notokredList.add(e);
+  				}else{
+  					okredList.add(e);
+  				}
+  				alluseList.add(e);
+ 				e=null;
   			}
   		} catch(Exception e){
   			(new TongYong()).dayinerro(e);
  		}
- 		return okredList;
+  		useredpd.put("canUseList", okredList);
+  		useredpd.put("notUseList", notokredList);
+  		useredpd.put("allUseList", alluseList);
+ 		return useredpd;
 	}
 	
 	/**
@@ -5422,13 +5434,14 @@ public class TongYong extends BaseController{
 			 //判断优惠后的金额是否已经是0
 			 double useredbeforMoney=reducemoney+zkmoney;//使用红包前的总共优惠了的金额：满减+z折扣
 			 String redpackage_id=(pd.getString("redpackage_id") == null?"":pd.getString("redpackage_id"));
- 			 List<PageData> canUseRedList=getAllStoreRedMoneyByMember(pd, notyouhui_money, yingxiaosize, reducemoney);
- 			 PageData canUsePd=null;
-			 String redMessage="暂无可使用红包";
-			 if(canUseRedList.size() >0){
-				 redMessage="有"+canUseRedList.size()+"个可使用红包";
+ 			 PageData useRedPd=getAllStoreRedMoneyByMember(pd, notyouhui_money, yingxiaosize, reducemoney);
+ 			 String redMessage="暂无可使用红包";
+  			 //判断可以使用的红包数量
+  			 if( ((List<PageData>) useRedPd.get("canUseList")).size() >0){
+				 redMessage="有"+ ((List<PageData>) useRedPd.get("canUseList")).size()+"个可使用红包";
 			 }
 			 String use_redpackagemoney="0";//使用红包
+			 PageData canUsePd=null;
 			 if(useredbeforMoney < youhui_money+notyouhui_money){
 				 	/**
 				 	 * 1先判断有red_id表示使用某个红包
@@ -5444,8 +5457,9 @@ public class TongYong extends BaseController{
 				    	}
   				    } 
  			 }
-			 map.put("canUseRedList", canUseRedList);//可以使用的红包集合
-			 map.put("canUsePd", canUsePd);
+ 			 map.put("canUseRedList", (List<PageData>) useRedPd.get("allUseList"));//所有未过期的红包集合
+			 map.put("useRedPd", useRedPd);//所有未过期的红包集合
+ 			 map.put("canUsePd", canUsePd);//当前使用的红包详情
 			 map.put("redMessage", redMessage);//显示红包的信息
  			//使用红包后的优惠后的实际应该支付的金额为
 			double surepaymoney=youhui_money-reducemoney-Double.parseDouble(use_redpackagemoney)-zkmoney+notyouhui_money;
