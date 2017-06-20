@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tianer.controller.base.BaseController;
+import com.tianer.controller.memberapp.tongyongUtil.TongYong;
 import com.tianer.entity.Page;
 import com.tianer.entity.html.HtmlUser;
 import com.tianer.service.business.menu_text.Menu_textService;
@@ -569,15 +570,18 @@ public class HtmlMemberMeController extends BaseController{
 	 */
 	@RequestMapping(value="/tihuoByOrderId")
  	public ModelAndView tihuoByOrderId(){
-//		logBefore(logger, "提货卷详情");
-		ModelAndView mv = this.getModelAndView();
+ 		ModelAndView mv = this.getModelAndView();
  		PageData pd = new PageData();
 		try{ 
 			pd = this.getPageData();
-			//判断是否为H5页面
-			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
-				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+			pd=orderService.tihuoByOrderId(pd);
+    		//获取商品信息 以及商家信息
+			pd=TongYong.getGoodsListByOrder(pd);
+			//更改提货卷显示格式
+ 			if(pd.getString("tihuo_id") != null && pd.getString("tihuo_id").length() == 10){
+				pd.put("tihuo_id", pd.getString("tihuo_id").substring(0, 2)+"-"+pd.getString("tihuo_id").substring(2,6 )+"-"+pd.getString("tihuo_id").substring(6, 10));
 			}
+  	 		pd.put("daoLiuStoreList", TongYong.daoliuList(pd));
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}

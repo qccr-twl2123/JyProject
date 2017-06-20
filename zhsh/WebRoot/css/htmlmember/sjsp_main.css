@@ -636,6 +636,7 @@ body{
 }
 .sjtj_text span{
     float: right;
+    margin-right: 5px;
 }
 .sjtj_text span:first-child{
     float: left;

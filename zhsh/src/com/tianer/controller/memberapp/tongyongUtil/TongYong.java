@@ -4435,6 +4435,7 @@ public class TongYong extends BaseController{
 				pd.put("shen_money", df2.format(shenmoney));//已省金额
 	 			pd.put("goods_number", goods_number);//数量
  				pd.put("goodsList", goodsList);
+ 				pd.put("sk_shop", BaseController.jiami(pd.getString("store_id")));
 	 			pd.put("store_name", ServiceHelper.getTYAllSortService().findByIdByStore(pd).getString("store_name"));
 	 			pd.put("pictrue_url", ServiceHelper.getTYAllSortService().findByIdByStore(pd).getString("pictrue_url"));
 	 			pd.put("phone_bymemeber", ServiceHelper.getTYAllSortService().findByIdByStore(pd).getString("phone_bymemeber"));

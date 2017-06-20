@@ -17,9 +17,12 @@
 	<link rel="stylesheet" href="css/htmlmember/normalize.min.css">
 	<script src="js/jquery-1.8.0.min.js"></script>
 	<style type="text/css">
-	.tit_bg_box{
- 			position: absolute;right: 0.4rem;top: 0.4rem;display: inline;padding-right: 1rem;height: 1.7rem;width: 1.3rem; background-size: 100%;
- 			}
+	.tit_bg_box {
+	    position: absolute; right: 0.4rem; top: 0.4rem; display: inline; height: 1.5rem; width: 3.3rem; font-size: 10px; background-size: 100%;
+	}
+	.inline_box{
+		height: 2.1rem;padding: 0.4rem 0.4rem;width: 100%;position: relative;line-height: 1.6rem;font-size: 2.1rem;
+	}
 	</style>
 </head>
 <body style="background:#ededed;">
@@ -30,7 +33,7 @@
 <div class="my-thj-list clearfix">
  	<span class="my-top-tx fl"><img src=""  id="pictrue_url"></span>
 	<div class="my-top-text my-thj-text">
-		<b id="store_name"></b>
+		<b id="store_name" style=" font-size: 25px; "></b>
  		<p id="address"> </p> 
  		<p id="phone_bymemeber"></p> 
 	</div>
@@ -38,21 +41,27 @@
 <div class="my-thj-list clearfix">
  	<span class="fr red" id="tihuo_text" style=" font-size: 30px; "></span>
   	<div class="my-thj-text">
-		<b>提货劵</b>
+		<b style=" font-size: 20px; ">提货劵</b>
 		<p>提货码：<span style="color:#bb413e;font-size:16px;" id="tihuo_id"> </span></p>
 		<p>有效期：<span id="start_end"> 至 </span></p>
 	</div>
 </div>
 <div class="my-thj-list clearfix">
 	<span class="red fr" class="sale_money">总价：<span class="sale_money"></span> 元</span>
- 		<div class="my-thj-text" style="width:60%" id="goodsList">
-			<b>商品信息</b>
+ 		<div class="my-thj-text" style="width:90%" id="goodsList">
+			<b style=" font-size: 20px; ">商品信息</b>
 			<%-- <p>${var.goods_name }x${var.shop_number }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;             总价：${var.price } </p> --%>
 		</div>
- </div>
+</div>
+<div class="my-thj-list clearfix">
+  		<div class="my-thj-text" style="width:90%" id="discountList">
+			<b style=" font-size: 20px; ">优惠信息</b>
+			
+ 		</div>
+</div>
 <div class="my-thj-list clearfix">
 	<div class="my-thj-text">
-		<b>订单信息</b>
+		<b style=" font-size: 20px; ">订单信息</b>
 		<p id="look_number">订单号:  </p>
 		<p id="pay_phone">购买手机号:  </p>
 		<p id="createtime">购买时间:   </p>
@@ -69,10 +78,9 @@
  		//验证提交
 		$.ajax({
 		        type:"post",
-		        url:'<%=basePath%>app_order/tihuoByOrderId.do', 
+		        url:'app_order/tihuoByOrderId.do', 
 		  	 	 data:{
-		  	 		"order_id":"${pd.order_id}",
-		 		 	"member_id":"${pd.member_id}" 
+		  	 		"order_id":"${pd.order_id}" 
 		  	 	 },                
 		        dataType:"json",
 		        success: function(data){
@@ -101,6 +109,12 @@
 							var str="<p>"+goodsList[i].goods_name+"x"+goodsList[i].shop_number+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;             总价："+goodsList[i].price+"  </p>";
 							$("#goodsList").append(str);
 			        	}
+			        	//优惠信息
+	 		        	var discountList=pd.discountList;
+			        	for (var i = 0; i < discountList.length; i++) {
+							var str="<p>" +discountList[i].content+  "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  "+discountList[i].number+"  </p>";
+							$("#discountList").append(str);
+			        	}
 			        	var daoLiuStoreList=pd.daoLiuStoreList;
 			        	for (var i = 0; i < daoLiuStoreList.length; i++) {
 				        		var onestore=daoLiuStoreList[i];
@@ -126,28 +140,28 @@
 					        		var onemark_type=onemark[m].marketing_type;
 					        		var onegrantrule=onemark[m].grantrule;
 					        		if(onemark_type == "1"){
-					        			onemarkstr+="<span class='zeng tit_bg_box'>增</span>";
+					        			onemarkstr+="<span class='zeng tit_bg_box'>满增</span>";
 					        		}else if(onemark_type == "2"){
-					        			onemarkstr+="<span class='jian tit_bg_box' >减</span>";
+					        			onemarkstr+="<span class='jian tit_bg_box' >立减</span>";
 					        		}else if(onemark_type == "3"){
-					        			onemarkstr+="<span class='shi tit_bg_box'   >时</span>";
+					        			onemarkstr+="<span class='shi tit_bg_box'   >时段</span>";
 					        		}else if(onemark_type == "4"){
-					        			onemarkstr+="<span class='song tit_bg_box'   >买</span>";
+					        			onemarkstr+="<span class='song tit_bg_box'   >立减</span>";
 					        		}else if(onemark_type == "5"){
-					        			onemarkstr+="<span class='song tit_bg_box'   >购</span>";
+					        			onemarkstr+="<span class='song tit_bg_box'   >累计</span>";
 					        		}else if(onemark_type == "6"){
-					        			onemarkstr+="<span class='ji tit_bg_box'   >积</span>";
+					        			onemarkstr+="<span class='ji tit_bg_box'   >积分</span>";
 						        		}else if(onemark_type == "7"){
-					        			onemarkstr+="<span class='zhe tit_bg_box '   >折</span>";
+					        			onemarkstr+="<span class='zhe tit_bg_box '   >折扣</span>";
 					        		}
 					        	}
-								var str="<a href='html_member/goStoreDetail.do?member_id=${pd.member_id}&store_id="+onestore.ci_store_id+"&daoliurecord_id="+onestore.daoliurecord_id+"' style='color:#000'><li class='li_item' style='width: 50%;float: left;padding: 0 0.4rem 1rem 0.4rem;'>"+
+								var str="<a href='html_member/goStoreDetail.do?sk_shop="+onestore.sk_shop+"&daoliurecord_id="+onestore.daoliurecord_id+"' style='color:#000'><li class='li_item' style='width: 50%;float: left;padding: 0 0.4rem 1rem 0.4rem;'>"+
 										"<div class='li_cont' style='width: 100%;border: 1px solid #ccc;padding-bottom: 1rem;'>"+
 									"<div class='img_box' style='    position: relative;width: 100%;padding-bottom:100%;height:0px'>"+
 										"<img src='"+onestore.pictrue_url+"' alt='' style='position: absolute;width: 100%;  height: 100%; '>"+
 									"</div>"+
 									"<div class='li_tit' style='width: 100%;'>"+
-										"<div class='inline_box' style='height: 1.6rem;padding: 0.4rem 0.4rem;width: 100%;position: relative;line-height: 1.6rem;font-size: 1.2rem;'>"+
+										"<div class='inline_box' style='height: 2.1rem;padding: 0.4rem 0.4rem;width: 100%;position: relative;line-height: 1.6rem;font-size: 2.1rem;'>"+
 											"<span class='title' style='width: 90%;margin: 0;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'>"+onestore.store_name+"</span>"+
 											 onemarkstr+
 										"</div>"+

@@ -7,14 +7,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+<base href="<%=basePath%>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-<link rel="stylesheet" type="text/css" href="<%=basePath%>css/htmlmember/style.css">
-<link rel="stylesheet" href="<%=basePath%>css/htmlmember/styles.css" type="text/css">
-<link rel="stylesheet" href="<%=basePath%>css/htmlmember/normalize.min.css" type="text/css">
-<script type="text/javascript" src="<%=basePath%>js/htmlmember/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="<%=basePath%>js/htmlmember/main.js"></script>
+<link rel="stylesheet" type="text/css" href="css/htmlmember/style.css">
+<link rel="stylesheet" href="css/htmlmember/styles.css" type="text/css">
+<link rel="stylesheet" href="css/htmlmember/normalize.min.css" type="text/css">
+<script type="text/javascript" src="js/htmlmember/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="js/htmlmember/main.js"></script>
 <style type="text/css">
 	.ddxq-text p{
 		line-height: 30px;
@@ -72,16 +73,13 @@
 <div class="wallet-content clearfix">
 	<p class="wallet-content-title" style="font-size: 17px;">付款方式</p>
 	<ul id="fukaungList">
-		<%-- <c:forEach items="${fukaungList }" var="var">
-			<li class="clearfix">
-				<div class="fl">
-					<p class="fourteen-px" style="font-size: 14px;">${var.fsname }</p>
-				</div>
-				<div class="fr">
-					<p style="color:red;">${var.fsnumber }</p>
-				</div>
-			</li>
-		</c:forEach> --%>
+
+	</ul>
+</div>
+<div class="wallet-content clearfix">
+	<p class="wallet-content-title" style="font-size: 17px;">优惠明细</p>
+	<ul id="discountList">
+		 
 	</ul>
 </div>
 <c:if test="${pd.discount_money >= '0.01'  or pd.get_integral >= '0.01'}">
@@ -138,8 +136,9 @@
  		//验证提交
 		$.ajax({
 		        type:"post",
-		        url:'<%=basePath%>app_order/findById.do', 
+		        url:'app_order/findById.do', 
 		  	 	 data:{
+ 		  	 		"tihuo_id":"${pd.tihuo_id}" ,
  		  	 		"order_id":"${pd.order_id}" 
  		  	 	 },                
 		        dataType:"json",
@@ -150,14 +149,14 @@
 	  		        	$("#tihuo_id").html(pd.tihuo_id);
 	  		        	$("#createtime").html(pd.createtime);
 			        	$("#pictrue_url").attr("src",pd.pictrue_url);
-			        	$(".back_yemian").attr("href","<%=basePath%>html_member/goStoreDetail.do?store_id="+pd.store_id+"&member_id=${pd.member_id}");
+			        	$(".back_yemian").attr("href","html_member/goStoreDetail.do?sk_shop="+pd.sk_shop);
   			        	$(".sale_money").html(pd.sale_money);
 			        	$("#look_number").html( pd.look_number);
 			        	$("#discount_money").html( pd.discount_money);
 			        	$("#get_integral").html( pd.get_integral);
    			        	//方式集合
 	 		        	var fukaungList=pd.fukaungList;
-			        	for (var i = 0; i < fukaungList.length; i++) {
+ 			        	for (var i = 0; i < fukaungList.length; i++) {
 							var str="<li class='clearfix'> <div class='fl'> <p class='fourteen-px' style='font-size: 14px;'>"+fukaungList[i].fsname+"</p> </div> <div class='fr'> <p style='color:red;'>"+fukaungList[i].fsnumber+"</p> </div> </li>";
 							$("#fukaungList").append(str);
 			        	}
@@ -171,6 +170,12 @@
 			        	}else{
 			        		$("#yhmx").hide();
 			        	}
+			        	//营销情况
+ 			        	var discountList=pd.discountList;
+ 			        	for (var i = 0; i < discountList.length; i++) {
+ 			        		var str="<li class='clearfix'> <div class='fl'> <p class='fourteen-px' style='font-size: 14px;'>"+discountList[i].content+"</p> </div> <div class='fr'> <p style='color:red;'>"+discountList[i].number+"</p> </div> </li>";
+							$("#discountList").append(str);
+ 			        	}
 			        	var daoLiuStoreList=pd.daoLiuStoreList;
 			        	for (var i = 0; i < daoLiuStoreList.length; i++) {
 				        		var onestore=daoLiuStoreList[i];

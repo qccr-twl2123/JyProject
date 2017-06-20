@@ -8,11 +8,12 @@
 <html>
 <head>
         <meta charset="utf-8">
+        <base href="<%=basePath%>">
  		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link rel="stylesheet" type="text/css" href="<%=basePath%>css/htmlmember/style.css">
-		<link rel="stylesheet" href="<%=basePath%>css/htmlmember/styles.css" type="text/css">
+		<link rel="stylesheet" type="text/css" href="css/htmlmember/style.css">
+		<link rel="stylesheet" href="css/htmlmember/styles.css" type="text/css">
 </head>
 <body style="background:#ededed;">
 <nav class="top">
@@ -20,7 +21,7 @@
 	<div style="text-align:center;line-height:40px;color:#fff">提货券</div>
 </nav>
 <c:forEach items="${tihuoList }" var="var">
-	<a href="<%=basePath%>html_me/tihuoByOrderId.do?order_id=${var.order_id}&member_id=${pd.member_id}">
+	<a href="html_me/tihuoByOrderId.do?order_id=${var.order_id}">
 		<div class="my-thj-list clearfix"> 
 			<c:if test="${var.tihuo_status eq '0' }">
 				<span class="fr red fourteen-px">待提货</span>

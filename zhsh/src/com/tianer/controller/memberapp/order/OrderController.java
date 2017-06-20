@@ -208,8 +208,7 @@ public class OrderController extends BaseController {
 	@RequestMapping(value="/tihuoByOrderId")
 	@ResponseBody
 	public Object tihuoByOrderId(){
-//		logBefore(logger, "提货卷详情");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
 		String result = "1";
 		String message="获取成功";
 		PageData pd = new PageData();
