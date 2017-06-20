@@ -5411,38 +5411,33 @@ public class TongYong extends BaseController{
 			 int yingxiaosize=yingxiaoList.size();
 			 //判断优惠后的金额是否已经是0
 			 String redpackage_id=(pd.getString("redpackage_id") == null?"":pd.getString("redpackage_id"));
-			 String redmoney="0";
-			 List<PageData> canUseRedList=getAllStoreRedMoneyByMember(pd, notyouhui_money, yingxiaosize, reducemoney);
+ 			 List<PageData> canUseRedList=getAllStoreRedMoneyByMember(pd, notyouhui_money, yingxiaosize, reducemoney);
 			 double useredbeforMoney=reducemoney+zkmoney;//使用红包前的总共优惠了的金额
 			 PageData canUsePd=null;
 			 String redMessage="暂无可使用红包";
+			 String use_redpackagemoney="0";//使用红包
 			 if(useredbeforMoney < youhui_money+notyouhui_money){
 				 	/**
-				 	 * 1先判断有red_id表示使用某个红包，2:如果没有则获取可使用的红包列表
+				 	 * 1先判断有red_id表示使用某个红包
 				 	 */
-				    if(redpackage_id.equals("")){
-				    	canUseRedList=getAllStoreRedMoneyByMember(pd, notyouhui_money, yingxiaosize, reducemoney);
-				    	canUsePd=new PageData();
-				    	if(canUseRedList.size() >0 ){
-				    		redMessage="有可用红包";
-				    	}
-  				    }else{
+				    if(!redpackage_id.equals("")){
 				    	canUsePd=getRedPackageInforByID(redpackage_id, youhui_money, reducemoney);
 				    	if(canUsePd == null){
 				    		canUsePd=new PageData();
 				    	}else{
+				    		use_redpackagemoney=canUsePd.getString("number");
 				    		redMessage=canUsePd.getString("content");
-				    		discount_content=canUsePd.getString("content")+"@"+canUsePd.getString("id")+"@"+canUsePd.getString("number")+"@"+canUsePd.getString("type")+",";
+				    		discount_content=canUsePd.getString("content")+"@"+canUsePd.getString("id")+"@-"+canUsePd.getString("number")+"@"+canUsePd.getString("type")+",";
 				    	}
-				    }
+  				    } 
  			 }
 			 map.put("canUseRedList", canUseRedList);//可以使用的红包集合
 			 map.put("canUsePd", canUsePd);
 			 map.put("redMessage", redMessage);//显示红包的信息
  			//使用红包后的优惠后的实际应该支付的金额为
-			double surepaymoney=youhui_money-reducemoney-Double.parseDouble(redmoney)-zkmoney+notyouhui_money;
+			double surepaymoney=youhui_money-reducemoney-Double.parseDouble(use_redpackagemoney)-zkmoney+notyouhui_money;
 			//总共优惠金额
-			double surehuiyoumoney=reducemoney+Double.parseDouble(redmoney)+zkmoney;
+			double surehuiyoumoney=reducemoney+Double.parseDouble(use_redpackagemoney)+zkmoney;
 			//获得积分
  			double addjf=0;
  			//获取所有启用的积分
