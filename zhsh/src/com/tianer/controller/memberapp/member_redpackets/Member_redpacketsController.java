@@ -149,9 +149,8 @@ public class Member_redpacketsController extends BaseController {
 	 */
 	@RequestMapping(value="/sendRedPackage")
 	@ResponseBody
-	public Object sendJFRedPackage(){
-//		logBefore(logger, "发送积分红包");
-		Map<String,Object> map = new HashMap<String,Object>();
+	public Object SendJFRedPackage(){
+ 		Map<String,Object> map = new HashMap<String,Object>();
 		DecimalFormat    df   = new DecimalFormat("######0.00"); 
 		String result = "1";
 		String message="发送成功";
@@ -169,12 +168,13 @@ public class Member_redpacketsController extends BaseController {
 					map.put("data", "");
 					return map;
 				}
-				if(redpackage_number == null || redpackage_number.equals("") || Double.parseDouble(redpackage_number) <= 0){
+				if(redpackage_number == null || redpackage_number.equals("") ||  Integer.parseInt(redpackage_number) <= 0){
 					map.put("result", "0");
 					map.put("message", "数量必须大于0");
 					map.put("data", "");
 					return map;
 				}
+				pd.put("redpackage_number", String.valueOf(Integer.parseInt(redpackage_number)));
  				//对积分红包进行判断
   				PageData e = new PageData();
 				if(user_type.equals("1")){

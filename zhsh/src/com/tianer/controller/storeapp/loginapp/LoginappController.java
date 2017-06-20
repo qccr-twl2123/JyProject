@@ -625,6 +625,8 @@ public class LoginappController extends BaseController{
 	
 	/**
 	 *  是否参加pk======ispk:0-不参加，1-参加,store_id
+	 *  storeapp_login/ifCanJiaPK.do
+	 *  
 	 */
 	@RequestMapping(value="/ifCanJiaPK")
 	@ResponseBody
@@ -651,6 +653,7 @@ public class LoginappController extends BaseController{
 	
 	/**
 	 *  pk的商家集合：按综合分值pk,前100名,当前商家id
+	 *  storeapp_login/pkStoreList.do
 	 */
 	@RequestMapping(value="/pkStoreList")
 	@ResponseBody

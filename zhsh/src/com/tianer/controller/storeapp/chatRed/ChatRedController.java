@@ -252,12 +252,13 @@ public class ChatRedController extends BaseController{
 					map.put("data", "");
 					return map;
 				}
-				if(redpackage_number == null || redpackage_number.equals("") || Double.parseDouble(redpackage_number) <= 0){
+				if(redpackage_number == null || redpackage_number.equals("") || Integer.parseInt(redpackage_number) <= 0){
 					map.put("result", "0");
 					map.put("message", "数量必须大于0");
 					map.put("data", "");
 					return map;
 				}
+				pd.put("redpackage_number", String.valueOf(Integer.parseInt(redpackage_number)));
 				PageData spd=appStoreService.findById(pd);
 	 			//发放类型
  				//当前为积分的情况下的积分数量
