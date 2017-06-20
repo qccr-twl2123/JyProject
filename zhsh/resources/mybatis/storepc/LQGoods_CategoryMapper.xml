@@ -332,7 +332,7 @@
 					<if test="pd.endtime != null and pd.endtime != '' ">
 						and d.createdate  &lt; #{pd.endtime}
 					</if>
-					order by d.createdate DESC
+					order by d.createdate desc
 	</select>
 
 	<select  id="countRenqi" parameterType="pd" resultType="String">
@@ -363,7 +363,7 @@
 					<if test="ww_goods_category_id != null and ww_goods_category_id != ''">
 					and a.goods_category_id=#{ww_goods_category_id}
 					</if>
-			order
+			order by a.sort ,b.sort,c.createdate desc
  	</select>
 	
 	<!-- 获取小类列表-->
@@ -394,8 +394,7 @@
  					and a.deletestatus='0'
  					and b.deletestatus='0'
  					and c.deletestatus='0'
-  			order by a.sort
-	</select>
+ 	</select>
 	
 	
 	<!-- 修改小类的积分率或折扣率 -->

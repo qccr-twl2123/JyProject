@@ -172,7 +172,7 @@ function sj_inf(){
             });
         }
 
-        $(".sj_xqimg").click(function(){
+        $(".ck_sjxq").click(function(){
             var xq_link=base_inf.base_herf+"html_member/goStoreInforByH5.do?sk_shop="+base_inf.sk_shop;
             $(".sj_xqimg a").attr("href",xq_link);
             $(".sj_xqimg a")[0].click();

@@ -95,9 +95,7 @@ public class GoodsController extends BaseController {
 				if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
 						pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
 						//商家ID解密
-						String sk_shop=pd.getString("sk_shop");
-						String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
-						pd.put("store_id", store_id);
+						pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
 				}
 //				//获取我的购物车内容
 //				pd = this.getPageData();
@@ -278,6 +276,13 @@ public class GoodsController extends BaseController {
 		PageData pd = new PageData();
 		try{ 
 				pd = this.getPageData();
+				//判断是否为H5页面
+				if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+					pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+					//商家ID解密
+					pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
+				}
+  				//============================
 				pd.put("pay_sort_type", "1");
    				//营销开始：先判断折扣设置，折扣完的金额计算积分值，接下来是判断折扣后的金额是否满足红包及其它优惠条件；最后的金额是本次应买单的金额；
 				String paymoney=pd.getString("paymoney");
@@ -598,9 +603,7 @@ public class GoodsController extends BaseController {
 			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
 				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
 				//商家ID解密
-				String sk_shop=pd.getString("sk_shop");
-				String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
-				pd.put("store_id", store_id);
+				pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
 			}
  			String allmoney=pd.getString("allmoney");
  			if(allmoney == null || allmoney.equals("") ){
@@ -658,9 +661,7 @@ public class GoodsController extends BaseController {
 				if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
 					pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
 					//商家ID解密
-					String sk_shop=pd.getString("sk_shop");
-					String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
-					pd.put("store_id", store_id);
+					pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
 				}
     			//营销开始：先判断折扣设置，折扣完的金额计算积分值，接下来是判断折扣后的金额是否满足红包及其它优惠条件；最后的金额是本次应买单的金额；
   				double youhui_money=0;

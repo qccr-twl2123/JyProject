@@ -182,12 +182,12 @@
             </div>
         </div>
 
-
+<!-- 
         <div class="swiper-container">
             <div class="swiper-wrapper sjxq_imgbox">
 
             </div>
-        </div>
+        </div> -->
     </li>
 
     <li class="sj_tit_inf clf">

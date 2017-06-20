@@ -140,10 +140,8 @@
 		        type:"post",
 		        url:'<%=basePath%>app_order/findById.do', 
 		  	 	 data:{
-		  	 		"tihuo_id":"${pd.tihuo_id}",
-		  	 		"order_id":"${pd.order_id}",
-		 		 	"member_id":"${pd.member_id}" 
-		  	 	 },                
+ 		  	 		"order_id":"${pd.order_id}" 
+ 		  	 	 },                
 		        dataType:"json",
 		        success: function(data){
 		        	if(data.result == "1"){
@@ -198,22 +196,22 @@
 					        		var onemark_type=onemark[m].marketing_type;
 					        		var onegrantrule=onemark[m].grantrule;
 					        		if(onemark_type == "1"){
-					        			onemarkstr+="<span class='zeng tit_bg_box'>增</span>";
+					        			onemarkstr+="<span class='zeng tit_bg_box'>满增</span>";
 					        		}else if(onemark_type == "2"){
-					        			onemarkstr+="<span class='jian tit_bg_box' >减</span>";
+					        			onemarkstr+="<span class='jian tit_bg_box' >立减</span>";
 					        		}else if(onemark_type == "3"){
-					        			onemarkstr+="<span class='shi tit_bg_box'   >时</span>";
+					        			onemarkstr+="<span class='shi tit_bg_box'   >时段</span>";
 					        		}else if(onemark_type == "4"){
-					        			onemarkstr+="<span class='song tit_bg_box'   >买</span>";
+					        			onemarkstr+="<span class='song tit_bg_box'   >立减</span>";
 					        		}else if(onemark_type == "5"){
-					        			onemarkstr+="<span class='song tit_bg_box'   >购</span>";
+					        			onemarkstr+="<span class='song tit_bg_box'   >累计</span>";
 					        		}else if(onemark_type == "6"){
-					        			onemarkstr+="<span class='ji tit_bg_box'   >积</span>";
-						        		}else if(onemark_type == "7"){
-					        			onemarkstr+="<span class='zhe tit_bg_box '   >折</span>";
+					        			onemarkstr+="<span class='ji tit_bg_box'   >积分</span>";
+						        	}else if(onemark_type == "7"){
+					        			onemarkstr+="<span class='zhe tit_bg_box '   >折扣</span>";
 					        		}
 					        	}
-								var str="<a href='html_member/goStoreDetail.do?member_id=${pd.member_id}&store_id="+onestore.ci_store_id+"&daoliurecord_id="+onestore.daoliurecord_id+"' style='color:#000'><li class='li_item' style='width: 50%;float: left;padding: 0 0.4rem 1rem 0.4rem;'>"+
+								var str="<a href='html_member/goStoreDetail.do?sk_shop="+onestore.sk_shop+"&daoliurecord_id="+onestore.daoliurecord_id+"' style='color:#000'><li class='li_item' style='width: 50%;float: left;padding: 0 0.4rem 1rem 0.4rem;'>"+
 										"<div class='li_cont' style='width: 100%;border: 1px solid #ccc;padding-bottom: 1rem;'>"+
 									"<div class='img_box' style='    position: relative;width: 100%;padding-bottom:100%;height:0px'>"+
 										"<img src='"+onestore.pictrue_url+"' alt='' style='position: absolute;width: 100%;  height: 100%; '>"+

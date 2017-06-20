@@ -93,7 +93,7 @@
     </head>
     <body>
         <div class="nav">
-          <span><a href="<%=basePath%>html_member/goStoreDetail.do?store_id=${pd.store_id}&member_id=${pd.member_id}" style="font-size: 23px;text-decoration: none;color:#fff;"><</a></span>
+          <span><a href="javascript:history.go(-1);" style="font-size: 23px;text-decoration: none;color:#fff;"><</a></span>
          	 商家详情图
         </div>
         <dl>

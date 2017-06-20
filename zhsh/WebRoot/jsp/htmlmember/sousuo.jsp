@@ -156,7 +156,7 @@ function shangjiazairu(data) {
 		 if(storepd.zkstatus == "1"){
 			 zkstr="<span class='zhekou'>折</span>";
 		 }
-		 var thistorestr =   " <li class='shangjia ' sk_shop='"+storepd.new_store_id+"' num='1' onclick='goStoreDetail(this)'>"+
+		 var thistorestr =   " <li class='shangjia ' sk_shop='"+storepd.sk_shop+"' num='1' onclick='goStoreDetail(this)'>"+
 			        "    <div class='sj_jcxx'>"+
 			        "        <div class='img_box'>"+zkstr+
 			        "            <img src='"+storepd.pictrue_url+"'>"+

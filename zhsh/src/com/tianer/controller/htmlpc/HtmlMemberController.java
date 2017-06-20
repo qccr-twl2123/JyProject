@@ -554,7 +554,7 @@ public class HtmlMemberController extends BaseController {
 //	  							//获取营销规则
 //								List<PageData> marketlist=ServiceHelper.getAppStorepc_marketingService().listAllMarketing(e);
 //								e.put("marketlist", marketlist);
-//								e.put("new_store_id",BaseController.get4ZMSZ()+EbotongSecurity.ebotongEncrypto(e.getString("store_id")));
+//								e.put("sk_shop",BaseController.jiami(e.getString("store_id")));
 //	 			}
 // 			}else{
 // 				allgoodsList=ServiceHelper.getAppGoodsService().getGoodslistPage(page);
@@ -625,7 +625,7 @@ public class HtmlMemberController extends BaseController {
   							//获取营销规则
 							List<PageData> marketlist=ServiceHelper.getAppStorepc_marketingService().listAllMarketing(e);
 							e.put("marketlist", marketlist);
-							e.put("new_store_id",BaseController.get4ZMSZ()+EbotongSecurity.ebotongEncrypto(e.getString("store_id")));
+							e.put("sk_shop",BaseController.jiami(e.getString("store_id")));
  			}
   			map.put("storeList", storeList);
     		storeList=null;
@@ -1177,12 +1177,10 @@ public class HtmlMemberController extends BaseController {
  				//判断是否为H5页面
 				if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
 					pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+					//商家ID解密
+  					pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
 				}
-				//商家ID解密
-				String sk_shop=pd.getString("sk_shop");
-				String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
-				pd.put("store_id", store_id);
- 				//============================
+  				//============================
  				//判断是否开通类别积分购买的权限
 				PageData issortjfpd=appStorepc_marketingService.getJfById(pd);
 				if(issortjfpd != null && issortjfpd.getString("change_type").equals("3") ){
@@ -1272,9 +1270,7 @@ public class HtmlMemberController extends BaseController {
 		try{ 
 			pd = this.getPageData();
 			//商家ID解密
-			String sk_shop=pd.getString("sk_shop");
-			String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
-			pd.put("store_id", store_id);
+			pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
 			PageData spd=appStoreService.findByIdOne(pd);
 			mv.addObject("spd", spd);
 			//获取详情图以及文字
@@ -1317,10 +1313,11 @@ public class HtmlMemberController extends BaseController {
 					mv.addObject("three", three);
  				}
 			}
-//			System.out.println(pd.toString());
-		} catch(Exception e){
+  		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
+		pd.remove("store_id");
+		pd.remove("member_id");
 		mv.addObject("pd", pd);
  		mv.setViewName("htmlmember/sjxqth5");
 		return mv;

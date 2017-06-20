@@ -61,11 +61,10 @@
 	<input type="hidden" id="user_integral" value="${pd.user_integral }" name="user_integral"/> 
 	<input type="hidden" id="pay_type" value="3" name="pay_type" /> 
 	 <input type="hidden" id="get_integral" value="${pd.get_integral }" name="get_integral"/> 
-	<input type="hidden" id="member_id" value="${pd.member_id}" name="member_id"/> 
-	<input type="hidden" id="discount_content" value="${pd.discount_content }" name="discount_content"/><!-- 优惠明细 -->
+ 	<input type="hidden" id="discount_content" value="${pd.discount_content }" name="discount_content"/><!-- 优惠明细 -->
 	<input type="hidden" id="redpackage_id"  value="${pd.redpackage_id }" name="redpackage_id"/><!-- 使用的红包ID-->
 	<input type="hidden" id="store_redpackets_id" value="${pd.store_redpackets_id }" name="store_redpackets_id"/><!--满赠的赠送红包ID-->
-	<input type="hidden" id="store_id" value="${pd.store_id}" name="store_id"/> 
+	<input type="hidden" id="sk_shop" value="${pd.sk_shop}" name="sk_shop"/> 
 	<input type="hidden" id="allgoodsid" value="${pd.allgoodsid }" name="allgoodsid"/> 
 	<input type="hidden" id="pay_sort_type" value="${pd.pay_sort_type }" name="pay_sort_type"/> 
 	<input type="hidden" id="remark" value="${pd.remark }" name="remark"/> 
@@ -84,7 +83,7 @@
 	function save(){
    		    $(".surepay").attr("onclick","");
    		    $(".surepay").css("background","#a4a4a4");
-   			var url="<%=basePath%>html_member/toLogin.do";
+   			var url="<%=basePath%>html_member/toLoginWx.do";
    		    $("#Form").ajaxSubmit({  
 						  	url : '<%=basePath%>app_pay_history/thirdPartyPay.do',
 					        type: "post",//提交类型  

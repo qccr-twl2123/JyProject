@@ -105,10 +105,8 @@ public class Pay_historyController extends BaseController {
  						if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
  							pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
  							//商家ID解密
- 							String sk_shop=pd.getString("sk_shop");
- 							String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
- 							pd.put("store_id", store_id);
- 						}
+ 							pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
+  						}
 						String in_jiqi=pd.getString("in_jiqi");
  						if(in_jiqi == null || in_jiqi.equals("")){
  							in_jiqi="1";

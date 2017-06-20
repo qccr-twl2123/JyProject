@@ -75,9 +75,7 @@ public class CommentController extends BaseController {
 			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
 					pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
 					//商家ID解密
-					String sk_shop=pd.getString("sk_shop");
-					String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
-					pd.put("store_id", store_id);
+					pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
 			}
  			String allstore=appStoreService.countStore();
 			//获取商家ID
@@ -154,8 +152,7 @@ public class CommentController extends BaseController {
 			@RequestParam  String order_id, 
 			@RequestParam  String content 
  			){
-//		logBefore(logger, "新增评价");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
 		DecimalFormat    df   = new DecimalFormat("######0.0"); 
 		String result = "1";
 		String message="新增成功";

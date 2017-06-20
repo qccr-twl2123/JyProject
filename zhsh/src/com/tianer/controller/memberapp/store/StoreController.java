@@ -69,9 +69,7 @@ public class StoreController extends BaseController {
 			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
 				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
 				//商家ID解密
-				String sk_shop=pd.getString("sk_shop");
-				String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
-				pd.put("store_id", store_id);
+				pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
 			}
 			if(pd.getString("member_id") == null || pd.getString("member_id").equals("")){
   					map.put("result", "0");
@@ -133,9 +131,7 @@ public class StoreController extends BaseController {
 				if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
 					pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
 					//商家ID解密
-					String sk_shop=pd.getString("sk_shop");
-					String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
-					pd.put("store_id", store_id);
+					pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
 				}
 				//处理导流
 //				pd=TongYong.DaoliuClickFee(pd);
@@ -437,9 +433,7 @@ public class StoreController extends BaseController {
 				if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
 					pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
 					//商家ID解密
-					String sk_shop=pd.getString("sk_shop");
-					String store_id=EbotongSecurity.ebotongDecrypto(sk_shop.substring(4, sk_shop.length()-1));
-					pd.put("store_id", store_id);
+					pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
 				}
 				//判断是否有当前会员
 	 			if(appMemberService.findById(pd) == null){

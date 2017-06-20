@@ -2,7 +2,6 @@ package com.tianer.controller.base;
 
 
 import java.text.DecimalFormat;
-import java.util.Date;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -14,9 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.tianer.entity.Page;
 import com.tianer.util.DateUtil;
+import com.tianer.util.EbotongSecurity;
 import com.tianer.util.Logger;
 import com.tianer.util.PageData;
-import com.tianer.util.StringUtil;
 import com.tianer.util.UuidUtil;
 
 public class BaseController {
@@ -268,6 +267,26 @@ public class BaseController {
 				str += (int)(Math.random()*10);
 			}
 		return str;
+	}
+	
+	/**
+	 * 加密
+	 */
+	public static String jiami(String str){
+			str=BaseController.get4ZMSZ()+EbotongSecurity.ebotongEncrypto(str);
+		return str;
+	}
+	/**
+	 * 解密
+	 */
+	public static String jiemi(String str){
+		try {
+			str=EbotongSecurity.ebotongDecrypto(str.substring(4, str.length()-1));
+		} catch (Exception e) {
+			// TODO: handle exception
+			str="";
+		}
+ 		return str;
 	}
 	
 	

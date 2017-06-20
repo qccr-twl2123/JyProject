@@ -50,11 +50,10 @@
 		<input type="hidden" id="user_integral" name="user_integral" value=""/> 
 		<input type="hidden" id="pay_type" name="pay_type" value="3" /> 
  		<input type="hidden" id="get_integral" value="0" name="get_integral"/> 
-		<input type="hidden" id="member_id" value="${pd.member_id}" name="member_id"/> 
-		<input type="hidden" id="discount_content" name="discount_content"/><!-- 优惠明细 -->
+ 		<input type="hidden" id="discount_content" name="discount_content"/><!-- 优惠明细 -->
 		<input type="hidden" id="redpackage_id" name="redpackage_id" /><!-- 使用的红包ID-->
 		<input type="hidden" id="store_redpackets_id" name="store_redpackets_id"/><!--满赠的赠送红包ID-->
-		<input type="hidden" id="store_id" value="${pd.store_id}" name="store_id" /> 
+		<input type="hidden" id="sk_shop" value="${pd.sk_shop}" name="sk_shop" /> 
 		<input type="hidden" id="allgoodsid" value="${pd.allgoods}" name="allgoodsid" /> 
 		<input type="hidden" id="pay_sort_type"  name="pay_sort_type" value="1" /> 
 		<input type="hidden" id="remark"  name="remark" value="" /> 
@@ -137,17 +136,16 @@ if(true){
 		        type:"post",
 		        url:'<%=basePath%>app_goods/allMoneyByOne.do', 
 		  	 	 data:{
-		  	 		"store_id":"${pd.store_id}",
-		 		 	"member_id":"${pd.member_id}",
-		 		 	"paymoney":"${pd.paymoney}" ,
+		  	 		"sk_shop":"${pd.sk_shop}",
+ 		 		 	"paymoney":"${pd.paymoney}" ,
 		 		 	"allgoods":"${pd.allgoods}" ,
 		 		 	"notmoney":"0"
 		  	 	 },                
 		        dataType:"json",
 		        success: function(data){
 		        	 	//优惠明细
-			       	 	 	 var yingxiaoList=data.data.yingxiaoList;
-			        		 var discount_content="";
+			       	 	var yingxiaoList=data.data.yingxiaoList;
+			        	var discount_content="";
 		        		 for (var i = 0; i < yingxiaoList.length; i++) {
 								var str="<p class='gay allyx'><span>"+yingxiaoList[i].content+"</span><span class='blue fr'>"+yingxiaoList[i].number+"</span></p>";
 								var dis=yingxiaoList[i].content+"@"+yingxiaoList[i].id+"@"+yingxiaoList[i].number+"@"+yingxiaoList[i].type;
@@ -183,12 +181,6 @@ if(true){
 </script>
 <script src="<%=basePath%>js/jquery.form.js"></script>
 <script type="text/javascript">
-	//默认选中
-	/* function ischeck(obj){
-		var a=$(obj).parent().prev().find("input").attr("checked","checked");
- 	} */
- 	
-
 		//判断是否为数字
 		function isNumber(obj){
 			if($(obj).val() == ""){
@@ -277,7 +269,7 @@ function threepay(){
 			   				//alert("支付成功");
 			   				var tihuo_id = data.tihuo_id;//订单号
 			   				//在支付成功的状态下跳转订单到订单详情界面
-			   				window.location.href='<%=basePath%>html_member/findById.do?member_id=${pd.member_id}&tihuo_id='+tihuo_id; 
+			   				window.location.href='<%=basePath%>html_member/findById.do?tihuo_id='+tihuo_id; 
 			   			}else{
 			   				alert("支付失败，请联系收银员");
 			   			}
