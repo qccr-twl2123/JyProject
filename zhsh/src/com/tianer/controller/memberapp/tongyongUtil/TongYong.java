@@ -2181,12 +2181,21 @@ public class TongYong extends BaseController{
 	public static  List<PageData>  getAllStoreRedMoneyByMember(PageData pd,double youhui_money,int yingxiaosize,double reducemoney){
 		List<PageData> okredList=new ArrayList<PageData>();
   		try{ 
+  			String redpackage_id=(pd.getString("redpackage_id") == null?"":pd.getString("redpackage_id"));//当前是否有使用红包
     		//获取当前用户在当前商家可以用的所有红包
 			List<PageData>	memredList =ServiceHelper.getAppMember_redpacketsService().listAllById(pd);
 			PageData e=null;
 			int memberredlength=memredList.size();
 			for (int redi = 0; redi < memberredlength;redi++) {
 				e=memredList.get(redi);
+				if(e == null){
+					continue;
+				}
+				if(e.getString("redpackage_id").equals(redpackage_id)){
+					e.put("isready_use", "1");
+				}else{
+					e.put("isready_use", "0");
+				}
 				e.put("canuse_red", "99");
 				String redpackage_content=e.getString("redpackage_content");
   				if(!redpackage_content.contains("null")){
@@ -2213,7 +2222,7 @@ public class TongYong extends BaseController{
   							e.put("canuse_red", "1");
 						}
 				}
-  				okredList.add(e);
+   				okredList.add(e);
 				e=null;
   			}
   		} catch(Exception e){
@@ -5411,11 +5420,14 @@ public class TongYong extends BaseController{
 			 String discount_content="";
 			 int yingxiaosize=yingxiaoList.size();
 			 //判断优惠后的金额是否已经是0
+			 double useredbeforMoney=reducemoney+zkmoney;//使用红包前的总共优惠了的金额：满减+z折扣
 			 String redpackage_id=(pd.getString("redpackage_id") == null?"":pd.getString("redpackage_id"));
  			 List<PageData> canUseRedList=getAllStoreRedMoneyByMember(pd, notyouhui_money, yingxiaosize, reducemoney);
-			 double useredbeforMoney=reducemoney+zkmoney;//使用红包前的总共优惠了的金额
-			 PageData canUsePd=null;
+ 			 PageData canUsePd=null;
 			 String redMessage="暂无可使用红包";
+			 if(canUseRedList.size() >0){
+				 redMessage="有"+canUseRedList.size()+"个可使用红包";
+			 }
 			 String use_redpackagemoney="0";//使用红包
 			 if(useredbeforMoney < youhui_money+notyouhui_money){
 				 	/**

@@ -60,12 +60,14 @@
 				a.redpackage_content,
 				a.enddate,
 				a.set_id,
+				ifnull(c.store_name,'九鱼网') as title_name,
 				a.set_type,
 				b.redpackage_type as store_redpackage_type,
 				b.srp_usercondition_id
 			from 
 				tb_member_redpackets a 
 				join tb_store_redpackets b  on b.store_redpackets_id=a.store_redpackets_id
+				left join tb_store c on a.set_id=c.store_id
 			where 
 				a.member_id=#{member_id}
  				and a.isguoqi='0'
