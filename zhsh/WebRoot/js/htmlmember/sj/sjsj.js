@@ -49,7 +49,7 @@ function sj_inf(){
                     markstr+="<span class='zhe tit_bg_box '>折扣</span>";
                 }
             }
-            sjtj_str ="<li sk_shop='"+daoliu_data[k].sk_shop+"' onclick='goStoreDetail(this)'><div class='sjtj_img_box'><img src='"+daoliu_data[k].pictrue_url+"' ></div><div class='sjtj_text ccyc'><span style='font-weight:bold;width: 50%;margin: 0;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size: 19px;'>"+daoliu_data[k].store_name+"</span>"+markstr+"</div><div class='sjtj_text ccyc'><span>"+daoliu_data[k].sort_name+"</span></div><div class='sjtj_text ccyc'><span id='star'"+daoliu_data[k].daoliurecord_id+"' starnum='"+daoliu_data[k].comment_score+"'></span><span>已售"+daoliu_data[k].transaction_times+"</span></div></li>";
+            sjtj_str ="<li sk_shop='"+daoliu_data[k].sk_shop+"' onclick='goStoreDetail(this)'><div class='sjtj_img_box'><img src='"+daoliu_data[k].pictrue_url+"' ></div><div class='sjtj_text ccyc'><span style='font-weight:bold;width: 50%;margin: 0;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size: 19px;'>"+daoliu_data[k].store_name+"</span>"+markstr+"</div><div class='sjtj_text ccyc'><span>"+daoliu_data[k].sort_name+"</span></div><div class='sjtj_text ccyc'><span id='star"+daoliu_data[k].daoliurecord_id+"' starnum='"+daoliu_data[k].comment_score+"'></span><span>已售"+daoliu_data[k].transaction_times+"</span></div></li>";
             $(".sjtuijian").append(sjtj_str);
             var star_Str="#star"+daoliu_data[k].daoliurecord_id;
             $(star_Str).raty({ readOnly:true,score:daoliu_data[k].comment_score,half:true,space:false,size:10});
@@ -161,7 +161,7 @@ function sj_inf(){
                 grabCursor: true,
                 centeredSlides: true,
                 slidesPerView: 'auto',
-                initialSlide :num,
+                initialSlide :1,
                 coverflow: {
                     rotate: 0,
                     stretch: 0,
