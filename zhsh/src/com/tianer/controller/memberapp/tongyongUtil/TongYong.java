@@ -2182,8 +2182,8 @@ public class TongYong extends BaseController{
 	public static  PageData  getAllStoreRedMoneyByMember(PageData pd,double youhui_money,int yingxiaosize,double reducemoney){
 		PageData useredpd=new PageData();
 		List<PageData> alluseList=new ArrayList<PageData>();
-		List<PageData> okredList=new ArrayList<PageData>();
-		List<PageData> notokredList=new ArrayList<PageData>();
+		List<PageData> canUseList=new ArrayList<PageData>();
+		List<PageData> notUseList=new ArrayList<PageData>();
   		try{ 
   			String redpackage_id=(pd.getString("redpackage_id") == null?"":pd.getString("redpackage_id"));//当前是否有使用红包
     		//获取当前用户在当前商家可以用的所有红包
@@ -2227,9 +2227,9 @@ public class TongYong extends BaseController{
 						}
 				}
   				if(e.getString("canuse_red").equals("99")){
-  					notokredList.add(e);
+  					notUseList.add(e);
   				}else{
-  					okredList.add(e);
+  					canUseList.add(e);
   				}
   				alluseList.add(e);
  				e=null;
@@ -2237,9 +2237,12 @@ public class TongYong extends BaseController{
   		} catch(Exception e){
   			(new TongYong()).dayinerro(e);
  		}
-  		useredpd.put("canUseList", okredList);
-  		useredpd.put("notUseList", notokredList);
+  		useredpd.put("canUseList", canUseList);
+  		useredpd.put("notUseList", notUseList);
   		useredpd.put("allUseList", alluseList);
+  		alluseList=null;
+  		notUseList=null;
+  		canUseList=null;
  		return useredpd;
 	}
 	
