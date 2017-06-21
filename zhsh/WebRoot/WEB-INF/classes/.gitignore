@@ -1,5 +1,7 @@
 /mybatis
-/com
 /appvalidation
+/com
+/config.properties
+/dbconfig.properties
 /ftl
-/spring
+/log4j.properties

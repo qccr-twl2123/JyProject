@@ -111,8 +111,9 @@ var base_inf={
 			},
 			success:function(data){
 				 var map1=data.data;
-				 $("#redList").empty;
-				 if(map1 != "" && map1 != "0"){
+				 $("#redList").empty();
+				 $("#allavert").empty();
+ 				 if(map1 != "" && map1 != "0"){
 					 var advertList=map1.advertList;
 					 for(var i=0;i<advertList.length;i++){
 						 $("#allavert").append("<img src='"+advertList[i].image_url+"'/>");

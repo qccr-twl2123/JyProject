@@ -283,7 +283,7 @@ function get_sp_list(){
             var list=inf[i].list
 
             if(inf[i].sort =="1"){
-                var hb_str="<ul class='hb_class'>";
+                var hb_str="<ul class='hb_class'><p style='padding-left: 10px;line-height: 2;border-bottom: 1px solid #ccc;border-left: 2px solid #aaa;'>"+inf[i].name+"</p>";
                 for (var j in list){
                     hb_str+="<li class='clf'>" +
                         "<div><img src='img/hongbao.png'></div>" +
@@ -304,10 +304,10 @@ function get_sp_list(){
                 })
             }else{
                 if (list.length=="0"){
-                    var sp_str="<ul class='sp_list' classid='"+inf[i].id+"'></ul>";
+                    var sp_str="<ul class='sp_list' classid='"+inf[i].id+"'><p style='padding-left: 10px;line-height: 2;border-bottom: 1px solid #ccc;border-left: 2px solid #aaa;'>"+inf[i].name+"</p></ul>";
                     $(".sp_list_box").append(sp_str)
                 }else{
-                    var sp_str="<ul class='sp_list' classid='"+inf[i].id+"'>";
+                    var sp_str="<ul class='sp_list' classid='"+inf[i].id+"'><p style='padding-left: 10px;line-height: 2;border-bottom: 1px solid #ccc;border-left: 2px solid #aaa;'>"+inf[i].name+"</p>";
                     for (var j in list){
                         sp_str+="<li class='clf'good_id='list[j].goods_id'><div><img src='"+list[j].image_url+"'></div>" +
                             "<div><p>"+list[j].goods_name+"</p>" +
