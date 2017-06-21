@@ -179,7 +179,7 @@
 		select 
  			name,	
 			phone,
-			password,
+			ifnull(password,'') password,
 			image_url,	
 			recommended,	
 			istuisong,
