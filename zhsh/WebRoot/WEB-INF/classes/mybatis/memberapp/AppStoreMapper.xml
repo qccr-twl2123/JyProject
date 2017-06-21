@@ -199,6 +199,7 @@
 				ifnull(a.complex_score,"") complex_score,
 				ifnull(a.comment_score,"") comment_score,
 				ifnull(a.pictrue_url,"") pictrue_url,
+				ifnull(a.logo,"") logo,
 				ifnull(b.store_introduce,"") store_introduce,
  				ifnull(b.phone,"") phone,
  				ifnull(b.store_phone,"") store_phone,

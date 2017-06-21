@@ -418,6 +418,11 @@ public class HtmlMemberController extends BaseController {
  				firstList=null;
 				citypd.put("advert_type", "1");
 				List<PageData> advertList=app_advertService.listAllAdvert(citypd);
+				for (PageData e : advertList) {
+					if(e.getString("hyperlink_type").equals("2")){
+						e.put("hyperlink_url",BaseController.jiami( e.getString("hyperlink_url") ));
+					}
+				}
 				mv.addObject("advertList", advertList);
 				advertList=null;
  			}

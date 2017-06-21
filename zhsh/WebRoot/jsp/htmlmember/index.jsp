@@ -54,11 +54,22 @@
          </div>
         <div class="swiper-pagination swiper-pagination_1"></div>
     </div>
-    
+
     <div class="swiper-container swiper-container_2  yingcang">
         <div class="swiper-wrapper lunbo_box" >
         	<c:forEach items="${advertList}" var="advervar">
-        		<div class='swiper-slide'><a href="${advervar.hyperlink_url}"><img src="${advervar.image_url}"></a></div>
+                <!--  1-跳转地址，2-跳转商家，3-跳转优选 -->
+                <c:choose>
+                     <c:when test="${advervar.hyperlink_type eq '2' }">
+                         <div class='swiper-slide'><a href="html_member/goStoreDetail.do?sk_shop=${advervar.hyperlink_url}"><img src="${advervar.image_url}"></a></div>
+                    </c:when>
+                     <c:when test="${advervar.hyperlink_type eq '3' }">
+                        <div class='swiper-slide'><a href="html_member/goMyYouXuanDetail.do?youxuangoods_id=${advervar.hyperlink_url}"><img src="${advervar.image_url}"></a></div>
+                    </c:when>
+                     <c:otherwise>
+                        <div class='swiper-slide'><a href="${advervar.hyperlink_url}"><img src="${advervar.image_url}"></a></div>
+                    </c:otherwise>
+                 </c:choose>
         	</c:forEach>
          </div>
         <div class="swiper-pagination swiper-pagination_2"  style=" width: 100%;"></div>
