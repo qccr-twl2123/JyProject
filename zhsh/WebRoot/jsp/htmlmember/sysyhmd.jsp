@@ -45,7 +45,7 @@
 			}
 			.fr_1 {
 			    float: none;
-			    margin-left: 14%;
+			    margin-left: 5%;
 			}
 			.zhifu {
 			        width: 97%;
