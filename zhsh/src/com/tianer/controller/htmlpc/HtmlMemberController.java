@@ -2323,7 +2323,7 @@ public class HtmlMemberController extends BaseController {
 			 pd = this.getPageData();
 			//判断是否为H5页面
 			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
-				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+				 pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
 				 //防止表单重复提交
 				 Session session = SecurityUtils.getSubject().getSession();	
 				 if(session.getAttribute(Const.SESSION_ORDER) == null ){

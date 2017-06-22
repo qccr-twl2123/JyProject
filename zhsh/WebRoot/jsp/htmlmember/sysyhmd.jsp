@@ -150,8 +150,8 @@
  			</div>
             <!-- 优惠买单新位置 -->
             <div class="tc" >
-                     <!-- 按总金额 -->
-                    <form action="" name="allbuyForm" id="allbuyForm" method="post">
+                  <!-- 按总金额 -->
+                  <form action="" name="allbuyForm" id="allbuyForm" method="post">
                     <input type="hidden" name="session_orderid" value="${session_orderid}">
                     <input type="hidden" name="pay_type" value="2"/>
                      <input type="hidden" name="pay_sort_type" value="1"/>
@@ -163,6 +163,7 @@
                     <input type="hidden" name="discount_content" id="alldiscount_content" value=""/>
                     <input type="hidden" name="get_integral" id="allget_integral" value=""/>
                     <input type="hidden" name="discount_money" id="alldiscount_money" value=""/>
+                    <input type="hidden" name="discount_after_money" id="alldiscount_after_money" value=""/>
                     <input type="hidden" name="actual_money" id="allactual_money"  value=""/>
                     <div  id="allpay">
 	                        <div class="yh-content clearfix">
@@ -199,7 +200,7 @@
 											<span class="fr_1 gay">赠送积分<span class="allget_integral" style="color:red"> </span>元</span>
  										</li>
 	 									<li>
- 											<div class="fourteen-px center"><b>实付金额：<span class="allactual_money" style="font-size: 20px;color:red"> </span>元</b></div>    
+ 											<div class="fourteen-px center"><b>优惠后还需支付金额：<span class="alldiscount_after_money" style="font-size: 20px;color:red"> </span>元</b></div>    
 										</li>
 										<li>
 											<span class="height ">
@@ -214,11 +215,14 @@
 											</span>
 											<span class="fr height gay">积分<fmt:formatNumber type="number" value="${mpd.now_integral}" pattern="0.00" maxFractionDigits="2"/>分</span>
 										</li>
+										<li>
+ 											<div class="fourteen-px center"><b>最后还需支付金额：<span class="alllastpay_money" style="font-size: 20px;color:red"> </span>元</b></div>    
+										</li>
 	 							</ul>
 						 	</div>
 	                        <div class="yhm-footer">
 	 							<a class="fr zeropaymoney" onclick="gopay('1')">
-									<p>在线支付 <span class="alllastpay_money"></span></p>
+									<p>在线支付</p>
 						 		</a>
 							</div> 
                       </div>
@@ -279,59 +283,6 @@
    		}
 
    		
-   		
-   		//选中支付
-   		function isOk(value,obj,type){
-   			if(isNumber(obj)){
-   				return;
-   			}
-    		//处理一下该支付的金额
-   			var actual_money=$("#"+type+"actual_money").val();
-   			var user_balance=$("#"+type+"user_balance").val();
-   			var user_integral=$("#"+type+"user_integral").val();
-   			var now_integral="${mpd.now_integral}";
-   			var now_money="${mpd.now_money}";
-   			var user="";
-    		if(value =="1"){//金额
-   				user=$(obj).val();
-    			if(user == ""){
-    				user="0";
-    			}
-				//判断金额够不够
-				var n=parseFloat(now_money).toFixed(2) - parseFloat(user).toFixed(2);
-  				if(n < 0){
-						alert("余额不足");
-						$(obj).val(user.substring(0, user.length-1));
-						return;
-				}
-   			}else{//积分
-   				user=$(obj).val();
-   				if(user == ""){
-    				user="0";
-    			}
-				//判断金额够不够
-				var n=parseFloat(now_integral).toFixed(2) - parseFloat(user).toFixed(2);
- 				if(n <0 ){
-					alert("积分不足");
-					$(obj).val(user.substring(0, user.length-1));
-					return;
-				}
-   			}
-    		if(user_balance == ""){
-    			user_balance="0";
-    		}
-    		if(user_integral == ""){
-    			user_integral="0";
-    		}
-    		var lastpay_money=parseFloat(actual_money)-parseFloat(user_balance)-parseFloat(user_integral);
-    		if(lastpay_money < 0){
-    			alert("支付金额过多，请重新输入");
-    			$(obj).val(user.substring(0, user.length-1));
-    			return;
-    		}
-   			$("."+type+"actual_money").html(lastpay_money.toFixed(2));
-   			$("."+type+"lastpay_money").html(lastpay_money.toFixed(2));
-    	}
     		
     		//获取总金额的优惠信息
    			function leibieone(){
@@ -341,10 +292,6 @@
    				if(isNumber($("#allno_discount_money"))){
    	   				return;
    	   			}
-    			if(member_id == null || member_id == ""){
-   					alert("请先前往登录");
-   					return;
-   				}
    				var sale_money=$("#allsale_money").val();
     			var no_discount_money=$("#allno_discount_money").val();
     			if(sale_money =="" ){
@@ -360,19 +307,23 @@
    				}
     	  		//获取营销信息
    	 			$.ajax({
-   					url:"<%=basePath%>app_goods/saoYiSaoShopBuyGoods.do",
+   					url:"app_goods/allMoneyByOne.do",
+   					 /* url:"app_goods/saoYiSaoShopBuyGoods.do",  */ 
    					type:"post",
    					dataType:"json",
    					data:{
     					"sk_shop":"${pd.new_store_id}",
-   						"allmoney":sale_money,
-   						"notmoney":no_discount_money},
+   						  "allmoney":sale_money,  
+   						"paymoney":sale_money,
+   						"notmoney":no_discount_money,
    						"redpackage_id":""
-   					success:function(data){ 
+   					},
+    					success:function(data){ 
    						var countpd=data.data.countpd;
    						var yingxiaoList=data.data.yingxiaoList;
    						if(countpd != null){
-   							$(".allactual_money").html(parseFloat(countpd.paymoney).toFixed(2));
+   							$(".alldiscount_after_money").html(parseFloat(countpd.paymoney).toFixed(2));
+   							$("#alldiscount_after_money").val(parseFloat(countpd.paymoney).toFixed(2));//优惠后支付的金额
    	   	 					$("#allactual_money").val(countpd.paymoney);
    	   	 					$(".alllastpay_money").html(parseFloat(countpd.paymoney).toFixed(2));
    	   						$("#alldiscount_money").val(countpd.reducemoney);
@@ -383,20 +334,80 @@
    	   						$("#allstore_redpackets_id").val(countpd.store_redpackets_id);
    	   						$("#alldiscount_content").val(countpd.discount_content);
    						}
+   						var dc="";
     	 				$(".allyouhui").empty();
-   	  					for(var n=0; n<yingxiaoList.length ; n++){
+    	  					for(var n=0; n<yingxiaoList.length ; n++){
    	  						var s1=yingxiaoList[n].content;
    	  						var s2=yingxiaoList[n].id;
    	  						var s3=yingxiaoList[n].number;
    	  						var s4=yingxiaoList[n].type;
      	  					var sspan="<p class='gay fr_1 '> <span>"+s1+"</span> <span class='blue fr_1'>"+s3+"</span> </p> ";
-   	  						$(".allyouhui").append(sspan);
+      	  					dc+=s1+"@"+s2+"@"+s3+"@"+s4+",";
+     	  					$(".allyouhui").append(sspan);
    	  					}
-    	  				/* $("#alldiscount_content").val(discount_content ); */
-   	 				}
+     	  				if($("#alldiscount_content").val() == ""){
+    	  					$("#alldiscount_content").val(dc);
+    	  				}
+    	 			}
    				});
    							
    			}
+    		
+    		
+
+   	   		
+   	   		//选中支付
+   	   		function isOk(value,obj,type){
+   	   			if(isNumber(obj)){
+   	   				return;
+   	   			}
+   	    		//处理一下该支付的金额
+   	   			var alldiscount_after_money=$("#alldiscount_after_money").val();//优惠后支付的金额
+   	   			var user_balance=$("#alluser_balance").val();
+   	   			var user_integral=$("#alluser_integral").val();
+   	   			var now_integral="${mpd.now_integral}";
+   	   			var now_money="${mpd.now_money}";
+   	   			var user="";
+   	    		if(value =="1"){//金额
+   	   				user=$(obj).val();
+   	    			if(user == ""){
+   	    				user="0";
+   	    			}
+   					//判断金额够不够
+   					var n=parseFloat(now_money).toFixed(2) - parseFloat(user).toFixed(2);
+   	  				if(n < 0){
+   							alert("余额不足");
+   							$(obj).val(user.substring(0, user.length-1));
+   							return;
+   					}
+   	   			}else{//积分
+   	   				user=$(obj).val();
+   	   				if(user == ""){
+   	    				user="0";
+   	    			}
+   					//判断金额够不够
+   					var n=parseFloat(now_integral).toFixed(2) - parseFloat(user).toFixed(2);
+   	 				if(n <0 ){
+   						alert("积分不足");
+   						$(obj).val(user.substring(0, user.length-1));
+   						return;
+   					}
+   	   			}
+   	    		if(user_balance == ""){
+   	    			user_balance="0";
+   	    		}
+   	    		if(user_integral == ""){
+   	    			user_integral="0";
+   	    		}
+   	    		var lastpay_money=parseFloat(alldiscount_after_money)-parseFloat(user_balance)-parseFloat(user_integral);
+   	    		if(lastpay_money < 0){
+   	    			alert("支付金额过多，请重新输入");
+   	    			$(obj).val(user.substring(0, user.length-1));
+   	    			return;
+   	    		}
+    	   		$("#allactual_money").val(lastpay_money.toFixed(2));//id表示隐藏的
+   	   			$(".alllastpay_money").html(lastpay_money.toFixed(2));
+   	    	}
    	 	 
    			
    			var flag=true;
@@ -406,34 +417,10 @@
    				if(!flag){
    					return;
    				}
-    	   		if(member_id == null || member_id == ""){
-   	   				alert("前往登录");
-   	   				return;
-   	   			}
-   	   			var zuihouyibu_money="";
-   	        	if(value=="1"){
-   	       			var acmoney=$("#allactual_money").val();
-   	       			if($("#allsale_money").val() == "" || parseFloat($("#allsale_money").val()) <= 0){
-   	       				return;
-   	       			}
-   	       			var usermoney=$("#alluser_balance").val();
-   	       			var userintegral=$("#alluser_integral").val();
-   	       			if(usermoney == ""){
-   	       				usermoney="0";
-   	        		}
-   	        		if(userintegral == ""){
-   	        			userintegral="0";
-   	        		}
-   	       			var paymoney=parseFloat(acmoney)-parseFloat(usermoney)-parseFloat(userintegral);
-   	       			if(paymoney <0){
-   	       				paymoney="0";
-   	        		}
-   	       			zuihouyibu_money=paymoney;
-   	       			$("#allactual_money").val(paymoney);
-   	        	} 
-   	       		$(".zuihouyibu_money").html(zuihouyibu_money.toFixed(2));
+    	   		var allactual_money=parseFloat($("#allactual_money").val());
+   	       		$(".zuihouyibu_money").html(allactual_money.toFixed(2));
    	       		$("#pay_sort").val(value);
-   	       		if(zuihouyibu_money == 0){
+   	       		if(allactual_money == 0){
    	       			zeropaymoney(value);
    	       		}else{
 	   	       		$(".tc").hide();
@@ -448,15 +435,15 @@
    	   		    $(".zeropaymoney").css("background","#a4a4a4");
  		    	var formup="";
 		    	if(value == "1"){
-		    	    	formup="allbuyForm";
+		    	    formup="allbuyForm";
 		    	}else{
-		    			flag=true;
-		   	   		    $(".zeropaymoney").css("background","#ffb900");
-		    	    	return;
+		    		flag=true;
+		   	   		$(".zeropaymoney").css("background","#ffb900");
+		    	    return;
 		    	}
-		    	var url="<%=basePath%>html_member/toLogin.do";
+		    	var url="html_member/toLogin.do";
     	   		$("#"+formup).ajaxSubmit({   
-				  	url : '<%=basePath%>app_pay_history/thirdPartyPay.do',
+				  	url : 'app_pay_history/thirdPartyPay.do',
 			        type: "POST",//提交类型  
 			      	data:{ 
 			      			"pay_way":"nowpay",
@@ -468,12 +455,12 @@
 				   		if(data.result == "1"){
 			   				alert("支付成功");
 			   				var order_id=data.data.order_id;
-			   				window.location.href='<%=basePath%>html_member/findById.do?ordertype=2&order_id='+order_id;
+			   				window.location.href='html_member/findById.do?ordertype=2&order_id='+order_id;
 			   			}else{
-			   				alert(data.message);
 			   				flag=true;
-			   	   		    $(".zeropaymoney").css("background","#ffb900");
-			   	   		    return;
+			   				alert(data.message);
+ 		   		   	   		$(".zeropaymoney").css("background","#ffb900");
+ 			   	   		    return;
 			   			}
 			   		} 	     
 				});
@@ -497,9 +484,9 @@
    		   	   		    $(".readypaymoney").css("background","#a4a4a4");
    		    	    	return;
    		    	    }
-    		    	var url="<%=basePath%>html_member/toLogin.do";
+    		    	var url="html_member/toLogin.do";
  	   	   		    $("#"+formup).ajaxSubmit({  
-	   							  	url : '<%=basePath%>app_pay_history/thirdPartyPay.do',
+	   							  	url : 'app_pay_history/thirdPartyPay.do',
 	   						        type: "post",//提交类型  
 	   						      	data:{ 
 	   						      		"pay_way":"wx_pub","url":url,"in_jiqi":"5"
@@ -521,7 +508,7 @@
 	   									    console.log(err.extra);
 	   									    if (result == "success") {
 	   									    	//alert("支付成功");
-	   									    	window.location.href='<%=basePath%>html_member/findById.do?ordertype=2&order_id='+order_id;
+	   									    	window.location.href='html_member/findById.do?ordertype=2&order_id='+order_id;
 	   									        // 只有微信公众账号 wx_pub 支付成功的结果会在这里返回，其他的支付结果都会跳转到 extra 中对应的 URL。
 	   									    } else if (result == "fail") {
 	   									    	alert("支付失败fail");
@@ -529,16 +516,12 @@
 	   					   		   	   		    $(".readypaymoney").css("background","#e4393c");
 	   	 								        // charge 不正确或者微信公众账号支付失败时会在此处返回
 		   					   		   	   		$(".zeropaymoney").css("background","#ffb900");
-				   					   		   	var n=parseFloat($("#allactual_money").val())+parseFloat($(".zuihouyibu_money").html());
-					   		   	   				$("#allactual_money").val(n.toFixed(2));
-	   									    } else if (result == "cancel") {
+ 	   									    } else if (result == "cancel") {
  	   									        // 微信公众账号支付取消支付
 	   									    	flag=true;
 	   					   		   	   		    $(".readypaymoney").css("background","#e4393c");
 	   					   		   	   			$(".zeropaymoney").css("background","#ffb900");
-	   					   		   	   			var n=parseFloat($("#allactual_money").val())+parseFloat($("#zuihouyibu_money").html());
-				   		   	   					$("#allactual_money").val(n.toFixed(2));
-	   									    }
+ 	   									    }
 	   									});
 	   						   		} 	     
 	   				});
