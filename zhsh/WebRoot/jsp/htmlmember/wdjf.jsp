@@ -8,25 +8,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+		<base href="<%=basePath%>">
         <meta charset="utf-8">
  		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link rel="stylesheet" type="text/css" href="<%=basePath%>css/htmlmember/style.css">
-		<link rel="stylesheet" href="<%=basePath%>css/htmlmember/styles.css" type="text/css">
-		<script type="text/javascript" src="<%=basePath%>js/htmlmember/jquery.min.js"></script>
-		<script type="text/javascript" src="<%=basePath%>js/htmlmember/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/htmlmember/style.css">
+		<link rel="stylesheet" href="css/htmlmember/styles.css" type="text/css">
+		<script type="text/javascript" src="js/htmlmember/jquery.min.js"></script>
+		<script type="text/javascript" src="js/htmlmember/jquery.min.js"></script>
 </head>
 <body style="background:#ededed">
 <nav class="top">
-	<a href="<%=basePath%>html_me/textDesc.do?type=8" class="fr" style="margin-right:10px;"><i class="order-two"></i>积分说明</a>
-	<a href="<%=basePath%>html_me/goMe.do"><b class="back-arrow fl"></b></a>
+	<a href="html_me/textDesc.do?type=8" class="fr" style="margin-right:10px;"><i class="order-two"></i>积分说明</a>
+	<a href="html_me/goMe.do"><b class="back-arrow fl"></b></a>
 	<div style="text-align:center;line-height:40px;color:#fff">我的积分</div>
 
 </nav>
 <div class="wallet">
-	<i><img src="../imgmem/points_03.png"></i>
-	<p>当前积分:   <span style="color:#ff0600">￥<fmt:formatNumber type="number" value="${pg.now_money}" pattern="0.00" maxFractionDigits="2"/></span>分</p>
+	<i><img src="imgmem/points_03.png"></i>
+	<p>当前积分:   <span style="color:#ff0600">￥<fmt:formatNumber type="number" value="${pg.now_integral}" pattern="0.00" maxFractionDigits="2"/></span>分</p>
 	<p class="wdjf-text">1积分=1元钱，平台所有商户均可抵等值现金使用</p>
 </div>
 <div class="wallet-content clearfix">

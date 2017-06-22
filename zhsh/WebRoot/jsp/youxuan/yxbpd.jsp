@@ -64,7 +64,7 @@
 	</header>
 <script type="text/javascript">
 function backreturn(){
-	window.location.href="<%=basePath%>html_member/goMyYouXuan.do?province_name=${pd.province_name}&city_name=${pd.city_name}&area_name=${pd.area_name}";
+	window.location.href="html_member/goMyYouXuan.do?province_name=${pd.province_name}&city_name=${pd.city_name}&area_name=${pd.area_name}";
 }
 </script>
 <div class="all swiper-container">
@@ -144,13 +144,13 @@ if(true){
 	//获取数据
  	$.ajax({
 	    	type:"post",
-	    	url:'<%=basePath%>youxuan/findDetailByYouxuan.do', 
+	    	url:'youxuan/findDetailByYouxuan.do', 
 		 	data:{
  		 		 	"youxuangoods_id":"${pd.youxuangoods_id}" 
 	 	 	},                
 	    	dataType:"json",
-/* 	    	async: false,
- */	    	success: function(data){
+/* 	    	async: false,*/	
+     		success: function(data){
 		   	 	if(data.result == "1"){
 		   	 		 var goodspd=data.data;
 		   	 		 window.store_id=goodspd.store_id;
@@ -178,7 +178,7 @@ if(true){
  		   	 		 window.t2 = setInterval(ShopcartTimer, 1000);//1秒执行一次
  		   	 		 var goods_imageinfor=goodspd.goods_imageinfor;//前往详情页地址
  		   	 		 $("#tiaozhuan").attr("href","html_member/goYouXuanDescInfor.do?show_type=1&type=2&youxuangoods_id="+goodspd.youxuangoods_id);
-		   	 		 $("#dianpu").attr("href","html_member/goStoreDetail.do?store_id="+goodspd.store_id);
+		   	 		 $("#dianpu").attr("href","html_member/goStoreDetail.do?sk_shop="+goodspd.sk_shop);
 		   	 		 $("#pictrue_url").attr("src",goodspd.pictrue_url);
 		   	 		 $("#store_name").html(goodspd.store_name);
 		   	 		 $("#store_address").html(goodspd.address);

@@ -362,6 +362,10 @@ public class StoreController extends BaseController {
 				//导流列表
 		 		pd.put("daoLiuStoreList", TongYong.daoliuList(pd));
 				//========
+		 		if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+		 			pd.remove("store_id");
+					pd.remove("member_id");
+				}
  		} catch(Exception e1){
 			result = "0";
 			message="系统错误";

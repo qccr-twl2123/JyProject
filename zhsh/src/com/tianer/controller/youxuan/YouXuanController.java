@@ -1524,8 +1524,7 @@ public class YouXuanController extends BaseController {
 			@RequestMapping(value="/findDetailByYouxuan")
 			@ResponseBody
 			public Object findDetailByYouxuan(){
-				//logBefore(logger, "获取优选商品详情");
-				Map<String,Object> map = new HashMap<String,Object>();
+ 				Map<String,Object> map = new HashMap<String,Object>();
  				PageData pd = new PageData();
 				String result="1";
 				String message="获取成功";
@@ -1618,7 +1617,12 @@ public class YouXuanController extends BaseController {
 							}else{
 								goodspd.put("fengxiang", "https://www.jiuyuvip.com/html_member/goMyYouXuanfengxaingDetail.do?recommended=0&recommended_type=0&youxuangoods_id="+youxuangoods_id);//商家
 							}
- 							map.put("data", goodspd);
+							goodspd.put("sk_shop", BaseController.jiami(goodspd.getString("store_id")));
+							if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+								goodspd.remove("store_id");
+								pd.remove("member_id");
+							}
+  							map.put("data", goodspd);
 				 			goodspd=null;
 						}
      		  	} catch(Exception e){
@@ -1669,12 +1673,17 @@ public class YouXuanController extends BaseController {
 					List<PageData> storeList= ServiceHelper.getShopCarService().getShopStoreIdByMember(pd);
 					for (PageData e : storeList) {
 						//获取购物车列表
+						e.put("sk_shop", BaseController.jiami(e.getString("store_id")));
 						e.put("goods_type", "2");
-						e.put("member_id", pd.getString("member_id"));
+ 						e.put("member_id", pd.getString("member_id"));
 						//获取我的购物车的所有的商品
 	 		 			List<PageData> goodsList= ServiceHelper.getShopCarService().MyShopCarList(e);
 	 		 			e.put("goodsList", goodsList);
 			 			goodsList=null;
+			 			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+							e.remove("store_id");
+							e.remove("member_id");
+						}
 					}
 					map1.put("storeList", storeList);	
 				}catch(Exception e){
