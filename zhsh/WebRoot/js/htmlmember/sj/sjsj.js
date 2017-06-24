@@ -518,7 +518,7 @@ $(function(){
                         for (var i=0;i<2;i++){
                             height=Number($($("body").children(".guding")[i]).height())+height
                         }
-                        $(".change").height(hei-height);
+                        $(".change").height(hei-height-50);
                         flag[0]=1
                     }
                 }else if(this.num==1){
