@@ -75,10 +75,17 @@ public class AppShopCarService {
 	}
 	
 	/*
-	* 删除我的购物车
+	* 删除我的购物车（购物车ID、(会员id+商品id)）
 	*/
 	public void delShop(PageData pd)throws Exception{
 		dao.delete("AppShopCarMapper.delShop", pd);
+	}
+	
+	/*
+	* 删除我的购物车(通过会员ID 以及商家ID)
+	*/
+	public void delShopByMs(PageData pd)throws Exception{
+		dao.delete("AppShopCarMapper.delShopByMs", pd);
 	}
  
 	/*

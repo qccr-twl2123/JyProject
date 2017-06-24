@@ -1195,6 +1195,9 @@ public class HtmlMemberController extends BaseController {
 				}else{
 					pd.put("issortjf", "0");
 				}
+				//情空购物车
+				pd.put("goods_type", "1");
+				ServiceHelper.getShopCarService().delShopByMs(pd);
 				pd.remove("store_id");
 	   			pd.remove("member_id");
   		} catch(Exception e){
@@ -1472,8 +1475,43 @@ public class HtmlMemberController extends BaseController {
 //	}
 	
 	
+	
+	/**
+	 * 去使用红包界面
+	 */
+	@RequestMapping(value="/goUseRed")
+	public ModelAndView goUseRed(){
+ 		ModelAndView mv = this.getModelAndView();
+ 		PageData pd = new PageData();
+		try{ 
+			pd = this.getPageData();
+			//判断是否为H5页面
+			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+  			}
+  			List<PageData> canUseList=(List<PageData>) this.getRequest().getSession().getAttribute(pd.getString("member_id")+"canUseList");
+  			List<PageData> notUseList=(List<PageData>) this.getRequest().getSession().getAttribute(pd.getString("member_id")+"notUseList");
+ 			mv.addObject("canUseList", canUseList);
+			mv.addObject("notUseList", notUseList);
+			pd.remove("member_id");
+			mv.addObject("pd", pd);
+			pd=null;
+			canUseList=null;
+			notUseList=null;
+  		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+ 		mv.setViewName("htmlmember/usered");
+ 		return mv;
+	}
+	
+	
 	/**
 	 * 添加进购物车去商品结算页面
+	 * html_member/goStoreGoodsOverBuy.do
+	 * 
+	 * sk_shop       商家加密ID
+	 * redpackage_id 红包ID
 	 */
 	@RequestMapping(value="/goStoreGoodsOverBuy")
 	public ModelAndView goStoreGoodsOverBuy(){
@@ -1484,45 +1522,56 @@ public class HtmlMemberController extends BaseController {
 			//判断是否为H5页面
 			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
 				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
-				//获取购物车
-				pd.put("goods_type", "1");
-	 			List<PageData> shopList=appShopCarService.shopCarList(pd);
-	 			double paymoney=0;
-				String allgoods="";
-				for(PageData e : shopList){//所有商品：商品id@数量@总金额，商品id@数量@总金额
-	  				double one=Integer.parseInt(e.getString("goods_number"))*Double.parseDouble(e.getString("sale_money"));
-	 				paymoney+=one;
-	 				String strgoods=e.getString("goods_id")+"@"+e.getString("goods_number")+"@"+TongYong.df2.format(one );
-					allgoods+=strgoods+",";
-					e.put("allmoney", TongYong.df2.format(one));
-					//清空购物车
-					ServiceHelper.getShopCarService().delShop(e);
-				}
-				mv.addObject("shopList", shopList);
-				shopList=null;
-				pd.put("notmoney", "0");
-				pd.put("allgoods", allgoods);
-				pd.put("paymoney", TongYong.df2.format(paymoney));
-	 			 //防止表单重复提交
-				Session session = SecurityUtils.getSubject().getSession();	
-				 if(session.getAttribute(Const.SESSION_ORDER) == null ){
-						String session_orderid=BaseController.getTimeID();
-						session.setAttribute(Const.SESSION_ORDER, session_orderid);
-						String sessionid =String.valueOf(session.getId());
-						mv.addObject("session_orderid ", sessionid );
-				}else{
-						mv.addObject("session_orderid", String.valueOf(session.getAttribute(Const.SESSION_ORDER)));
-				}
-				 mv.setViewName("htmlmember/tjdd");
-			}else{
-				mv.setViewName("redirect:toLoginWx.do");
+				//商家ID解密
+				pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
 			}
-  		} catch(Exception e){
+			//营销开始：先判断折扣设置，折扣完的金额计算积分值，接下来是判断折扣后的金额是否满足红包及其它优惠条件；最后的金额是本次应买单的金额；
+			double youhui_money=0;
+			double notyouhui_money=0;
+			//获取购物车
+			pd.put("goods_type", "1");
+			List<PageData> goodsList=new ArrayList<PageData>();
+ 			List<PageData> shopList=appShopCarService.shopCarList(pd);
+			String allgoods="";
+			PageData goodspd=null;
+			for(PageData e : shopList){//所有商品：商品id@数量@总金额，商品id@数量@总金额
+  				double one=Integer.parseInt(e.getString("goods_number"))*Double.parseDouble(e.getString("sale_money"));
+   				if(ServiceHelper.getAppGoodsService().findById(e).getString("goods_type").equals("1")){//今日特价商品不参与优惠--相当于不优惠金额
+					notyouhui_money+=one;
+				}else{
+					youhui_money+=one;
+				}
+   				goodspd=new PageData();
+  				goodspd.put("goods_name", e.getString("goods_name"));
+				goodspd.put("shop_number", e.getString("goods_number"));
+				goodspd.put("summoney", TongYong.df2.format(one));
+				goodsList.add(goodspd);
+				goodspd=null;
+ 				String strgoods=e.getString("goods_id")+"@"+e.getString("goods_number")+"@"+TongYong.df2.format(one );
+				allgoods+=strgoods+",";
+  			}
+ 			pd.put("allgoods", allgoods);
+  			//优惠买单信息
+			Map<String,Object> yhmdpd=TongYong.YouHuiMaiDanByTwoForMember(pd, youhui_money, notyouhui_money);
+			yhmdpd.put("goodsList", goodsList);
+			yhmdpd.put("sk_shop", pd.getString("sk_shop"));
+ 			mv.addObject("yhmdpd",yhmdpd );
+ 			this.getRequest().getSession().removeAttribute(pd.getString("member_id")+"canUseList");
+			this.getRequest().getSession().removeAttribute(pd.getString("member_id")+"notUseList");
+ 			PageData useRedPd = (PageData) yhmdpd.get("useRedPd");
+ 			this.getRequest().getSession().setAttribute(pd.getString("member_id")+"canUseList", (List<PageData>) useRedPd.get("canUseList"));
+ 			this.getRequest().getSession().setAttribute(pd.getString("member_id")+"notUseList", (List<PageData>) useRedPd.get("notUseList"));
+  			yhmdpd=null;
+  			useRedPd=null;
+  			mv.setViewName("htmlmember/shopcatpay");
+  			pd=null;
+  			//防止表单重复提交
+	 		String session_orderid=String.valueOf(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_ORDER));
+	  		mv.addObject("session_orderid", session_orderid);
+		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
-		mv.addObject("pd", pd);
- 		pd=null;
-		return mv;
+ 		return mv;
 	}
 	
 	/**
@@ -1997,8 +2046,7 @@ public class HtmlMemberController extends BaseController {
 	 */
 	@RequestMapping(value="/goMyYouXuan")
 	public ModelAndView goMyYouXuan(Page page){
-//		logBefore(logger, "去我的优选爆品界面");
-		ModelAndView mv = this.getModelAndView();
+ 		ModelAndView mv = this.getModelAndView();
 		//Shiro session
 		Subject currentUser = SecurityUtils.getSubject();  
 		Session session = currentUser.getSession();
@@ -2346,23 +2394,29 @@ public class HtmlMemberController extends BaseController {
 		 					mv.addObject("issortjf", "0");
 		 				}
 		 			}
+		 		if(pd.getString("sk_shop") != null && !pd.getString("sk_shop").equals("")){
+		 			pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
+		 		}else{
+		 			pd.put("sk_shop",BaseController.jiami(pd.getString("store_id")));
+		 		}
 		 		//商家名称
 		 		mv.addObject("store_name", ServiceHelper.getAppStoreService().findById(pd).getString("store_name"));
 				//获取营销规则
 				List<PageData> marketlist=appStorepc_marketingService.listAllById(pd);
 	   			mv.addObject("marketlist", marketlist); 
-	   			pd.put("new_store_id",BaseController.get4ZMSZ()+EbotongSecurity.ebotongEncrypto(pd.getString("store_id")));
-	   			mv.setViewName("htmlmember/sysyhmd");
+	   			marketlist=null;
+ 	   			mv.setViewName("htmlmember/sysyhmd");
 	   			pd.remove("store_id");
 	   			pd.remove("member_id");
-			}else{
+ 			}else{
 				mv.setViewName("redirect:toLoginWx.do");
 			}
      	} catch(Exception e){
 			logger.error(e.toString(), e);
  		}
-  		mv.addObject("pd", pd); 
- 		return mv;
+   		mv.addObject("pd", pd); 
+		pd=null;
+  		return mv;
  	}
 	
 	

@@ -623,6 +623,13 @@ public class GoodsController extends BaseController {
  			//优惠买单信息
 			Map<String,Object> yhmdpd=TongYong.YouHuiMaiDanByTwoForMember(pd, youhui_money, Double.parseDouble(notmoney));
  			map.put("data",yhmdpd );
+ 			this.getRequest().getSession().removeAttribute(pd.getString("member_id")+"canUseList");
+			this.getRequest().getSession().removeAttribute(pd.getString("member_id")+"notUseList");
+ 			PageData useRedPd = (PageData) yhmdpd.get("useRedPd");
+ 			this.getRequest().getSession().setAttribute(pd.getString("member_id")+"canUseList", (List<PageData>) useRedPd.get("canUseList"));
+ 			this.getRequest().getSession().setAttribute(pd.getString("member_id")+"notUseList", (List<PageData>) useRedPd.get("notUseList"));
+  			yhmdpd=null;
+  			useRedPd=null;
 			yhmdpd=null;
 		} catch(Exception e){
     		map.put("data","");

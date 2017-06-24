@@ -40,9 +40,12 @@
 	.ddxq-list p{
 		text-align: left;
 	}
-	.tit_bg_box{
- 		position: absolute;right: 0.4rem;top: 0.4rem;display: inline;padding-right: 1rem;height: 1.7rem;width: 1.3rem; background-size: 100%;
- 	}
+	.tit_bg_box {
+	    position: absolute; right: 0.4rem; top: 0.4rem; display: inline; height: 1.5rem; width: 3.3rem; font-size: 10px; background-size: 100%;
+	}
+	.inline_box{
+		height: 2.1rem;padding: 0.4rem 0.4rem;width: 100%;position: relative;line-height: 1.6rem;font-size: 2.1rem;
+	}
 </style>
 </head>
 <body style="background:#ededed;">
@@ -176,7 +179,7 @@
  			        		var str="<li class='clearfix'> <div class='fl'> <p class='fourteen-px' style='font-size: 14px;'>"+discountList[i].content+"</p> </div> <div class='fr'> <p style='color:red;'>"+discountList[i].number+"</p> </div> </li>";
 							$("#discountList").append(str);
  			        	}
-			        	var daoLiuStoreList=pd.daoLiuStoreList;
+ 			        	var daoLiuStoreList=pd.daoLiuStoreList;
 			        	for (var i = 0; i < daoLiuStoreList.length; i++) {
 				        		var onestore=daoLiuStoreList[i];
 				        		//评论星级
@@ -212,7 +215,7 @@
 					        			onemarkstr+="<span class='song tit_bg_box'   >累计</span>";
 					        		}else if(onemark_type == "6"){
 					        			onemarkstr+="<span class='ji tit_bg_box'   >积分</span>";
-						        	}else if(onemark_type == "7"){
+						        		}else if(onemark_type == "7"){
 					        			onemarkstr+="<span class='zhe tit_bg_box '   >折扣</span>";
 					        		}
 					        	}
@@ -222,7 +225,7 @@
 										"<img src='"+onestore.pictrue_url+"' alt='' style='position: absolute;width: 100%;  height: 100%; '>"+
 									"</div>"+
 									"<div class='li_tit' style='width: 100%;'>"+
-										"<div class='inline_box' style='height: 1.6rem;padding: 0.4rem 0.4rem;width: 100%;position: relative;line-height: 1.6rem;font-size: 1.2rem;'>"+
+										"<div class='inline_box' style='height: 2.1rem;padding: 0.4rem 0.4rem;width: 100%;position: relative;line-height: 1.6rem;font-size: 2.1rem;'>"+
 											"<span class='title' style='width: 90%;margin: 0;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'>"+onestore.store_name+"</span>"+
 											 onemarkstr+
 										"</div>"+

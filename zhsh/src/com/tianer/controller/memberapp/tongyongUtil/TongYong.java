@@ -434,7 +434,7 @@ public class TongYong extends BaseController{
 				double discount_after_money=Double.parseDouble(sale_money)-Double.parseDouble(discount_money);
 				pd.put("discount_after_money", df2.format(discount_after_money));//优惠后总共需要支付的金额
 				//判断金钱是否大于0
-//				System.out.println("sale_money="+sale_money+"*actual_money="+actual_money+"*user_balance="+user_balance+"*user_integral="+user_integral+"*discount_money="+discount_money);
+//				System.out.println("sale_money="+sale_money+"*actual_money="+df2.format(Double.parseDouble(actual_money)+Double.parseDouble(user_balance)+Double.parseDouble(user_integral)+Double.parseDouble(discount_money)));
  				if(Double.parseDouble(sale_money) <= 0 || (!df2.format(Double.parseDouble(sale_money)).equals(df2.format(Double.parseDouble(actual_money)+Double.parseDouble(user_balance)+Double.parseDouble(user_integral)+Double.parseDouble(discount_money))))){
 					returnpd.put("result", "0");
 					returnpd.put("message", "金钱的支付有误，请注意一下");
@@ -2237,10 +2237,16 @@ public class TongYong extends BaseController{
   		} catch(Exception e){
   			(new TongYong()).dayinerro(e);
  		}
-  		useredpd.put("canUseList", canUseList);
-  		useredpd.put("notUseList", notUseList);
-  		useredpd.put("allUseList", alluseList);
-  		alluseList=null;
+  		if(youhui_money == 0){
+  			useredpd.put("canUseList", new ArrayList<PageData>());
+  	  		useredpd.put("notUseList", new ArrayList<PageData>());
+  	  		useredpd.put("allUseList", new ArrayList<PageData>());
+  		}else{
+  			useredpd.put("canUseList", canUseList);
+  	  		useredpd.put("notUseList", notUseList);
+  	  		useredpd.put("allUseList", alluseList);
+  		}
+   		alluseList=null;
   		notUseList=null;
   		canUseList=null;
  		return useredpd;
@@ -5049,7 +5055,13 @@ public class TongYong extends BaseController{
   		List<PageData> yingxiaoList=new ArrayList<PageData>();//用来存储营销List
   		try {
     		String allgoods=pd.getString("allgoods");
+    		
     		boolean goodsFlag=(allgoods != null  && !allgoods.equals(""));//是否为购物车购买
+    		if(goodsFlag){
+    			map.put("allgoods", allgoods);
+    		}else{
+    			map.put("allgoods", "");
+    		}
   			double alljifeng=0;
    			//1.先获取营销中的折扣设置
   			PageData typepd=new PageData();
@@ -5437,7 +5449,7 @@ public class TongYong extends BaseController{
 			 //判断优惠后的金额是否已经是0
 			 double useredbeforMoney=reducemoney+zkmoney;//使用红包前的总共优惠了的金额：满减+z折扣
 			 String redpackage_id=(pd.getString("redpackage_id") == null?"":pd.getString("redpackage_id"));
- 			 PageData useRedPd=getAllStoreRedMoneyByMember(pd, notyouhui_money, yingxiaosize, reducemoney);
+ 			 PageData useRedPd=getAllStoreRedMoneyByMember(pd, youhui_money, yingxiaosize, reducemoney);
  			 String redMessage="暂无可使用红包";
   			 //判断可以使用的红包数量
   			 if( ((List<PageData>) useRedPd.get("canUseList")).size() >0){

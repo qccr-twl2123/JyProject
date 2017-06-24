@@ -49,7 +49,7 @@
 			</if>
  	</update>
  	
- 	<!-- 按照id清空购物车 -->
+ 	<!-- 删除我的购物车（购物车ID、(会员id+商品id)） -->
 	<delete id="delShop" parameterType="pd">
 		delete from tb_shopcart  
 		where 
@@ -63,9 +63,17 @@
 						<if test="goods_id != null and goods_id != ''">
 						and  goods_id=#{goods_id}
 						</if>
+						<if test="goods_type != null and goods_type != ''">
+						and  goods_type=#{goods_type}
+						</if>
 				</otherwise>
 			</choose>
 	</delete>
+ 	<!-- 删除我的购物车(通过会员ID 以及商家ID) -->
+	<delete id="delShopByMs" parameterType="pd">
+		delete from tb_shopcart  
+		where  member_id = #{member_id} and  goods_type=#{goods_type} and  store_id=#{store_id}
+ 	</delete>
 
 	 
 	
@@ -146,10 +154,12 @@
  			ifnull(c.goods_jfrate,'0') goods_jfrate,
  			ifnull(c.gf_salemoney,'0') gf_salemoney,
  			ifnull(c.goods_dw,'件') goods_dw,
- 			ifnull(c.brand_name,'') brand_name
+ 			ifnull(c.brand_name,'') brand_name,
+ 			ifnull(g.goods_type,'0') as  zcspgoods_type 
   		from 
 			tb_shopcart a 
 			left join tb_store s on a.store_id=s.store_id 
+   			left join tb_goods g on a.goods_id=g.goods_id
    			left join tb_youxuangg b on a.goods_id=b.youxuangg_id
  			left join tb_youxuangoods c on b.youxuangoods_id=c.youxuangoods_id
    		where 
@@ -207,7 +217,7 @@
  			a.goods_id
 		from 
 			tb_shopcart a 
- 		where 
+  		where 
 			a.member_id = #{member_id}
 			<if test="store_id !=null and store_id != '' ">
 			and a.store_id=#{store_id}

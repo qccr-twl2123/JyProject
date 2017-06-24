@@ -1,0 +1,40 @@
+*{
+    border-radius: 2px;
+}
+.bg_c9{
+    background: #c90000;
+}
+.bg_ff0600{
+    background: #ff0600;
+}
+.col_f{
+    color: #fff;
+}
+.col_c9{
+    color: #c90000;
+}
+.fll{
+    float: left;
+}
+section{
+    padding:  10px;
+    box-sizing: border-box;
+    border-bottom: 56px solid transparent;
+}
+.mx_width{
+    max-width: 66%;
+}
+.dis_in_b{
+    display: inline-block;
+    vertical-align: middle;
+}
+.mg_b_10{
+    margin-bottom: 10px;
+}
+.list_span{
+    float: right;
+    margin-right: 10px;
+}
+footer{
+    background: #fff;
+}
