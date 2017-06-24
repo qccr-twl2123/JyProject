@@ -80,8 +80,7 @@
             </span>
             <span class="sel_box">
                 <select   id="loc_shi" class="select_item" onchange="addsearcharea()">
-                    <option value="请选择">请选择</option>
-                    <c:forEach items="${cityList }" var="var" >
+                     <c:forEach items="${cityList }" var="var" >
                     	<option value="${var.city_id }" ${pd.city_name eq var.city_name?'selected':'' }>${var.city_name }</option>
                     </c:forEach>
                  </select>
