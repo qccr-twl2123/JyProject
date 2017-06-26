@@ -2457,12 +2457,12 @@ public class HtmlMemberController extends BaseController {
    		try {
    				pd=this.getPageData();
    				String code=pd.getString("code");
-   				String wxopen_id = WxpubOAuth.getOpenId(WxUtil.APP_ID, WxUtil.APP_SECRET, code);
-   				if(wxopen_id.equals("again")){
-   					mv.setViewName("redirect:goErrorJsp.do");
-   			 		return mv;
-   				}
-//   			String wxopen_id ="owD2DwsxdygwHXxNV75kjGT7Wvlw";
+//   				String wxopen_id = WxpubOAuth.getOpenId(WxUtil.APP_ID, WxUtil.APP_SECRET, code);
+//   				if(wxopen_id.equals("again")){
+//   					mv.setViewName("redirect:goErrorJsp.do");
+//   			 		return mv;
+//   				}
+   				String wxopen_id ="owD2DwsxdygwHXxNV75kjGT7Wvlw";
    				//获取用户的一些信息
   				pd=WxpubOAuth.getWxInformation(pd,wxopen_id,appMemberService.getWxAccess(pd).getString("access_token") );
   				//根据openid判断是否存在用户
@@ -2594,19 +2594,14 @@ public class HtmlMemberController extends BaseController {
 				// TODO: handle exception
  			}
  			if(appMemberService.detailByPhone(pd) == null){
-  				if(pd.getString("result").equals("1")){
-  					String password=BaseController.getMiMaNumber();
- 					pd.put("password", password);
- 					pd.put("zhuce_shebei","3");
- 					pd=TongYong.saveMember(pd,pd.getString("recommended"), pd.getString("recommended_type"));//注册
- 					//发送短信
- 					SmsUtil.ZhuCeForPassword(pd.getString("phone"), password);
- 					member_id=pd.getString("member_id");
- 				} else{
- 					result="0";
- 					message="系统繁忙，请重进进入页面";
- 				}
- 			}else{
+ 				String password=BaseController.getMiMaNumber();
+				pd.put("password", password);
+				pd.put("zhuce_shebei","3");
+				pd=TongYong.saveMember(pd,pd.getString("recommended"), pd.getString("recommended_type"));//注册
+				//发送短信
+				SmsUtil.ZhuCeForPassword(pd.getString("phone"), password);
+				member_id=pd.getString("member_id");
+  			}else{
  				member_id= appMemberService.detailByPhone(pd).getString("member_id");
  			}
  			if(result.equals("1")){
