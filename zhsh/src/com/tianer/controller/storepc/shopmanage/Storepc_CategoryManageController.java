@@ -363,45 +363,45 @@ public class Storepc_CategoryManageController extends BaseController {
   						PageData pd = new PageData();
  						try {
  							pd=this.getPageData();
- 							if(obj != null){
-			 					StoreRole slogin=(StoreRole)session.getAttribute(Const.SESSION_STORE_USER);
-				 				if(slogin != null){
-				 					String store_id=slogin.getStore_id();
-				 					String type=slogin.getType();
-				 					String login_id=slogin.getLogin_id();
-					 				if(pd.getString("store_id") == null || pd.getString("store_id").equals("")){
-									    pd.put("store_id", store_id);
-					 				}
-					 				pd.put("login_id", login_id);
-					 				pd.put("type", type);
-				 				}
- 							}else{
- 								Qx qx=new Qx();
- 								String type=pd.getString("type");
- 								String login_id=pd.getString("login_id");
- 								if(type.equals("1")){
- 									 qx.setAdd("1");
-									 qx.setDelete("1");
-									 qx.setEdit("1");
-									 qx.setLook("1");
-									 pcsession.setAttribute("storeqx", qx);
- 								}else if(type.equals("2")){
- 									 PageData store=new PageData();
- 									 store.put("store_operator_id", login_id);
- 									 store=storeManageService.findOperatorById(store);
- 									 if(store != null){
- 										 String[] syStr=store.getString("sp_competence").split(",");
- 										 qx.setAdd(syStr[0]);
- 										 qx.setDelete(syStr[1]);
- 										 qx.setEdit(syStr[2]);
- 										 qx.setLook(syStr[3]);
+ 							if(pd.getString("store_id") == null || pd.getString("store_id").equals("")){
+ 								if(obj != null){
+ 				 					StoreRole slogin=(StoreRole)session.getAttribute(Const.SESSION_STORE_USER);
+ 					 				if(slogin != null){
+ 					 					String store_id=slogin.getStore_id();
+ 					 					String type=slogin.getType();
+ 					 					String login_id=slogin.getLogin_id();
+ 					 					pd.put("store_id", store_id);
+ 						 				pd.put("login_id", login_id);
+ 						 				pd.put("type", type);
+ 					 				}
+ 	 							}else{
+ 	 								Qx qx=new Qx();
+ 	 								String type=pd.getString("type");
+ 	 								String login_id=pd.getString("login_id");
+ 	 								if(type.equals("1")){
+ 	 									 qx.setAdd("1");
+ 										 qx.setDelete("1");
+ 										 qx.setEdit("1");
+ 										 qx.setLook("1");
  										 pcsession.setAttribute("storeqx", qx);
- 									 }
- 									store=null;
-  								}
- 								qx=null;
+ 	 								}else if(type.equals("2")){
+ 	 									 PageData store=new PageData();
+ 	 									 store.put("store_operator_id", login_id);
+ 	 									 store=storeManageService.findOperatorById(store);
+ 	 									 if(store != null){
+ 	 										 String[] syStr=store.getString("sp_competence").split(",");
+ 	 										 qx.setAdd(syStr[0]);
+ 	 										 qx.setDelete(syStr[1]);
+ 	 										 qx.setEdit(syStr[2]);
+ 	 										 qx.setLook(syStr[3]);
+ 	 										 pcsession.setAttribute("storeqx", qx);
+ 	 									 }
+ 	 									store=null;
+ 	  								}
+ 	 								qx=null;
+ 	 							}
  							}
-							if(pd.getString("store_id") != null && !pd.getString("store_id").equals("")){
+ 							if(pd.getString("store_id") != null && !pd.getString("store_id").equals("")){
 		 							//判断是否有进行积分设置
 									PageData jfpd=storepcScorewayService.findById(pd);
 									if(jfpd == null ){
@@ -456,6 +456,8 @@ public class Storepc_CategoryManageController extends BaseController {
 							 		if(cm_allService.listAllUpStoreFee(citypd).size()>0){
 							 			modelAndView.addObject("citypd", cm_allService.listAllUpStoreFee(citypd).get(0));
 							 		}
+  							}else{
+  								System.out.println("商家ID不能为空");
   							}
 						} catch (Exception e) {
 							// TODO: handle exception

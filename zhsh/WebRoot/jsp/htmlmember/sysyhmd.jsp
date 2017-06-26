@@ -140,12 +140,13 @@
 			$(obj).val($(obj).val().substring(0, $(obj).val().length-1));
 		　　return true;
 		} 
-	if($(obj).val().indexOf("-") >= 0){
+		if($(obj).val().indexOf("-") >= 0){
+			$(obj).val($(obj).val().substring(0, $(obj).val().length-1));
 			return true;
 		}
-	var xiaoshu=$(obj).val().length - $(obj).val().indexOf(".");
+		var xiaoshu=$(obj).val().length - $(obj).val().indexOf(".");
 		if($(obj).val().indexOf(".") >0 && xiaoshu > 3){
-		$(obj).val($(obj).val().substring(0, $(obj).val().length-1));
+			$(obj).val($(obj).val().substring(0, $(obj).val().length-1));
 		}
 	}
 
@@ -249,7 +250,7 @@
     	var double_actual_money=parseFloat($("#actual_money").val());
   		var double_user_balance=parseFloat($("#user_balance").val());
   		var double_user_integral=parseFloat($("#user_integral").val());
-  		if(paymoeny == 0){
+  		if(paymoeny == 0 || $("#sale_money").val() == "" || parseFloat($("#sale_money").val()) <=0    ){
   			$(obj).removeAttr("checked");
   			return;
   		}

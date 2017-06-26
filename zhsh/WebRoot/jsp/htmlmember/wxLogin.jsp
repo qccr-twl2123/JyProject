@@ -13,14 +13,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <link rel="stylesheet" href="css/htmlmember/labary/predefine.css">
     <link rel="stylesheet" href="css/htmlmember/loading.css">
-    <script type="text/javascript">
-	 		var base_inf={
- 	            base_herf:"<%=basePath%>" 
- 	        };
-	</script>
 </head>
 <style>
-     li{
+    li{
         padding: 0;
     }
     body{
@@ -34,12 +29,12 @@
     .inf_box{
         position: absolute;
         margin: auto;
-        top: 7rem;
+        top: 0;
         bottom: 0;
         right: 0;
         left: 0;
         padding: 6% 12%;
-        max-height: 16.2rem;
+        height: 17.6rem;
         border-radius: 4px;
         box-sizing: border-box;
     }
@@ -79,36 +74,37 @@
 
     }
 </style>
-<body style="background-color: #fff">
-<div class="neirong"  style="display:none;">
-	<img src="img/bangding.jpg" alt="" style="width: 100%">
-	<ul class="inf_box">
-	    <li class="lh2   bd1_li mg_b">
-	        <span class="fwb li_span"><img class="li_img" src="img/shouji.png" style="left: 0.5rem;" alt=""></span>
-	        <input type="text" maxlength="13" id="phone" placeholder="请输入手机号" style="background: rgba(0,0,0,0);width: 75%" oninput="lenghtOK(this)">
-	    </li>
-	    <li class="lh2  bd1_li  mg_b li2">
-	        <span class="fwb li_span"><img class="li_img" src="img/yanzhengma.png" style="left: 0.5rem;" alt=""></span>
-	        <input type="text"   style="background: rgba(0,0,0,0);width: 50%" maxlength="4" id="messagecode">
-	        <div class="li_div bd1_li">
-	            <span class="txr  code " >获取验证码</span>
-	        </div>
-	    </li>
-	    <li class="lh2 bd1_li   mg_b">
-	        <span class="fwb li_span"><img class="li_img" src="img/tjr.png" style="left: 0.4rem;" alt=""></span>
-	         <select name="recommended" id="recommended"    style="width: 75%;">
+<body>
+<img src="img/bangding.jpg" alt="" style="width: 100%">
+<ul class="inf_box clf">
+    <li class="   bd1_li mg_b">
+        <span class="fwb li_span"><img class="li_img" src="img/shouji.png" style="left: 0.5rem;" alt=""></span>
+        <input type="text" maxlength="13" id="phone" placeholder="请输入手机号" style="background: rgba(0,0,0,0);width: 75%" oninput="lenghtOK(this)"  >
+    </li>
+    <li class="  bd1_li  mg_b li2">
+        <span class="fwb li_span"><img class="li_img" src="img/yanzhengma.png" style="left: 0.5rem;" alt=""></span>
+        <input type="text" maxlength="" style="background: rgba(0,0,0,0);width: 50%" id="messagecode">
+        <div class="li_div bd1_li">
+            <span class="txr  code " >获取验证码</span>
+        </div>
+    </li>
+    <li class=" bd1_li mg_b">
+        <span class="fwb li_span"><img class="li_img" src="img/tjr.png" style="left: 0.4rem;" alt=""></span>
+          <select name="recommended" id="recommended"    style="width: 75%;">
 	        	<option value="0@0">不填写，直接注册</option>
 	        </select>
-	    </li>
-	    <li class="txc lh2 pd2 mg_b">
-	        <span class="act btn pd2" onclick="submitLogin()">登录</span>
-	    </li>
-	</ul>
-</div>
-<div class="readyjsp" style="width: 100%;margin: auto;position: absolute;top: 40%; display:none; ">
-			<img alt="" src="img/readyjsp.gif"  style=" width: 100%; ">
-</div>
+    </li>
+    <li class="txc  pd2 mg_b">
+        <span class="act btn pd2" onclick="submitLogin()">登录</span>
+    </li>
+</ul>
+
 </body>
+<script type="text/javascript">
+	 		var base_inf={
+ 	            base_herf:"<%=basePath%>" 
+ 	        };
+</script>
 <script src="js/htmlmember/library/jquery-1.12.4.min.js"></script>
 <script src="js/wx/jweixin-1.0.0.js"></script>
 <script src="js/wx/zepto.min.js"></script>
@@ -122,9 +118,15 @@ if("${member_id}" != ""){//已经注册过微信账号,直接前往首页
 	 wxdingwei();
 	 //gogogo2();
   } else{
-	
-	$(".neirong").show();
- 	 document.title='绑定手机';
+	  /* if("${pd.subscribe}" == 0){
+		  document.title='前往关注页面';
+		  window.location.href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzI2MzM4MDkyOA==&scene=124#wechat_redirect";
+	  }else{
+		  $(".neirong").show();
+		  document.title='绑定手机';
+	  } */
+	  $(".neirong").show();
+	  document.title='绑定手机';
 }
 //=========================================推荐人===========================================================
 var str="";
@@ -298,5 +300,4 @@ function pcd(lng,lat){
 		   });
 }
 </script>
-
 </html>

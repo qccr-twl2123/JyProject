@@ -287,44 +287,7 @@ public class HtmlMemberController extends BaseController {
 //		}
 //	}
 	
-	/**
-	 * 访问注册页one
-	 * @return 
-	 * @return 
-	 * @return
-	 * @throws Exception 
-	 */
-	@RequestMapping(value="/goRegister")
-	public void goRegister(HttpServletRequest request,HttpServletResponse response) throws Exception{
-		PageData pd=new PageData();
-		String code = "";
-		try {
-			pd=this.getPageData();
-			String str="";
-			String recommended=pd.getString("recommended");
-			String recommended_type=pd.getString("recommended_type");
-			String recommended_phone=pd.getString("recommended_phone");
-			if(recommended != null && !recommended.equals("")){
-				if(recommended_type.equals("1")){
- 					recommended=ServiceHelper.getAppPcdService().getrecommendedByStoreId(pd).getString("store_id");
-					recommended_phone=ServiceHelper.getAppPcdService().getrecommendedByStoreId(pd).getString("store_name");
-				}else if(recommended_type.equals("2")){
-					recommended=ServiceHelper.getAppPcdService().getrecommendedByMemberId(pd).getString("member_id");
-					recommended_phone=ServiceHelper.getAppPcdService().getrecommendedByMemberId(pd).getString("phone");
-				}else{
-					 
-				}
- 				str="?recommended="+recommended+"&recommended_type="+recommended_type+"&recommended_phone="+recommended_phone;
-			}
-// 			code = WxpubOAuth.createOauthUrlForCode(WxUtil.APP_ID, WxUtil.HOST+"/html_member/twoRegister.do"+str, true);//繁琐的注册步骤
- 			code = WxpubOAuth.createOauthUrlForCode(WxUtil.APP_ID, WxUtil.HOST+"/html_member/htmlWxLogin.do"+str, true);//简单的注册步骤
- 			response.sendRedirect(code); 
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	
 	
 	
 //	
@@ -2419,6 +2382,42 @@ public class HtmlMemberController extends BaseController {
   		return mv;
  	}
 	
+	/**
+	 * 访问注册页one
+	 * @return 
+	 * @return 
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping(value="/goRegister")
+	public void goRegister(HttpServletRequest request,HttpServletResponse response,String recommended,String recommended_type,String recommended_phone) throws Exception{
+		PageData pd=new PageData();
+		String code = "";
+		try {
+			pd=this.getPageData();
+ 			if(recommended != null && !recommended.equals("")){
+				if(recommended_type.equals("1")){
+ 					recommended=ServiceHelper.getAppPcdService().getrecommendedByStoreId(pd).getString("store_id");
+					recommended_phone=ServiceHelper.getAppPcdService().getrecommendedByStoreId(pd).getString("store_name");
+				}else if(recommended_type.equals("2")){
+					recommended=ServiceHelper.getAppPcdService().getrecommendedByMemberId(pd).getString("member_id");
+					recommended_phone=ServiceHelper.getAppPcdService().getrecommendedByMemberId(pd).getString("phone");
+				}else{
+					 
+				}
+			}
+ 			request.getSession().setAttribute("recommended", recommended);
+ 			request.getSession().setAttribute("recommended_type", recommended_type);
+ 			request.getSession().setAttribute("recommended_phone", recommended_phone);
+ 			code = WxpubOAuth.createOauthUrlForCode(WxUtil.APP_ID, WxUtil.HOST+"/html_member/htmlWxLogin.do", true);//简单的注册步骤
+ 			response.sendRedirect(code); 
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	//新版微信登录=================================================================================
 	
@@ -2450,22 +2449,23 @@ public class HtmlMemberController extends BaseController {
 	 *  
 	 */
 	@RequestMapping(value="/htmlWxLogin")
-	public ModelAndView HtmlWxLogin()throws Exception{
+	public ModelAndView HtmlWxLogin(HttpServletRequest request)throws Exception{
 		ModelAndView mv = this.getModelAndView();
   		PageData pd = new PageData();
  		String member_id="";
    		try {
    				pd=this.getPageData();
    				String code=pd.getString("code");
-//   				String wxopen_id = WxpubOAuth.getOpenId(WxUtil.APP_ID, WxUtil.APP_SECRET, code);
-//   				if(wxopen_id.equals("again")){
-//   					mv.setViewName("redirect:goErrorJsp.do");
-//   			 		return mv;
-//   				}
-   				String wxopen_id ="owD2DwsxdygwHXxNV75kjGT7Wvlw";
+     			pd = WxpubOAuth.getOpenId(pd,WxUtil.APP_ID, WxUtil.APP_SECRET, code);
+    			if(pd.getString("wxopen_id") == null || pd.getString("wxopen_id").equals("")){
+    				mv.setViewName("redirect:goErrorJsp.do");
+   			 		return mv;
+   				} 
+//   			String wxopen_id ="owD2DwsxdygwHXxNV75kjGT7Wvlw";
    				//获取用户的一些信息
-  				pd=WxpubOAuth.getWxInformation(pd,wxopen_id,appMemberService.getWxAccess(pd).getString("access_token") );
-  				//根据openid判断是否存在用户
+    			pd=WxpubOAuth.getUserInforForNotGuanZhu(pd,pd.getString("wxopen_id"),pd.getString("access_token"));//获取未关注的用户信息
+  				pd=WxpubOAuth.getWxInformation(pd,pd.getString("wxopen_id"),appMemberService.getWxAccess(pd).getString("access_token") );//对于已经关注所获取的信息
+   				//根据openid判断是否存在用户
   				boolean flag=(appMemberService.getByOpenid(pd) != null || appMemberService.getByUnionid(pd) != null);
    				if( flag  ){
  					if(appMemberService.getByOpenid(pd) != null ){
@@ -2485,7 +2485,15 @@ public class HtmlMemberController extends BaseController {
  				}else{
 					member_id="";
    				}
- 				this.getRequest().getSession().setAttribute("okgetcode","1");
+   				request.getSession().setAttribute("okgetcode","1");
+     			if(request.getSession().getAttribute("recommended") != null){
+   					pd.put("recommended", (String) request.getSession().getAttribute("recommended"));
+   					pd.put("recommended_type", (String) request.getSession().getAttribute("recommended_type"));
+   					pd.put("recommended_phone", (String) request.getSession().getAttribute("recommended_phone"));
+   					request.getSession().removeAttribute("recommended");
+   					request.getSession().removeAttribute("recommended_type");
+   					request.getSession().removeAttribute("recommended_phone");
+     			}
 				mv.addObject("pd", pd);
 				mv.addObject("member_id", member_id);
     		} catch (Exception e) {
@@ -2579,21 +2587,21 @@ public class HtmlMemberController extends BaseController {
 				map.put("data", "");
  		 		return map;
 			} 
+			try {
+	  				//存储app的第三方登录信息
+		  			PageData _pd=new PageData();
+		  			_pd.put("unionid", pd.getString("wxunionid"));
+		  			_pd.put("open_id", pd.getString("wxopen_id"));
+		  			_pd.put("phone", pd.getString("phone"));
+		  			_pd.put("type", "1");
+		  			ServiceHelper.getTYAllSortService().saveThreeLogin(_pd);
+		  			_pd=null;
+			} catch (Exception e) {
+					// TODO: handle exception
+	 		}
   			//判断当前手机号是否注册过
   			String member_id="";
- 			try {
-  				//存储app的第三方登录信息
-	  			PageData _pd=new PageData();
-	  			_pd.put("unionid", pd.getString("wxunionid"));
-	  			_pd.put("open_id", pd.getString("wxopen_id"));
-	  			_pd.put("phone", pd.getString("phone"));
-	  			_pd.put("type", "1");
-	  			ServiceHelper.getTYAllSortService().saveThreeLogin(_pd);
-	  			_pd=null;
-			} catch (Exception e) {
-				// TODO: handle exception
- 			}
- 			if(appMemberService.detailByPhone(pd) == null){
+  			if(appMemberService.detailByPhone(pd) == null){
  				String password=BaseController.getMiMaNumber();
 				pd.put("password", password);
 				pd.put("zhuce_shebei","3");

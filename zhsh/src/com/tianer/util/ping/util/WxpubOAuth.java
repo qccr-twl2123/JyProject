@@ -13,6 +13,8 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.tianer.controller.memberapp.tongyongUtil.TongYong;
@@ -41,19 +43,28 @@ public class WxpubOAuth {
      * @param code      授权code, 通过调用WxpubOAuth.createOauthUrlForCode来获取
      * @return openid   微信公众号授权用户唯一标识, 可用于微信网页内支付
      */
-    public static String getOpenId(String appId, String appSecret, String code) throws UnsupportedEncodingException {
+    public static PageData getOpenId(PageData pd,String appId, String appSecret, String code) throws UnsupportedEncodingException {
          String url = WxpubOAuth.createOauthUrlForOpenid(appId, appSecret, code);
          String ret = WxpubOAuth.httpGet(url);
-//         System.out.println(ret.toString());
-         JsonParser jp = new JsonParser();
-         JsonObject respJson = jp.parse(ret).getAsJsonObject();
-         if(respJson.get("errcode") != null && FileUtil.readTxtFile("C:\\openid_errcode.txt").contains(String.valueOf(respJson.get("errcode")))){
-             System.out.println(String.valueOf(respJson.get("errcode")));
-             return "again";
-          }
-          return respJson.get("openid").getAsString();
-//         OAuthResult oAuthResult = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create().fromJson(ret, OAuthResult.class);
- //        return oAuthResult.getOpenid();
+//         JsonParser jp = new JsonParser();
+//         JsonObject respJson = jp.parse(ret).getAsJsonObject();
+//         if(respJson.get("errcode") != null && FileUtil.readTxtFile("C:\\openid_errcode.txt").contains(String.valueOf(respJson.get("errcode")))){
+//             System.out.println("getOpenId"+String.valueOf(respJson.get("errcode")));
+//             return "again";
+//          }
+//          return respJson.get("openid").getAsString();
+         OAuthResult oAuthResult = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create().fromJson(ret, OAuthResult.class);
+         pd.put("wxopen_id", oAuthResult.getOpenid());
+         pd.put("access_token", oAuthResult.getAccessToken());
+         /*
+          * OAuthResult [
+				accessToken=gRRmK_in0h0UOwzgYaDkd0Q_J_xrlqEDAMpmjjB3lL_MarIof1vEKVIZfof4NRKuJslfVPDgjf4O5f6EKs77uIQgH037xRUnevjMvwlGDGg,
+				 expiresIn=7200, 
+				 refreshToken=5y88Qhsomq7gn5Fuyk1XCWn18OhFltuQpvUWmw1ZShFkfvnPtl5cSJvvCEZSTlzTVYz7QklsG4ZbF4k4lkkWww9mP9juHhoodAg6tLXH-Fo, 
+				openid=owD2DwsxdygwHXxNV75kjGT7Wvlw,
+				 scope=snsapi_userinfo]
+          */
+         return pd;
     }
     
     
@@ -343,19 +354,19 @@ public class WxpubOAuth {
      * @param access_token 微信公众号应用密钥（注意保密）
       */
     public static PageData getWxInformation(PageData pd,String openid,String access_token) throws UnsupportedEncodingException {
-     	pd.put("result", "1");
-    	try { 
+     	try { 
       		 Map<String, String> data = new HashMap<String, String>();
  	    	 data.put("access_token",access_token);
 	         data.put("openid", openid);
+	         data.put("lang", "zh_CN");
  	         String queryString = WxpubOAuth.httpBuildQuery(data);
 	         String accessTokenUrl = "https://api.weixin.qq.com/cgi-bin/user/info?" + queryString;
 	         String resp = httpGet(accessTokenUrl);
 	         JsonParser jp = new JsonParser();
 	         JsonObject respJson = jp.parse(resp).getAsJsonObject();
    	         if(respJson.has("errcode")) {//access_token 为空41001 过期40001 42001,40003
-   	        	 System.out.println("access_token错误"+resp.toString());
-   	        	 if(n < 4 && FileUtil.readTxtFile("C:\\access_tokenerror.txt").contains(String.valueOf(respJson.get("errcode")))){
+   	        	 System.out.println("getWxInformation=====access_token错误"+resp.toString());
+   	        	 if(n < 10 && FileUtil.readTxtFile("C:\\access_tokenerror.txt").contains(String.valueOf(respJson.get("errcode")))){
    	        		 ++n;
    	        		 access_token=  setJiChuAccess_token().getString("access_token");
 	        		 return  getWxInformation(pd, openid,access_token);
@@ -367,8 +378,11 @@ public class WxpubOAuth {
  	         }
    	         n=0;
  	        String subscribe=respJson.get("subscribe").getAsString();
+ 	        pd.put("subscribe", subscribe);
  	        if(subscribe.equals("0")){
- 	        	return pd;
+ 	        	pd.put("wxunionid", respJson.get("unionid").getAsString());
+ 		        pd.put("wxopen_id", openid);
+  	        	return pd;
  	        }
 	        pd.put("sex", respJson.get("sex").getAsString());
   	        pd.put("image_url", respJson.get("headimgurl").getAsString());
@@ -380,20 +394,44 @@ public class WxpubOAuth {
  		} catch (Exception e) {
 			// TODO Auto-generated catch block
  			(new TongYong()).dayinerro(e);
-			pd.put("result", "0");
-		}
+ 		}
+         return pd;
+     }
+    
+    
+    /**
+     * 获取未关注的用户的基本信息
+     * @param openid     微信公众号应用唯一标识
+     * @param access_token 微信公众号应用密钥（注意保密）
+      */
+    public static PageData getUserInforForNotGuanZhu(PageData pd,String openid,String access_token) throws UnsupportedEncodingException {
+     	try { 
+      		 Map<String, String> data = new HashMap<String, String>();
+ 	    	 data.put("access_token",access_token);
+	         data.put("openid", openid);
+	         data.put("lang", "zh_CN");
+ 	         String queryString = WxpubOAuth.httpBuildQuery(data);
+	         String accessTokenUrl = "https://api.weixin.qq.com/sns/userinfo?" + queryString;
+ 	         String resp = httpGet(accessTokenUrl);
+	         JsonParser jp = new JsonParser();
+	         JsonObject respJson = jp.parse(resp).getAsJsonObject();
+ 	         pd.put("sex", respJson.get("sex").getAsString());
+  	         pd.put("image_url", respJson.get("headimgurl").getAsString());
+	         pd.put("name", respJson.get("nickname").getAsString());
+	         pd.put("province_name", respJson.get("province").getAsString());
+	         pd.put("city_name", respJson.get("city").getAsString());
+  		} catch (Exception e) {
+			// TODO Auto-generated catch block
+ 			(new TongYong()).dayinerro(e);
+ 		}
          return pd;
      }
     
     
     public static void main(String[] args) {
     	try {
-//			System.out.println(getJsapiTicket(WxUtil.APP_ID,WxUtil.APP_SECRET));
-    		String ret="{'access_token':'ECPIfeBkVVyvyPMEYUt5rvfWBoks8sZlFHdWmqnopKUec5hWlvEzbYxLIdwLBE6TgDpVfdwuDRRCW_I2xNyrJRm1uhTkSl4WE59no-KEG1g','expires_in':7200,'refresh_token':'b1cfKm1egf7BEYzsu4xi9pfW3qVc-COfU_DaghhQRTXbKA2uxVJAVxZ0leXdCdqhfrh_e14DW2w_sFwRQ5H1v_zNjdCCsPzl4AgX7slU1jw','openid':'owD2DwsxdygwHXxNV75kjGT7Wvlw','scope':'snsapi_userinfo','unionid':'ovN92w3nc0wCdY3FueQpH2nssIug'}";
-    		JsonParser jp = new JsonParser();
-            JsonObject respJson = jp.parse(ret).getAsJsonObject();
-            System.out.println(respJson.toString());
-     		System.out.println(respJson.get("openid").getAsString());
+    		String url="https://api.weixin.qq.com/cgi-bin/user/info?access_token=gRRmK_in0h0UOwzgYaDkd0Q_J_xrlqEDAMpmjjB3lL_MarIof1vEKVIZfof4NRKuJslfVPDgjf4O5f6EKs77uIQgH037xRUnevjMvwlGDGg&openid=owD2DwsxdygwHXxNV75kjGT7Wvlw&lang=zh_CN";
+    		System.err.println(httpGet(url));
 		} catch ( Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -415,7 +453,7 @@ public class WxpubOAuth {
         String refreshToken;
         String openid;
         String scope;
-
+ 
         public String getAccessToken() {
             return accessToken;
         }
@@ -435,5 +473,14 @@ public class WxpubOAuth {
         public String getScope() {
             return scope;
         }
+
+		@Override
+		public String toString() {
+			return "OAuthResult [accessToken=" + accessToken + ", expiresIn="
+					+ expiresIn + ", refreshToken=" + refreshToken
+					+ ", openid=" + openid + ", scope=" + scope + "]";
+		}
+        
+        
     }
 }
