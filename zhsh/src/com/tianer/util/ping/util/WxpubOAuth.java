@@ -430,8 +430,7 @@ public class WxpubOAuth {
     
     public static void main(String[] args) {
     	try {
-    		String url="https://api.weixin.qq.com/cgi-bin/user/info?access_token=gRRmK_in0h0UOwzgYaDkd0Q_J_xrlqEDAMpmjjB3lL_MarIof1vEKVIZfof4NRKuJslfVPDgjf4O5f6EKs77uIQgH037xRUnevjMvwlGDGg&openid=owD2DwsxdygwHXxNV75kjGT7Wvlw&lang=zh_CN";
-    		System.err.println(httpGet(url));
+     		System.err.println(getUserInforForNotGuanZhu(new PageData(),"owD2DwsxdygwHXxNV75kjGT7Wvlw","KDCJ86w43GjInA9NmjTmQ3fC6dyyDwEpyW_XbVbTpA8A6KSl3N6v96Kz3-YA9MX6hyAxfZFesdZCGu0rixWFNsQ4edUVHiACxAusc_uGxvQ"));
 		} catch ( Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

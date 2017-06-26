@@ -29,7 +29,7 @@
     .inf_box{
         position: absolute;
         margin: auto;
-        top: 0;
+        top: 75px;
         bottom: 0;
         right: 0;
         left: 0;
@@ -75,7 +75,7 @@
     }
 </style>
 <body>
-<img src="img/bangding.jpg" alt="" style="width: 100%">
+<img src="img/bangding.jpg" alt="" style="width: 100%;height: 94%;">
 <ul class="inf_box clf">
     <li class="   bd1_li mg_b">
         <span class="fwb li_span"><img class="li_img" src="img/shouji.png" style="left: 0.5rem;" alt=""></span>
