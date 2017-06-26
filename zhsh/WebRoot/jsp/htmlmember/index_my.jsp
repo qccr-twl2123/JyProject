@@ -75,22 +75,22 @@
 		<li><a><i class="my-list-six"></i>魅力值  <span style="color:red;display: inline-block;float: right;">${pg.charm_number}</span></a></li>
 	</ul>
 </article>
-<%-- <article class="rm-list tj-list  ">
-	<ul>
-		<li><a href="<%=basePath%>oneYuan/listAllGoods.do?member_id=${pd.member_id}&type=2"><i class="my-list-five"></i>一元购商品<b class="z-arrow"></b></a></li>
- 	</ul>
-</article>  --%>
 <article class="rm-list tj-list  ">
 	<ul>
 		<li><a href="<%=basePath%>html_me/goMe.do?type=9"><i class="my-list-shi"></i>我要开店<b class="z-arrow"></b></a></li>
  	</ul>
 </article>
-<%-- <article class="rm-list tj-list ">
+<article class="rm-list tj-list ">
 	<ul>
-		<li><a href="<%=basePath%>html_me/outLogin.do?member_id=${pd.member_id}&islogin=0&in_jiqi=5" ><i  class="my-list-seven"></i>解除微信绑定，并退出</a><b class="z-arrow"></b></li>
+		<li><a href="<%=basePath%>html_me/outLogin.do?islogin=0&in_jiqi=5" ><i  class="my-list-seven"></i>解除与当前微信绑定</a></li>
 	</ul>
 </article> 
-<article class="rm-list tj-list ">
+<%-- <article class="rm-list tj-list  ">
+	<ul>
+		<li><a href="<%=basePath%>oneYuan/listAllGoods.do?member_id=${pd.member_id}&type=2"><i class="my-list-five"></i>一元购商品<b class="z-arrow"></b></a></li>
+ 	</ul>
+</article>  --%>
+<%-- <article class="rm-list tj-list ">
 	<ul>
 		<li><a href="<%=basePath%>html_me/goMe.do?type=10"><i  class="my-list-seven"></i>设置<b class="z-arrow"></b></a></li>
 	</ul>

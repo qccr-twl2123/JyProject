@@ -710,16 +710,17 @@ public class HtmlMemberMeController extends BaseController{
 				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
 			}
 			pd.put("islogin","0");
-			pd.put("openid","0");
-			appMemberService.edit(pd);
+			pd.put("wxopen_id","--");
+			pd.put("wxunionid","--");
+			appMemberService.editHtmlLogin(pd);
 			//移除session
-			this.getRequest().getSession().removeAttribute("openid");
+			this.getRequest().getSession().removeAttribute("wxlogin_id");
  			//Shiro session
  			SecurityUtils.getSubject().getSession().removeAttribute(Const.SESSION_H5_USER);
   		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
-		mv.setViewName("redirect:../html_member/toLogin.do");
+		mv.setViewName("redirect:../html_member/toLoginWx.do");
 		return mv;
 	}
 	
