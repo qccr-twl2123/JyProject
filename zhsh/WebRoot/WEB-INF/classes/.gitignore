@@ -1,4 +1,6 @@
 /mybatis
+/spring
+/your_rsa_private_key.pem
 /appvalidation
 /com
 /config.properties

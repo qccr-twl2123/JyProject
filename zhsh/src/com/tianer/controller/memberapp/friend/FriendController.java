@@ -478,9 +478,9 @@ public class FriendController extends BaseController {
 	 * 
 	 * 查询好友:content,id 
 	   修改 接口：app_friend/selFriend.do
-	   传字段：content=搜索字段，id=当前登录账号id
+	   传字段：     content=搜索字段，id=当前登录账号id
 	   
-	   判断依据：message_status=0：表示未注册会员
+	   判断依据： message_status=0：表示未注册会员
 	   			message_status=1：已注册会员/商家，但是未成为好友
 	   			message_status=2：已经是好友关系
 	 */
@@ -553,7 +553,40 @@ public class FriendController extends BaseController {
   	 		pd.put("message_status", message_status);
  		} catch (Exception e) {
 			// TODO: handle exception
-			//System.out.println(e.toString());
+ 			e.printStackTrace();
+ 		}
+   		map.put("result", result);
+		map.put("message", message);
+		map.put("data", pd);
+		return map;
+	}
+	
+	/**
+	 * 
+	 * 查询好友:content,id 
+	 *   修改 接口：app_friend/newSearchFriend.do
+	 *  传字段：content=搜索字段，id=当前登录账号id
+	 *  
+	 *  判断依据：    message_status=0：表示未注册会员
+	 *  			message_status=1：已注册会员/商家，但是未成为好友
+	 *  			message_status=2：已经是好友关系
+	 */
+	@RequestMapping(value="/newSearchFriend")
+	@ResponseBody
+	public Object NewSearchFriend() throws Exception{
+ 		Map<String,Object> map = new HashMap<String,Object>();
+		String result = "1";
+		String message="";
+		String message_status="";//0-无，1-为成为好友，2-已经是好友 
+		String sousuo_id="";
+		PageData pd = new PageData();
+		PageData mpd = new PageData();
+		PageData spd = new PageData();
+ 		try { 
+ 			
+ 		} catch (Exception e) {
+			// TODO: handle exception
+ 			e.printStackTrace();
  		}
    		map.put("result", result);
 		map.put("message", message);

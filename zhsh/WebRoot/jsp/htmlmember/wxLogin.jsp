@@ -232,6 +232,12 @@ function lenghtOK(obj){
                 type:"post",
                 url:'<%=basePath%>html_member/ajaxYanZhengWxLogin.do', 
           	 	 data:{
+          	 		 	"province_name":"${pd.province_name}" ,
+          	 		 	"city_name":"${pd.city_name}" ,
+          	 		 	"image_url":"${pd.image_url}" ,
+          	 		 	"sex":"${pd.sex}" ,
+          	 		 	"name":"${pd.name}" ,
+          	 		 	"wxunionid":"${pd.wxunionid}" ,
           	 		 	"wxopen_id":"${pd.wxopen_id}" ,
           	 		 	"code":$("#messagecode").val(),
           	 		 	"phone":$("#phone").val(),

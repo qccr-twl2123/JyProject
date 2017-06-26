@@ -2551,51 +2551,56 @@ public class HtmlMemberController extends BaseController {
 	/**
 	 * 使用微信登录
 	 * 第三步
-	 * html_member/ajaxYanZhengWxLogin.do?wxopen_id=&phone=
+	 * html_member/ajaxYanZhengWxLogin.do
 	 * 参数如下：
-	 * wxopen_id 微信的唯一标示ID
+	 * province_name  省
+	 * city_name  市
+	 * image_url  头像
+	 * sex  性别
+	 * name 姓名
+	 * wxunionid 微信的唯一标示ID
+	 * wxopen_id 微信的公众号唯一标示ID
 	 * phone 登录获取验证码手机号
 	 * code 验证码
 	 */
 	@RequestMapping(value="/ajaxYanZhengWxLogin")
 	@ResponseBody
-	public Object AjaxYanZhengWxLogin(String wxopen_id,String phone,String code,String recommended,String recommended_type) throws Exception{
+	public Object AjaxYanZhengWxLogin() throws Exception{
  		Map<String,Object> map = new HashMap<String,Object>();
  		String result = "1";
 		String message="登录成功";
   		PageData pd = new PageData();
   		try {
+  			pd=this.getPageData();
   			String sessionCode=String.valueOf(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_MEMBER_ZHUCECODE));
-			if(!sessionCode.equals(code)){
+			if(!sessionCode.equals(pd.getString("code"))){
 				map.put("result", "0");
 				map.put("message", "验证码错误");
 				map.put("data", "");
  		 		return map;
 			} 
   			//判断当前手机号是否注册过
- 			pd.put("phone", phone);
   			String member_id="";
- 			pd=WxpubOAuth.getWxInformation(pd,wxopen_id,appMemberService.getWxAccess(pd).getString("access_token") );//获取用户的一些信息
  			try {
   				//存储app的第三方登录信息
 	  			PageData _pd=new PageData();
 	  			_pd.put("unionid", pd.getString("wxunionid"));
-	  			_pd.put("open_id", wxopen_id);
-	  			_pd.put("phone", phone);
+	  			_pd.put("open_id", pd.getString("wxopen_id"));
+	  			_pd.put("phone", pd.getString("phone"));
 	  			_pd.put("type", "1");
 	  			ServiceHelper.getTYAllSortService().saveThreeLogin(_pd);
 	  			_pd=null;
 			} catch (Exception e) {
 				// TODO: handle exception
-			}
+ 			}
  			if(appMemberService.detailByPhone(pd) == null){
   				if(pd.getString("result").equals("1")){
   					String password=BaseController.getMiMaNumber();
  					pd.put("password", password);
  					pd.put("zhuce_shebei","3");
- 					pd=TongYong.saveMember(pd,recommended, recommended_type);//注册
+ 					pd=TongYong.saveMember(pd,pd.getString("recommended"), pd.getString("recommended_type"));//注册
  					//发送短信
- 					SmsUtil.ZhuCeForPassword(phone, password);
+ 					SmsUtil.ZhuCeForPassword(pd.getString("phone"), password);
  					member_id=pd.getString("member_id");
  				} else{
  					result="0";
@@ -2607,8 +2612,7 @@ public class HtmlMemberController extends BaseController {
  			if(result.equals("1")){
  				//将微信和当前的手机号码合并
  				pd.put("member_id",member_id);
- 				pd.put("wxopen_id", wxopen_id);
- 				pd.put("islogin","1");
+  				pd.put("islogin","1");
  				appMemberService.editHtmlLogin(pd);
  	 			SecurityUtils.getSubject().getSession().removeAttribute(Const.SESSION_MEMBER_ZHUCECODE);
  	 			this.getRequest().getSession().removeAttribute("okgetcode");

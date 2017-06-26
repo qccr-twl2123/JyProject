@@ -168,6 +168,7 @@
 		select
 				a.store_id,
 				a.store_name,
+ 				a.pictrue_url,
 				a.registertel_phone,
  				a.store_vip_id,
 				a.store_biaozhun,
@@ -195,8 +196,7 @@
 				a.operate_id,
 				a.longitude,
 				a.latitude,
-				a.pictrue_url,
-				a.tixian_money,
+ 				a.tixian_money,
 				a.ispk,
 				a.istuisong
 		from 

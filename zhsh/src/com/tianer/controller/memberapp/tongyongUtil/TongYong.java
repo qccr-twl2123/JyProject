@@ -434,7 +434,7 @@ public class TongYong extends BaseController{
 				double discount_after_money=Double.parseDouble(sale_money)-Double.parseDouble(discount_money);
 				pd.put("discount_after_money", df2.format(discount_after_money));//优惠后总共需要支付的金额
 				//判断金钱是否大于0
-//				System.out.println("sale_money="+sale_money+"*actual_money="+df2.format(Double.parseDouble(actual_money)+Double.parseDouble(user_balance)+Double.parseDouble(user_integral)+Double.parseDouble(discount_money)));
+				System.out.println("sale_money="+sale_money+"*actual_money="+df2.format(Double.parseDouble(actual_money)+Double.parseDouble(user_balance)+Double.parseDouble(user_integral)+Double.parseDouble(discount_money)));
  				if(Double.parseDouble(sale_money) <= 0 || (!df2.format(Double.parseDouble(sale_money)).equals(df2.format(Double.parseDouble(actual_money)+Double.parseDouble(user_balance)+Double.parseDouble(user_integral)+Double.parseDouble(discount_money))))){
 					returnpd.put("result", "0");
 					returnpd.put("message", "金钱的支付有误，请注意一下");
