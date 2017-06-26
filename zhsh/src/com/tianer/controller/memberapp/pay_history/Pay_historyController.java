@@ -104,9 +104,7 @@ public class Pay_historyController extends BaseController {
  						//判断是否为H5页面
  						if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
  							pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
- 							//商家ID解密
- 							pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
-  						}
+    						}
 						String in_jiqi=pd.getString("in_jiqi");
  						if(in_jiqi == null || in_jiqi.equals("")){
  							in_jiqi="1";

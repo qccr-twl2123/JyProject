@@ -9,6 +9,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.tianer.controller.base.BaseController;
+
 public class PageData extends HashMap implements Map{
 	
 	private static final long serialVersionUID = 1L;
@@ -18,11 +20,11 @@ public class PageData extends HashMap implements Map{
 	
 	public PageData(HttpServletRequest request) {
 		this.request = request;
-//		try {
-//			request.setCharacterEncoding("utf-8");
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
  		Map properties = request.getParameterMap();
 		Map returnMap = new HashMap(); 
 		Iterator entries = properties.entrySet().iterator(); 
@@ -34,7 +36,13 @@ public class PageData extends HashMap implements Map{
 			name = (String) entry.getKey(); 
 			Object valueObj = entry.getValue(); 
 			//判断是否为加密字段
-			if(name.equals("jy_sign")){
+			if(name.equals("sk_shop")){
+				String[] values = (String[])valueObj;
+				value = values[0];
+				value=value.replaceAll(" ","+");
+				returnMap.put("sk_shop", value);  
+ 				returnMap.put("store_id", BaseController.jiemi(value)); //商家ID解密
+			}else if(name.equals("jy_sign")){
 				String[] values = (String[])valueObj;
 				value = values[0];
 				value=value.replaceAll(" ","+");
@@ -49,7 +57,7 @@ public class PageData extends HashMap implements Map{
 					}
  				}
  			}else{
- 				if(null == valueObj){ 
+  				if(null == valueObj){ 
 					value = ""; 
 				}else if(valueObj instanceof String[]){ 
 					String[] values = (String[])valueObj;

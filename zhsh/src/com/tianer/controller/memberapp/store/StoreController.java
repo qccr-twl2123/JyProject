@@ -68,9 +68,7 @@ public class StoreController extends BaseController {
 			//判断是否为H5页面
 			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
 				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
-				//商家ID解密
-				pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
-			}
+ 			}
 			if(pd.getString("member_id") == null || pd.getString("member_id").equals("")){
   					map.put("result", "0");
 					map.put("message", "请前往登陆");
@@ -130,9 +128,7 @@ public class StoreController extends BaseController {
 				//判断是否为H5页面
 				if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
 					pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
-					//商家ID解密
-					pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
-				}
+  				}
 				//处理导流
 //				pd=TongYong.DaoliuClickFee(pd);
  				String member_id=pd.getString("member_id");
@@ -436,9 +432,7 @@ public class StoreController extends BaseController {
 				//判断是否为H5页面
 				if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
 					pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
-					//商家ID解密
-					pd.put("store_id", BaseController.jiemi(pd.getString("sk_shop")));
-				}
+ 				}
 				//判断是否有当前会员
 	 			if(appMemberService.findById(pd) == null){
 					map.put("result", "0");

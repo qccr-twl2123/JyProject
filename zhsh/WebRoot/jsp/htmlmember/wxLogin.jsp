@@ -29,7 +29,7 @@
     .inf_box{
         position: absolute;
         margin: auto;
-        top: 75px;
+        top: 26%;
         bottom: 0;
         right: 0;
         left: 0;
@@ -74,12 +74,13 @@
 
     }
 </style>
-<body>
+<body style="background-color: #fff"> 
+<div class="neirong"  style="display:none;">
 <img src="img/bangding.jpg" alt="" style="width: 100%;height: 94%;">
 <ul class="inf_box clf">
-    <li class="   bd1_li mg_b">
+    <li class=" bd1_li mg_b">
         <span class="fwb li_span"><img class="li_img" src="img/shouji.png" style="left: 0.5rem;" alt=""></span>
-        <input type="text" maxlength="13" id="phone" placeholder="请输入手机号" style="background: rgba(0,0,0,0);width: 75%" oninput="lenghtOK(this)"  >
+        <input type="text" maxlength="13" id="phone" placeholder="请输入手机号" style="background: rgba(0,0,0,0);width: 65%" oninput="lenghtOK(this)"  >
     </li>
     <li class="  bd1_li  mg_b li2">
         <span class="fwb li_span"><img class="li_img" src="img/yanzhengma.png" style="left: 0.5rem;" alt=""></span>
@@ -98,7 +99,10 @@
         <span class="act btn pd2" onclick="submitLogin()">登录</span>
     </li>
 </ul>
-
+</div>
+<div class="readyjsp" style="width: 100%;margin: auto;position: absolute;top: 40%; display:none; ">
+			<img alt="" src="img/readyjsp.gif"  style=" width: 100%; ">
+</div>
 </body>
 <script type="text/javascript">
 	 		var base_inf={

@@ -3333,7 +3333,7 @@ public class TongYong extends BaseController{
 				daoliupd.put("daoliurecord_id", BaseController.get4Integer());
 				daoliupd.put("zhu_store_id", pd.getString("store_id"));
 				daoliupd.put("ci_store_id", daoliupd.getString("store_id"));
-				daoliupd.put("sk_shop",BaseController.get4ZMSZ()+EbotongSecurity.ebotongEncrypto(daoliupd.getString("store_id")));
+				daoliupd.put("sk_shop",BaseController.jiami(daoliupd.getString("store_id")));
  	 	 		if(ServiceHelper.getStoreService().findById(daoliupd) != null){
 	 	 			daoliupd.put("sort_name", "经营类别："+ServiceHelper.getStoreService().findById(daoliupd).getString("sort_name"));
 	 	 			daoliupd.put("store_name", ServiceHelper.getStoreService().findById(daoliupd).getString("store_name"));
