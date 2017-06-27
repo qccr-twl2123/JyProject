@@ -34,7 +34,7 @@
 			<span >支付金额：<span class="col">￥${pd.zongjia_money}</span></span>
  	</div>
 	<a onclick="payMoney('wx_pub')" class="payway">
-		<img src="img/wechat.png" >
+		<img src="img/wechattb.png" >
  		<p>微信支付</p>
   	</a>
 	<!-- <a href="" class="payway">
