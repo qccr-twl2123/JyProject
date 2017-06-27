@@ -26,9 +26,11 @@
 <body>
 <div class="tit">支付成功</div>
 <img src="img/qqimg.png" alt="" class="img">
-<p>支付方式： <span class="col">${pd.pay_name}</span></p>
-<p>支付金额： <span class="col">￥${pd.money}</span></p>
-<div class="link">
+<p> <span class="col">积分支付:￥${pd.jfmoney eq ''?'0':pd.jfmoney}</span></p>
+<c:if test="${pd.wxmoney >0}">
+	<p> <span class="col">微信支付:￥${pd.wxmoney}</span></p>
+</c:if>
+ <div class="link">
 	<a onclick="goBaoPing()"><img src="img/jxqg.png" alt=""></a>
 	<a href="html_member/payOkDetailOrder.do?orderno=${pd.orderno}&city_name=${pd.city_name}&area_name=${pd.area_name}"><img src="img/ddxq.png" alt=""></a>
 	<h5 class="text">提示：到店后，请将本页面出示给商家收银员，作为付款凭证，返回后可到我的-“提货券”查看详情</h5>

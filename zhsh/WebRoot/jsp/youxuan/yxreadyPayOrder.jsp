@@ -27,9 +27,9 @@
 	<script type="text/javascript">
 	function backreturn(){
 		if("${pd.gopay_type}" == "2"){
-			window.location.href="<%=basePath%>html_member/goMyYouXuanShopCart.do";
+			window.location.href="html_member/goMyYouXuanShopCart.do";
  		}else{
- 			window.location.href="<%=basePath%>html_member/goMyYouXuanDetail.do?youxuangoods_id=${pd.goods_id}";
+ 			window.location.href="html_member/goMyYouXuanDetail.do?youxuangoods_id=${pd.goods_id}";
 		}
  	}
 	</script>
@@ -46,12 +46,8 @@
  		<a  class="foot_tj jiesuan" onclick="goPayMoney()">结算</a>
 	</footer>
 	<input type="hidden" class="zongpaymoney" value="">
-	<form action="html_member/surePayMoney.do" method="post" name="OrderForm" id="OrderForm">
- 		<input name="goodsinfor" value="${pd.goodsinfor}" type="hidden"  >
-		<input name="gopay_type" value="${pd.gopay_type}" type="hidden"  >
-		<input name="zongjia_money" value="" type="hidden" id="zongjia_money">
-		<input name="user_integral" value="" type="hidden" id="user_integral">
-	</form>
+	<input type="hidden" class="lastpaymoney" value="">
+	<script src="js/ping/pingpp.js" type="text/javascript"></script>
 	<script type="text/javascript">
 	$(function(){
   		$.ajax({
@@ -72,8 +68,8 @@
   		          var gopay_type="${pd.gopay_type}";
 		          var map1=data.data;
 		          var moneyCount=map1.moneyCount;
-		          $("#zongjia_money").val(parseFloat(moneyCount).toFixed(2));
-		          $(".zongpaymoney").val(parseFloat(moneyCount).toFixed(2));
+ 		          $(".zongpaymoney").val(parseFloat(moneyCount).toFixed(2));
+ 		          $(".lastpaymoney").val(parseFloat(moneyCount).toFixed(2));
 		          $(".zongjia").html("￥"+parseFloat(moneyCount).toFixed(2)+"元");
 		          window.zongjia_money=parseFloat(moneyCount).toFixed(2);
 		          var jfCount=map1.jfCount;
@@ -136,7 +132,7 @@
 		        success: function(data){
 		        	//判断是否还有库存
   		        	if(data.result == "1"){
-		        		window.location.href="<%=basePath%>html_member/goReadyPayOrder.do?goods_id=${pd.goods_id}&gopay_type=${pd.gopay_type}&goodsinfor="+youxuangg_id+"@"+shopnumber;
+		        		window.location.href="html_member/goReadyPayOrder.do?goods_id=${pd.goods_id}&gopay_type=${pd.gopay_type}&goodsinfor="+youxuangg_id+"@"+shopnumber;
  	 	       	 	}else{
  	 	       	 		alert(data.message);
  	 	       	 	}
@@ -149,24 +145,24 @@
 	
 	//去结算页面
 	function goPayMoney(){
-		if(parseFloat($("#zongjia_money").val()) == 0){
+  		if(parseFloat($(".lastpaymoney").val()) == 0){
 			//直接生成订单，不用跳转页面
-			payMoney();
+			payMoney("nowpay","0");
  		}else{
-			$("#OrderForm").submit();
+ 			payMoney("wx_pub","1");
 		}
   	}
 	
 	//当使用积分支付，总金额为o的时候
-	function payMoney(){
+	function payMoney(pay_way,change_type){
  		$.ajax({
 	        type:"post",
 	        url:'<%=basePath%>youxuan/PayOrder.do', 
 		  	data:{
 	  	 		"goodsinfor":"${pd.goodsinfor}", 
  	  	 		"gopay_type":"${pd.gopay_type}",
-	  	 		"pay_way":"nowpay",
-	  	 		"user_integral":$("#user_integral").val(),
+	  	 		"pay_way":pay_way,
+	  	 		"user_integral":$(".memberuser_integral").val(),
 	  	 		"in_jiqi":"5",
 	  	 		"goods_type":"2"//1-正常商品，2-优选商品
 		  	},                
@@ -177,9 +173,32 @@
 	   				alert(data.message);
 	   				return
 	   			}else{
-	   				var orderno=data.data;
-	   				window.location.href='<%=basePath%>html_member/payOkGoJsp.do?orderno='+orderno+'&pay_name=积分支付&money='+$(".zongpaymoney").val();
-	   			}
+ 	   				if(change_type == "0"){
+ 	   					var orderno=data.data;
+	   					window.location.href='html_member/payOkGoJsp.do?orderno='+orderno+'&jfmoney='+$(".memberuser_integral").val();
+	   				}else{
+	   					var charge=data.data;
+	   		   			var orderno=charge.orderNo;
+	   		   			var money=(charge.amount/100).toFixed(2);
+	   		   			//支付
+	   					pingpp.createPayment(charge, function(result, err){
+	   					    console.log(result);
+	   					    console.log(err.msg);
+	   					    console.log(err.extra);
+	   					    if (result == "success") {
+	   					    	//alert("支付成功");
+	   					    	window.location.href='html_member/payOkGoJsp.do?orderno='+orderno+'&jfmoney='+$(".memberuser_integral").val()+'&wxmoney='+$(".lastpaymoney").val();
+	   					        // 只有微信公众账号 wx_pub 支付成功的结果会在这里返回，其他的支付结果都会跳转到 extra 中对应的 URL。
+	   					    } else if (result == "fail") {
+	   					    	alert("支付失败fail");
+	   						    // charge 不正确或者微信公众账号支付失败时会在此处返回
+	   					    } else if (result == "cancel") {
+	   					    	alert("cancel");
+	   					        // 微信公众账号支付取消支付
+	   					    }
+	   					});
+	   				}
+ 	   			}
  			}
 	    });
 	}
@@ -199,9 +218,8 @@
  			$(obj).val(use.substring(0, use.length-1));
  			return;
 		}
-		$("#zongjia_money").val(last_cha.toFixed(2));
-		$(".zongjia").html("￥"+last_cha.toFixed(2)+"元");
-		$("#user_integral").val(use);
+ 		$(".zongjia").html("￥"+last_cha.toFixed(2)+"元");
+ 		$(".lastpaymoney").val(last_cha.toFixed(2));
 	}
 	
 	

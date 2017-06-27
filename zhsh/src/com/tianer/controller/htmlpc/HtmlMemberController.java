@@ -2222,7 +2222,6 @@ public class HtmlMemberController extends BaseController {
 	 */
 	@RequestMapping(value="/goReadyPayOrder")
 	public ModelAndView goReadyPayOrder(   ){
-//		logBefore(logger, "待支付订单界面--结算界面");
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		try{ 
@@ -2270,8 +2269,7 @@ public class HtmlMemberController extends BaseController {
 	 */
 	@RequestMapping(value="/payOkGoJsp")
 	public ModelAndView payOkGoJsp(){
-//		logBefore(logger, "支付成功后跳转的页面");
-		ModelAndView mv = this.getModelAndView();
+ 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		try{ 
 			pd = this.getPageData();
