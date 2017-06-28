@@ -27,7 +27,7 @@
 <div class="tit">支付成功</div>
 <img src="img/qqimg.png" alt="" class="img">
 <p> <span class="col">积分支付:￥${pd.jfmoney eq ''?'0':pd.jfmoney}</span></p>
-<c:if test="${pd.wxmoney >0}">
+<c:if test="${!empty pd.wxmoney}">
 	<p> <span class="col">微信支付:￥${pd.wxmoney}</span></p>
 </c:if>
  <div class="link">

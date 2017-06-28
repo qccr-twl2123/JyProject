@@ -130,7 +130,6 @@ public class StoreController extends BaseController {
 					pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
   				}
 				//处理导流
-//				pd=TongYong.DaoliuClickFee(pd);
  				String member_id=pd.getString("member_id");
   	 		    pd= appStoreService.findByIdOne(pd);	//列出Store列表
 	 		    if(pd== null ){
@@ -171,7 +170,7 @@ public class StoreController extends BaseController {
 	  	 		    	}
 	  	 		     }
 	 	 		     if(!pay_way.equals("")){
-	 	 			  pay_way=pay_way.substring(0, pay_way.length()-1);
+	 	 		    	 pay_way=pay_way.substring(0, pay_way.length()-1);
 			    	 }
 	 	 		     pd.put("pay_way", pay_way);
 	 	 		     //新的

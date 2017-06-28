@@ -2449,6 +2449,7 @@ public class TongYong extends BaseController{
   	 */
   	public static Map<String,Object> storeAndMemberByRed(PageData pd){
   		Map<String,Object> map = new HashMap<String,Object>();
+  		List<PageData> okredList=new ArrayList<PageData>();//满足条件的红包
   		boolean varListflay=false;
    		try{
    		    //获取当前用户的所有红包
@@ -2456,44 +2457,36 @@ public class TongYong extends BaseController{
 			//列出红包列表--除去已拥有的红包
 			pd.put("redpackage_status", Const.putong_redpackage_status);
 			List<PageData>	varList = ServiceHelper.getAppStore_redpacketsService().list(pd);	
-			for(int i=0 ; i<varList.size() ;i++ ){
-//				//System.out.println(i);
-				 PageData e=varList.get(i);
+ 			PageData e=null;
+			int redn=varList.size();
+			PageData f =null;
+			for(int i=0 ; i< redn ;i++ ){
+ 				 e=varList.get(i);
 				 String store_redpackets_id=e.getString("store_redpackets_id");
-				 boolean flag=false;
- 				 for(int j=0;j< memredList.size() ; j++ ){
-					 PageData f =new PageData();
-					 f=memredList.get(j);
+				 boolean flag=true;//false表示该红包不符合要求，true表示符合
+ 				 for(int j=0;j< memredList.size() ; j++ ){//会员当前红包的集合循环判断是否拥有当前红包
+ 					 f=memredList.get(j);
 					 if(store_redpackets_id.equals(f.getString("store_redpackets_id"))){
-						 flag=true;
+						 flag=false;
 						 break;
 					 }
 					 f=null;
 				}
- 				if(flag){
- 					varList.remove(i);
- 					--i;
- 					 e=null;
-					continue;
-				 }else{
-//					 //System.out.println("共"+varList.size()+"条数据，当前红包第"+i+"个详情"+e.toString());
-					 boolean flag2=getRedByMemberIsOk(ServiceHelper.getAppMemberService().findById(pd),e);
-	  				 if(!flag2){
-						 varList.remove(i);
-						 --i;
-						 e=null;
-						 continue;
-	 				 } 
-				 }
- 			}
+ 				if(flag){//第一层符合要求进入
+ 					 boolean flag2=getRedByMemberIsOk(ServiceHelper.getAppMemberService().findById(pd),e);//判断会员是否符合当前红包的条件
+ 					 if(flag2){
+ 						okredList.add(e); 
+ 					 }
+ 				}
+  			}
 			memredList=null;
-			if(varList.size() >0){
+			varList=null;
+			if(okredList.size() >0){
 				varListflay=true;
  			}
-			map.put("varList", varList);
+			map.put("varList", okredList);
    		} catch(Exception e){
-  			//System.out.println(e.toString()+"判断这个会员对于这个商家是否有红包可言===========================");
-  			(new TongYong()).dayinerro(e);
+   			(new TongYong()).dayinerro(e);
    		}
   		map.put("flag", varListflay);
   		return map;
@@ -2626,7 +2619,7 @@ public class TongYong extends BaseController{
 	 * 创建时间：2016年7月21日 上午10:48:06
 	 */
 	public static boolean getRedByMemberIsOk(PageData mpd,PageData redpd){
-		boolean flag=false;
+		boolean flag=false;//false-不符合，true-符合
 		PageData pd=new PageData();
 		try {
 			if(mpd == null){
