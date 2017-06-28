@@ -70,7 +70,7 @@ function shangjiazairu(data) {
 			        "       <div class='zs_jf'>"+
 			        "            <div>积分"+storepd.integral_rate+"</div>"+
  			        "        </div>"+
-			        "        <ul class='sj_jf_inf'>"+makstr
+			        "        <ul class='sj_jf_inf'>"+makstr+
  			        "        </ul>"+
 			        "    </div>"+redstr+
 			        "</li>";

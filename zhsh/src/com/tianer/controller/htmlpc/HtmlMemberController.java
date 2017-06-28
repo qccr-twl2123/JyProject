@@ -476,6 +476,7 @@ public class HtmlMemberController extends BaseController {
  	 * sort_type   分类类型
 	 * sort_name   分类名称
 	 * content   搜索框内容
+	 * member_id  
 	 * @return
 	 */
 	@RequestMapping(value="/gSLPage")
@@ -489,7 +490,7 @@ public class HtmlMemberController extends BaseController {
 		List<PageData> allgoodsList=new ArrayList<PageData>();//用来存储商品List
 		try { 
 			pd=this.getPageData();
-// 			String nowpage=(pd.getString("nowpage") == null?"1":pd.getString("nowpage"));
+ // 		String nowpage=(pd.getString("nowpage") == null?"1":pd.getString("nowpage"));
 //			page.setCurrentPage(Integer.parseInt(nowpage));
 //			page.setPd(pd);
 //			if(pd.getString("change_type") == null || pd.getString("change_type").equals("1")){
@@ -558,6 +559,10 @@ public class HtmlMemberController extends BaseController {
 	public static Map<String,Object>  GetStoreList(PageData pd,Page page){
 		Map<String,Object> map = new HashMap<String,Object>();
 		try {
+			//判断是否为H5页面
+			if(SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER) != null){
+				pd.put("member_id", ((HtmlUser)SecurityUtils.getSubject().getSession().getAttribute(Const.SESSION_H5_USER)).getMember_id());
+			}
    			String nowpage=pd.getString("nowpage");
 			if(nowpage == null){
 				nowpage="1";
