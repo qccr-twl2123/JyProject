@@ -40,7 +40,7 @@
 					a.store_name,
 					ifnull(a.pictrue_url,"") pictrue_url,	
   					a.comment_score,
-  	 				a.transaction_times,
+  	 				ifnull(cast(f.ordernumber as char) , '0') as transaction_times,
  	 				a.zan_times,
 	 				a.sort_score,
   					a.longitude,
@@ -57,6 +57,7 @@
 				left join tb_city_file_sort c on b.city_sort_one=c.city_file_sort_id 
 				left join tb_city_file_sort d on b.city_sort_two=d.city_file_sort_id 
 				left join tb_city_file_sort e on b.city_sort_three=e.city_file_sort_id 
+				left join (select  count(*) as ordernumber , store_id  from  tb_store_wealthhistory where  profit_type='3' and process_status='1' GROUP BY store_id )  as f on a.store_id=f.store_id 
 		where  
 				a.check_status='1' <!-- 审核通过，开启状态，交过服务费或是交易扣点，正在开启的状态 -->
 				and a.merchant_status != '4'

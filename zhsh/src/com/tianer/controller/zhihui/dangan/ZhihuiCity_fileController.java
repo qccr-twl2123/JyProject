@@ -454,7 +454,6 @@ public class ZhihuiCity_fileController extends BaseController {
 	@RequestMapping(value="/getServiceFee")
 	@ResponseBody
 	public Object getServiceFee(Page page){
-//		logBefore(logger, "获取当前等级的星级费用");
 		Map<String,Object> map = new HashMap<String,Object>();
 		String result="01";
 		PageData pd = new PageData();

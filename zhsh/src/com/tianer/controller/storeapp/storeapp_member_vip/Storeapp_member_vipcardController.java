@@ -96,7 +96,6 @@ public class Storeapp_member_vipcardController extends BaseController {
 	@RequestMapping(value="/searchList")
 	@ResponseBody
 	public Object searchList(Page page){
-		//logBefore(logger, " 会员查询");
 		Map<String,Object> map = new HashMap<String,Object>();
 		List<PageData> vip_list=new ArrayList<PageData>();
  		String result = "1";
@@ -104,7 +103,7 @@ public class Storeapp_member_vipcardController extends BaseController {
 		PageData pd = new PageData();
 		try{
  			pd = this.getPageData();
- 			String pagenumber=pd.getString("pagenumber");
+  			String pagenumber=pd.getString("pagenumber");
  			if(pagenumber == null || pagenumber.equals("")){
  				pagenumber="1";
  			}

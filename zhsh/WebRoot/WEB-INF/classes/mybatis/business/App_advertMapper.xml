@@ -124,10 +124,8 @@
 				a.city_file_id
 		from 
 				tb_app_advert a
-		where  
-				1=1
-				<if test=" pd.city_file_id != null and pd.city_file_id != '' ">
-					and a.city_file_id=#{pd.city_file_id}
+  				<if test=" pd.city_file_id != null and pd.city_file_id != '' ">
+				where   a.city_file_id=#{pd.city_file_id}
 				</if>
 		order by advert_type 
 	</select>
