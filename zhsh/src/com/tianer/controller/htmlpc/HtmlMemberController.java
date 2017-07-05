@@ -1161,10 +1161,12 @@ public class HtmlMemberController extends BaseController {
 				}else{
 					pd.put("issortjf", "0");
 				}
-				//情空购物车
+				//情空购物车，session存储
 				pd.put("goods_type", "1");
 				ServiceHelper.getShopCarService().delShopByMs(pd);
-				pd.remove("store_id");
+				this.getRequest().getSession().removeAttribute(pd.getString("member_id")+"canUseList");
+				this.getRequest().getSession().removeAttribute(pd.getString("member_id")+"notUseList");
+ 				pd.remove("store_id");
 	   			pd.remove("member_id");
   		} catch(Exception e){
 			logger.error(e.toString(), e);
