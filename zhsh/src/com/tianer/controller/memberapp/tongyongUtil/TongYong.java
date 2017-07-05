@@ -434,7 +434,7 @@ public class TongYong extends BaseController{
 				double discount_after_money=Double.parseDouble(sale_money)-Double.parseDouble(discount_money);
 				pd.put("discount_after_money", df2.format(discount_after_money));//优惠后总共需要支付的金额
 				//判断金钱是否大于0
-				System.out.println("sale_money="+sale_money+"*actual_money="+df2.format(Double.parseDouble(actual_money)+Double.parseDouble(user_balance)+Double.parseDouble(user_integral)+Double.parseDouble(discount_money)));
+//				System.out.println("sale_money="+sale_money+"*actual_money="+df2.format(Double.parseDouble(actual_money)+Double.parseDouble(user_balance)+Double.parseDouble(user_integral)+Double.parseDouble(discount_money)));
  				if(Double.parseDouble(sale_money) <= 0 || (!df2.format(Double.parseDouble(sale_money)).equals(df2.format(Double.parseDouble(actual_money)+Double.parseDouble(user_balance)+Double.parseDouble(user_integral)+Double.parseDouble(discount_money))))){
 					returnpd.put("result", "0");
 					returnpd.put("message", "金钱的支付有误，请注意一下");
@@ -4765,7 +4765,8 @@ public class TongYong extends BaseController{
 						    TongYong.sendTuiSong(orderpd.getString("store_id"), orderpd.getString("order_id"), "3", orderpd.getString("store_id"), "1", orderpd.getString("sale_money"),"");
 		   				}
 				}
-    			
+    			glpd.put("status", "1");//0-未处理，1-已处理
+    			ServiceHelper.getAppOrderService().updateguanlian(glpd);
      		}
  		} catch (Exception e) {
 			// TODO: handle exception
@@ -5557,7 +5558,7 @@ public class TongYong extends BaseController{
  				discount_content+=dispd.getString("content")+"@"+dispd.getString("id")+"@"+dispd.getString("number")+"@"+dispd.getString("type")+",";
 			}
     		PageData countpd=new PageData();//总统计消费金额以及使用红包情况
-   			countpd.put("store_redpackets_id", zengid2+","+zengid);//增红包,id的集合
+    		countpd.put("store_redpackets_id", zengid2+","+zengid);//增红包,id的集合
  			countpd.put("zengjf", df2.format(addjf+alljifeng));//赠送的积分
  			countpd.put("redpackage_id", redpackage_id);//使用红包的ID
   			countpd.put("allmoney", df2.format(youhui_money+notyouhui_money));//总金额

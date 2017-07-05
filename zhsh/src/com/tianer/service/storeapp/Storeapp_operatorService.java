@@ -28,22 +28,30 @@ public class Storeapp_operatorService {
 	 * 查看内部人员
 	 */
 	public List<PageData> listAll(PageData pd)throws Exception{
-		return (List<PageData>)dao.findForList("XJTStoreapp_operatorMapper.listAll", pd);
+		return (List<PageData>)dao.findForList("Storeapp_operatorMapper.listAll", pd);
+	}
+	
+	/*
+	 * 获取操作员列表
+	 */
+	public List<PageData> getListOpratorById(PageData pd)throws Exception{
+		return (List<PageData>)dao.findForList("Storeapp_operatorMapper.getListOpratorById", pd);
 	}
 	
 	/*
 	* 删除成员
 	*/
 	public void delete(PageData pd)throws Exception{
-		dao.delete("XJTStoreapp_operatorMapper.delete", pd);
+		dao.delete("Storeapp_operatorMapper.delete", pd);
 	}
 	
-	/**
+	/*
 	 * 添加成员
 	 */
 	public void save(PageData pd)throws Exception{
-		dao.save("XJTStoreapp_operatorMapper.save", pd);
+		dao.save("Storeapp_operatorMapper.save", pd);
 	}
+ 
 	
 
 }

@@ -30,6 +30,9 @@ import com.tianer.service.memberapp.AppStore_redpacketsService;
 import com.tianer.service.memberapp.AppStorepc_marketingService;
 import com.tianer.service.oneyuan.OneYuanService;
 import com.tianer.service.storeapp.Payapp_historyService;
+import com.tianer.service.storeapp.Storeapp_OrderService;
+import com.tianer.service.storeapp.Storeapp_operatorService;
+import com.tianer.service.storeapp.Storeapp_wealthhistoryService;
 import com.tianer.service.storepc.daoliu.StoreDaoLiuService;
 import com.tianer.service.storepc.liangqin.basemanage.StoreManageService;
 import com.tianer.service.storepc.store_discountway.Storepc_discountwayService;
@@ -111,7 +114,11 @@ public final class ServiceHelper {
 	public static Storepc_wealthhistoryService getStorepc_wealthhistoryService(){
 		return (Storepc_wealthhistoryService) getService("storepc_wealthhistoryService");
 	}
-	//商家财富
+	//app端商家财富
+	public static Storeapp_wealthhistoryService getStoreapp_wealthhistoryService(){
+		return (Storeapp_wealthhistoryService) getService("storeapp_wealthhistoryService");
+	}
+	//PC端商家财富
 	public static Storepc_wealthService getStorepc_wealthService(){
 		return (Storepc_wealthService) getService("storepc_wealthService");
 	}
@@ -180,65 +187,72 @@ public final class ServiceHelper {
 	public static City_fileService getCity_fileService(){
 		return (City_fileService) getService("city_fileService");
 	}
-	
+	//业务员
 	public static Clerk_fileService getClerk_fileService(){
 		return (Clerk_fileService) getService("clerk_fileService");
 	}
  
-	
+	//会员App
 	public static AppOrderService getAppOrderService(){
 		return (AppOrderService) getService("appOrderService");
 	}
+	//商家app
+	public static Storeapp_OrderService getStoreapp_OrderService(){
+		return (Storeapp_OrderService) getService("storeapp_OrderService");
+	}
+ 
 	
+	
+	//会员
 	public static AppMemberService getAppMemberService(){
 		return (AppMemberService) getService("appMemberService");
 	}
-	
+	//商家
 	public static StoreService getStoreService(){
 		return (StoreService) getService("storeService");
 	}
 	
- 	
+ 	// 
 	public static AppStoreService getAppStoreService(){
 		return (AppStoreService) getService("appStoreService");
 	}
-	
+	//
 	public static AppStorepc_marketingService getAppStorepc_marketingService(){
 		return (AppStorepc_marketingService) getService("appStorepc_marketingService");
 	}
-	
+	//
 	public static Store_fileService getStore_fileService(){
 		return (Store_fileService) getService("store_fileService");
 	}
-	
+	//
 	public static Storepc_marketingeffectService getstorepcMarketingeffectService(){
 		return (Storepc_marketingeffectService) getService("storepc_marketingeffectService");
 	}
 	
-	
+	//
 	public static Storepc_discountwayService getStorepc_discountwayService(){
 		return (Storepc_discountwayService) getService("storepc_discountwayService");
 	}
 	
-	
+	//
 	public static Storepc_redpacketsService getStorepc_redpacketsService(){
 		return (Storepc_redpacketsService) getService("storepc_redpacketsService");
 	}
 	
-	
+	//
 	public static Storepc_marketingtypeService getStorepc_marketingtypeService(){
 		return (Storepc_marketingtypeService) getService("storepc_marketingtypeService");
 	}
 	
-	
+	//
 	public static Storepc_scorewayService getStorepc_scorewayService(){
 		return (Storepc_scorewayService) getService("storepc_scorewayService");
 	}
-	
+	//
 	public static AppMember_redpacketsService getAppMember_redpacketsService(){
 		return (AppMember_redpacketsService) getService("appMember_redpacketsService");
 	}
-	
+	//
 	public static AppMember_wealthhistoryService getAppMember_wealthhistoryService(){
 		return (AppMember_wealthhistoryService) getService("appMember_wealthhistoryService");
 	}
@@ -255,9 +269,14 @@ public final class ServiceHelper {
  
 	
 	
-	//操作员的信息
+	//pc操作员的信息
 	public static StoreManageService getStoreManageService(){
 		return (StoreManageService) getService("storeManageService");
+	}
+	
+	//app操作员的信息
+	public static Storeapp_operatorService getStoreapp_operatorService(){
+		return (Storeapp_operatorService) getService("storeapp_operatorService");
 	}
 	
 	

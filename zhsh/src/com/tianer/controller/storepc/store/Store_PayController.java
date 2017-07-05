@@ -624,7 +624,7 @@ public class Store_PayController extends BaseController {
  		 			   				pd.put("store_operator_id", pd.getString("store_operator_id"));
 		 			   				pd.put("process_status", "0");
   			 			   			pd.put("last_wealth", df2.format( n));
-			 			   			pd.put("arrivalMoney", arrivalMoney);//实际到账金额
+			 			   			pd.put("arrivalMoney", "-"+arrivalMoney);//实际到账金额
  			 			   			pd.put("user_id", Const.jiuyunumber);
  		 			   				appStoreService.saveWealthhistory(pd);
 		 			   				//新增总后台提现充值/记录

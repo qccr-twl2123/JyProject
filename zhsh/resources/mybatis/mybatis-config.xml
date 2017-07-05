@@ -283,7 +283,20 @@
 		<mapper resource="mybatis/memberapp/AppMember_wealthhistoryMapper.xml"/>
 		<!--我的红包-->
 		<mapper resource="mybatis/memberapp/AppMember_redpacketsMapper.xml"/>
+		
+		
 		<!-- 商家app -->
+		<!-- 操作员信息 -->
+		<mapper resource="mybatis/storeapp/Storeapp_operatorMapper.xml"/>
+		<!-- 流水记录 -->
+		<mapper resource="mybatis/storeapp/Storeapp_wealthhistoryMapper.xml"/>
+		<!-- 订单信息 -->
+		<mapper resource="mybatis/storeapp/Storeapp_orderMapper.xml"/>
+		
+		
+		
+		<!-- 商家PC -->
+ 		
 		<!-- 登录 -->
 		<mapper resource="mybatis/storepc/XJTlogin.xml"/>
 		<!-- 操作员信息 -->
@@ -355,8 +368,8 @@
 		
 		
 		
-		<!-- 通用模块 -->
-		<mapper resource="mybatis/tongyon/TYAllSortMapper.xml"/>
+	
+		<mapper resource="mybatis/tongyon/TYAllSortMapper.xml"/>	<!-- 通用模块 -->
 		
 		<!-- 微信端 -->
  		<mapper resource="mybatis/htmlwx/HtmlWxMapper.xml"/>

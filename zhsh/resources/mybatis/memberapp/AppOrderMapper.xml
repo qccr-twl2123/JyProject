@@ -441,10 +441,10 @@
  			now()
  		)
 	</insert>
-	<delete id="deleteguanlian" parameterType="pd">
-			delete from tb_guanlian
- 			where status='1'
-	</delete>
+	<delete id="deleteguanlian" parameterType="pd"><!-- 假删除  -->
+			update tb_guanlian
+			set status='1'
+ 	</delete>
 	<update id="updateguanlian" parameterType="pd">
 			update tb_guanlian
 			set status=#{status}

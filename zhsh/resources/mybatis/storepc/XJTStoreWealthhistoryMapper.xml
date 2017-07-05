@@ -50,7 +50,7 @@
 	
 	<!--流水的where处判断-->  
 	<sql id="StoreWaterWheresql">  
-					and a.store_id=#{pd.store_id}
+					a.store_id=#{pd.store_id}
 					<choose>	
 						<when test="pd.chuli_type =='3'.toString()">and a.process_status in ('0','1','99')</when>
 						<otherwise>and a.process_status ='1'</otherwise>
@@ -157,8 +157,7 @@
 					left join tb_order d on d.order_id = g.waterrecord_id 
  	 				left join tb_store_shift f on f.store_shift_id =d.store_shift_id
   		  where
-					1=1
-					<include refid="StoreWaterWheresql" />  	
+ 					<include refid="StoreWaterWheresql" />  	
  		order by a.createtime desc
 	</select>
   	<!-- 分页统计当前的页的总和流水明细 列表-->
@@ -217,8 +216,7 @@
 							left join tb_waterrecord g on g.waterrecord_id = a.store_wealthhistory_id
 							left join tb_order d on d.order_id = g.waterrecord_id  
    		       where
-   		       		1=1
- 					<include refid="StoreWaterWheresql" /> 
+  					<include refid="StoreWaterWheresql" /> 
 				order by a.createtime desc
 				limit #{pd.nowpage},10
 			) as f
@@ -279,8 +277,7 @@
 					left join tb_waterrecord g on g.waterrecord_id = a.store_wealthhistory_id
 					left join tb_order d on d.order_id = g.waterrecord_id   
    		  		where
-					1=1
-					<include refid="StoreWaterWheresql" />  
+ 					<include refid="StoreWaterWheresql" />  
 				order by a.createtime desc
  			) as f
  	</select>

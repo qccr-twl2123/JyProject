@@ -70,5 +70,26 @@
 		)
 	
 	</insert>
+	
+	
+	<!-- 获取正常的操作员列表筛选条件信息 -->
+	<select id="getListOpratorById" parameterType="pd" resultType="pd">
+		select
+				a.operator_name,		
+ 				a.store_shift_id,	
+ 				a.store_operator_id
+		from 
+				tb_store_operator a
+		where 
+				a.operator_status='1'    <!-- 1正常，0停用 -->
+				<choose>
+					<when test="login_type == '2'.toString()">and a.store_operator_id=#{login_id}</when>
+					<otherwise>and a.store_id=#{login_id}</otherwise>
+				</choose>
+ 		order by a.createdate desc
+	</select>
+	
+ 
+	
 
 </mapper>

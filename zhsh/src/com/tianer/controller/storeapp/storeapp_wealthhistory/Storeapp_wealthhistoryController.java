@@ -37,8 +37,16 @@ import com.tianer.util.StringUtil;
 @RequestMapping(value="/storeapp_wealthhistory")
 public class Storeapp_wealthhistoryController extends BaseController{
 	
+	@Resource(name="storeManageService")
+	private StoreManageService storeManageService;
+	
 	@Resource(name = "ChatRedService")
 	private ChatRedService chatRedService;
+  	
+	@Resource(name="store_shiftService")
+	private Store_shiftService store_shiftService;
+	
+	
 	
 	/**
 	 * 商品在线销售明细列表
@@ -94,8 +102,6 @@ public class Storeapp_wealthhistoryController extends BaseController{
 	}
 	
 	
-	@Resource(name="store_shiftService")
-	private Store_shiftService store_shiftService;
 	
 	/**
 	 * 流水明细列表 login_id   login_type
@@ -216,6 +222,7 @@ public class Storeapp_wealthhistoryController extends BaseController{
 		map.put("data", pd);
 		return map;
 	}
+	
 	
 	/**
 	 * 流水明细列表
@@ -477,10 +484,247 @@ public class Storeapp_wealthhistoryController extends BaseController{
  		return map;
  	}
 	
+	//***************************************APP加快加载速度以及安全处理更新*******************************************************
+ 
+	/**
+	 * 筛选条件接口   
+	 * storeapp_wealthhistory/sXTJ.do
+	 * 
+	 * login_id  登录人ID    必须传
+	 * login_type 登录人类型   必须传
+	 */
+	@RequestMapping(value="/sXTJ")
+	@ResponseBody
+	public Object ShaiXuanTiaoJian() throws Exception{
+		Map<String,Object> map = new HashMap<String,Object>();
+ 		String result = "1";
+		String message="获取成功";
+		PageData pd = new PageData();
+		try{
+			pd = this.getPageData();
+			//订单类型名称集合
+			PageData e=null;
+ 			List<PageData> lxlist =new ArrayList<PageData>();
+			for(int i=0;i< Const.storeorderprofit_type.length ; i++){
+				e=new PageData();
+				if(i != 0 && i !=4 && i != 5  && i != 16 && i != 15){
+					e.put("typenumber", String.valueOf(i));
+					e.put("typename", Const.storeorderprofit_type[i]);
+					lxlist.add(e);
+				}
+ 			}
+ 			pd.put("lxlist", lxlist);
+  			//获取所有操作员列表
+ 			List<PageData> splist = ServiceHelper.getStoreapp_operatorService().getListOpratorById(pd);
+			pd.put("splist", splist);
+			if(pd.getString("login_type").equals("2") && splist.size() >0 ){
+				pd.put("store_shift_id", splist.get(0).getString("store_shift_id"));
+			}
+ 			//获取当前商家的班次
+  			List<PageData> shiftList=store_shiftService.listAll(pd);
+ 			pd.put("shiftList", shiftList);
+ 		}catch(Exception e){
+			logger.error(e.toString(), e);
+			message="获取失败";
+			result="0";
+		}
+		map.put("result", result);
+		map.put("message", message);
+		map.put("data", pd);
+		return map;
+	}
+	
+	
+	/**
+	 * 流水明细列表 
+	 * storeapp_wealthhistory/aWLP.do
+	 * 
+	 * login_id  			登录人ID    			必须传
+	 * login_type 			登录人类型   			必须传
+	 * nowpage   			当前页数    			必须传
+	 * store_operator_id  	操作员ID
+	 * profit_type   		交易类型
+	 * starttime			开始时间
+	 * endtime				结束时间
+	 * 
+	 */
+	@RequestMapping(value="/aWLP")
+	@ResponseBody
+	public Object AppWaterListPage(Page page) throws Exception{
+		Map<String,Object> map = new HashMap<String,Object>();
+ 		String result = "1";
+		String message="获取成功";
+		PageData pd = new PageData();
+		try{
+			pd=this.getPageData();
+			String nowpage=pd.getString("nowpage");
+			if(nowpage == null || nowpage.equals("")){
+				nowpage="1";
+			}
+			page.setCurrentPage(Integer.parseInt(nowpage));
+			page.setPd(pd);
+			List<PageData>	varList = ServiceHelper.getStoreapp_wealthhistoryService().weallistPage(page);
+			int length=varList.size();
+			PageData e=null;
+			for (int i = 0; i < length; i++) {
+				e=varList.get(i);
+				e.put("profit_name", Const.storeorderprofit_type[Integer.parseInt(e.getString("profit_type"))]);//类型
+			}
+ 			map.put("data", varList);
+ 		}catch(Exception e){
+			logger.error(e.toString(), e);
+			message="获取失败";
+			result="0";
+		}
+		map.put("result", result);
+		map.put("message", message);
+ 		return map;
+	}
+	
+	
+
+	/**
+	 * 流水订单详情----
+	 * storeapp_wealthhistory/aWLP.do
+	 * 
+	 * store_wealthhistory_id  唯一标示ID
+	 * 
+	 */
+	@RequestMapping(value="/dWOBI")
+	@ResponseBody
+	public Object DetailWaterOrderById(Page page) throws Exception{
+		Map<String,Object> map = new HashMap<String,Object>();
+		Map<String,Object> map1 = new HashMap<String,Object>();
+ 		String result = "1";
+		String message="获取成功";
+		PageData pd = new PageData();
+		try{
+			pd=this.getPageData();
+			pd=ServiceHelper.getStoreapp_wealthhistoryService().DetailWaterOrderById(pd);
+			if(pd==null){
+				map.put("result", "0");
+				map.put("message", "订单不存在");
+				map.put("data", "");
+				return map;
+			}
+			if(pd.getString("pay_type").contains("alipay")){
+				pd.put("pay_name", "支付宝支付");
+			}else if(pd.getString("pay_type").contains("wx")){
+				pd.put("pay_name", "微信支付");
+			}else if(pd.getString("pay_type").equals("unionpay")){
+				pd.put("pay_name", "银联支付");
+			}else{
+				pd.put("pay_name", "现金支付");
+			}
+ 			map1.put("orderpd", pd);
+			List<PageData> moneyInforList =new ArrayList<PageData>();//金钱信息集合
+ 			PageData fspd=new PageData();
+			if(pd.getString("profit_type").equals("3")){//处理订单
+				PageData ddpd=ServiceHelper.getStoreapp_OrderService().DetailOrderById(pd);
+				fspd.put("inforname", "消费总金额");
+				fspd.put("infornumber", ddpd.getString("sale_money"));
+				moneyInforList.add(fspd);
+				fspd=new PageData();
+				if(Double.parseDouble(ddpd.getString("no_discount_money") ) > 0){
+					fspd.put("inforname", "不优惠金额");
+					fspd.put("infornumber", ddpd.getString("no_discount_money"));
+					moneyInforList.add(fspd);
+					fspd=new PageData();
+ 				}
+				//优惠信息
+				String discount_content=ddpd.getString("discount_content");
+ 	 			if(discount_content != null && discount_content.contains(",")){
+ 	 					String[] str=discount_content.split(",");
+ 	 					PageData  dispd=null;
+	   					for(int i=0;  i<  str.length ; i++){
+	   						dispd=new PageData();
+	   					    if(str[i].contains("@")){
+	   					    	String[] str1=str[i].split("@");
+			   					dispd.put("inforname", str1[0]);
+			   					dispd.put("infornumber", str1[2]);
+			   					moneyInforList.add(dispd);
+	   					    }
+ 		   					dispd=null;
+	 	 			 }
+ 	 			}
+				if(Double.parseDouble(ddpd.getString("discount_money") ) > 0){
+ 					fspd.put("inforname", "优惠金额");
+					fspd.put("infornumber", ddpd.getString("discount_money"));
+					moneyInforList.add(fspd);
+					fspd=new PageData();
+ 				}
+				if( Double.parseDouble(ddpd.getString("user_balance") ) > 0){
+ 					fspd.put("inforname", "余额支付");
+ 					fspd.put("infornumber", ddpd.getString("user_balance"));
+ 					moneyInforList.add(fspd);
+ 					fspd=new PageData();
+ 				}
+  				if(   Double.parseDouble(ddpd.getString("user_integral") ) > 0){
+ 					fspd.put("inforname", "积分支付");
+ 					fspd.put("infornumber", ddpd.getString("user_integral"));
+ 					moneyInforList.add(fspd);
+ 					fspd=new PageData();
+ 				}
+				if(   Double.parseDouble(ddpd.getString("actual_money") ) > 0){
+					if(ddpd.getString("channel").contains("wx")){
+	 					fspd.put("inforname", "微信支付");
+	 					fspd.put("infornumber", ddpd.getString("actual_money"));
+	 					moneyInforList.add(fspd);
+	 				}else if(ddpd.getString("channel").contains("alipay")){
+	 					fspd.put("inforname", "支付宝支付");
+	 					fspd.put("infornumber", ddpd.getString("actual_money"));
+	 					moneyInforList.add(fspd);
+	 				}else{// if(ddpd.getString("channel").contains("nowpay"))
+	 					fspd.put("inforname", "当面收银");
+	 					fspd.put("infornumber", ddpd.getString("actual_money"));
+	 					moneyInforList.add(fspd);
+	 				}
+					fspd=new PageData();
+  				}
+				if( Double.parseDouble(ddpd.getString("get_integral") ) > 0){
+ 					fspd.put("inforname", "返会员积分");
+ 					fspd.put("infornumber", ddpd.getString("get_integral"));
+ 					moneyInforList.add(fspd);
+ 					fspd=new PageData();
+ 				}
+				if( Double.parseDouble(ddpd.getString("sendxitong_integral") ) > 0){
+ 					fspd.put("inforname", "返人脉积分");
+ 					fspd.put("infornumber", ddpd.getString("sendxitong_integral"));
+ 					moneyInforList.add(fspd);
+ 					fspd=new PageData();
+ 				}
+				if( Double.parseDouble(ddpd.getString("store_renmai_money") ) > 0){
+ 					fspd.put("inforname", "人脉收益积分");
+ 					fspd.put("infornumber", ddpd.getString("store_renmai_money"));
+ 					moneyInforList.add(fspd);
+ 					fspd=new PageData();
+ 				}
+ 			}else{
+ 				fspd.put("inforname", Const.storeorderprofit_type[Integer.parseInt(pd.getString("profit_type"))]);
+				fspd.put("infornumber", pd.getString("number"));
+				moneyInforList.add(fspd);
+				fspd=new PageData();
+				fspd.put("inforname", "实际到账金额");
+				fspd.put("infornumber", pd.getString("arrivalMoney"));
+				moneyInforList.add(fspd);
+			}
+			fspd=null;
+			map1.put("moneyInforList", moneyInforList);
+		}catch(Exception e){
+			logger.error(e.toString(), e);
+			message="获取失败";
+			result="0";
+		}
+		map.put("result", result);
+		map.put("message", message);
+		map.put("data", map1);
+		return map;
+	}
 	
 	
 	
-	@Resource(name="storeManageService")
-	private StoreManageService storeManageService;
+	
+	
+	
 
 }
