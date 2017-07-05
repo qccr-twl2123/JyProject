@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Storeapp_wealthhistoryMapper">	
 
- 	<!-- 流水明细 列表-->
+ 	<!-- 流水明细（只记录成功和失败的）列表-->
 	<select id="weallistPage" parameterType="page" resultType="pd">
 			select 
 					a.store_wealthhistory_id,
@@ -14,11 +14,12 @@
   		  	from 
 					tb_store_wealthhistory a  left join tb_member b on a.user_id=b.member_id
 			where
+					process_status in ('1','99')
 					<choose>
-						<when test="pd.login_type == '2'.toString()">a.store_operator_id=#{pd.login_id}</when>
-						<otherwise>a.store_id=#{pd.login_id}</otherwise>
+						<when test="pd.login_type == '2'.toString()">and a.store_operator_id=#{pd.login_id}</when>
+						<otherwise>and a.store_id=#{pd.login_id}</otherwise>
 					</choose>
-					<if test="pd.store_operator_id != null and pd.store_operator_id != ''">
+ 					<if test="pd.store_operator_id != null and pd.store_operator_id != ''">
 					and a.store_operator_id=#{pd.store_operator_id}
 					</if>
  					<if test="pd.profit_type != null and pd.profit_type != ''">

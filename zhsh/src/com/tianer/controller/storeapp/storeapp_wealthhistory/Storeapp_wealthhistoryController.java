@@ -497,6 +497,7 @@ public class Storeapp_wealthhistoryController extends BaseController{
 	@ResponseBody
 	public Object ShaiXuanTiaoJian() throws Exception{
 		Map<String,Object> map = new HashMap<String,Object>();
+		Map<String,Object> map1 = new HashMap<String,Object>();
  		String result = "1";
 		String message="获取成功";
 		PageData pd = new PageData();
@@ -513,16 +514,16 @@ public class Storeapp_wealthhistoryController extends BaseController{
 					lxlist.add(e);
 				}
  			}
- 			pd.put("lxlist", lxlist);
+			map1.put("lxlist", lxlist);
   			//获取所有操作员列表
  			List<PageData> splist = ServiceHelper.getStoreapp_operatorService().getListOpratorById(pd);
-			pd.put("splist", splist);
+ 			map1.put("splist", splist);
 			if(pd.getString("login_type").equals("2") && splist.size() >0 ){
 				pd.put("store_shift_id", splist.get(0).getString("store_shift_id"));
 			}
  			//获取当前商家的班次
   			List<PageData> shiftList=store_shiftService.listAll(pd);
- 			pd.put("shiftList", shiftList);
+  			map1.put("shiftList", shiftList);
  		}catch(Exception e){
 			logger.error(e.toString(), e);
 			message="获取失败";
@@ -530,7 +531,7 @@ public class Storeapp_wealthhistoryController extends BaseController{
 		}
 		map.put("result", result);
 		map.put("message", message);
-		map.put("data", pd);
+		map.put("data", map1);
 		return map;
 	}
 	
@@ -569,6 +570,7 @@ public class Storeapp_wealthhistoryController extends BaseController{
 			for (int i = 0; i < length; i++) {
 				e=varList.get(i);
 				e.put("profit_name", Const.storeorderprofit_type[Integer.parseInt(e.getString("profit_type"))]);//类型
+				e.remove("profit_type");
 			}
  			map.put("data", varList);
  		}catch(Exception e){
@@ -616,8 +618,7 @@ public class Storeapp_wealthhistoryController extends BaseController{
 			}else{
 				pd.put("pay_name", "现金支付");
 			}
- 			map1.put("orderpd", pd);
-			List<PageData> moneyInforList =new ArrayList<PageData>();//金钱信息集合
+ 			List<PageData> moneyInforList =new ArrayList<PageData>();//金钱信息集合
  			PageData fspd=new PageData();
 			if(pd.getString("profit_type").equals("3")){//处理订单
 				PageData ddpd=ServiceHelper.getStoreapp_OrderService().DetailOrderById(pd);
@@ -710,6 +711,9 @@ public class Storeapp_wealthhistoryController extends BaseController{
 			}
 			fspd=null;
 			map1.put("moneyInforList", moneyInforList);
+			pd.remove("pay_type");
+			pd.remove("profit_type");
+ 			map1.put("orderpd", pd);
 		}catch(Exception e){
 			logger.error(e.toString(), e);
 			message="获取失败";
