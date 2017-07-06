@@ -54,9 +54,9 @@
 <!--内容-->
 <section>
     <div class="sec_cont">
-  		<div class="item"  onclick="surethis(this,'50','','12')">
+  		<div class="item"  onclick="surethis(this,'10','','12')">
 				 <div class="pricebox" >
-	 				  <span  class="price_text">首次充值积分：<span class="price">50</span>元</span>
+	 				  <span  class="price_text">首次充值积分：<span class="price">10</span>元</span>
 					  <br/>
 	 				  <span  class="price_text">交易扣点：<span class="price">${pd.transaction_points}</span>%</span>
 					  <br/>
