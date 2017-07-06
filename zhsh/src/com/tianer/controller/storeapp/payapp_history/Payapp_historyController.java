@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tianer.controller.base.BaseController;
-import com.tianer.controller.memberapp.tongyongUtil.TongYong;
+import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.entity.Page;
 import com.tianer.service.business.clerk_file.Clerk_fileService;
 import com.tianer.service.business.service_performance.Service_performanceService;

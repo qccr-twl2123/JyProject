@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tianer.controller.base.BaseController;
-import com.tianer.controller.memberapp.tongyongUtil.TongYong;
+import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.entity.html.HtmlUser;
 import com.tianer.service.memberapp.AppMemberService;
 import com.tianer.service.memberapp.AppOrderService;
@@ -33,7 +33,6 @@ import com.tianer.service.storepc.store_wealthhistory.Storepc_wealthhistoryServi
 import com.tianer.service.storepc.stotr.StorepcService;
 import com.tianer.util.AppUtil;
 import com.tianer.util.Const;
-import com.tianer.util.EbotongSecurity;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
 

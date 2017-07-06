@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tianer.controller.base.BaseController;
-import com.tianer.controller.memberapp.tongyongUtil.TongYong;
+import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.entity.zhihui.Qx;
 import com.tianer.entity.zhihui.StoreRole;
 import com.tianer.service.memberapp.AppMemberService;

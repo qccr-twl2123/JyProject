@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tianer.controller.base.BaseController;
-import com.tianer.controller.memberapp.tongyongUtil.TongYong;
+import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.entity.Page;
 import com.tianer.service.storepc.daoliu.StoreDaoLiuService;
 import com.tianer.util.Const;

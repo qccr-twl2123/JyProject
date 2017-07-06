@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tianer.controller.base.BaseController;
-import com.tianer.controller.memberapp.tongyongUtil.TongYong;
+import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.entity.Page;
 import com.tianer.entity.html.HtmlUser;
 import com.tianer.service.business.store.StoreService;
@@ -34,7 +34,6 @@ import com.tianer.service.memberapp.AppStoreService;
 import com.tianer.util.AppUtil;
 import com.tianer.util.Const;
 import com.tianer.util.DateUtil;
-import com.tianer.util.EbotongSecurity;
 import com.tianer.util.FileUpload;
 import com.tianer.util.PageData;
 

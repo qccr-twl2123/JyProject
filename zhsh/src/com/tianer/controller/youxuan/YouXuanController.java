@@ -33,7 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.pingplusplus.model.Charge;
 import com.tianer.controller.base.BaseController;
 import com.tianer.controller.memberapp.pay_history.Pay_historyController;
-import com.tianer.controller.memberapp.tongyongUtil.TongYong;
+import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.controller.zhihui.payMoney.ChargeExample;
 import com.tianer.entity.Page;
 import com.tianer.entity.html.HtmlUser;

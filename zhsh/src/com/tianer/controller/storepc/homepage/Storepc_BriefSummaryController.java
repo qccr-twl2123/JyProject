@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tianer.controller.base.BaseController;
-import com.tianer.controller.memberapp.tongyongUtil.TongYong;
+import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.service.memberapp.AppFriendService;
 import com.tianer.service.memberapp.AppStoreService;
 import com.tianer.service.storepc.liangqin.homepage.BriefSummaryService;

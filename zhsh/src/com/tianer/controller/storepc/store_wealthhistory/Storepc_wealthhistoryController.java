@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tianer.controller.base.BaseController;
-import com.tianer.controller.memberapp.tongyongUtil.TongYong;
+import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.entity.Page;
 import com.tianer.entity.zhihui.StoreRole;
 import com.tianer.service.business.store_shift.Store_shiftService;
@@ -31,7 +31,6 @@ import com.tianer.util.Const;
 import com.tianer.util.DateUtil;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
-import com.tianer.util.SmsUtil;
 
 /** 
  * 

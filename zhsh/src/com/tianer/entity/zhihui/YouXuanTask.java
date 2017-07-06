@@ -3,7 +3,7 @@ package com.tianer.entity.zhihui;
 import java.util.Date;
 import java.util.TimerTask;
 
-import com.tianer.controller.memberapp.tongyongUtil.TongYong;
+import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.util.DateUtil;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;

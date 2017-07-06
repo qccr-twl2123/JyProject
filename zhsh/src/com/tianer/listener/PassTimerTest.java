@@ -11,7 +11,7 @@ import java.util.Timer;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.tianer.controller.memberapp.tongyongUtil.TongYong;
+import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.entity.zhihui.MsgTask;
 import com.tianer.util.Const;
 import com.tianer.util.DateUtil;

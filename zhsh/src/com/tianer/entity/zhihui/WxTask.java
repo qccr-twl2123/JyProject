@@ -2,7 +2,7 @@ package com.tianer.entity.zhihui;
 
 import java.util.TimerTask;
 
-import com.tianer.controller.memberapp.tongyongUtil.TongYong;
+import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.util.ping.util.WxpubOAuth;
  
 /**

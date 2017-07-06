@@ -1,4 +1,4 @@
-package com.tianer.controller.memberapp.tongyongUtil;
+package com.tianer.controller.tongyongUtil;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
