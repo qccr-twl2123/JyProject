@@ -72,8 +72,8 @@
 				ifnull(cast(sum(a.sale_money)  as decimal(15,2)) , 0) as sumsale_money,
 				ifnull(cast(sum(a.discount_money)  as decimal(15,2)) , 0) as discount_money,
 				ifnull(cast(sum(a.discount_money)  as decimal(15,2)) , 0) as sumdiscount_money,
-				ifnull(cast(sum(a.actual_money)  as decimal(15,2)) , 0) as actual_money,
-				ifnull(cast(sum(a.actual_money)  as decimal(15,2)) , 0) as sumactual_money,
+				ifnull(cast(sum(a.discount_after_money)  as decimal(15,2)) , 0) as actual_money,
+				ifnull(cast(sum(a.discount_after_money)  as decimal(15,2)) , 0) as sumactual_money,
 				ifnull(cast(sum(a.get_integral)  as decimal(15,2)) , 0) as get_integral,
 				ifnull(cast(sum(a.get_integral)  as decimal(15,2)) , 0) as sumget_integral,
 				b.name
@@ -93,8 +93,8 @@
 				ifnull(cast(sum(a.sale_money)  as decimal(15,2)) , 0) as sumsale_money,
 				ifnull(cast(sum(a.discount_money)  as decimal(15,2)) , 0) as discount_money,
 				ifnull(cast(sum(a.discount_money)  as decimal(15,2)) , 0) as sumdiscount_money,
-				ifnull(cast(sum(a.actual_money)  as decimal(15,2)) , 0) as actual_money,
-				ifnull(cast(sum(a.actual_money)  as decimal(15,2)) , 0) as sumactual_money,
+				ifnull(cast(sum(a.discount_after_money)  as decimal(15,2)) , 0) as actual_money,
+				ifnull(cast(sum(a.discount_after_money)  as decimal(15,2)) , 0) as sumactual_money,
 				ifnull(cast(sum(a.get_integral)  as decimal(15,2)) , 0) as get_integral,
 				ifnull(cast(sum(a.get_integral)  as decimal(15,2)) , 0) as sumget_integral,
 				b.name
