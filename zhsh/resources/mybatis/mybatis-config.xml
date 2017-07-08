@@ -365,14 +365,14 @@
 		
 		<!-- 城市经理 -->
 		<mapper resource="mybatis/business/CityManagerMapper.xml"/>
-		
-		
-		
 	
 		<mapper resource="mybatis/tongyon/TYAllSortMapper.xml"/>	<!-- 通用模块 -->
 		
 		<!-- 微信端 -->
  		<mapper resource="mybatis/htmlwx/HtmlWxMapper.xml"/>
+ 		
+ 		<!-- 报表统计 -->
+ 		<mapper resource="mybatis/baobiao/BaoBiaoMapper.xml"/>
  		
 	</mappers>
 	

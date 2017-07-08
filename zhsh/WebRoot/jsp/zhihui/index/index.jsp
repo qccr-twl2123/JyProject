@@ -375,6 +375,11 @@
                           <div class="zhihui_body_right_middle_d1_content">商家经营分析报表</div>
                        </div>
                    </a>
+                   <a class="middle_a" href="zhihuiBaoBiao/baoBiaoTypeTotol.do?menu_id=57"  target="ifra">
+                       <div class="zhihui_body_right_middle_d1 hands demo2">
+                          <div class="zhihui_body_right_middle_d1_content">总服务报表</div>
+                       </div>
+                   </a>
                </div>
                <!-- 事项管理内容导航 -->
                <div class="zhihui_body_right_middle " id="shixiang">

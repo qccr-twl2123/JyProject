@@ -53,16 +53,7 @@
 				     <input type="hidden" name="city_name" id="city_name" value="${pd.city_name}"  />
 				     <input type="hidden" name="area_name" id="area_name" value="${pd.area_name}"  />
 		           <input type="text" name="area_name" id="area_name" value="${pd.area_name}" style="display:none;width:1px;height:1px;"/>
-		          
- 		  	   </div>
- 		  	   <div  class="dangan2_d1">
- 		  	    <span  class="zhifu1_sp1">时段 </span> 
-		           <input placeholder="开始时间" class="zhifu1_st1" type="text" name="starttime" id="starttime" value="${pd.starttime}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
-		           <span  class="zhifu1_sp1">至 </span>  
-		           <input placeholder="结束时间" class="zhifu1_st1" type="text" name="endtime" id="endtime" value="${pd.endtime}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
- 		  	   </div>
-  			  <div class="dangan2_d1">
-  			  	   <span  class="zhifu1_sp1">支付类型</span>  
+		           <span  class="zhifu1_sp1">支付类型</span>  
  		           <select class="dangan2_d1_st1"   name="jiaoyi_type">
 		               <option value="0">全部</option>
 		             <%--   <option value="1" ${pd.jiaoyi_type eq '1'?'selected':'' }>当面付</option>
@@ -77,13 +68,20 @@
 		               <option value="1" ${pd.tihuo_status eq '1'?'selected':'' }>已提货</option>
 		               <option value="99" ${pd.tihuo_status eq '99'?'selected':'' }>已退款</option>
  		           </select>
-   		          <span  class="zhifu1_sp1">关键字&nbsp;&nbsp;&nbsp;&nbsp; </span>
+ 		  	   </div>
+ 		  	   <div  class="dangan2_d1">
+ 		  	    <span  class="zhifu1_sp1">时段 </span> 
+		           <input placeholder="开始时间" class="zhifu1_st1" type="text" name="starttime" id="starttime" value="${pd.starttime}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+		           <span  class="zhifu1_sp1">至 </span>  
+		           <input placeholder="结束时间" class="zhifu1_st1" type="text" name="endtime" id="endtime" value="${pd.endtime}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+     		       <span  class="zhifu1_sp1">关键字&nbsp;&nbsp;&nbsp;&nbsp; </span>
 		          <input class="zhifu1_ipt1" type="text" name="store_checked"  placeholder="请输入ID号、商家名称 进行查询" value="${pd.store_checked}"></input> 
 		          <span class="zhifu1_btn1" onclick="search()">查询</span>
  		       </div>
 		       <div class="dangan2_d2">
 		          <table  border="0" cellspacing="0" cellpadding="0" class="dangan2_d2_table"  style="    white-space: nowrap;line-height:36px">
 		              <tr class="tdtop">
+		               	<td rowspan="2">序号</td>
 		                <td  rowspan="2">支付时间</td>
 		                <td  rowspan="2">订单号</td>
 		                <td  colspan="2">付款方</td>
@@ -116,6 +114,7 @@
  	                  </tr> 
 		              <c:forEach items="${varList}" var="var" varStatus="vs">
 		              <tr >
+		              	<td>${vs.index+1}</td>
 		                <td>${var.over_time}</td>
 		                <td>${var.waterrecord_id}</td>
   		                <td>${var.member_name} </td>
@@ -152,7 +151,7 @@
  		              </tr>
 		              </c:forEach>
 		               <tr>
-		               		<td colspan="4">本页合计</td>
+		               		<td colspan="5">本页合计</td>
 		               		<td>${nowpagesum.summoney}</td>
 			                <td>${nowpagesum.sumdiscount_money}</td>
 			                <td>${nowpagesum.sumarrivalmoney}</td>
@@ -169,7 +168,7 @@
  			                <td colspan="5"></td>
 			           </tr>
 			           <tr>
-			           		<td colspan="4">总合计</td>
+			           		<td colspan="5">总合计</td>
 			                <td>${allpagesum.summoney}</td>
 			                <td>${allpagesum.sumdiscount_money}</td>
 			                <td>${allpagesum.sumarrivalmoney}</td>

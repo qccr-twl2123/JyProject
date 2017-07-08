@@ -333,8 +333,7 @@ public class ZhihuiWaterRecordController extends BaseController {
 	 */
 	@RequestMapping(value="/liushuilist")
 	public ModelAndView liushuilist(Page page){
-//		logBefore(logger, "流水记录");
-		ModelAndView mv = this.getModelAndView();
+ 		ModelAndView mv = this.getModelAndView();
 		//shiro管理的session
 		Subject currentUser = SecurityUtils.getSubject();  
 		Session session = currentUser.getSession();
@@ -455,8 +454,7 @@ public class ZhihuiWaterRecordController extends BaseController {
 	 */
 	@RequestMapping(value="/orderSolelist")
 	public ModelAndView orderSolelist(Page page){
-//		logBefore(logger, "销售明细");
-		ModelAndView mv = this.getModelAndView();
+ 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		try{
 			pd = this.getPageData();
@@ -636,10 +634,8 @@ public class ZhihuiWaterRecordController extends BaseController {
  	 */
 	@RequestMapping(value="/listTxPage")
 	public ModelAndView listTxPage(Page page){
-//		logBefore(logger, "提现列表");
-		ModelAndView mv = this.getModelAndView();
-//		DecimalFormat    df   = new DecimalFormat("######0.00"); 
-		PageData pd = new PageData();
+ 		ModelAndView mv = this.getModelAndView();
+ 		PageData pd = new PageData();
 		try{
 			//操作员列表
  			List<PageData> operatorList = ServiceHelper.getOperator_fileService().listAll(pd);

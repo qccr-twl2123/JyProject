@@ -98,10 +98,10 @@
                 <td>${var.city_name}</td>
                 <td>${var.area_name}</td>
                 <td>
-	                <c:if test="${var.user_type==1}">商家</c:if>
-	                <c:if test="${var.user_type==2}">会员</c:if>
-	                <c:if test="${var.user_type==4}">业务员</c:if>
-                 	<c:if test="${var.user_type==3}">服务商</c:if>
+	                <c:if test="${var.user_type eq '1'}">商家</c:if>
+	                <c:if test="${var.user_type eq '2'}">会员</c:if>
+	                <c:if test="${var.user_type eq '4'}">业务员</c:if>
+                 	<c:if test="${var.user_type eq '3'}">服务商</c:if>
                 </td>
                 <td>${var.phone }</td>
                 <td>${var.money }</td>

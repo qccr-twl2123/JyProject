@@ -191,41 +191,53 @@
  				<choose>
  						<when test="pd.chuli_ok == '0'.toString() ">
  						        and a.pay_status=#{pd.pay_status} <!-- 0-待审批，1-已处理，支付到账，2-转为异常,3-通过，99-提现失败驳回 -->
+ 						        <if test="pd.starttime != null and pd.starttime!= ''"> 
+									and date_format(a.createtime,'%Y-%m-%d') &gt;= #{pd.starttime} 
+						 		</if>
+								<if test="pd.endtime != null and pd.endtime!= ''"> 
+									and date_format(a.createtime,'%Y-%m-%d') &lt;= #{pd.endtime} 
+						 		</if>
  						</when>
  						<when test="pd.pay_status != null and pd.pay_status != ''">
- 						        and a.pay_status=#{pd.pay_status} <!-- 0-待审批，1-已处理，支付到账，2-转为异常,3-通过，99-提现失败驳回 -->
+ 						        and a.pay_status=#{pd.pay_status} <!--  1-已处理，支付到账， 99-提现失败驳回 -->
+ 						        <if test="pd.starttime != null and pd.starttime!= ''"> 
+									and date_format(a.over_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+						 		</if>
+								<if test="pd.endtime != null and pd.endtime!= ''"> 
+									and date_format(a.over_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+						 		</if>
  						</when>
- 						<when test="pd.chuli_ok == '1'.toString()">
+ 						<when test="pd.chuli_ok == '1'.toString()"><!-- 提现成功，交易成功，提货券已提货，充值成功 -->
  							 	and a.pay_status in ('1')
+ 							 	<if test="pd.starttime != null and pd.starttime!= ''"> 
+									and date_format(a.over_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+						 		</if>
+								<if test="pd.endtime != null and pd.endtime!= ''"> 
+									and date_format(a.over_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+						 		</if>
 						</when>
 						<when test="pd.chuli_ok == '2'.toString()"><!-- 专属提货券1成功，98退款 -->
  							 	and a.pay_status in ('1','97','98')
+ 							 	<if test="pd.starttime != null and pd.starttime!= ''"> 
+									and date_format(a.createtime,'%Y-%m-%d') &gt;= #{pd.starttime} 
+						 		</if>
+								<if test="pd.endtime != null and pd.endtime!= ''"> 
+									and date_format(a.createtime,'%Y-%m-%d') &lt;= #{pd.endtime} 
+						 		</if>
 						</when>
-						<when test="pd.chuli_ok == '3'.toString()">
+						<when test="pd.chuli_ok == '3'.toString()"> <!-- 提现成功/已驳回 -->
  							 	and a.pay_status in ('1','99')
+ 							 	<if test="pd.starttime != null and pd.starttime!= ''"> 
+									and date_format(a.over_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
+						 		</if>
+								<if test="pd.endtime != null and pd.endtime!= ''"> 
+									and date_format(a.over_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
+						 		</if>
 						</when>
  						<otherwise></otherwise>
 				</choose>	
-   				<choose>
-   					<when test="pd.chuli_ok == '3'.toString()">
-   						<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
-								and date_format(a.over_time,'%Y-%m-%d') &gt;= #{pd.starttime} 
-				 		</if>
-						<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
-								and date_format(a.over_time,'%Y-%m-%d') &lt;= #{pd.endtime} 
-				 		</if>
-   					</when>
-   					<otherwise>
-   						<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
-								and date_format(a.createtime,'%Y-%m-%d') &gt;= #{pd.starttime} 
-				 		</if>
-						<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
-								and date_format(a.createtime,'%Y-%m-%d') &lt;= #{pd.endtime} 
-				 		</if>
-   					</otherwise>
-   				</choose>	
-				<if test="pd.month != null and pd.month != ''"><!-- 当前月份时间 -->
-						and date_format(a.createtime,'%Y-%m') = #{pd.month}
+ 				<if test="pd.month != null and pd.month != ''"><!-- 当前月份时间 -->
+						and date_format(a.over_time,'%Y-%m') = #{pd.month}
 		 		</if>
 		 		<if test="pd.user_type!= null and pd.user_type!= ''"><!-- 用户类型1商家，2会员，3服务商，4业务员 -->
 					and a.user_type=#{pd.user_type}

@@ -192,5 +192,11 @@ function starload(){
         $("#"+str).raty({ readOnly:true,score:num,half:true,space:false});
     }
 }
+
+
+function goStoreDetail(obj){
+ 	window.location.href=base_inf.base_herf+"html_member/goStoreDetail.do?sk_shop="+$(obj).attr("sk_shop");
+}
+
 </script>
 </html>

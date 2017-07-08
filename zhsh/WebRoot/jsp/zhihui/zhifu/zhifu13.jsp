@@ -100,6 +100,7 @@
        <div class="dangan2_d2">
           <table  border="0" cellspacing="0" cellpadding="0" class="dangan2_d2_table" style="white-space: nowrap;line-height:36px">
               <tr class="tdtop">
+              	<td>序号</td>
                 <td>订单号</td>
                 <td>省</td>
                 <td>市</td>
@@ -125,6 +126,7 @@
               </tr>
              <c:forEach items="${varList}" var="var" varStatus="vs">
               <tr >
+              	<td>${vs.index+1}</td>
                  <td>${var.waterrecord_id}</td>
                 <td>${var.province_name}</td>
                 <td>${var.city_name}</td>
@@ -176,14 +178,14 @@
                 </tr>
               </c:forEach>
              <tr>
-                 <td colspan="9">本页合计</td>
+                 <td colspan="10">本页合计</td>
                  <td><span class="benye_money">${nowpagesum.summoney}</span></td>
                  <td>/</td>
                  <td><span  class="benye_money">${nowpagesum.sumarrivalmoney}</span></td>
                  <td colspan="10">/</td>
                </tr>
               <tr>
-                 <td colspan="9">总合计</td>
+                 <td colspan="10">总合计</td>
                  <td><span class="benye_money">${allpagesum.summoney}</span></td>
                  <td>/</td>
                  <td><span  class="benye_money">${allpagesum.sumarrivalmoney}</span></td>

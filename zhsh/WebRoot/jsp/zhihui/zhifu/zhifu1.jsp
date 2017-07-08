@@ -21,7 +21,7 @@
         <script src="js/zhihui/bg.js"></script>
         <style type="text/css">
         td{
-        	padding:6px;
+        	padding:2px;
         }
         .bluemoney{
         	color:blue;
@@ -112,8 +112,23 @@
 		          <input placeholder="开始时间" class="zhifu1_st1" type="text" name="starttime" id="starttime" value="${pd.starttime}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
 		          <span  class="zhifu1_sp1">至 </span>  
 		          <input placeholder="结束时间" class="zhifu1_st1" type="text" name="endtime" id="endtime" value="${pd.endtime}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
+		          <span  class="zhifu1_sp1">月份 </span>  
+		          <input placeholder="结束时间" class="zhifu1_st1" type="text" name="month" id="month" value="${pd.month}" onclick="WdatePicker({dateFmt:'yyyy-MM'})"/>
+		  	  	   <!-- 1-银联支付，2- 现金支付（为0的情况下），3-支付宝支付，4-微信支付，5-苹果支付 -->
+		       	  <span  class="zhifu1_sp1">支付方式</span>
+			      <select name="remittance_type" class="zhifu1_st1" id="remittance_type" >
+			            <option value="">全部</option>
+			            <option value="1" ${pd.remittance_type eq '1'?'selected':''}>银联支付</option>
+			            <option value="2" ${pd.remittance_type eq '2'?'selected':''}>现金支付</option>
+			            <option value="3" ${pd.remittance_type eq '3'?'selected':''}>支付宝支付</option>
+	           			<option value="4" ${pd.remittance_type eq '4'?'selected':''}>微信支付</option>
+	           			<option value="5" ${pd.remittance_type eq '5'?'selected':''}>苹果支付</option>
+	           			<option value="6" ${pd.remittance_type eq '6'?'selected':''}>平台支付</option>
+			  	  </select> 
+		  	  </div>
+		  	  <div class="dangan2_d1">
 		  	      <!-- 1-充值（商家或会员充积分），2-消费，3-商家购买保证金，4-服务商支付保证金 -->
-		  	      <span  class="zhifu1_sp1">款项类型</span>
+ 		  	      <span  class="zhifu1_sp1">款项类型</span>
 		          <select name="money_type" class="zhifu1_st1" id="money_type" >
 			           <option value="">全部</option>
 			           <option value="1" ${pd.money_type eq '1'?'selected':''}>充值（商家或会员充积分）</option>
@@ -126,12 +141,13 @@
 	           		   <option value="19" ${pd.money_type eq '19'?'selected':''}>服务商月销售收益</option>
               	  </select>
               	  <span class="zhifu1_btn1" onclick="search()">查询</span>
-		          <span class="zhifu1_btn1" onclick="daochuexcel()">导出excel表格</span>
+		          <span class="zhifu1_btn1" onclick="daochuexcel()" style="width: 120px;">导出excel表格</span>
    		       </div>
 		       <div class="dangan2_d2">
 		          <table  border="0" cellspacing="0" cellpadding="0" class="dangan2_d2_table"  style="    white-space: nowrap;line-height:36px">
 		              <tr class="tdtop">
-		                <td  rowspan="2">支付时间</td>
+		                <td  rowspan="2">序号</td>
+		                <td  rowspan="2">完成时间</td>
 		                <td  rowspan="2">订单号</td>
 		                <td  colspan="3">付款方</td>
  		                <td rowspan="2">款项类型</td>
@@ -174,7 +190,8 @@
 	                  </tr> 
 		              <c:forEach items="${varList}" var="var" varStatus="vs">
 		              <tr >
-		                <td>${var.createtime}</td>
+		                <td>${vs.index+1}</td>
+		                <td>${var.over_time}</td>
 		                <td>${var.waterrecord_id}</td>
 		                <td>
 			                <c:if test="${var.user_type eq '1'}">商家 </c:if>

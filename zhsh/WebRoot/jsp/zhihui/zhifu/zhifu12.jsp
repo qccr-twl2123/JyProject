@@ -93,6 +93,7 @@
        <div class="dangan2_d2">
          <table  border="0" cellspacing="0" cellpadding="0" class="dangan2_d2_table" style="width:100%">
               <tr class="tdtop">
+              	<td>序号</td>
               	<td>状态</td>
                 <td>订单号</td>
                 <td>省</td>
@@ -118,6 +119,7 @@
               </tr>
              <c:forEach items="${varList}" var="var" varStatus="vs">
               <tr >
+              	 <td>${vs.index+1}</td>
               	<td>
               		<c:if test="${var.exception_status eq '1' }">
                 		信息异常
@@ -171,14 +173,14 @@
               </tr>
               </c:forEach>
              <tr>
-                 <td colspan="10">本页合计</td>
+                 <td colspan="11">本页合计</td>
                  <td><span class="benye_money">${nowpagesum.summoney}</span></td>
                  <td>/</td>
                  <td><span  class="benye_money">${nowpagesum.sumarrivalmoney}</span></td>
                  <td colspan="9">/</td>
                </tr>
               <tr>
-                 <td colspan="10">总合计</td>
+                 <td colspan="11">总合计</td>
                  <td><span class="benye_money">${allpagesum.summoney}</span></td>
                  <td>/</td>
                  <td><span  class="benye_money">${allpagesum.sumarrivalmoney}</span></td>

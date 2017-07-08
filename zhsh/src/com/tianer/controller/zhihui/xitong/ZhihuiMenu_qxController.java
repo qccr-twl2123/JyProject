@@ -263,9 +263,9 @@ public class ZhihuiMenu_qxController extends BaseController {
  		PageData pd = new PageData();
  		String message="ok";
 		try {
-			String menu_name="商家经营分析报表";
+			String menu_name="总服务报表";
 			String menu_parent_name="报表";
-			pd.put("menu_id", "56");
+			pd.put("menu_id", "57");
  			pd.put("menu_name", menu_name);
 			pd.put("menu_parent_name", menu_parent_name);
 			pd.put("menu_parent_id", "5");

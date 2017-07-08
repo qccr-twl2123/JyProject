@@ -101,6 +101,7 @@
           <table  border="0" cellspacing="0" cellpadding="0" class="dangan2_d2_table" style="    white-space: nowrap;line-height:36px">
               <tr class="tdtop">
               	<td><input type="checkbox" id = "setAll" class="setAll"/></td>
+              	<td>序号</td>
                 <td>订单号</td>
                 <td>省</td>
                 <td>市</td>
@@ -124,6 +125,7 @@
              <c:forEach items="${varList}" var="var" varStatus="vs">
               <tr >
                 <td><input type="checkbox" name = "chose" value="${var.waterrecord_id}" /></td>
+                <td>${vs.index+1}</td>
                 <td>${var.waterrecord_id}</td>
                 <td>${var.province_name}</td>
                 <td>${var.city_name}</td>
@@ -164,14 +166,14 @@
                </tr>
               </c:forEach>
               <tr>
-                 <td colspan="10">本页合计</td>
+                 <td colspan="11">本页合计</td>
                  <td><span class="benye_money">${nowpagesum.summoney}</span></td>
                  <td>/</td>
                  <td><span  class="benye_money">${nowpagesum.sumarrivalmoney}</span></td>
                  <td colspan="7">/</td>
                </tr>
               <tr>
-                 <td colspan="10">总合计</td>
+                 <td colspan="11">总合计</td>
                  <td><span class="benye_money">${allpagesum.summoney}</span></td>
                  <td>/</td>
                  <td><span  class="benye_money">${allpagesum.sumarrivalmoney}</span></td>
