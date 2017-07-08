@@ -113,7 +113,7 @@
 		          <span  class="zhifu1_sp1">至 </span>  
 		          <input placeholder="结束时间" class="zhifu1_st1" type="text" name="endtime" id="endtime" value="${pd.endtime}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})"/>
 		          <span  class="zhifu1_sp1">月份 </span>  
-		          <input placeholder="结束时间" class="zhifu1_st1" type="text" name="month" id="month" value="${pd.month}" onclick="WdatePicker({dateFmt:'yyyy-MM'})"/>
+		          <input placeholder="月份查询" class="zhifu1_st1" type="text" name="month" id="month" value="${pd.month}" onclick="WdatePicker({dateFmt:'yyyy-MM'})"/>
 		  	  	   <!-- 1-银联支付，2- 现金支付（为0的情况下），3-支付宝支付，4-微信支付，5-苹果支付 -->
 		       	  <span  class="zhifu1_sp1">支付方式</span>
 			      <select name="remittance_type" class="zhifu1_st1" id="remittance_type" >
@@ -266,7 +266,7 @@
 		              </tr>
 		              </c:forEach>
 		               <tr>
-		               		<td colspan="6">本页合计</td>
+		               		<td colspan="7">本页合计</td>
 		               		<td class="money">${nowpagesum.summoney}</td>
 			                <td>${nowpagesum.sumreduce_money}</td>
 			                <td>${nowpagesum.sumno_discount_money}</td>
@@ -288,7 +288,7 @@
 			                <td colspan="5"></td>
 			           </tr>
 			           <tr>
-			           		<td colspan="6">总合计</td>
+			           		<td colspan="7">总合计</td>
 			                <td class="money">${allpagesum.summoney}</td>
 			                <td>${allpagesum.sumreduce_money}</td>
 			                <td>${allpagesum.sumno_discount_money}</td>
