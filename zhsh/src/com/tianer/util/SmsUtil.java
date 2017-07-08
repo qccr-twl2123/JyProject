@@ -14,11 +14,11 @@ import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
 public class SmsUtil {
 	
 	private static final String url="http://gw.api.taobao.com/router/rest";
- 	private static String appkey="csshih";
-	private static String secret="csshih";
+// 	private static String appkey="csshih";
+//	private static String secret="csshih";
 	
-//	private static  final String appkey="23401024";
-//	private static  final String secret="a0cafe6907c857094299fd13a8eec193";
+	private static  final String appkey="23401024";
+	private static  final String secret="a0cafe6907c857094299fd13a8eec193";
 	
  	private static  final String product="九鱼网";
 	private static  final String jiuyudizhi="www.baidu.com";
