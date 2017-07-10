@@ -122,7 +122,7 @@ function shangjiazairu(data) {
 	 if(base_inf.nowpage == "1"){
 		 $(".sj_list").empty();
 	 }
- 	 if(parseInt(base_inf.nowpage) >1 && storelist.length == 0){
+ 	 if(parseInt(base_inf.nowpage) >= 1 && storelist.length == 0){
 		 base_inf.nowpage=parseInt(base_inf.nowpage)-1;
 	 }
  	 for (var i = 0; i < storelist.length; i++) {

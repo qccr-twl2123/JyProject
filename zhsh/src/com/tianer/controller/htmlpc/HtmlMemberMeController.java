@@ -575,7 +575,7 @@ public class HtmlMemberMeController extends BaseController{
 		try{ 
 			pd = this.getPageData();
 			pd=orderService.tihuoByOrderId(pd);
-    		//获取商品信息 以及商家信息
+    		//获取商品信息 以及商家信息---tihuolimit_day
 			pd=TongYong.getGoodsListByOrder(pd);
 			//更改提货卷显示格式
  			if(pd.getString("tihuo_id") != null && pd.getString("tihuo_id").length() == 10){

@@ -627,8 +627,7 @@
 			left join tb_store_file  b on a.store_id=b.store_id
 			left join tb_store  c on a.store_id=c.store_id
 		where 
-			1=1
-			and wealth_type = '1'
+			 a.wealth_type = '1'
 			<if test="store_id != null and store_id != '' ">
 			and a.store_id = #{store_id}
 			</if>

@@ -104,10 +104,10 @@ function shangjiazairu(data) {
 		 $(".sj_list").scrollTop(0);
 		 $(".load").show();
 	 }
- 	 if(parseInt(base_inf.nowpage) >1 && storelist.length == 0){
+ 	 if(parseInt(base_inf.nowpage) >=1 && storelist.length == 0){
 		 base_inf.nowpage=parseInt(base_inf.nowpage)-1;
 		 $(".load").hide();
- 	 } 
+  	 } 
   	 for (var i = 0; i < storelist.length; i++) {
 		 var storepd=storelist[i];
 		 var makstr="";

@@ -271,7 +271,7 @@
 					});
 	   			}else{
 	   				//在支付成功的状态下跳转订单到订单详情界面
-	   				window.location.href='html_member/findById.do?tihuo_id='+tihuo_id; 
+	   				window.location.href='html_member/findById.do?ordertype=3&tihuo_id='+tihuo_id; 
 	   			}
  	   		} 
 	    });

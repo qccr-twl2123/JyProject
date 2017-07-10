@@ -122,8 +122,7 @@
 <c:if test="${pd.ordertype eq '3' }">
 	<p class="red ddxq-red">到店后，请将本页面出示给商家收银员，作为付款凭证 返回后也可以
 	到<span class="blod">我的-提货券</span>查看详情</p>
-	
-	<div class="my-thj-list ddxq-list">
+ 	<div class="my-thj-list ddxq-list">
 		<p class="fourteen-px">说明</p>
 		<p class="gay">1.该界面是在购物车付款成功之后跳转的界面，点击返回后是到商家详情页（注意：现在的版本买单后购物车未清空）；</p>
 		<p class="gay">2.如果使用余额支付或积分支付的款项已经足够，则直接跳转到该页面，不需要再跳转到支付宝和微信支付的界面。</p>

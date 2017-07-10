@@ -673,8 +673,7 @@
 		from 
 				tb_waterrecord a 
  		where  
-				1=1
-				and a.pay_status='1'
+				a.pay_status='1'
 				<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
 					and
 						(

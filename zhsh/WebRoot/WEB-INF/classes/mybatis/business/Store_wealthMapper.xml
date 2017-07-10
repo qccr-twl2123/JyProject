@@ -53,13 +53,7 @@
 				a.STORE_WEALTH_ID
 		from 
 				TB_STORE_WEALTH a
-		where  1=1
-		<if test="pd.content != null and pd.content != ''"><!-- 关键词检索 -->
-			and
-				(
-					 
-				)
-		</if>
+ 
 		
 	</select>
 	
