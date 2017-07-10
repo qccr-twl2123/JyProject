@@ -639,7 +639,7 @@
 	<!-- 统计商家财富魏汉文20160701 -->
 	<select id="sumStoreMoney" parameterType="pd" resultType="String">
 		select 
-			cast(a.now_wealth as DECIMAL(10,3) ) as now_wealth 
+			cast(a.now_wealth as DECIMAL(10,2) ) as now_wealth 
 		from 
 			tb_store_wealth a 
  		where 
