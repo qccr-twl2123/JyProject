@@ -152,28 +152,32 @@ public class BaoBiaoController extends BaseController{
 			 * 支付宝转账：每个月20000以内，超过的部分0.006
 			 * 银联转账：每笔两元
 			 */
-			//九鱼平台的总收益
+			//计算总收入金额
 			double jiuyuwxup=sumupwx;
- 			double jiuyuwxupkou=(new BigDecimal(sumupwx)).setScale(4,BigDecimal.ROUND_HALF_UP).doubleValue()*0.006;
-			double jiuyualipayup=sumupalipay;
-			double jiuyualipayupkou=(new BigDecimal(sumupalipay)).setScale(4,BigDecimal.ROUND_HALF_UP).doubleValue()*0.0055 ;
-			//总收入金额
-			double jiuyuallup=(new BigDecimal(jiuyuwxup+jiuyualipayup)).setScale(4,BigDecimal.ROUND_HALF_UP).doubleValue();
-			//九鱼平台的总支出
+ 			double jiuyualipayup=sumupalipay;
+ 			double jiuyuallup=(new BigDecimal(jiuyuwxup+jiuyualipayup)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+			//计算支付宝和微信收入扣除的服务费
+			double jiuyuwxupkou=(new BigDecimal(sumupwx)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue()*0.006;
+			double jiuyualipayupkou=(new BigDecimal(sumupalipay)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue()*0.0055 ;
+			//计算支付宝支出提现金额
 			double jiuyualipaydown=(-sumdownalipay);
 			double jiuyubankdown=(-sumdownbank);
 			mv.addObject("jiuyualipaydown", df.format(jiuyualipaydown));
  			mv.addObject("jiuyubankdown", df.format(jiuyubankdown));
+ 			//计算支付宝支出总扣服务费
   			double jiuyualipaydownkou=0;
 			double jiuyubankdownkou=countdownbank*2;
-			double alipaycha=(new BigDecimal(jiuyualipaydown+20000)).setScale(4,BigDecimal.ROUND_HALF_UP).doubleValue();
+			double alipaycha=(new BigDecimal(jiuyualipaydown+20000)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
  			if(alipaycha < 0 ){
- 				jiuyualipaydownkou=(new BigDecimal((-alipaycha)*0.006)).setScale(4,BigDecimal.ROUND_HALF_UP).doubleValue();
+ 				jiuyualipaydownkou=(new BigDecimal((-alipaycha)*0.006)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
 			}
   			double downfuwukou=jiuyualipaydownkou+jiuyubankdownkou;
  			mv.addObject("downfuwukou", df.format(downfuwukou));
+ 			//计算支付宝总支出金额（收入扣除服务费+转账金额+转账扣除服务费）
+ 			double jiuyualipayalldown=jiuyualipayupkou+jiuyualipaydown+jiuyubankdown+downfuwukou;
+ 			mv.addObject("jiuyualipayalldown", df.format(jiuyualipayalldown));
  			//支付宝总计算
- 			double jiuyualipay=jiuyualipayup-jiuyualipayupkou-jiuyualipaydown-jiuyualipaydownkou-jiuyubankdown;
+ 			double jiuyualipay=jiuyualipayup-jiuyualipayalldown;
  			mv.addObject("jiuyualipay", df.format(jiuyualipay));
  			//微信总计算
  			double jiuyuwx=jiuyuwxup-jiuyuwxupkou;

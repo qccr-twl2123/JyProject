@@ -88,10 +88,10 @@
 				                	<c:if test="${var.remittance_type eq '6'}">九鱼平台</c:if>
 				                </td>
 				                <td>${var.typecount}</td>
-				                <td>${var.sumalipay_money}</td>
-				                <td>${var.sumbank_money}</td>
-				                <td>${var.sumwx_money}</td>
-				                <td>${var.sumjiuyu_money}</td>
+				                <td class="number">${var.sumalipay_money}</td>
+				                <td class="number">${var.sumbank_money}</td>
+				                <td class="number">${var.sumwx_money}</td>
+				                <td class="number">${var.sumjiuyu_money}</td>
      	 		           </tr>
 		              </c:forEach>
  		          </table>
@@ -108,55 +108,58 @@
    		              </tr> 
  		              <tr >
 				           <td>支付宝</td>
-				           <td>${sumupalipay}和 ${countupalipay}单</td>
-				           <td style="color:red">${sumdownalipay}和${countdownalipay}单</td>
+				           <td>${sumupalipay}  ----  ${countupalipay}单</td>
+				           <td>${sumdownalipay} ----  ${countdownalipay}单</td>
 				           <td style="color:green;">${allalipay}</td>
      	 		      </tr>
      	 		      <tr >
 				           <td>微信</td>
-				           <td>${sumupwx}和 ${countupwx}单</td>
-				           <td style="color:red">${sumdownwx}和 ${countdownwx}单</td>
+				           <td>${sumupwx}  ----   ${countupwx}单</td>
+				           <td>${sumdownwx}  ----   ${countdownwx}单</td>
 				           <td style="color:green;">${allwx}</td>
      	 		      </tr>
      	 		      <tr >
 				           <td>银行卡</td>
-				           <td>${sumupbank}和${countupbank}单</td>
-				           <td style="color:red">${sumdownbank}和${countdownbank}单</td>
+				           <td>${sumupbank}  ----  ${countupbank}单</td>
+				           <td>${sumdownbank}  ----  ${countdownbank}单</td>
 				           <td style="color:green;">${allbank}</td>
      	 		      </tr>
      	 		      <tr >
 				           <td>九鱼网</td>
 				           <td colspan="3">${sumjiuyu}和${countjiuyu}单</td>
      	 		      </tr>
-     	 		      <tr><td colspan="4" style="color:#df1ac5;">总金额：${allmoney}</td></tr>
+     	 		      <tr><td colspan="4" >总金额： <span style="font-size: 24px;color:#df1ac5;"> ${allmoney}</span></td></tr>
  		     </table>
  		     <span style="display: block;color:blue;font-size: 24px;">当月九鱼账户收支明细</span>
        		 <table  border="0" cellspacing="0" cellpadding="0" class="dangan2_d2_table"  style="white-space: nowrap;line-height:36px;width:96%">
 		              <tr class="tdtop">
 		                <td>支付方式\￥</td>
-		                <td>收入金额</td>
-		                <td>收入服务费</td>
+		                <td>总收入金额</td>
+		                <td>收入支出服务费</td>
 		                <td>支出金额</td>
  		                <td>支出服务费</td>
+ 		                <td>总支出金额</td>
  		                <td>合计收益</td>
    		              </tr> 
  		              <tr >
 				           <td>支付宝</td>
-				           <td>${jiuyualipayup}</td>
-				           <td style="color:red">${jiuyualipayupkou}</td>
-				           <td style="color:red">支付宝：${jiuyualipaydown}，银行卡：${jiuyubankdown }和${countdownbank}单</td>
-     	 		      	   <td style="color:red">${downfuwukou}</td>
-     	 		      	   <td style="color:green;">${jiuyualipay}</td>
+				           <td  style="color:red">${jiuyualipayup}</td>
+				           <td>${jiuyualipayupkou}</td>
+				           <td>支付宝：${jiuyualipaydown}，银行卡：${jiuyubankdown }和${countdownbank}单</td>
+     	 		      	   <td>${downfuwukou}</td>
+     	 		      	   <td style="color:red">${jiuyualipayalldown}</td>
+      	 		      	   <td style="color:green;">${jiuyualipay}</td>
      	 		      </tr>
      	 		      <tr >
 				           <td>微信</td>
-				           <td>${jiuyuwxup}</td>
-				           <td style="color:red">${jiuyuwxupkou}</td>
+				           <td  style="color:red">${jiuyuwxup}</td>
+				           <td>${jiuyuwxupkou}</td>
 				           <td></td>
      	 		      	   <td></td>
+     	 		      	   <td style="color:red">${jiuyuwxupkou}</td>
      	 		      	   <td style="color:green;">${jiuyuwx}</td>
      	 		      </tr>
-      	 		      <tr><td colspan="6" style="color:#df1ac5;">总金额：${alljiuyu}加上扣除的服务费 +${jiuyualipayupkou} +${downfuwukou }+${jiuyuwxupkou}  =  (${notkou})</td></tr>
+      	 		      <tr><td colspan="7"  >总金额：  <span style="color:#df1ac5;font-size: 24px;">  ${alljiuyu} </span>  加上扣除的服务费 +${jiuyualipayupkou} +${downfuwukou }+${jiuyuwxupkou}  =  (${notkou})</td></tr>
  		     </table>
          </c:if>
       </body>
@@ -164,6 +167,13 @@
       //获取城市
 		function addsearchfind(){
 			var str=$("#province_id option:selected").val();//获取被选中的value值
+			$("#city_name").val("");
+			$("#area_name").val("");
+			$("#province_name").val("");
+			$("#city_id").empty();
+		  	$("#area_id").empty();
+		    $("#city_id").append("<option value=''>请选择市</option>");
+		  	$("#area_id").append("<option  value=''>请选择区</option>");
  			$.ajax({
 				  url: 'zhihuiBaoBiao/citylist.do',
 				  data:"province_id="+str,
@@ -171,11 +181,7 @@
 				  dataType:"json",
 				  success:function(data){
 					  	var list=data.citylist;
-					  	$("#city_id").empty();
-					  	$("#area_id").empty();
-					    $("#city_id").append("<option value=''>请选择市</option>");
-					  	$("#area_id").append("<option  value=''>请选择区</option>");
-					  	if(list.length>0){
+ 					  	if(list.length>0){
 						  	for(var i=0;i<list.length;i++){
 						  		$("#city_id").append("<option value='"+list[i].pcd_id+"'>"+list[i].name+"</option>");
 						  	}
@@ -229,5 +235,17 @@
 			}
 	    	$("#Form").submit();
 	}
+		
+		
+	$(function(){
+		$(".number").each(function(i){
+			   var number= $(this).html().trim();
+			   if(parseFloat(number) != 0 ){
+				   $(this).css("color","red");
+			   }else{
+				   $(this).html("/");
+			   }
+		});
+	});
       </script>
  </html>

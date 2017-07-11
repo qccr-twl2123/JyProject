@@ -36,7 +36,7 @@
  				<if test="monthtime != null and monthtime  != ''"><!-- 月份  -->
 					and date_format( over_time,'%Y-%m') = #{monthtime} 
 				 </if>
- 			GROUP BY remittance_type,money_type
+  			GROUP BY remittance_type,money_type
 			ORDER BY money_type
 	</select>
 	
