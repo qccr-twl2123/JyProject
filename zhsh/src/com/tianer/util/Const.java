@@ -87,7 +87,7 @@ public class Const {
 	public static final String AREAFILEPATH = "uploadify/uploads/area/";	//头像文件上传路径
 	public static final String ErWeiMa = "c:/";	//头像文件上传路径
  	
-    public static final String NO_INTERCEPTOR_PATH = ".*/((login)|(logout)|(code)|(app)|(websocket)|(zhihui)|(store)|(member)|(html)|(one)|(you)|(zhao)|(fa)|(jiuyu)|(#)).*";	//都不拦截
+    public static final String NO_INTERCEPTOR_PATH = ".*/((login)|(logout)|(code)|(app)|(websocket)|(zhihui)|(store)|(member)|(html)|(one)|(you)|(zhao)|(fa)|(jiuyu)|(wxback)|(alipayback)|(#)).*";	//都不拦截
  	public static ApplicationContext WEB_APP_CONTEXT = null; //该值会在web容器启动时由WebAppContextListener初始化
 	
 
