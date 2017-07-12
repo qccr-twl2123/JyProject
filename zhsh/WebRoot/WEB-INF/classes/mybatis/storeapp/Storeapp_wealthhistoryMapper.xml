@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Storeapp_wealthhistoryMapper">	
+
+ 	<!-- 流水明细（只记录成功和失败的）列表-->
+	<select id="weallistPage" parameterType="page" resultType="pd">
+			select 
+					a.store_wealthhistory_id,
+					date_format(a.createtime,'%Y-%c-%d %H:%i:%s') as createtime ,
+  					a.number ,
+ 					a.process_status,
+ 					a.profit_type,
+    				ifnull(b.name,'Jiuyu') as  jiayi_name  
+  		  	from 
+					tb_store_wealthhistory a  left join tb_member b on a.user_id=b.member_id
+			where
+					process_status in ('1','99')
+					<choose>
+						<when test="pd.login_type == '2'.toString()">and a.store_operator_id=#{pd.login_id}</when>
+						<otherwise>and a.store_id=#{pd.login_id}</otherwise>
+					</choose>
+ 					<if test="pd.store_operator_id != null and pd.store_operator_id != ''">
+					and a.store_operator_id=#{pd.store_operator_id}
+					</if>
+ 					<if test="pd.profit_type != null and pd.profit_type != ''">
+					and a.profit_type=#{pd.profit_type}
+					</if>
+					<if test="pd.starttime != null and pd.starttime!= ''"><!-- 开始时间-->
+					and  date_format(a.createtime,'%Y-%m-%d') &gt;= date_format(#{pd.starttime},'%Y-%m-%d')
+		 			</if>
+					<if test="pd.endtime != null and pd.endtime!= ''"><!-- 结束时间 -->
+					and  date_format(a.createtime,'%Y-%m-%d') &lt;= date_format(#{pd.endtime},'%Y-%m-%d')
+		 			</if>
+   			order by a.createtime desc
+	</select>
+ 
+ 	<!-- 流水详情  -->
+	<select id="DetailWaterOrderById" parameterType="pd" resultType="pd">
+			select 
+					a.store_wealthhistory_id,
+					date_format(a.createtime,'%Y-%c-%d %H:%i:%s') as createtime ,
+  					a.number ,
+  					a.arrivalMoney,
+					a.process_status,
+					a.profit_type,
+ 					a.last_wealth,
+    				ifnull(a.pay_type,'nowpay') as  pay_type ,
+    				ifnull(b.name,'Jiuyu') as  jiayi_name ,
+    				ifnull(c.operator_name,'无') as operator_name,
+		    		ifnull(d.shift_name,'无') as shift_name  
+  		  	from 
+					tb_store_wealthhistory a  
+					left join tb_member b on a.user_id=b.member_id
+					left join tb_store_operator c on c.store_operator_id=a.store_operator_id
+					left join tb_store_shift d on d.store_shift_id =c.store_shift_id
+ 			where
+					a.store_wealthhistory_id=#{store_wealthhistory_id}
+ 	</select>
+	
+	
+	
+
+</mapper>

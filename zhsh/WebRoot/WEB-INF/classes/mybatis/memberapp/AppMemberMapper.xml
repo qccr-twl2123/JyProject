@@ -975,7 +975,7 @@
 				tb_member a 
 		where 
 				a.member_id=#{member_id}
- 	</select>
+  	</select>
    	
    	
    	<!-- 获得用户余额刘耀耀20160711 -->

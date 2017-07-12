@@ -139,8 +139,8 @@ $(function(){
 			  	num:2},
 			  {
 			  	name:"基础信息",
-			  	listitem:["商家信息","商家图片","高级信息","修改密码","操作员","班次","桌号"],
-			  	linkitem:["storepc_StoreManageController/goInformation.do?store_id=${storepd.store_id}","storepc_StoreManageController/goImage.do?store_id=${storepd.store_id}","storepc_StoreManageController/showSenior.do?store_id=${storepd.store_id}","storepc_StoreManageController/showPassword.do?store_id=${storepd.store_id}","storepcOperator_file/findOperator.do?store_id=${storepd.store_id}","storepcOperator_file/list.do?store_id=${storepd.store_id}","storepc_tableNumber/list.do?store_id=${storepd.store_id}"],
+			  	listitem:["商家信息","商家图片","高级信息",/* "修改密码", */"操作员","班次","桌号"],
+			  	linkitem:["storepc_StoreManageController/goInformation.do?store_id=${storepd.store_id}","storepc_StoreManageController/goImage.do?store_id=${storepd.store_id}","storepc_StoreManageController/showSenior.do?store_id=${storepd.store_id}",/* "storepc_StoreManageController/showPassword.do?store_id=${storepd.store_id}", */"storepcOperator_file/findOperator.do?store_id=${storepd.store_id}","storepcOperator_file/list.do?store_id=${storepd.store_id}","storepc_tableNumber/list.do?store_id=${storepd.store_id}"],
 			  	num:3},
 			  {
 			  	name:"账户信息",

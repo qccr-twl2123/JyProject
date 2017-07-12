@@ -648,9 +648,8 @@ public class TongYong extends BaseController{
 	 * 提货后或是支付的最后操作阶段
 	 * @param pd           订单详情
 	 * @param channel      nowpay-线下现金支付，alipay-支付宝支付，wx-微信支付
-	 * @param comeon_type  1-收银，2-优惠买单，3-提货卷 ,4-购买一元夺宝 ， 5-优选提货券
-	 * @param apptype      b-b端，c-c端，pc网页端
-	 * @param pay_type     1-收银，2-优惠买单，3-提货卷 ,4-购买一元夺宝 
+	 * @param comeon_type/pay_type  1-收银，2-优惠买单，3-提货卷 ,4-购买一元夺宝 ， 5-优选提货券
+	 * @param apptype      b-b端，c-c端，pc-网页端,wx-公众号
 	 * @param iszeroorder  true-是0元订单，false-不是0元订单
 	 * @return:
 	 * @throws Exception

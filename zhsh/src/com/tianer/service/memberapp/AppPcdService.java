@@ -19,6 +19,11 @@ public class AppPcdService {
 	
 	/*
 	 * 新增log日志
+	 * 00 --- 充值+99失败订单
+	 * 01 --- 消费+99失败订单
+	 * 02 --- 商家购买扣点/服务费+99失败订单
+	 * 03 --- 商家支付其他+99失败订单
+	 *   
 	 */
 	public void saveLog(String order_id,String message,String type)throws Exception{
 		PageData logpd=new PageData();

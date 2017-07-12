@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BaoBiaoMapper">
+ 
+ 	<!-- 报表统计根据不同类型统计 -->
+	<select id="baoBiaoTypeTotol" parameterType="pd" resultType="pd">
+			SELECT 	
+				remittance_type,
+				money_type,
+				cast( count(*) as char) as typecount,
+				cast( CAST(SUM(IFNULL(bank_money,0)) AS   decimal(10,2))   as char ) as sumbank_money,
+				cast( CAST(SUM(IFNULL(alipay_money,0)) AS   decimal(10,2))   as char ) as sumalipay_money,
+				cast( CAST(SUM(IFNULL(wx_money,0)) AS   decimal(10,2))   as char ) as sumwx_money,
+				cast( CAST(SUM(IFNULL(jiuyu_money,0)) AS   decimal(10,2))    as char )  as sumjiuyu_money
+			FROM 
+				`tb_waterrecord`
+			where 
+				remittance_type in ('1','3','4','6')
+				and money_type in ('1','2','3','5','7')
+				and pay_status in ('1','97','98')
+				<if test="province_name != null and province_name != ''"><!-- 省 -->
+					and  province_name=#{province_name}
+ 				</if>
+				<if test="city_name != null and city_name != ''"><!-- 市 -->
+					and  city_name=#{city_name}
+ 				</if>
+				<if test="area_name != null and area_name != ''"><!-- 区 -->
+					and  area_name=#{area_name}
+ 				</if>
+ 				<if test="starttime != null and starttime  != ''"><!-- 开始时间-->
+					and date_format( over_time,'%Y-%m-%d') &gt;= #{starttime} 
+				 </if>
+				<if test="endtime != null and endtime != ''"><!-- 结束时间 -->
+					and date_format( over_time,'%Y-%m-%d') &lt;= #{endtime} 
+				 </if>
+ 				<if test="monthtime != null and monthtime  != ''"><!-- 月份  -->
+					and date_format( over_time,'%Y-%m') = #{monthtime} 
+				 </if>
+  			GROUP BY remittance_type,money_type
+			ORDER BY money_type
+	</select>
+	
+</mapper>

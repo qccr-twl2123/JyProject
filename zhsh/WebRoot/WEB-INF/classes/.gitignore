@@ -1,9 +1,3 @@
-/mybatis
-/spring
-/your_rsa_private_key.pem
 /appvalidation
 /com
 /config.properties
-/dbconfig.properties
-/ftl
-/log4j.properties

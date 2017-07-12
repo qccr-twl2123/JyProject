@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Storeapp_orderMapper">
+
+  
+	<!-- 查看订单详情-通过store_wealthhistory_id  -->
+	<select id="DetailOrderById" parameterType="pd" resultType="pd">
+		select 
+   			cast(cast((ifnull(a.sale_money,'0')) as decimal(10,2)) as char)  sale_money,
+ 			cast(cast((ifnull(a.discount_money,'0')) as decimal(10,2)) as char)  discount_money,
+ 			cast(cast((ifnull(a.no_discount_money,'0')) as decimal(10,2)) as char)  no_discount_money,
+ 			cast(cast((ifnull(a.actual_money,'0')) as decimal(10,2)) as char)  actual_money,
+  			cast(cast((ifnull(a.user_balance,'0')) as decimal(10,2)) as char)  user_balance,
+ 			cast(cast((ifnull(a.user_integral,'0')) as decimal(10,2)) as char)  user_integral,
+ 			cast(cast((ifnull(a.discount_after_money,'0')) as decimal(10,2)) as char)  discount_after_money,
+  			cast(cast((ifnull(a.get_integral,'0')) as decimal(10,2)) as char)  get_integral,
+ 			cast(cast((ifnull(a.sendxitong_integral,'0')) as decimal(10,2)) as char)  sendxitong_integral,
+ 			cast(cast((ifnull(a.store_renmai_money,'0')) as decimal(10,2)) as char)  store_renmai_money,
+ 			a.discount_content,
+ 			a.channel,
+ 			a.order_id 
+   		from 
+			tb_order a
+		where 
+			a.order_id=#{store_wealthhistory_id}
+ 	</select>
+	
+	  
+</mapper>

@@ -94,13 +94,18 @@
 			set 
  				<if test=" money != null and money != '' ">money = #{money},</if>
  				<if test=" money_type != null and money_type != '' ">money_type = #{money_type},</if>
- 				<if test=" pay_status != null and pay_status != '' ">pay_status = #{pay_status},</if>
-				<if test=" order_tn != null and order_tn != '' ">order_tn = #{order_tn},over_time=now(),</if>
-				<if test=" over_operator_id != null and over_operator_id != '' ">over_operator_id = #{over_operator_id},over_time=now(),</if>
+ 				<if test=" pay_status != null and pay_status != '' ">
+ 					pay_status = #{pay_status},
+ 					<if test="pay_status =='1'.toString()">over_time=now(),</if>
+ 					<if test="pay_status =='3'.toString()">pass_time=now(),</if>
+ 					<if test="pay_status =='2'.toString()">exception_time=now(),</if>
+ 				</if>
+				<if test=" order_tn != null and order_tn != '' ">order_tn = #{order_tn}</if>
+				<if test=" over_operator_id != null and over_operator_id != '' ">over_operator_id = #{over_operator_id},</if>
 				<if test=" dakuan_remark != null and dakuan_remark != '' ">dakuan_remark = #{dakuan_remark},</if>
-				<if test=" exception_operator_id != null and exception_operator_id != '' ">exception_operator_id = #{exception_operator_id},exception_time=now(),</if>
+				<if test=" exception_operator_id != null and exception_operator_id != '' ">exception_operator_id = #{exception_operator_id},</if>
 				<if test=" exception_remark != null and exception_remark != '' ">exception_remark = #{exception_remark}, </if>
-				<if test=" pass_operate_id != null and pass_operate_id != '' ">pass_operate_id = #{pass_operate_id},pass_time=now(),</if>
+				<if test=" pass_operate_id != null and pass_operate_id != '' ">pass_operate_id = #{pass_operate_id},</if>
 				<if test=" chuli_remark != null and chuli_remark != '' ">chuli_remark = #{chuli_remark},</if>
 				<if test=" exception_status != null and exception_status != '' ">exception_status = #{exception_status}, </if>
   				waterrecord_id = waterrecord_id
@@ -789,4 +794,18 @@
 		where waterrecord_id = #{waterrecord_id}
 	</delete>
 	
+	
+	
+	<!-- 20170711新增的接口sql -->
+ 	<select id="findWaterRecordByBackPay" parameterType="pd" resultType="pd">
+		select 
+			a.waterrecord_id ,
+			a.user_id ,
+			a.money
+		from 
+			tb_waterrecord a
+		where 
+			a.waterrecord_id = #{waterrecord_id}
+			
+	</select>
 </mapper>

@@ -52,6 +52,8 @@ public class WaterRecordService {
  	public PageData findByIdWaterRecord(PageData  pd) throws Exception {
  		return (PageData) dao.findForObject("WaterRecordMapper.findByIdWaterRecord", pd);
  	}
+ 	
+ 
  
 	
 	/**
@@ -171,7 +173,15 @@ public class WaterRecordService {
  	public PageData findWaterRecordIsPayOk(PageData  pd) throws Exception {
  		return (PageData) dao.findForObject("WaterRecordMapper.findWaterRecordIsPayOk", pd);
  	}
-	
- 
+ 	
+ 	
+ 	
+	//=================================2017-07-11================================================
+ 	/**
+ 	 * 第三方支付时候需要的回调详情
+ 	 */
+ 	public PageData findWaterRecordByBackPay(PageData  pd) throws Exception {
+ 		return (PageData) dao.findForObject("WaterRecordMapper.findWaterRecordByBackPay", pd);
+ 	}
 	
 }
