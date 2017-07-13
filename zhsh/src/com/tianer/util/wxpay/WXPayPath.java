@@ -1,7 +1,17 @@
 package com.tianer.util.wxpay;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.github.wxpay.sdk.WXPayConstants.SignType;
 
 /**
  * 微信支付通道
@@ -17,6 +27,23 @@ public class WXPayPath {
         config = WXPayConfigImpl.getInstance();
         wxpay = new WXPay(config);
     }
+    
+
+
+    public String getAppID() {
+        return config.getAppID();
+    }
+
+    public String getMchID() {
+        return config.getMchID();
+    }
+
+    public  String getKey() {
+        return config.getKey();
+    }
+    public  String getSpbill_create_ip() {
+    	return "139.196.81.14";
+    }
 
     /**
      * sign验签
@@ -28,12 +55,100 @@ public class WXPayPath {
     }
     
     
+    /**
+     * 添加签名--Md5
+     * @return
+     * @throws Exception 
+     */
+    public  String AddSign(Map<String, String> data) throws Exception{
+     	return WXPayUtil.generateSignedXml(data, config.getKey(), SignType.MD5);
+    }
     
-//    public void doReport() {
-//        HashMap<String, String> data = new HashMap<String, String>();
-//        data.put("interface_url", "20160822");
-//        data.put("bill_type", "ALL");
-//    }
+   
+   //=================================================================================
+   
+    /**
+     * 作用：统一下单<br>向 Map 中添加 appid、mch_id、nonce_str、sign_type、sign <br>
+     * 场景：公共号支付、扫码支付、APP支付
+     * @param reqData 向wxpay post的请求数据
+     * @return API返回数据
+     * @throws Exception
+     */
+    public Map<String, String> unifiedOrder(Map<String, String> reqData) throws Exception {
+    	return wxpay.unifiedOrder(reqData);
+    }
+    
+    
+    //=================================================================================
+    
+    /**
+     * 向 Map 中添加 appid、mch_id、nonce_str、sign_type、sign <br>
+     * 该函数适用于商户适用于统一下单等接口，不适用于红包、代金券接口
+     *
+     * @param reqData
+     * @return
+     * @throws Exception 
+     */
+    public  Map<String, String> fillRequestData(Map<String, String> data) throws Exception{
+     	return wxpay.fillRequestData(data);
+    }
+    
+    /**
+     * 自定义网络连接支付
+     * 场景：公共号支付、扫码支付、APP支付
+     * @param newreqBody
+     * @return
+     * @throws Exception
+     * 返回结果map
+     */
+    public Map<String,String> payorderByHttps(String newreqBody) throws Exception{
+    	 String UTF8 = "UTF-8";
+         URL httpUrl = new URL("https://api.mch.weixin.qq.com/pay/unifiedorder");
+         HttpURLConnection httpURLConnection = (HttpURLConnection) httpUrl.openConnection();
+         httpURLConnection.setRequestProperty("Host", "api.mch.weixin.qq.com");
+         httpURLConnection.setDoOutput(true);
+         httpURLConnection.setRequestMethod("POST");
+         httpURLConnection.setConnectTimeout(10*1000);
+         httpURLConnection.setReadTimeout(10*1000);
+         httpURLConnection.connect();
+         OutputStream outputStream = httpURLConnection.getOutputStream();
+         outputStream.write(newreqBody.getBytes(UTF8));
+
+         //获取内容
+         InputStream inputStream = httpURLConnection.getInputStream();
+         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, UTF8));
+         final StringBuffer stringBuffer = new StringBuffer();
+         String line = null;
+         while ((line = bufferedReader.readLine()) != null) {
+             stringBuffer.append(line);
+         }
+         String resp = stringBuffer.toString();
+         if (stringBuffer!=null) {
+             try {
+                 bufferedReader.close();
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
+         }
+         if (inputStream!=null) {
+             try {
+                 inputStream.close();
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
+         }
+         if (outputStream!=null) {
+             try {
+                 outputStream.close();
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
+         }
+         Map<String, String> map2=WXPayUtil.xmlToMap(resp);
+         return map2;
+    }
+    
+    
 
     /**
      * 小测试

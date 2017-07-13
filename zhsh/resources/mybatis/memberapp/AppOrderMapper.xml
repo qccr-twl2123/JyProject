@@ -463,6 +463,17 @@
  				and a.status=#{status}
  				</if>
   	</select>
+  	<select id="sumguanlianById" parameterType="pd" resultType="pd">
+		select 
+			SUM(a.user_integral) as jfmoney,SUM(a.actual_money) as wxmoney,b.guanlian_id as orderno
+		from 
+			tb_order a left join tb_guanlian b on find_in_set(a.order_id, b.beguanlian_id) >0
+		where 
+			b.guanlian_id=#{orderno} 
+		order by b.guanlian_id
+   	</select>
+   	
+   	
   	
   	<!-- 获取所有的商品订单表 -->
   	<select id="getAllOrderGoods"  parameterType="pd" resultType="pd">

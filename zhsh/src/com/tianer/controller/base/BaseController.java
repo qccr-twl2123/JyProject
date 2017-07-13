@@ -292,7 +292,7 @@ public class BaseController {
 	
 	//主函数
 	public static void main(String[] msg){
-		System.out.println(get4Integer( ));;
+		System.out.println(getTimeID( ));;
   	}
 	
 	/**

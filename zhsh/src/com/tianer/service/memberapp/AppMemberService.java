@@ -468,6 +468,13 @@ public class AppMemberService {
 	}
 	
 	
+	//============================获取第三方登录的一些信息
+	/*
+	 * 获取openid
+	 */
+	public PageData findMemberThreeById(PageData pd)throws Exception{
+		return (PageData)dao.findForObject("AppMemberMapper.findMemberThreeById", pd);
+	}
 	
 	
 }

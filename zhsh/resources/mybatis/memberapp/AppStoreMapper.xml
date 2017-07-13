@@ -722,8 +722,28 @@
 	<!-- 通过商家财富魏汉文20160701 -->
 	<select id="findWealthHistoryById" parameterType="pd" resultType="pd">
 		select 
- 			*
-		from 
+ 			store_wealthhistory_id,
+			wealth_type,
+			profit_type,
+			number,
+			store_id,
+			store_operator_id,
+			process_status,
+			pay_type,
+			last_wealth,
+			createtime,
+			arrivalMoney,
+			jiaoyi_id,
+			user_id,
+			in_jiqi,
+			sp_getmoney,
+			send_jf,
+			oneday_renmaijifen,
+			oneday_renmaimoney,
+			transaction_points,
+			orderfuwu_money,
+			ordersp_getmoney
+ 		from 
 			tb_store_wealthhistory
 		where 
   			store_wealthhistory_id = #{store_wealthhistory_id}

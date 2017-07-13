@@ -1124,6 +1124,25 @@
 		limit 1
  	</select>
  	
+ 	
+ 	<!-- 获取openid/unionid -->
+	<select id="findMemberThreeById" parameterType="pd" resultType="pd">
+		select
+				a.member_id,
+				a.name,
+				a.wxunionid,
+				a.qqunionid,
+				a.wbunionid,
+				a.alipayunionid,
+				a.wxopen_id,
+				a.qqopen_id,
+				a.wbopen_id,
+				a.alipayopen_id
+ 		from 
+				tb_member a 
+		where 
+				a.member_id=#{member_id}
+ 	</select>
  	 
 	
 	

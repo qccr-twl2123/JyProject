@@ -32,12 +32,12 @@
 </c:if>
  <div class="link">
 	<a onclick="goBaoPing()"><img src="img/jxqg.png" alt=""></a>
-	<a href="html_member/payOkDetailOrder.do?orderno=${pd.orderno}&city_name=${pd.city_name}&area_name=${pd.area_name}"><img src="img/ddxq.png" alt=""></a>
+	<a href="html_member/payOkDetailOrder.do?orderno=${pd.orderno}"><img src="img/ddxq.png" alt=""></a>
 	<h5 class="text">提示：到店后，请将本页面出示给商家收银员，作为付款凭证，返回后可到我的-“提货券”查看详情</h5>
 </div>
 <script type="text/javascript">
 function goBaoPing(){
-	window.location.href='<%=basePath%>html_member/goMyYouXuan.do?city_name=${pd.city_name}&area_name=${pd.area_name}';
+	window.location.href='<%=basePath%>html_member/goMyYouXuan.do';
 }
 </script>
 </body>

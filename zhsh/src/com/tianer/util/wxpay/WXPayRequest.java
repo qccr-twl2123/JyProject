@@ -30,8 +30,7 @@ import java.security.SecureRandom;
 public class WXPayRequest {
     private WXPayConfig config;
     public WXPayRequest(WXPayConfig config) throws Exception{
-
-        this.config = config;
+         this.config = config;
     }
 
     /**
@@ -105,7 +104,7 @@ public class WXPayRequest {
         httpPost.addHeader("Content-Type", "text/xml");
         httpPost.addHeader("User-Agent", "wxpay sdk java v1.0 " + config.getMchID());  // TODO: 很重要，用来检测 sdk 的使用情况，要不要加上商户信息？
         httpPost.setEntity(postEntity);
-
+        
         HttpResponse httpResponse = httpClient.execute(httpPost);
         HttpEntity httpEntity = httpResponse.getEntity();
         return EntityUtils.toString(httpEntity, "UTF-8");

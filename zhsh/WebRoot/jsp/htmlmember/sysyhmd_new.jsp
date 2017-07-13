@@ -129,9 +129,16 @@
     </div>
 </section>
 </body>
-<script type="text/javascript" src="js/htmlmember/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+var base_inf={
+         base_herf:"<%=basePath%>" 
+};
+</script>
+<script src="js/jquery-1.8.0.min.js"></script>
 <script src="js/jquery.form.js"></script>
-<script src="js/ping/pingpp.js" type="text/javascript"></script>
+<script src="js/wx/jweixin-1.0.0.js"></script>
+<script src="js/wx/zepto.min.js"></script>
+<script src="js/htmlmember/weixindemo.js"></script>
 <script type="text/javascript">
 
 	//判断是否为数字
@@ -327,16 +334,16 @@
 		$(".surepay").removeAttr("onclick");
 		$(".surepay").css("background","rgb(192, 192, 192)");
  		var double_actual_money=parseFloat($("#actual_money").val());
- 		var pay_way="nowpay";
+		var url="<%=basePath%>html_member/toLoginWx.do";
+		var pay_way="nowpay";
 		if(double_actual_money > 0){
 			pay_way="wx_pub";
-		}
+		} 
 	    $("#Form").ajaxSubmit({  
-	    	url : 'html_member/payorder.do',
+	    	url : 'app_pay_history/thirdPartyPay.do',
 	        type: "post",//提交类型  
 	      	data:{ 
-	      		"pay_way":pay_way,
-				"in_jiqi":"5"
+	      		"pay_way":pay_way,"url":url,"in_jiqi":"5"
 	      	},  
 	      	dataType:"json",
 	   		success:function(data){ 
@@ -347,14 +354,30 @@
 	   				alert(data.message);
 	   				return;
 	   			}
-	   			var map=data.data;
-	   			var order_id = map.order_id;//订单号
+	   			var order_id = data.data.order_id;//订单号
 	   			if(double_actual_money > 0){
- 					 if(map.return_msg == "OK"){
-						onBridgeReady(map.payment_type_,map.appId_,map.timestamp_,map.nonceStr_,map.package_,map.signType_,map.paySign_,map.out_trade_no_);
-		        	 }else{
-		        		 alert(map.return_msg);
-		        	 }
+ 		   			var charge=data.data.charge;
+ 					pingpp.createPayment(charge, function(result, err){
+					    console.log(result);
+					    console.log(err.msg);
+					    console.log(err.extra);
+					    if (result == "success") {
+ 					    	window.location.href='html_member/findById.do?ordertype=2&order_id='+order_id;
+					        // 只有微信公众账号 wx_pub 支付成功的结果会在这里返回，其他的支付结果都会跳转到 extra 中对应的 URL。
+					    } else if (result == "fail") {
+					    	alert("支付失败fail");
+					    	flag=true;
+					    	$(".surepay").attr("onclick","surepay()");
+			   				$(".surepay").css("background","#c90000");
+ 						    // charge 不正确或者微信公众账号支付失败时会在此处返回
+					    } else if (result == "cancel") {
+					    	alert("cancel");
+					        // 微信公众账号支付取消支付
+					        flag=true;
+					    	$(".surepay").attr("onclick","surepay()");
+			   				$(".surepay").css("background","#c90000");
+ 					    }
+					});
 	   			}else{
 	   				//在支付成功的状态下跳转订单到订单详情界面
 	   				window.location.href='html_member/findById.do?ordertype=2&order_id='+order_id; 

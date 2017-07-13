@@ -13,8 +13,7 @@
 	<base href="<%=basePath%>">
 	<link rel="stylesheet" href="css/youxuan/normalize.min.css">
 	<link rel="stylesheet" href="css/youxuan/qrdd.css">
-	<script src="js/jquery-1.8.0.min.js"></script>
-</head>
+ </head>
 <body>
 	<header>
 		<div class="goback" onclick="backreturn()">‹</div>
@@ -24,16 +23,7 @@
 	    	</div>
 		</div>
 	</header>
-	<script type="text/javascript">
-	function backreturn(){
-		if("${pd.gopay_type}" == "2"){
-			window.location.href="html_member/goMyYouXuanShopCart.do";
- 		}else{
- 			window.location.href="html_member/goMyYouXuanDetail.do?youxuangoods_id=${pd.goods_id}";
-		}
- 	}
-	</script>
-	<div class="shopping">
+ 	<div class="shopping">
 	</div>
 	<div style="height: 6%;position: absolute;bottom: 56px;font-size: 15px;">
 		使用积分：<input style="    font-size: 22px; display: inline-block;width: 128px;height: 82%;margin-right: 10px;" type="text" value="" class="memberuser_integral" oninput="jisuanlastmoney(this)"  onkeyup="value=value.replace(/[^\d\.]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))"   /><span>
@@ -47,12 +37,22 @@
 	</footer>
 	<input type="hidden" class="zongpaymoney" value="">
 	<input type="hidden" class="lastpaymoney" value="">
-	<script src="js/ping/pingpp.js" type="text/javascript"></script>
+</body>
+<script type="text/javascript">
+var base_inf={
+         base_herf:"<%=basePath%>" 
+};
+</script>
+<script src="js/jquery-1.8.0.min.js"></script>
+<script src="js/jquery.form.js"></script>
+<script src="js/wx/jweixin-1.0.0.js"></script>
+<script src="js/wx/zepto.min.js"></script>
+<script src="js/htmlmember/weixindemo.js"></script>
 	<script type="text/javascript">
 	$(function(){
   		$.ajax({
 	        type:"post",
-	        url:'<%=basePath%>youxuan/gosurePayOrder.do', 
+	        url:'youxuan/gosurePayOrder.do', 
 		  	data:{
 	  	 		"goodsinfor":"${pd.goodsinfor}", 
  	  	 		"gopay_type":"${pd.gopay_type}"
@@ -106,6 +106,15 @@
 	    });
 	});
 	
+	//返回
+	function backreturn(){
+		if("${pd.gopay_type}" == "2"){
+			window.location.href="html_member/goMyYouXuanShopCart.do";
+ 		}else{
+ 			window.location.href="html_member/goMyYouXuanDetail.do?youxuangoods_id=${pd.goods_id}";
+		}
+ 	}
+	
 	//操作购买数量
 	function caozuoShop(value,obj){
 		var nowshopnumber;
@@ -121,7 +130,7 @@
 			var shopnumber=parseInt($(nowshopnumber).html())+parseInt(value);
 			$.ajax({
 		        type:"post",
-		        url:'<%=basePath%>youxuan/isOKadd.do', 
+		        url:'youxuan/isOKadd.do', 
 		  	 	data:{
 		  	 		"goods_id":youxuangg_id,
 		  	 		"goods_type":"2",
@@ -157,7 +166,7 @@
 	function payMoney(pay_way,change_type){
  		$.ajax({
 	        type:"post",
-	        url:'<%=basePath%>youxuan/PayOrder.do', 
+	        url:'html_member/yxPayOrder.do', 
 		  	data:{
 	  	 		"goodsinfor":"${pd.goodsinfor}", 
  	  	 		"gopay_type":"${pd.gopay_type}",
@@ -177,26 +186,12 @@
  	   					var orderno=data.data;
 	   					window.location.href='html_member/payOkGoJsp.do?orderno='+orderno;
 	   				}else{
-	   					var charge=data.data;
-	   		   			var orderno=charge.orderNo;
-	   		   			var money=(charge.amount/100).toFixed(2);
-	   		   			//支付
-	   					pingpp.createPayment(charge, function(result, err){
-	   					    console.log(result);
-	   					    console.log(err.msg);
-	   					    console.log(err.extra);
-	   					    if (result == "success") {
-	   					    	//alert("支付成功");
-	   					    	window.location.href='html_member/payOkGoJsp.do?orderno='+orderno;
-	   					        // 只有微信公众账号 wx_pub 支付成功的结果会在这里返回，其他的支付结果都会跳转到 extra 中对应的 URL。
-	   					    } else if (result == "fail") {
-	   					    	alert("支付失败fail");
-	   						    // charge 不正确或者微信公众账号支付失败时会在此处返回
-	   					    } else if (result == "cancel") {
-	   					    	alert("cancel");
-	   					        // 微信公众账号支付取消支付
-	   					    }
-	   					});
+	   					var map=data.data;
+	   					if(map.return_msg == "OK"){
+							onBridgeReady(map.payment_type_,map.appId_,map.timestamp_,map.nonceStr_,map.package_,map.signType_,map.paySign_,map.out_trade_no_);
+			        	 }else{
+			        		 alert(map.return_msg);
+			        	 }
 	   				}
  	   			}
  			}
@@ -240,6 +235,5 @@
 
 	
 	
-	</script>
-</body>
+</script>
 </html>

@@ -317,8 +317,7 @@ public class StoreController extends BaseController {
 	 */
 	@RequestMapping(value="/goLogin")
 	public ModelAndView goLogin() throws Exception{
-		//logBefore(logger, "到登陆页面");
-		ModelAndView mv = this.getModelAndView();
+ 		ModelAndView mv = this.getModelAndView();
  		PageData pd = new PageData();
 		try {
 			pd=this.getPageData();
@@ -808,8 +807,7 @@ public class StoreController extends BaseController {
  		 				storepcService.updateTime(pd);
 					}
 	 				Map<String,Object> map=slogin.getMap();
-//	 				//system.out.println(map.toString());
-					pd.put("store_id", store_id);
+ 					pd.put("store_id", store_id);
  					pd=storepcService.findById(pd);
   					pd.put("oprator_id", operator_id);
   					pd.put("store_name", store_name);
@@ -820,8 +818,7 @@ public class StoreController extends BaseController {
  					pcsession.setAttribute("storepd", pd);
 	 				Qx qx=new Qx();
 					qx=(Qx) map.get("sy");
-//					//system.out.println(qx.toString());
-					pcsession.setAttribute("storeqx", qx);
+ 					pcsession.setAttribute("storeqx", qx);
 	 				mv.addObject("qx", qx);
 	 				//判断办证金是否已经交了
 //					String earnest_money=pd.getString("earnest_money");

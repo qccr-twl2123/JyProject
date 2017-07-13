@@ -69,23 +69,23 @@ public class Store_PayController extends BaseController {
 		// type代表支付方式
 		PageData pd=new PageData();
 		try{
-						pd = this.getPageData();
- 						String url=pd.getString("url");
- 						String in_jiqi=pd.getString("in_jiqi");
-						if(in_jiqi == null || in_jiqi.equals("")){
- 							pd.put("in_jiqi", "2");
-						}
-   						//商家财富
-   			 			if(pd.getString("store_id")== null || pd.getString("store_id").equals("")){
- 			 				result="0";
- 			 				message="id不能为空";
- 			 			}else{
- 			 				String store_wealthhistory_id=BaseController.getCZUID(pd.getString("store_id"));//充值单号
- 			 				if( pd.getString("store_operator_id") == null ||  pd.getString("store_operator_id").trim().equals("") ){
- 								pd.put("store_operator_id", "jy"+pd.getString("store_id"));
- 							}else{
- 								store_wealthhistory_id=BaseController.getCZUID(pd.getString("store_operator_id")); 
- 							}
+			pd = this.getPageData();
+ 			String url=pd.getString("url");
+ 			String in_jiqi=pd.getString("in_jiqi");
+			if(in_jiqi == null || in_jiqi.equals("")){
+ 					pd.put("in_jiqi", "2");
+			}
+   			//商家财富
+   			 if(pd.getString("store_id")== null || pd.getString("store_id").equals("")){
+ 			 	result="0";
+ 			 	message="id不能为空";
+ 			 }else{
+ 			 	String store_wealthhistory_id=BaseController.getCZUID(pd.getString("store_id"));//充值单号
+ 			 	if( pd.getString("store_operator_id") == null ||  pd.getString("store_operator_id").trim().equals("") ){
+ 						pd.put("store_operator_id", "jy"+pd.getString("store_id"));
+ 				}else{
+ 						store_wealthhistory_id=BaseController.getCZUID(pd.getString("store_operator_id")); 
+ 				}
  				 			String ip=getIp(request);//当前用户所在IP地址
  							String money=pd.getString("money");
  							if( money== null || money.equals("")){
@@ -508,8 +508,7 @@ public class Store_PayController extends BaseController {
 		@RequestMapping(value="/saveWithdraw")
 		@ResponseBody
 		public Object saveWithdraw() throws Exception{
-			//logBefore(logger, "新增Withdraw_approval");
-			Map<String,Object> map = new HashMap<String,Object>();
+ 			Map<String,Object> map = new HashMap<String,Object>();
  			String result = "1";
 			String message="提现审批，请等待1至2个工作日";
 			PageData pd = new PageData();
@@ -683,10 +682,8 @@ public class Store_PayController extends BaseController {
 			pd=null;
 			return map;
 		}
+		 
 		
-		public static void main(String[] args) {
-			//System.out.println( 100%50 );
-		}
 		
 		
 		

@@ -1330,10 +1330,7 @@ public class Pay_historyController extends BaseController {
 			return ipAddress;
 		}
 		
-		
-		
-		
-		
+ 
 
 		@Resource(name = "storepc_marketingeffectService")
 		private   Storepc_marketingeffectService storepcMarketingeffectService;	
@@ -1351,92 +1348,18 @@ public class Pay_historyController extends BaseController {
 		@Resource(name = "storepc_marketingtypeService")
 		private Storepc_marketingtypeService storepcMarketingTypeService;
 		
- 
-		
-//		/**
-//		 * 
-//		* 方法名称:：createOrder 
-//		* 方法描述：生成一个订单及相关操作
-//		* 创建人：魏汉文
-//		* 创建时间：2016年8月10日 下午1:44:50
-//		 */
-//		public Map<String,Object> createOrder(PageData pd,PageData mpd,PageData spd) throws Exception{
-//			logBefore(logger, "0元支付");
-//			Map<String,Object> map = new HashMap<String,Object>();
-// 	 		String result = "1";
-//			String message="支付成功";
-// 			try{ 
-// 				//新增订单
-//               	String channel=pd.getString("pay_way");
-//               	String pay_type=pd.getString("pay_type");
-//               //新增订单
-//				if(!TongYong.historyByOrder(pd, channel, pay_type,"b")){
-//						message="支付失败,请联平台";
-//						result="0";
-//				}
-//  			}catch(Exception e){
-//				 result = "0";
-//				 message="系统错误";
-// 				 System.out.println("++++++++++++++++++"+e.toString());
-//			}
-//	 		map.put("result", result);
-//			map.put("message", message);
-//			map.put("data", "");
-//	  		return map;
-//		}
-		
+  
 		
 		@Resource(name="city_fileService")
 		private City_fileService city_fileService;
 		
 		
 		
+		//===================
 		
 		
-		public static void main(String[] args){
-		 
- 		}
- 		@RequestMapping(value="/ceshi")
-		@ResponseBody
-		public void ceshi() throws Exception{
- 			 String orderno="CZ201703030218337805";//支付记录号
-			 int sub=2;
-	         String channel="wx";//支付方式
-	         String trade="CZ201703030218337805";//流水单号
-	         double price=100;//支付金额（消费/充值金额）
-	         PageData pd=new PageData();
- 			//保证金
-	            try { 
-	            	
-	            } catch (Exception e) {
-					// TODO: handle exception
-						logger.error(e.toString());
-						System.out.println(e.toString());
-					}
- 		}
-// 		
-//		
-//		@RequestMapping(value="/ceshi2")
-//		@ResponseBody
-//		public void ceshi2(){
- //			String orderno="201609200425089856";//支付记录号
-//			int sub=2;
-//			String channel="alipay";//支付方式
-//			String trade="1111111111111";//流水单号
-//			double price=100000;//支付金额（消费/充值金额）
-//			PageData pd=new PageData();
-//			//订单支付
-//			try {
-//					pd.put("order_id", orderno);
-//	         		pd=appOrderService.findById(pd);//订单详情
-//					//第三方支付
-//	       			pd.put("member_id", pd.getString("payer_id"));
-//	       			TongYong.historyByOrder(pd, channel, "2","b");
-//			} catch (Exception e) {
-//					// TODO: handle exception
-//					logger.error(e.toString());
-//					System.out.println(e.toString());
-//			}
-//		}
-//		
+		
+		
+		
+	 
   }

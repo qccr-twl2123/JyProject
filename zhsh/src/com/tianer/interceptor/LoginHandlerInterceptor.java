@@ -53,12 +53,12 @@ public class LoginHandlerInterceptor extends HandlerInterceptorAdapter{
  				return false;
  			}
 		}else if(!Const.NOTLANJIEJIEKOU.contains(path) && path.matches(Const.WEIXINLANJIEJIEKOU)  ){//微信端登录
-  			Subject currentUser = SecurityUtils.getSubject();  
- 			Session session = currentUser.getSession();	
- 			if(session.getAttribute(Const.SESSION_H5_USER) == null){
-   				response.sendRedirect(request.getContextPath()+"/html_member/toLoginWx.do");
- 				return false;
- 			}
+//  			Subject currentUser = SecurityUtils.getSubject();  
+// 			Session session = currentUser.getSession();	
+// 			if(session.getAttribute(Const.SESSION_H5_USER) == null){
+//   				response.sendRedirect(request.getContextPath()+"/html_member/toLoginWx.do");
+// 				return false;
+// 			}
 		}else if(path.contains("storeapp_payhHstory/sureConfirmed.do") || path.contains("app_pay_history/thirdPartyPay")){//收银,公众号支付
 			String session_orderid=request.getParameter("session_orderid");
  			String in_jiqi=request.getParameter("in_jiqi");

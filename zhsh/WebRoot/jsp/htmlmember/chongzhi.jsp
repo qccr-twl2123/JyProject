@@ -79,6 +79,7 @@
  			return;
  		}
  		var url='http://www.jiuyuvip.com/html_member/toLogin.do';
+ 		//var url='https://www.jiuyuvip.com/html_me/goMe.do?type=11';
  		if(channel == "wx_pub"){
  			//获取charge
  	   		$.ajax({

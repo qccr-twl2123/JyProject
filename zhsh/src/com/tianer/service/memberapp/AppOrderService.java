@@ -227,6 +227,9 @@ public class AppOrderService {
  	public PageData getguanlianById(PageData pd) throws Exception {
 		return (PageData) dao.findForObject("AppOrderMapper.getguanlianById", pd);
 	}
+ 	public PageData sumguanlianById(PageData pd) throws Exception {
+		return (PageData) dao.findForObject("AppOrderMapper.sumguanlianById", pd);
+	}
  	//============================================================================================================================
 	
 	/*

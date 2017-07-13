@@ -39,15 +39,15 @@ public class WxChatBackUrlController extends BaseController {
 	
 	 
 	/**
-	 * 购买订单微信支付回调接口
-	* 方法名：GZHPayForOrder
-	* wxback/gZHPayForOrder.do
+	 * 微信支付回调接口
+	* 方法名：Notify
+	* wxback_chat/notify.do
 	* 
     */
-	@RequestMapping(value="/gZHPayForOrder")
+	@RequestMapping(value="/notify")
 	@ResponseBody
-	public void GZHPayForOrder(PrintWriter out,HttpServletRequest request) throws Exception{
-		logBefore(logger, "购买订单微信支付回调接口");
+	public void Notify(PrintWriter out,HttpServletRequest request) throws Exception{
+		logBefore(logger, "微信支付回调接口");
 		String inputLine;
 		StringBuilder sb =new StringBuilder();
 		String resXml="";//返回数据
@@ -78,7 +78,7 @@ public class WxChatBackUrlController extends BaseController {
 			WXPayPath dodo = new WXPayPath();
 			boolean signflag=dodo.YanQian(xmlStr);
 			if(!signflag){
-				ServiceHelper.getAppPcdService().saveLog(xmlStr, "充值回调的订单验签失败","0099");
+				ServiceHelper.getAppPcdService().saveLog(xmlStr, "回调的订单验签失败","0099");
 				resXml=notsign;
 			}else{
 				Map<String, String> map =  WXPayUtil.xmlToMap( xmlStr );
@@ -89,20 +89,22 @@ public class WxChatBackUrlController extends BaseController {
 				String tradnumber = (String) map.get("transaction_id");
 	 			//3.总金额
 				String total_fee=(String) map.get("total_fee");
-				//4.支付类型  12-优惠买单支付，13-购买提货券商品,14-优选商品
+				//4.支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
 				String attach=(String) map.get("attach");
 	 			//是否成功
 				Object result_code=map.get("result_code");
 				if("SUCCESS".equals(result_code)){ 
-						 if(attach.equals("12")){
+						 if(attach.equals("1")){
 							 resXml=YhmdHuiDiao(out_trade_no, tradnumber, total_fee, map);
-						 }else if(attach.equals("13")){
+						 }else if(attach.equals("2")){
 							 resXml=ThjHuiDiao(out_trade_no, tradnumber, total_fee, map);
+						 }else if(attach.equals("3")){
+							 resXml=YxThjHuiDiao(out_trade_no, tradnumber, total_fee, map);
 						 }else{
-							 resXml=YhmdHuiDiao(out_trade_no, tradnumber, total_fee, map);
+							 resXml=chongzhi(out_trade_no, tradnumber, total_fee, map);
 						 }
 			 	}else{
- 					ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值失败"+map.toString(),"0099");
+ 					ServiceHelper.getAppPcdService().saveLog(out_trade_no, "支付失败"+map.toString(),"0099");
  					resXml=notsuccess;	 
 				}		
 			}
@@ -124,12 +126,12 @@ public class WxChatBackUrlController extends BaseController {
     		pd.put("order_id", out_trade_no);
     		pd=ServiceHelper.getAppOrderService().findById(pd);//订单详情
     		if(pd == null){
-    			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值回调的订单不存在"+map.toString(),"0099");
+    			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "优惠买单的订单不存在"+map.toString(),"0099");
      			 return notorder;
     		}
     		double actual_money=Double.parseDouble(pd.getString("actual_money"));
     		if(actionmoney != actual_money){
-    			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值回调的订单金额不匹配"+map.toString(),"0099");
+    			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "优惠买单的订单金额不匹配"+map.toString(),"0099");
  				 return notmoney;
     		}
  			pd.put("order_tn", tradnumber);
@@ -158,12 +160,12 @@ public class WxChatBackUrlController extends BaseController {
     		pd.put("order_id", out_trade_no);
     		pd=ServiceHelper.getAppOrderService().findById(pd);//订单详情
     		if(pd == null){
-    			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值回调的订单不存在"+map.toString(),"0099");
+    			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "提货券的订单不存在"+map.toString(),"0099");
      			 return notorder;
     		}
     		double actual_money=Double.parseDouble(pd.getString("actual_money"));
     		if(actionmoney != actual_money){
-    			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值回调的订单金额不匹配"+map.toString(),"0099");
+    			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "提货券的订单金额不匹配"+map.toString(),"0099");
  				 return notmoney;
     		}
  			//修改订单状态
@@ -319,121 +321,74 @@ public class WxChatBackUrlController extends BaseController {
 		}
  		return success;
 	}
-
 	
 	/**
-	 *微信充值金额回调接口
-	* 方法名：gZHPayForCZ
-	* wxback/gZHPayForCZ.do
-	* 
-  	 */
-	@RequestMapping(value="/gZHPayForCZ")
-	@ResponseBody
-	public void gZHPayForCZ(PrintWriter out,HttpServletRequest request) throws Exception{
-		logBefore(logger, "微信充值金额回调接口");
-		String inputLine;
-		StringBuilder sb =new StringBuilder();
-		String resXml="";//返回数据
- 		try {
-			while ((inputLine = request.getReader().readLine()) != null) {
-				sb.append(inputLine);
-			}
-			request.getReader().close();
-			String xmlStr = "<xml>"
-					+ "<appid><![CDATA[wxb4dc385f953b356e]]></appid>"//公众账号ID
-					+ "<bank_type><![CDATA[CCB_CREDIT]]></bank_type>"//付款银行
-					+ "<cash_fee><![CDATA[1]]></cash_fee>"//现金支付金额
-					+ "<fee_type><![CDATA[CNY]]></fee_type>"//货币种类
-					+ "<is_subscribe><![CDATA[Y]]></is_subscribe>"//是否关注公众账号
-					+ "<mch_id><![CDATA[1228442802]]></mch_id>"//商户号
-					+ "<nonce_str><![CDATA[1002477130]]></nonce_str>"//随机字符串
-					+ "<openid><![CDATA[o-HREuJzRr3moMvv990VdfnQ8x4k]]></openid>"//用户标识
-					+ "<out_trade_no><![CDATA[0016cacc7b844752a1222e6f3a57c897]]></out_trade_no>"//商户订单号最多32位
-					+ "<result_code><![CDATA[SUCCESS]]></result_code>"//业务结果
-					+ "<sign><![CDATA[1269E03E43F2B8C388A414EDAE185CEE]]></sign>"//签名
-					+ "<time_end><![CDATA[20150324100405]]></time_end>"//支付完成时间
-					+ "<total_fee>0</total_fee>"//总金额
-					+ "<trade_type><![CDATA[JSAPI]]></trade_type>"//交易类型
-					+ "<transaction_id><![CDATA[1009530574201503240036299496]]></transaction_id>"//微信支付订单号
-					+" <attach><![CDATA[12123212112014070335681123222222]]></attach>"//商家数据包
-			  + "</xml>" ;
-			//验签
-			WXPayPath dodo = new WXPayPath();
-			boolean signflag=dodo.YanQian(xmlStr);
-			if(!signflag){
-				ServiceHelper.getAppPcdService().saveLog(xmlStr, "充值回调的订单验签失败","0099");
-				resXml= notsign;
+	 * 充值
+	 * @param out_trade_no
+	 * @param tradnumber
+	 * @param total_fee
+	 * @param map
+	 * @return
+	 */
+	public String chongzhi(String out_trade_no,String tradnumber,String total_fee,Map<String, String>  map){
+		try {
+ 	        //新增用户余额充值记录
+			PageData pd=new PageData();
+			pd.put("waterrecord_id", out_trade_no);
+			pd=ServiceHelper.getWaterRecordService().findWaterRecordByBackPay(pd);
+			if(pd == null ){
+				 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值回调的订单不存在"+map.toString(),"0099");
+				 return notorder;
 			}else{
-				Map<String, String> map =  WXPayUtil.xmlToMap( xmlStr );
-//				Map<String, String> map =  WXPayUtil.xmlToMap(sb.toString());
-	 	 		//1.订单id
-				String out_trade_no=(String)map.get("out_trade_no");
-	 			//2.流水单号
-				String tradnumber = (String) map.get("transaction_id");
-	 			//3.总金额
-				String total_fee=(String) map.get("total_fee");
-	 			//是否成功
-				Object result_code=map.get("result_code");
-				if("SUCCESS".equals(result_code)){
-	 		            //新增用户余额充值记录
-						PageData pd=new PageData();
-						pd.put("waterrecord_id", out_trade_no);
-						pd=ServiceHelper.getWaterRecordService().findWaterRecordByBackPay(pd);
-						if(pd == null ){
-							 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值回调的订单不存在"+map.toString(),"0099");
- 							 resXml= notorder;
-						}else{
-							double actionmoney=(new BigDecimal(Double.parseDouble(total_fee)/100)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
-							//判断当前充值订单的金额和返回的金额是不是一致的
-							double jymoney=Double.parseDouble(pd.getString("money"));
-							if(actionmoney != jymoney){
-								 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值回调的订单金额不匹配"+map.toString(),"0099");
-								 resXml= notmoney;
-							}else{
-								pd.put("member_id", pd.getString("user_id"));
-			 	 			    double now_money=Double.parseDouble(ServiceHelper.getAppMemberService().findWealthById(pd).getString("now_money"));
-	 			 			  	PageData moneypd=new PageData();
-				  				moneypd.put("member_id", pd.getString("member_id"));
-				   				moneypd.put("wealth_type", "2");//1-积分，2-金钱
-				  				moneypd.put("consume_type", "1");//1-收益，2-支出
-				  				moneypd.put("content", "充值");
-				  				moneypd.put("number", TongYong.df2.format(actionmoney));
-				  				moneypd.put("now_money", TongYong.df2.format(now_money+actionmoney));
-					  			moneypd.put("jiaoyi_id", out_trade_no);
-					  			moneypd.put("jiaoyi_status", "1");
-					  			moneypd.put("member_wealthhistory_id", out_trade_no);
-					  			ServiceHelper.getAppMember_wealthhistoryService().saveWealthhistory(moneypd); 
-					  			//更新会员充值次数
-					  			moneypd=null;
-					  			moneypd=new PageData();
-			 		  			int cz_number=Integer.parseInt(pd.getString("cz_number"))+1;
-					  			moneypd.put("cz_number", cz_number);
-					  			moneypd.put("member_id",  pd.getString("member_id"));
-				  				ServiceHelper.getAppMemberService().edit(moneypd);
-					  			if(cz_number == 1){//新增会员的魅力值
-			 		  				TongYong.charm_numberAdd(pd.getString("member_id"), Const.charm_number[9]); 
-				  				}
-					  			//更新支付信息
-					  			pd.put("pay_status", "1");
-					  			pd.put("order_tn", tradnumber);
-			 		  			ServiceHelper.getWaterRecordService().editWaterRecord(pd);
-			 		  			//返回状态码,返回信息
-								resXml =success; 					
-							}
- 						}
- 				}else{
- 					ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值失败"+map.toString(),"0099");
- 					resXml=notsuccess;	 
-				}		
+				double actionmoney=(new BigDecimal(Double.parseDouble(total_fee)/100)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+				//判断当前充值订单的金额和返回的金额是不是一致的
+				double jymoney=Double.parseDouble(pd.getString("money"));
+				if(actionmoney != jymoney){
+					 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值回调的订单金额不匹配"+map.toString(),"0099");
+					 return notmoney;
+				}else{
+					pd.put("member_id", pd.getString("user_id"));
+ 	 			    double now_money=Double.parseDouble(ServiceHelper.getAppMemberService().findWealthById(pd).getString("now_money"));
+		 			PageData moneypd=new PageData();
+	  				moneypd.put("member_id", pd.getString("member_id"));
+	   				moneypd.put("wealth_type", "2");//1-积分，2-金钱
+	  				moneypd.put("consume_type", "1");//1-收益，2-支出
+	  				moneypd.put("content", "充值");
+	  				moneypd.put("number", TongYong.df2.format(actionmoney));
+	  				moneypd.put("now_money", TongYong.df2.format(now_money+actionmoney));
+		  			moneypd.put("jiaoyi_id", out_trade_no);
+		  			moneypd.put("jiaoyi_status", "1");
+		  			moneypd.put("member_wealthhistory_id", out_trade_no);
+		  			ServiceHelper.getAppMember_wealthhistoryService().saveWealthhistory(moneypd); 
+		  			//更新会员充值次数
+		  			moneypd=null;
+		  			moneypd=new PageData();
+ 		  			int cz_number=Integer.parseInt(pd.getString("cz_number"))+1;
+		  			moneypd.put("cz_number", cz_number);
+		  			moneypd.put("member_id",  pd.getString("member_id"));
+	  				ServiceHelper.getAppMemberService().edit(moneypd);
+		  			if(cz_number == 1){//新增会员的魅力值
+ 		  				TongYong.charm_numberAdd(pd.getString("member_id"), Const.charm_number[9]); 
+	  				}
+		  			//更新支付信息
+		  			pd.put("pay_status", "1");
+		  			pd.put("order_tn", tradnumber);
+ 		  			ServiceHelper.getWaterRecordService().editWaterRecord(pd);
+ 		  			 				
+				}
 			}
-   		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+		
+		} catch (Exception e) {
+			// TODO: handle exception
 			e.printStackTrace();
-		}
-		out.write(resXml);
-		out.close();
- 	}
+ 		}
+		return success;
+	}
 	
+	
+
+	
+	 
 	
 	 
 	

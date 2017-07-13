@@ -11,7 +11,7 @@ public class WXPayConfigImpl extends WXPayConfig{
     private static WXPayConfigImpl INSTANCE;
 
     private WXPayConfigImpl() throws Exception{
-    	 String certPath = "D://CERT/common/apiclient_cert.p12";
+    	 String certPath = "C://wx/apiclient_cert.p12";
     	 InputStream certStream=null;
     	 try {
             File file = new File(certPath);
@@ -37,7 +37,7 @@ public class WXPayConfigImpl extends WXPayConfig{
     }
 
     public String getAppID() {
-        return "wx62d81eec40f745b4";
+        return "wxab8acb865bb1637e";
     }
 
     public String getMchID() {
