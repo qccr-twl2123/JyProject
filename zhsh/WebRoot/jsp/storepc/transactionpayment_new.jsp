@@ -185,7 +185,7 @@
 	     					type:"post",
 	     						url:"storepc_wx/transaction_pointsPay.do",
 	     						data:{
- 	     							"money",paymoney,"pay_way":channel
+ 	     							"money":paymoney,"pay_way":channel
 	     						},
 	     	 					dataType:"json",
 	     						success:function(data){ 

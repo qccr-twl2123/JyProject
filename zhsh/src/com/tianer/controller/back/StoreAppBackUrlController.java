@@ -1,21 +1,33 @@
-package com.tianer.controller.wxback;
+package com.tianer.controller.back;
 
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.tianer.controller.base.BaseController;
 import com.tianer.controller.tongyongUtil.TongYong;
+import com.tianer.entity.zhihui.StoreRole;
 import com.tianer.util.Const;
 import com.tianer.util.DateUtil;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
+import com.tianer.util.alipaypay.AlipayConfig;
 import com.tianer.util.wxpay.WXPayConfig;
 import com.tianer.util.wxpay.WXPayConfigImpl;
 import com.tianer.util.wxpay.WXPayPath;
@@ -29,10 +41,72 @@ import com.tianer.util.wxpay.WXPayUtil;
  * @author Administrator
  *
  */
-@Controller("storeAppWxBackUrlController")
-@RequestMapping(value="/wxback_sapp")
-public class StoreAppWxBackUrlController extends BaseController { 
+@Controller("storeAppBackUrlController")
+@RequestMapping(value="/back_sapp")
+public class StoreAppBackUrlController extends BaseController {
 
+
+
+	 
+	/**
+	 * 
+	* 方法名：Alipaynotify
+ 	* 描述：支付宝返回结果（获取流水单号）
+	* 返回类型：json
+	* back_sapp/alipaynotify.do
+	 */
+	@RequestMapping(value="/alipaynotify")
+	@ResponseBody
+	public Object Alipaynotify() throws Exception{
+  		PageData pd = new PageData();
+ 		try {
+ 			pd = this.getPageData();
+			Map<String, String> paramsMap =(Map<String, String>)pd ;//将异步通知中收到的所有参数都存放到map中
+			boolean signVerified = AlipaySignature.rsaCheckV1(paramsMap, AlipayConfig.alipay_public_key, AlipayConfig.charset, AlipayConfig.sign_type); //调用SDK验证签名
+			if(signVerified){
+				// TODO 验签成功后，按照支付结果异步通知中的描述，对支付结果中的业务内容进行二次校验，校验成功后在response中返回success并继续商户自身业务处理，校验失败返回failure
+				//订单状态成功：TRADE_SUCCESS
+				String trade_status=pd.getString("trade_status");	
+				if(trade_status.equals("TRADE_SUCCESS")){
+					//trade_no流水单号
+					String out_trade_no=pd.getString("out_trade_no");	
+					//trade_no流水单号
+					String trade_no=pd.getString("trade_no");	
+ 					//total_fee总价
+					String total_fee=TongYong.df2.format(Double.parseDouble(pd.getString("total_fee").trim())*100);//化为分的单位
+					//body订单id
+					String body=pd.getString("body");
+					String resXml="";
+					if(body.equals("1")){
+//						 resXml=Transaction_pointsPay(out_trade_no, trade_no, total_fee, pd,"alipay");
+					 }else if(body.equals("2")){
+//						 resXml=Service_Pay(out_trade_no, trade_no, total_fee, pd,"alipay");
+					 }else if(body.equals("3")){
+						  resXml=Store_cz(out_trade_no, trade_no, total_fee, pd,"alipay");
+					 }else{
+//						 resXml=BianjiYouXuan_pay(out_trade_no, trade_no, total_fee, pd,"alipay");
+					 }
+					//logger记录
+					ServiceHelper.getAppPcdService().saveLog(pd.toString(), "支付宝回调的订单结果","alipay");
+ 					return "success";
+				}
+			}else{
+				// TODO 验签失败则记录异常日志，并在response中返回failure.
+				AlipayConfig.logResult(pd.toString());
+				ServiceHelper.getAppPcdService().saveLog(pd.toString(), "支付宝回调的订单验签失败","0099");
+			}
+ 		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+ 		return "";
+	} 
+	
+	
+	
+
+	
+	
 	private String success= "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml> "; 
 	private String notsuccess="<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[]]></return_msg></xml>";
 	private String notsign="<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[签名错误]]></return_msg></xml>";
@@ -43,15 +117,14 @@ public class StoreAppWxBackUrlController extends BaseController {
 	 
 	/**
 	 * 微信支付回调接口
-	* 方法名：Notify
-	* wxback_sapp/notify.do
+	* 方法名：wxnotify
+	* back_sapp/notify.do
 	* 
     */
-	@RequestMapping(value="/notify")
+	@RequestMapping(value="/wxnotify")
 	@ResponseBody
-	public void Notify(PrintWriter out,HttpServletRequest request) throws Exception{
-		logBefore(logger, "微信支付回调接口");
-		String inputLine;
+	public void wxnotify(PrintWriter out,HttpServletRequest request) throws Exception{
+ 		String inputLine;
 		StringBuilder sb =new StringBuilder();
 		String resXml="";//返回数据
  		try {
@@ -59,24 +132,7 @@ public class StoreAppWxBackUrlController extends BaseController {
 				sb.append(inputLine);
 			}
 			request.getReader().close();
-			String xmlStr = "<xml>"
-					+ "<appid><![CDATA[wxb4dc385f953b356e]]></appid>"//公众账号ID
-					+ "<bank_type><![CDATA[CCB_CREDIT]]></bank_type>"//付款银行
-					+ "<cash_fee><![CDATA[1]]></cash_fee>"//现金支付金额
-					+ "<fee_type><![CDATA[CNY]]></fee_type>"//货币种类
-					+ "<is_subscribe><![CDATA[Y]]></is_subscribe>"//是否关注公众账号
-					+ "<mch_id><![CDATA[1228442802]]></mch_id>"//商户号
-					+ "<nonce_str><![CDATA[1002477130]]></nonce_str>"//随机字符串
-					+ "<openid><![CDATA[o-HREuJzRr3moMvv990VdfnQ8x4k]]></openid>"//用户标识
-					+ "<out_trade_no><![CDATA[0016cacc7b844752a1222e6f3a57c897]]></out_trade_no>"//商户订单号最多32位
-					+ "<result_code><![CDATA[SUCCESS]]></result_code>"//业务结果
-					+ "<sign><![CDATA[1269E03E43F2B8C388A414EDAE185CEE]]></sign>"//签名
-					+ "<time_end><![CDATA[20150324100405]]></time_end>"//支付完成时间
-					+ "<total_fee>0</total_fee>"//总金额
-					+ "<trade_type><![CDATA[JSAPI]]></trade_type>"//交易类型
-					+ "<transaction_id><![CDATA[1009530574201503240036299496]]></transaction_id>"//微信支付订单号
-					+" <attach><![CDATA[12123212112014070335681123222222]]></attach>"//商家数据包
-			  + "</xml>" ;
+			String xmlStr = sb.toString();
 			//验签
 			WXPayPath dodo = new WXPayPath();
 			boolean signflag=dodo.YanQian(xmlStr);
@@ -97,14 +153,14 @@ public class StoreAppWxBackUrlController extends BaseController {
 	 			//是否成功
 				Object result_code=map.get("result_code");
 				if("SUCCESS".equals(result_code)){ 
-						 if(attach.equals("3")){
-//							 resXml=Transaction_pointsPay(out_trade_no, tradnumber, total_fee, map);
+						 if(attach.equals("1")){
+//							 resXml=Transaction_pointsPay(out_trade_no, tradnumber, total_fee, map,"wx");
 						 }else if(attach.equals("2")){
-//							 resXml=Service_Pay(out_trade_no, tradnumber, total_fee, map);
+//							 resXml=Service_Pay(out_trade_no, tradnumber, total_fee, map,"wx");
  						 }else if(attach.equals("3")){
-							  resXml=Store_cz(out_trade_no, tradnumber, total_fee, map);
+							  resXml=Store_cz(out_trade_no, tradnumber, total_fee, map,"wx");
 						 }else{
-//							 resXml=BianjiYouXuan_pay(out_trade_no, tradnumber, total_fee, map);
+//							 resXml=BianjiYouXuan_pay(out_trade_no, tradnumber, total_fee, map,"wx");
 						 }
 			 	}else{
  					ServiceHelper.getAppPcdService().saveLog(out_trade_no, "支付失败"+map.toString(),"0099");
@@ -120,10 +176,17 @@ public class StoreAppWxBackUrlController extends BaseController {
  	}
 	
 	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * 商家充值
 	 */
-	public String Store_cz(String out_trade_no,String tradnumber,String total_fee,Map<String, String>  map){
+	public String Store_cz(String out_trade_no,String tradnumber,String total_fee,Map<String, String>  map,String pay_way){
  		try {
  			PageData pd=new PageData();
  			double actionmoney=(new BigDecimal(Double.parseDouble(total_fee)/100)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -142,6 +205,7 @@ public class StoreAppWxBackUrlController extends BaseController {
      			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值金额不匹配"+map.toString(),"0099");
   				 return notmoney;
      		 }
+     		historypd.put("pay_way", pay_way);
     		 ////更新财富信息
           	PageData spd=ServiceHelper.getAppStoreService().findById(historypd);
 	   		double now_wealth=Double.parseDouble(ServiceHelper.getAppStoreService().sumStoreWealth(spd));
@@ -211,9 +275,5 @@ public class StoreAppWxBackUrlController extends BaseController {
 		}
  		return success;
 	}
-	
-	
-	
-	
 	
 }

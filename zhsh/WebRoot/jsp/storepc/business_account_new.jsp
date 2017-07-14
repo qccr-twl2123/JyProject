@@ -70,6 +70,9 @@
 			</li>
 		</c:if>
 	</ul>
+	<div class="alipay">
+	
+	</div>
 </c:if>
 </body>
 <script type="text/javascript">
@@ -95,43 +98,42 @@
       			clearInterval(t);
       		}
       		var url='<%=basePath%>storepc/goStore.do';
-      		if(channel == "wx_pub_qr"){
- 				$.ajax({
- 					type:"post",
- 						url:"storepc_wx/store_cz.do",
- 						data:{
-  							"money",$("#amount").val(),"pay_way":channel
- 						},
- 	 					dataType:"json",
- 						success:function(data){ 
- 							 if(data.result == "1"){
- 								 var map=data.data;
- 								 var wx_pub_qr =map.code_url ;
- 								 $(".wx_ewm").show();
-								 $("#erweimapay").empty();
-								 //生成二维码：商家ID以及zhuohao.生成的二维码下载，图片尺寸为5*6CM；
-		 				         jQuery($("#erweimapay")).qrcode({ text: wx_pub_qr }); 
-		 				         $("#erweimapay").append("<span>微信支付二维码</span>");
-								 //设置定时器
- 								 var time=30;
- 	 		       				 window.t=setInterval(function() {
-	 			       				time--;
- 	 			       				if(time == 0){
-	 			       					shuaxin();
-	 			       				}else{
-	 			       					$(".ewm_title").html(time+"秒后将会自动刷新页面，请尽快支付");
-	 			       				}
- 	 			       			},1000);
+      		$.ajax({
+					type:"post",
+						url:"storepc_pay/store_cz.do",
+						data:{
+							"money":$("#amount").val(),"pay_way":channel
+						},
+	 					dataType:"json",
+						success:function(data){ 
+							 if(data.result == "1"){
+								 var map=data.data;
+								 if(channel == "wx_pub_qr"){
+									 var wx_pub_qr =map.code_url ;
+									 $(".wx_ewm").show();
+									 $("#erweimapay").empty();
+									 //生成二维码：商家ID以及zhuohao.生成的二维码下载，图片尺寸为5*6CM；
+			 				         jQuery($("#erweimapay")).qrcode({ text: wx_pub_qr }); 
+			 				         $("#erweimapay").append("<span>微信支付二维码</span>");
+									 //设置定时器
+										 var time=30;
+			 		       				 window.t=setInterval(function() {
+		 			       				time--;
+			 			       				if(time == 0){
+		 			       					shuaxin();
+		 			       				}else{
+		 			       					$(".ewm_title").html(time+"秒后将会自动刷新页面，请尽快支付");
+		 			       				}
+			 			       			},1000);
+					 			 }else{
+					 				window.open('<%=basePath%>torepc_alipay/goPayChongZhi.do?total_amount='+$("#amount").val()+'&body=3&out_trade_no='+map);
+					 			 }
  							 }else{
- 								 alert(data.message);
- 							 }
- 	   					}
- 				});  
- 			 }else{
- 				 alert("暂未开通");
- 			 }
-      		 
-          }
+								 alert(data.message);
+							 }
+	   					}
+				});  
+           }
     	
    
 	var box=$(".act_box")

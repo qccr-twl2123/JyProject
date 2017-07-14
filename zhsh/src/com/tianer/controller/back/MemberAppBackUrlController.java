@@ -1,35 +1,43 @@
-package com.tianer.controller.wxback;
+package com.tianer.controller.back;
 
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.tianer.controller.base.BaseController;
 import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.util.Const;
 import com.tianer.util.DateUtil;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
+import com.tianer.util.wxpay.WXPayConfig;
+import com.tianer.util.wxpay.WXPayConfigImpl;
 import com.tianer.util.wxpay.WXPayPath;
 import com.tianer.util.wxpay.WXPayUtil;
+ 
+
+
 
 /** 
- * 微信公众号的全部回调地址
+ * 会员的App的微信的全部回调地址
  * @author Administrator
  *
  */
-@Controller("wxChatBackUrlController")
-@RequestMapping(value="/wxback_chat")
-public class WxChatBackUrlController extends BaseController { 
+@Controller("memberAppBackUrlController")
+@RequestMapping(value="/back_mapp")
+public class MemberAppBackUrlController extends BaseController { 
 	
-	
+
 	private String success= "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml> "; 
 	private String notsuccess="<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[]]></return_msg></xml>";
 	private String notsign="<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[签名错误]]></return_msg></xml>";
@@ -41,7 +49,7 @@ public class WxChatBackUrlController extends BaseController {
 	/**
 	 * 微信支付回调接口
 	* 方法名：Notify
-	* wxback_chat/notify.do
+	* back_mapp/notify.do
 	* 
     */
 	@RequestMapping(value="/notify")
@@ -135,7 +143,7 @@ public class WxChatBackUrlController extends BaseController {
  				 return notmoney;
     		}
  			pd.put("order_tn", tradnumber);
-			TongYong.historyByOrder(pd, pd.getString("channel"), "2","wx",true);
+			TongYong.historyByOrder(pd, pd.getString("channel"), "2","c",true);
     		if(pd.getString("store_operator_id").contains("jy")){
 	    		//发送推送
 			    TongYong.sendTuiSong(pd.getString("store_id"), out_trade_no, "2", pd.getString("store_id"), "1", pd.getString("sale_money"),"");
@@ -250,9 +258,9 @@ public class WxChatBackUrlController extends BaseController {
 	 	   					waterpd.put("arrivalmoney", TongYong.df2.format(Double.parseDouble(orderpd.getString("sale_money"))-Double.parseDouble(orderpd.getString("discount_money"))));
 	 	   					waterpd.put("nowuser_money", mpd.getString("now_money"));
 	 	    				waterpd.put("application_channel", orderpd.getString("in_jiqi")); 
-	 	    				waterpd.put("remittance_type","3" );
- 	    	 				waterpd.put("alipay_money",orderpd.getString("actual_money") );
- 	    	 				waterpd.put("remittance_name",Const.payjiqi[3] );
+	 	    				waterpd.put("remittance_type","4" );
+ 	   						waterpd.put("wx_money",orderpd.getString("actual_money") );
+ 	   						waterpd.put("remittance_name",Const.payjiqi[4] );
 		 	   				waterpd.put("integral_money",orderpd.getString("user_integral")); 
 		 	   				waterpd.put("balance_money",orderpd.getString("user_balance")); 
 	 	   					waterpd.put("remittance_number",mpd.getString("phone"));//支付人的支付账号
@@ -360,12 +368,5 @@ public class WxChatBackUrlController extends BaseController {
  		}
 		return success;
 	}
-	
-	
-
-	
 	 
-	
-	 
-	
 }

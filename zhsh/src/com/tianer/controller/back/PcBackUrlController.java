@@ -1,4 +1,4 @@
-package com.tianer.controller.wxback;
+package com.tianer.controller.back;
 
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alipay.api.internal.util.AlipaySignature;
 import com.tianer.controller.base.BaseController;
 import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.entity.zhihui.StoreFeeTihuoTask;
@@ -18,8 +19,7 @@ import com.tianer.util.Const;
 import com.tianer.util.DateUtil;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
-import com.tianer.util.wxpay.WXPayConfig;
-import com.tianer.util.wxpay.WXPayConfigImpl;
+import com.tianer.util.alipaypay.AlipayConfig;
 import com.tianer.util.wxpay.WXPayPath;
 import com.tianer.util.wxpay.WXPayUtil;
  
@@ -27,13 +27,73 @@ import com.tianer.util.wxpay.WXPayUtil;
 
 
 /** 
- * 微信的全部回调地址
+ * PC端的回调地址
  * @author Administrator
  *
  */
-@Controller("pcWxBackUrlController")
-@RequestMapping(value="/wxback_pc")
-public class PcWxBackUrlController extends BaseController { 
+@Controller("pcBackUrlController")
+@RequestMapping(value="/back_pc")
+public class PcBackUrlController extends BaseController { 
+	
+ 
+	/**
+	 * 
+	* 方法名：Alipaynotify
+ 	* 描述：支付宝返回结果（获取流水单号）
+	* 返回类型：json
+	* back_pc/alipaynotify.do
+	 */
+	@RequestMapping(value="/alipaynotify")
+	@ResponseBody
+	public Object Alipaynotify() throws Exception{
+  		PageData pd = new PageData();
+ 		try {
+ 			pd = this.getPageData();
+			Map<String, String> paramsMap =(Map<String, String>)pd ;//将异步通知中收到的所有参数都存放到map中
+			boolean signVerified = AlipaySignature.rsaCheckV1(paramsMap, AlipayConfig.alipay_public_key, AlipayConfig.charset, AlipayConfig.sign_type); //调用SDK验证签名
+			if(signVerified){
+				// TODO 验签成功后，按照支付结果异步通知中的描述，对支付结果中的业务内容进行二次校验，校验成功后在response中返回success并继续商户自身业务处理，校验失败返回failure
+				//订单状态成功：TRADE_SUCCESS
+				String trade_status=pd.getString("trade_status");	
+				if(trade_status.equals("TRADE_SUCCESS")){
+					//trade_no流水单号
+					String out_trade_no=pd.getString("out_trade_no");	
+					//trade_no流水单号
+					String trade_no=pd.getString("trade_no");	
+ 					//total_fee总价
+					String total_fee=TongYong.df2.format(Double.parseDouble(pd.getString("total_fee").trim())*100);//化为分的单位
+					//body订单id
+					String body=pd.getString("body");
+					String resXml="";
+					if(body.equals("1")){
+						 resXml=Transaction_pointsPay(out_trade_no, trade_no, total_fee, pd,"alipay");
+					 }else if(body.equals("2")){
+						 resXml=Service_Pay(out_trade_no, trade_no, total_fee, pd,"alipay");
+					 }else if(body.equals("3")){
+						  resXml=Store_cz(out_trade_no, trade_no, total_fee, pd,"alipay");
+					 }else{
+						 resXml=BianjiYouXuan_pay(out_trade_no, trade_no, total_fee, pd,"alipay");
+					 }
+					//logger记录
+					ServiceHelper.getAppPcdService().saveLog(pd.toString(), "支付宝回调的订单结果","alipay");
+ 					return "success";
+				}
+			}else{
+				// TODO 验签失败则记录异常日志，并在response中返回failure.
+				AlipayConfig.logResult(pd.toString());
+				ServiceHelper.getAppPcdService().saveLog(pd.toString(), "支付宝回调的订单验签失败","0099");
+			}
+ 		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+ 		return "";
+	} 
+	
+	
+	
+
+	
 	
 	private String success= "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml> "; 
 	private String notsuccess="<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[]]></return_msg></xml>";
@@ -46,14 +106,13 @@ public class PcWxBackUrlController extends BaseController {
 	/**
 	 * 微信支付回调接口
 	* 方法名：Notify
-	* wxback_pc/notify.do
+	* back_pc/notify.do
 	* 
     */
-	@RequestMapping(value="/notify")
+	@RequestMapping(value="/wxnotify")
 	@ResponseBody
-	public void Notify(PrintWriter out,HttpServletRequest request) throws Exception{
-		logBefore(logger, "微信支付回调接口");
-		String inputLine;
+	public void wxnotify(PrintWriter out,HttpServletRequest request) throws Exception{
+ 		String inputLine;
 		StringBuilder sb =new StringBuilder();
 		String resXml="";//返回数据
  		try {
@@ -61,24 +120,7 @@ public class PcWxBackUrlController extends BaseController {
 				sb.append(inputLine);
 			}
 			request.getReader().close();
-			String xmlStr = "<xml>"
-					+ "<appid><![CDATA[wxb4dc385f953b356e]]></appid>"//公众账号ID
-					+ "<bank_type><![CDATA[CCB_CREDIT]]></bank_type>"//付款银行
-					+ "<cash_fee><![CDATA[1]]></cash_fee>"//现金支付金额
-					+ "<fee_type><![CDATA[CNY]]></fee_type>"//货币种类
-					+ "<is_subscribe><![CDATA[Y]]></is_subscribe>"//是否关注公众账号
-					+ "<mch_id><![CDATA[1228442802]]></mch_id>"//商户号
-					+ "<nonce_str><![CDATA[1002477130]]></nonce_str>"//随机字符串
-					+ "<openid><![CDATA[o-HREuJzRr3moMvv990VdfnQ8x4k]]></openid>"//用户标识
-					+ "<out_trade_no><![CDATA[0016cacc7b844752a1222e6f3a57c897]]></out_trade_no>"//商户订单号最多32位
-					+ "<result_code><![CDATA[SUCCESS]]></result_code>"//业务结果
-					+ "<sign><![CDATA[1269E03E43F2B8C388A414EDAE185CEE]]></sign>"//签名
-					+ "<time_end><![CDATA[20150324100405]]></time_end>"//支付完成时间
-					+ "<total_fee>0</total_fee>"//总金额
-					+ "<trade_type><![CDATA[JSAPI]]></trade_type>"//交易类型
-					+ "<transaction_id><![CDATA[1009530574201503240036299496]]></transaction_id>"//微信支付订单号
-					+" <attach><![CDATA[12123212112014070335681123222222]]></attach>"//商家数据包
-			  + "</xml>" ;
+			String xmlStr = sb.toString();
 			//验签
 			WXPayPath dodo = new WXPayPath();
 			boolean signflag=dodo.YanQian(xmlStr);
@@ -100,13 +142,13 @@ public class PcWxBackUrlController extends BaseController {
 				Object result_code=map.get("result_code");
 				if("SUCCESS".equals(result_code)){ 
 						 if(attach.equals("1")){
-							 resXml=Transaction_pointsPay(out_trade_no, tradnumber, total_fee, map);
+							 resXml=Transaction_pointsPay(out_trade_no, tradnumber, total_fee, map,"wx");
 						 }else if(attach.equals("2")){
-							 resXml=Service_Pay(out_trade_no, tradnumber, total_fee, map);
+							 resXml=Service_Pay(out_trade_no, tradnumber, total_fee, map,"wx");
  						 }else if(attach.equals("3")){
-							  resXml=Store_cz(out_trade_no, tradnumber, total_fee, map);
+							  resXml=Store_cz(out_trade_no, tradnumber, total_fee, map,"wx");
 						 }else{
-							 resXml=BianjiYouXuan_pay(out_trade_no, tradnumber, total_fee, map);
+							 resXml=BianjiYouXuan_pay(out_trade_no, tradnumber, total_fee, map,"wx");
 						 }
 			 	}else{
  					ServiceHelper.getAppPcdService().saveLog(out_trade_no, "支付失败"+map.toString(),"0099");
@@ -122,10 +164,17 @@ public class PcWxBackUrlController extends BaseController {
  	}
 	
 	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * 商家充值
 	 */
-	public String Store_cz(String out_trade_no,String tradnumber,String total_fee,Map<String, String>  map){
+	public String Store_cz(String out_trade_no,String tradnumber,String total_fee,Map<String, String>  map,String pay_way){
  		try {
  			PageData pd=new PageData();
  			double actionmoney=(new BigDecimal(Double.parseDouble(total_fee)/100)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -144,6 +193,7 @@ public class PcWxBackUrlController extends BaseController {
      			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值金额不匹配"+map.toString(),"0099");
   				 return notmoney;
      		 }
+     		historypd.put("pay_way", pay_way);
     		 ////更新财富信息
           	PageData spd=ServiceHelper.getAppStoreService().findById(historypd);
 	   		double now_wealth=Double.parseDouble(ServiceHelper.getAppStoreService().sumStoreWealth(spd));
@@ -219,7 +269,7 @@ public class PcWxBackUrlController extends BaseController {
 	/**
 	 * 交易扣点支付
 	 */
-	public String Transaction_pointsPay(String out_trade_no,String tradnumber,String total_fee,Map<String, String>  map){
+	public String Transaction_pointsPay(String out_trade_no,String tradnumber,String total_fee,Map<String, String>  map,String pay_way){
 		PageData pd=new PageData();
 		double actionmoney=(new BigDecimal(Double.parseDouble(total_fee)/100)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
 		try {
@@ -240,6 +290,7 @@ public class PcWxBackUrlController extends BaseController {
      			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "交易扣点金额不匹配"+map.toString(),"0099");
   				 return notmoney;
      		 }
+     		historypd.put("pay_way", pay_way);
     		//更新订单处理状态
      		PageData spd=ServiceHelper.getAppStoreService().findById(historypd);
 	   		double now_wealth=Double.parseDouble(ServiceHelper.getAppStoreService().sumStoreWealth(spd));
@@ -258,9 +309,33 @@ public class PcWxBackUrlController extends BaseController {
    			waterpd.put("arrivalmoney",  TongYong.df2.format(actionmoney));
    			waterpd.put("nowuser_money","0");
    			waterpd.put("application_channel", historypd.getString("in_jiqi"));
-   			waterpd.put("remittance_name",Const.payjiqi[4] );
-   			waterpd.put("remittance_type","4" );
-   			waterpd.put("wx_money",  TongYong.df2.format(actionmoney) );
+   			if(historypd.getString("pay_way").contains("alipay")){
+					waterpd.put("remittance_type","3" );
+	 				waterpd.put("alipay_money",historypd.getString("number") );
+	 				waterpd.put("remittance_name",Const.payjiqi[3] );
+			}else if(historypd.getString("pay_way").contains("wx")){
+					waterpd.put("remittance_type","4" );
+					waterpd.put("wx_money",historypd.getString("number") );
+					waterpd.put("remittance_name",Const.payjiqi[4] );
+			}else if(historypd.getString("pay_way").contains("nowpay")){
+					waterpd.put("remittance_type","2" );
+					waterpd.put("nowypay_money",historypd.getString("number") );
+					if(historypd.getString("in_jiqi").equals("1")){
+						waterpd.put("remittance_name",Const.payjiqi[0] );
+					}else if(historypd.getString("in_jiqi").equals("4")){
+						waterpd.put("remittance_name",Const.payjiqi[6] );
+					}else if(historypd.getString("in_jiqi").equals("2")){
+						waterpd.put("remittance_name",Const.payjiqi[2] );
+					}
+			}else if(historypd.getString("pay_way").contains("pple")){
+					waterpd.put("remittance_type","5" );
+					waterpd.put("apple_money",historypd.getString("number") );
+					waterpd.put("remittance_name",Const.payjiqi[5] );
+			}else{
+					waterpd.put("remittance_type","5" );
+					waterpd.put("bank_money",historypd.getString("number"));
+					waterpd.put("remittance_name",Const.payjiqi[1] );
+			}
    			waterpd.put("remittance_number",spd.getString("registertel_phone"));//支付人的支付账号
     		waterpd.put("createtime",DateUtil.getTime());
    			waterpd.put("over_time",DateUtil.getTime());
@@ -315,7 +390,7 @@ public class PcWxBackUrlController extends BaseController {
 	/**
 	 * 优选编辑费用
 	 */
-	public String BianjiYouXuan_pay(String out_trade_no,String tradnumber,String total_fee,Map<String, String>  map){
+	public String BianjiYouXuan_pay(String out_trade_no,String tradnumber,String total_fee,Map<String, String>  map,String pay_way){
  		double bianji_money=(new BigDecimal(Double.parseDouble(total_fee)/100)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
 		try { 
 	 			PageData historypd=new PageData();
@@ -331,6 +406,7 @@ public class PcWxBackUrlController extends BaseController {
 	     			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "优选金额不匹配"+map.toString(),"0099");
 	  				 return notmoney;
 	     		 }
+	     		historypd.put("pay_way", pay_way);
 	 		 	String profit_type=historypd.getString("profit_type");
 	 		 	String jiaoyi_id=historypd.getString("jiaoyi_id");
       			PageData spd=ServiceHelper.getAppStoreService().findById(historypd);//商家详情
@@ -369,9 +445,33 @@ public class PcWxBackUrlController extends BaseController {
 				waterpd.put("arrivalmoney",  TongYong.df2.format(bianji_money));
 				waterpd.put("nowuser_money",ServiceHelper.getAppStoreService().sumStoreWealth(spd));
 				waterpd.put("application_channel", historypd.getString("in_jiqi"));
- 	   			waterpd.put("remittance_name",Const.payjiqi[4] );
-				waterpd.put("remittance_type","4" );
-				waterpd.put("wx_money",  TongYong.df2.format(bianji_money) );
+				if(historypd.getString("pay_way").contains("alipay")){
+					waterpd.put("remittance_type","3" );
+	 				waterpd.put("alipay_money",historypd.getString("number") );
+	 				waterpd.put("remittance_name",Const.payjiqi[3] );
+				}else if(historypd.getString("pay_way").contains("wx")){
+						waterpd.put("remittance_type","4" );
+						waterpd.put("wx_money",historypd.getString("number") );
+						waterpd.put("remittance_name",Const.payjiqi[4] );
+				}else if(historypd.getString("pay_way").contains("nowpay")){
+						waterpd.put("remittance_type","2" );
+						waterpd.put("nowypay_money",historypd.getString("number") );
+						if(historypd.getString("in_jiqi").equals("1")){
+							waterpd.put("remittance_name",Const.payjiqi[0] );
+						}else if(historypd.getString("in_jiqi").equals("4")){
+							waterpd.put("remittance_name",Const.payjiqi[6] );
+						}else if(historypd.getString("in_jiqi").equals("2")){
+							waterpd.put("remittance_name",Const.payjiqi[2] );
+						}
+				}else if(historypd.getString("pay_way").contains("pple")){
+						waterpd.put("remittance_type","5" );
+						waterpd.put("apple_money",historypd.getString("number") );
+						waterpd.put("remittance_name",Const.payjiqi[5] );
+				}else{
+						waterpd.put("remittance_type","5" );
+						waterpd.put("bank_money",historypd.getString("number"));
+						waterpd.put("remittance_name",Const.payjiqi[1] );
+				}
  				waterpd.put("remittance_number",spd.getString("registertel_phone"));//支付人的支付账号
 				waterpd.put("createtime",DateUtil.getTime());
 				waterpd.put("over_time",DateUtil.getTime());
@@ -413,7 +513,7 @@ public class PcWxBackUrlController extends BaseController {
 	 * 
 	 * 购买服务费
 	 */
-	public String Service_Pay(String out_trade_no,String tradnumber,String total_fee,Map<String, String>  map){
+	public String Service_Pay(String out_trade_no,String tradnumber,String total_fee,Map<String, String>  map,String pay_way){
 		double fw_money=(new BigDecimal(Double.parseDouble(total_fee)/100)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
 		try { 
  		 		PageData historypd=new PageData();
@@ -429,6 +529,7 @@ public class PcWxBackUrlController extends BaseController {
 	     			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "服务费金额不匹配"+map.toString(),"0099");
 	  				 return notmoney;
 	     		 }
+	     		historypd.put("pay_way", pay_way);
  		 		PageData spd=ServiceHelper.getAppStoreService().findById(historypd);
  				String city_file_fee_id=spd.getString("city_file_fee_id");
 				String biaozhun_content=spd.getString("biaozhun_content");
@@ -514,9 +615,33 @@ public class PcWxBackUrlController extends BaseController {
 				waterpd.put("arrivalmoney",   TongYong.df2.format(-fw_money));
 				waterpd.put("nowuser_money",ServiceHelper.getAppStoreService().sumStoreWealth(spd));
 				waterpd.put("application_channel", historypd.getString("in_jiqi") );
- 	   			waterpd.put("remittance_name",Const.payjiqi[4] );
-				waterpd.put("remittance_type","4" );
-				waterpd.put("wx_money",  TongYong.df2.format(-fw_money) );
+				if(historypd.getString("pay_way").contains("alipay")){
+						waterpd.put("remittance_type","3" );
+		 				waterpd.put("alipay_money",historypd.getString("number") );
+		 				waterpd.put("remittance_name",Const.payjiqi[3] );
+				}else if(historypd.getString("pay_way").contains("wx")){
+						waterpd.put("remittance_type","4" );
+						waterpd.put("wx_money",historypd.getString("number") );
+						waterpd.put("remittance_name",Const.payjiqi[4] );
+				}else if(historypd.getString("pay_way").contains("nowpay")){
+						waterpd.put("remittance_type","2" );
+						waterpd.put("nowypay_money",historypd.getString("number") );
+						if(historypd.getString("in_jiqi").equals("1")){
+							waterpd.put("remittance_name",Const.payjiqi[0] );
+						}else if(historypd.getString("in_jiqi").equals("4")){
+							waterpd.put("remittance_name",Const.payjiqi[6] );
+						}else if(historypd.getString("in_jiqi").equals("2")){
+							waterpd.put("remittance_name",Const.payjiqi[2] );
+						}
+				}else if(historypd.getString("pay_way").contains("pple")){
+						waterpd.put("remittance_type","5" );
+						waterpd.put("apple_money",historypd.getString("number") );
+						waterpd.put("remittance_name",Const.payjiqi[5] );
+				}else{
+						waterpd.put("remittance_type","5" );
+						waterpd.put("bank_money",historypd.getString("number"));
+						waterpd.put("remittance_name",Const.payjiqi[1] );
+				}
  				waterpd.put("remittance_number",spd.getString("registertel_phone"));//支付人的支付账号
  				waterpd.put("createtime",DateUtil.getTime());
 				waterpd.put("over_time",DateUtil.getTime());
@@ -560,9 +685,33 @@ public class PcWxBackUrlController extends BaseController {
 				waterpd.put("arrivalmoney",   TongYong.df2.format(fw_money));
 				waterpd.put("nowuser_money",ServiceHelper.getAppStoreService().sumStoreWealth(spd));
 				waterpd.put("application_channel", historypd.getString("in_jiqi") );
- 	   			waterpd.put("remittance_name",Const.payjiqi[4] );
-				waterpd.put("remittance_type","4" );
-				waterpd.put("wx_money",  TongYong.df2.format(fw_money) );
+				if(historypd.getString("pay_way").contains("alipay")){
+						waterpd.put("remittance_type","3" );
+		 				waterpd.put("alipay_money",historypd.getString("number") );
+		 				waterpd.put("remittance_name",Const.payjiqi[3] );
+				}else if(historypd.getString("pay_way").contains("wx")){
+						waterpd.put("remittance_type","4" );
+						waterpd.put("wx_money",historypd.getString("number") );
+						waterpd.put("remittance_name",Const.payjiqi[4] );
+				}else if(historypd.getString("pay_way").contains("nowpay")){
+						waterpd.put("remittance_type","2" );
+						waterpd.put("nowypay_money",historypd.getString("number") );
+						if(historypd.getString("in_jiqi").equals("1")){
+							waterpd.put("remittance_name",Const.payjiqi[0] );
+						}else if(historypd.getString("in_jiqi").equals("4")){
+							waterpd.put("remittance_name",Const.payjiqi[6] );
+						}else if(historypd.getString("in_jiqi").equals("2")){
+							waterpd.put("remittance_name",Const.payjiqi[2] );
+						}
+				}else if(historypd.getString("pay_way").contains("pple")){
+						waterpd.put("remittance_type","5" );
+						waterpd.put("apple_money",historypd.getString("number") );
+						waterpd.put("remittance_name",Const.payjiqi[5] );
+				}else{
+						waterpd.put("remittance_type","5" );
+						waterpd.put("bank_money",historypd.getString("number"));
+						waterpd.put("remittance_name",Const.payjiqi[1] );
+				}
  				waterpd.put("remittance_number",spd.getString("registertel_phone"));//支付人的支付账号
  				waterpd.put("createtime",DateUtil.getTime());
 				waterpd.put("over_time",DateUtil.getTime());

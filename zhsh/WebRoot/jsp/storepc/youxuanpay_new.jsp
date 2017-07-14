@@ -40,7 +40,7 @@
              <div style="width:200px;height:200px;margin-right: 92px;float:right;" id="erweimapay">
  
   	         </div>   
-             <span class="tj" onclick="wap_pay()">提交(支付完成后请刷新页面)</span> 
+             <span class="tj" onclick="wap_pay()">提交</span> 
        </body>
      <script type="text/javascript">
     	//更新支付方式
@@ -56,7 +56,7 @@
  					type:"post",
  						url:"storepc_wx/payyouxuan.do",
  						data:{
-  							"money",$("#amount").val(),"pay_way":channel
+  							"money":$("#amount").val(),"pay_way":channel,"youxuangoods_id":"${pd.youxuangoods_id}"
  						},
  	 					dataType:"json",
  						success:function(data){ 
@@ -66,18 +66,8 @@
  								$("#erweimapay").empty();
 								//生成二维码：商家ID以及zhuohao.生成的二维码下载，图片尺寸为5*6CM；
 		 				        jQuery($("#erweimapay")).qrcode({ width: 150, height: 150,  text: wx_pub_qr }); 
-		 				        $("#erweimapay").append("<span>微信支付二维码</span>");
-		 				        //设置定时器
-								 var time=30;
-	 		       				 window.t=setInterval(function() {
-	 			       				time--;
-	 			       				if(time == 0){
-	 			       					shuaxin();
-	 			       				}else{
-	 			       					$(".ewm_title").html(time+"秒后将会自动刷新页面，请尽快支付");
-	 			       				}
-	 			       			},1000);
- 							 }else{
+		 				        $("#erweimapay").append("<span>微信支付二维码,支付完关闭窗口即可</span>");
+  							 }else{
  								 alert(data.message);
  							 }
  	   					}
