@@ -250,33 +250,9 @@ public class WxChatBackUrlController extends BaseController {
 	 	   					waterpd.put("arrivalmoney", TongYong.df2.format(Double.parseDouble(orderpd.getString("sale_money"))-Double.parseDouble(orderpd.getString("discount_money"))));
 	 	   					waterpd.put("nowuser_money", mpd.getString("now_money"));
 	 	    				waterpd.put("application_channel", orderpd.getString("in_jiqi")); 
-	 	   					if(orderpd.getString("channel").contains("alipay")){
-	 	   						waterpd.put("remittance_type","3" );
-	 	    	 				waterpd.put("alipay_money",orderpd.getString("actual_money") );
-	 	    	 				waterpd.put("remittance_name",Const.payjiqi[3] );
-	 	   					}else if(orderpd.getString("channel").contains("wx")){
-	 	   						waterpd.put("remittance_type","4" );
-	 	   						waterpd.put("wx_money",orderpd.getString("actual_money") );
-	 	   						waterpd.put("remittance_name",Const.payjiqi[4] );
-	 	   					}else if(orderpd.getString("channel").contains("nowpay")){
-	 	   						waterpd.put("remittance_type","2" );
-	 	   						waterpd.put("nowypay_money",orderpd.getString("actual_money") );
-	 	   						if(orderpd.getString("in_jiqi").equals("1")){
-	 	   							waterpd.put("remittance_name",Const.payjiqi[0] );
-	 	   						}else if(orderpd.getString("in_jiqi").equals("4")){
-	 	   							waterpd.put("remittance_name",Const.payjiqi[6] );
-	 	   						}else if(orderpd.getString("in_jiqi").equals("2")){
-	 	   							waterpd.put("remittance_name",Const.payjiqi[2] );
-	 	   						}
-	 	   					}else if(orderpd.getString("channel").contains("pple")){
-	 	   						waterpd.put("remittance_type","5" );
-	 	   						waterpd.put("apple_money",orderpd.getString("actual_money") );
-	 	   						waterpd.put("remittance_name",Const.payjiqi[5] );
-	 	   					}else{
-	 	   						waterpd.put("remittance_type","5" );
-	 	   						waterpd.put("bank_money",orderpd.getString("actual_money"));
-	 	    					waterpd.put("remittance_name",Const.payjiqi[1] );
-	 	   					}
+	 	    				waterpd.put("remittance_type","3" );
+ 	    	 				waterpd.put("alipay_money",orderpd.getString("actual_money") );
+ 	    	 				waterpd.put("remittance_name",Const.payjiqi[3] );
 		 	   				waterpd.put("integral_money",orderpd.getString("user_integral")); 
 		 	   				waterpd.put("balance_money",orderpd.getString("user_balance")); 
 	 	   					waterpd.put("remittance_number",mpd.getString("phone"));//支付人的支付账号
