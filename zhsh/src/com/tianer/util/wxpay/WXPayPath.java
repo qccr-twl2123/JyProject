@@ -81,18 +81,27 @@ public class WXPayPath {
     
     //=================================================================================
     
+    
+    
+//	//补全信息
+//	map=dodo.fillRequestData(map);
+//	//map转化为字符创
+//	String newreqBody=WXPayUtil.mapToXml(map);
+// 	System.out.println(newreqBody);
+// 	Map<String, String> map2=dodo.payorderByHttps(newreqBody);
+    
     /**
-     * 向 Map 中添加 appid、mch_id、nonce_str、sign_type、sign <br>
+     * 向 Map 中添加 appid、mch_id、nonce_str、sign_type、sign <br>--然后开始支付
      * 该函数适用于商户适用于统一下单等接口，不适用于红包、代金券接口
      *
      * @param reqData
      * @return
      * @throws Exception 
      */
-    public  Map<String, String> fillRequestData(Map<String, String> data) throws Exception{
-     	return wxpay.fillRequestData(data);
+    public  Map<String, String> payorderByHttps(Map<String, String> data) throws Exception{
+     	return payorderByHttps(WXPayUtil.mapToXml(wxpay.fillRequestData(data)));
     }
-    
+
     /**
      * 自定义网络连接支付
      * 场景：公共号支付、扫码支付、APP支付

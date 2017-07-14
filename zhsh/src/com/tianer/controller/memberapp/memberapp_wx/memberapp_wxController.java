@@ -56,23 +56,19 @@ public class memberapp_wxController extends BaseController{
    			BigDecimal total_fee = new BigDecimal(Double.parseDouble(_total_fee)*100);
   	    	//开始调用微信支付接口
   			WXPayPath dodo = new WXPayPath();
- 	    	Map<String, String> map=new HashMap<String, String>();
-	    	map.put("body", body);
-	    	map.put("attach",attach);
-	    	map.put("out_trade_no", out_trade_no);
-	    	map.put("fee_type", "CNY");
-	    	map.put("total_fee", String.valueOf(total_fee.intValue()));
-	    	map.put("spbill_create_ip", dodo.getSpbill_create_ip());
-	    	map.put("notify_url", "http://www.jiuyuvip.com/wxback_mapp/notify.do");
+ 	    	Map<String, String> reqData=new HashMap<String, String>();
+ 	    	reqData.put("body", body);
+	    	reqData.put("attach",attach);
+	    	reqData.put("out_trade_no", out_trade_no);
+	    	reqData.put("fee_type", "CNY");
+	    	reqData.put("total_fee", String.valueOf(total_fee.intValue()));
+	    	reqData.put("spbill_create_ip", dodo.getSpbill_create_ip());
+	    	reqData.put("notify_url", "http://www.jiuyuvip.com/wxback_mapp/notify.do");
 	     	//JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付，统一下单接口trade_type的传参可参考这里
 	    	//MICROPAY--刷卡支付，刷卡支付有单独的支付接口，不调用统一下单接口
-	    	map.put("trade_type", "APP");
- 	    	//补全信息
-	    	map=dodo.fillRequestData(map);
-	    	//map转化为字符创
-	    	String newreqBody=WXPayUtil.mapToXml(map);
- 	    	System.out.println(newreqBody);
- 	    	Map<String, String> map2=dodo.payorderByHttps(newreqBody);
+	    	reqData.put("trade_type", "APP");
+	    	//支付处理
+ 	    	Map<String, String> map2=dodo.unifiedOrder(reqData);
  	    	//开始处理结果
   	        if(map2.get("result_code").toString().equals("SUCCESS") && map2.get("return_code").toString().equals("SUCCESS")){
  	    	  returnmap.put("payment_type_", attach);

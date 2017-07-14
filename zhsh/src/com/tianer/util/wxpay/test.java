@@ -17,7 +17,7 @@ public class test {
     public static void main(String[] args) throws Exception {
     	test t=new test();
     	t.Apipay();
-//    	t.httppay();
+    	t.httppay();
      }
     
     public void Apipay() throws Exception{
@@ -29,7 +29,7 @@ public class test {
     	reqData.put("out_trade_no", out_trade_no);
     	reqData.put("fee_type", "CNY");
     	reqData.put("total_fee", "1");
-    	reqData.put("spbill_create_ip", "123.12.12.123");
+    	reqData.put("spbill_create_ip", dodo.getSpbill_create_ip());
     	reqData.put("notify_url", "http://test.letiantian.com/wxpay/notify");
      	//JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付，统一下单接口trade_type的传参可参考这里
     	//MICROPAY--刷卡支付，刷卡支付有单独的支付接口，不调用统一下单接口
@@ -46,13 +46,6 @@ public class test {
      * @throws Exception
      */
     public void httppay() throws Exception{
-          // HostnameVerifier hnv = new HostnameVerifier() {
-        //     public boolean verify(String hostname, SSLSession session) {
-        //         // Always return true，接受任意域名服务器
-        //         return true;
-        //     }
-        // };
-        // HttpsURLConnection.setDefaultHostnameVerifier(hnv);
     	WXPayPath dodo = new WXPayPath();
     	String out_trade_no=BaseController.getTimeID();
     	Map<String, String> map=new HashMap<String, String>();
@@ -61,61 +54,15 @@ public class test {
     	map.put("out_trade_no", out_trade_no);
     	map.put("fee_type", "CNY");
     	map.put("total_fee", "1");
-    	map.put("spbill_create_ip", "123.12.12.123");
+    	map.put("spbill_create_ip", dodo.getSpbill_create_ip());
     	map.put("notify_url", "http://test.letiantian.com/wxpay/notify");
      	//JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付，统一下单接口trade_type的传参可参考这里
     	//MICROPAY--刷卡支付，刷卡支付有单独的支付接口，不调用统一下单接口
     	map.put("trade_type", "NATIVE");
 //    	map.put("openid", "owD2DwsxdygwHXxNV75kjGT7Wvlw");
     	//添加签名
-    	map=dodo.fillRequestData(map);
-     	System.out.println(map);
-    	String newreqBody=WXPayUtil.mapToXml(map);
-    	
-        String UTF8 = "UTF-8";
-        URL httpUrl = new URL("https://api.mch.weixin.qq.com/pay/unifiedorder");
-        HttpURLConnection httpURLConnection = (HttpURLConnection) httpUrl.openConnection();
-        httpURLConnection.setRequestProperty("Host", "api.mch.weixin.qq.com");
-        httpURLConnection.setDoOutput(true);
-        httpURLConnection.setRequestMethod("POST");
-        httpURLConnection.setConnectTimeout(10*1000);
-        httpURLConnection.setReadTimeout(10*1000);
-        httpURLConnection.connect();
-        OutputStream outputStream = httpURLConnection.getOutputStream();
-        outputStream.write(newreqBody.getBytes(UTF8));
-
-        //获取内容
-        InputStream inputStream = httpURLConnection.getInputStream();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, UTF8));
-        final StringBuffer stringBuffer = new StringBuffer();
-        String line = null;
-        while ((line = bufferedReader.readLine()) != null) {
-            stringBuffer.append(line);
-        }
-        String resp = stringBuffer.toString();
-        if (stringBuffer!=null) {
-            try {
-                bufferedReader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if (inputStream!=null) {
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if (outputStream!=null) {
-            try {
-                outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        Map<String, String> map2=WXPayUtil.xmlToMap(resp);
-	    System.out.println(map2.toString());
+    	Map<String, String> map2=dodo.payorderByHttps(map);
+ 	    System.out.println(map2.toString());
      }
 
 }
