@@ -83,7 +83,6 @@
 </footer>
 </div>
 <script src="js/jquery-1.8.0.min.js"></script>
-<script src="js/ping/pingpp.js" type="text/javascript"></script>
 <script src="js/jquery.qrcode.min.js"></script>
 <script type="text/javascript">
         function shuaxin(){
@@ -95,63 +94,43 @@
     		channel=value;
     		$(".button_box").show();
     	}
-      	//ping++支付
-    	function sure_pay() {
+     	function sure_pay() {
       		if($("#amount").val() == "" || $("#amount").val() =="0"){
       			return;
       		}
      		var url='<%=basePath%>storepc/goSheZhiOne.do?jichushezhi=${pd.jichushezhi}';
-      		//获取charge
-    		$.ajax({
-				type:"post",
-					url:"storepc_pay/store_PartyCz.do",
-					data:"money="+$("#amount").val()+"&pay_way="+channel+"&store_id=${storepd.store_id}&store_operator_id=${storepd.oprator_id}&url="+url,
-					dataType:"json",
-					success:function(data){
-						if(data.result == "0"){
-							alert(data.message);
- 							return;
-						}
-						var charge=data.data;
-						if(charge == ""){
-							alert("支付渠道未开通");
-						}else{
-							if(channel == "alipay_qr"){
-								var credential=charge.credential;
-								var alipay_qr=credential.alipay_qr;
-								$(".dask").show();
-								$(".ewm").empty();
-								//生成二维码：商家ID以及zhuohao.生成的二维码下载，图片尺寸为5*6CM；
-		 				        jQuery($(".ewm")).qrcode({ width: 180, height: 180,  text: alipay_qr }); 
-							}else if(channel == "wx_pub_qr" ){
-								var credential=charge.credential;
-								var wx_pub_qr =credential.wx_pub_qr ;
-								$(".dask").show();
-								$(".ewm").empty();
-								//生成二维码：商家ID以及zhuohao.生成的二维码下载，图片尺寸为5*6CM；
-		 				        jQuery($(".ewm")).qrcode({ width: 180, height: 180,  text: wx_pub_qr }); 
- 							}else if(channel == "alipay_pc_direct"  ||  channel == "alipay_wap"  || channel == "wx_pub"){
-								//支付
-								pingpp.createPayment(charge, function(result, err){
-								    console.log(result);
-								    console.log(err.msg);
-								    console.log(err.extra);
-								    if (result == "success") {
-								    	alert("success");
-								        // 只有微信公众账号 wx_pub 支付成功的结果会在这里返回，其他的支付结果都会跳转到 extra 中对应的 URL。
-								    } else if (result == "fail") {
-								    	alert("支付失败fail");
-								        // charge 不正确或者微信公众账号支付失败时会在此处返回
-								    } else if (result == "cancel") {
-								    	alert("cancel");
-								        // 微信公众账号支付取消支付
-								    }
-								}); 
-							}
- 						}
-   					}
-			});  
-          }
+     		if(channel == "wx_pub_qr"){
+ 				$.ajax({
+ 					type:"post",
+ 						url:"storepc_wx/store_cz.do",
+ 						data:{
+  							"money",$("#amount").val(),"pay_way":channel
+ 						},
+ 	 					dataType:"json",
+ 						success:function(data){ 
+ 							 if(data.result == "1"){
+ 								 var map=data.data;
+ 								 var wx_pub_qr =map.code_url ;
+  					     		 $(".dask").show();
+ 								 $(".ewm").empty();
+ 								 //生成二维码：商家ID以及zhuohao.生成的二维码下载，图片尺寸为5*6CM；
+ 							     jQuery($(".ewm")).qrcode({ width: 180, height: 180,  text: wx_pub_qr }); 
+ 							    //设置定时器
+ 								 window.t1 = setInterval(shuaxin, 10000);//10秒执行一次
+ 							 }else{
+ 								 alert(data.message);
+ 							 }
+ 	   					}
+ 				});  
+ 			 }else{
+ 				 alert("暂未开通");
+ 			 }
+           }
+     	
+     	//刷新
+        function shuaxin(){
+        	window.location.reload(); 
+        }
     	
     	//使用document.getElementById获取到按钮对象
  		function BindEnter(event){
@@ -164,9 +143,9 @@
 		
     //下一步
 	function gonext(){
-		var n="${pd.now_wealth}";
-		window.location.href='<%=basePath%>storepc/goSheZhiOne.do?store_id=${pd.store_id}&jichushezhi=${pd.jichushezhi}';
-		<%-- if(parseFloat(n) < 100){
+ 		window.location.href='<%=basePath%>storepc/goSheZhiOne.do?jichushezhi=${pd.jichushezhi}';
+		<%-- var n="${pd.now_wealth}";
+			if(parseFloat(n) < 100){
 				alert("至少充值100，若已充值请刷新一下");
 				return;
 		}else{

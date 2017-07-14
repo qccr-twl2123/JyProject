@@ -63,18 +63,30 @@ public class Storepc_wealthController extends BaseController{
 	@RequestMapping(value="/list")
 	public ModelAndView list(){
 		ModelAndView mv = this.getModelAndView();
+		//shiro管理的session
+  		Subject currentUser = SecurityUtils.getSubject();  
+  		Session session = currentUser.getSession();	
+  		StoreRole slogin=(StoreRole)session.getAttribute(Const.SESSION_STORE_USER);
 		PageData pd = new PageData();
 		try{
 			pd = this.getPageData();
-			String jichushezhi=pd.getString("jichushezhi");
-			pd=appStoreService.findById(pd);
+			if(slogin ==null || slogin.getStore_id() == null){
+				mv.setViewName("redirect:goLogin.do");//到登录页面
+				return mv;
+ 			}
+			String store_id=slogin.getStore_id();
+			pd.put("store_id",store_id) ;
+ 			pd=appStoreService.findById(pd);
+ 			String jichushezhi=pd.getString("jichushezhi");
  			String now_wealth=wealthService.sumStoreWealth(pd); 
  			pd.put("now_wealth", now_wealth);
    			if(jichushezhi != null && jichushezhi.equals("11111111100")){
-  				mv.setViewName("/storepc/shezhi_9");
+  				mv.setViewName("/storepc/shezhi_9_new");
+//  				mv.setViewName("/storepc/shezhi_9");
   				pd.put("jichushezhi", jichushezhi);
   			}else{
-  				mv.setViewName("storepc/business_account");
+  				mv.setViewName("storepc/business_account_new");
+//  				mv.setViewName("storepc/business_account");
    			}
   		} catch(Exception e){
 			logger.error(e.toString(), e);

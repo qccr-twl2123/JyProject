@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.pingplusplus.model.Charge;
 import com.tianer.controller.base.BaseController;
+import com.tianer.controller.memberapp.pay_history.Pay_historyController;
 import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.controller.zhihui.payMoney.ChargeExample;
 import com.tianer.entity.html.HtmlUser;
@@ -152,6 +153,8 @@ public class Storepc_wxController extends BaseController{
 	 * 交易扣点方式支付服务费
 	 * storepc_wx/transaction_pointsPay.do
 	 * 
+	 * money 金额
+	 * 
   	 */
 	@RequestMapping(value="/transaction_pointsPay")
 	@ResponseBody
@@ -172,7 +175,7 @@ public class Storepc_wxController extends BaseController{
  				message="id不能为空";
  			}else{
  				pd.put("store_id", slogin.getStore_id());
-  				String store_wealthhistory_id=BaseController.getCZUID(pd.getString("store_id"));//充值单号
+  				String store_wealthhistory_id=BaseController.getCZUID("");
  				if( pd.getString("store_operator_id") == null ||  pd.getString("store_operator_id").equals("") ){
 					pd.put("store_operator_id", "jy"+pd.getString("store_id"));
 				}else{
@@ -284,6 +287,69 @@ public class Storepc_wxController extends BaseController{
     	return map;
 	}
 	
+	
+	
+	 /**
+	  * 优选的编辑费/上架费
+	  * storepc_wx/payyouxuan.do
+	  * 
+	  */
+	@RequestMapping(value="/payyouxuan")
+	@ResponseBody
+	public Object payyouxuan(HttpServletRequest request) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, String> data = new HashMap<String, String>();
+ 		String result="1";
+		String message="支付确认中";
+ 		PageData pd=new PageData();
+		try{
+					pd = this.getPageData();
+					String store_wealthhistory_id=BaseController.getTimeID();
+					String youxuangoods_id=pd.getString("youxuangoods_id");
+					PageData yxgoodspd=ServiceHelper.getYouXuanService().findByIdGoods(pd);
+					String goods_status=yxgoodspd.getString("goods_status");
+					String bianji_money=yxgoodspd.getString("bianji_money");
+//					String shangjia_money=yxgoodspd.getString("shangjia_money");
+					String money="";
+					String profit_type="13";
+					if(goods_status.equals("1")){
+						money=bianji_money;
+						profit_type="13";
+					}
+//						else if(goods_status.equals("2")){
+//							money=shangjia_money;
+//							profit_type="14";
+//						}
+					if( pd.getString("store_operator_id") == null ||  pd.getString("store_operator_id").equals("") ){
+							pd.put("store_operator_id", "jy"+pd.getString("store_id"));
+					}
+					String pay_way=pd.getString("pay_way");//支付方式
+ 	   				pd.put("wealth_type", "1");
+	   				pd.put("profit_type",  profit_type);
+	   				pd.put("number", TongYong.df2.format(Double.parseDouble(money)));
+	   				pd.put("store_wealthhistory_id", store_wealthhistory_id);
+	   				pd.put("jiaoyi_id", youxuangoods_id);
+	   				pd.put("user_id", "Jiuyu");
+		   			pd.put("store_id", pd.getString("store_id"));
+		   			pd.put("pay_type", pay_way);
+	   				pd.put("store_operator_id", pd.getString("store_operator_id"));
+	   				pd.put("process_status", "0");
+	   				pd.put("in_jiqi", "4");
+		   			pd.put("last_wealth", ServiceHelper.getAppStoreService().sumStoreWealth(pd));
+		   			pd.put("arrivalMoney", TongYong.df2.format(Double.parseDouble(money)));
+		   			ServiceHelper.getAppStoreService().saveWealthhistory(pd);
+		   			//获取支付二维码
+	   				data=WxPayOrder(money, "4", "优选商品-编辑支付", store_wealthhistory_id);
+  		}catch(Exception e){
+			result="0";
+			message="系统异常";
+ 			logger.error(e.toString(), e);
+		}
+		map.put("result", result);
+		map.put("message", message);
+		map.put("data", data);
+		return map;
+	}
 	
 	
 	

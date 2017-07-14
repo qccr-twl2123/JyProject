@@ -1295,16 +1295,14 @@ public class YouXuanController extends BaseController {
 	 */
 	@RequestMapping(value="/goyouxuanpay")
 	public ModelAndView goyouxuanpay() throws Exception{
-		//logBefore(logger, "去添加商品的页面");
-		ModelAndView mv = this.getModelAndView();
+ 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		try {
 			pd = this.getPageData();
-    		mv.setViewName("storepc/youxuanpay");
+    		mv.setViewName("storepc/youxuanpay_new");
+//    		mv.setViewName("storepc/youxuanpay");
 		} catch (Exception e) {
-			// TODO: handle exception
-			//System.out.println(e.toString());
-			logger.error(e.toString(), e);
+  			logger.error(e.toString(), e);
 		}
 		mv.addObject("pd", pd);
 		pd=null;

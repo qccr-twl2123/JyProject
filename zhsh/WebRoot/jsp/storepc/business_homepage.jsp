@@ -144,8 +144,8 @@ $(function(){
 			  	num:3},
 			  {
 			  	name:"账户信息",
-			  	listitem:["积分充值","提现","流水明细","商品销售明细表","提货券销售明细","充值提现汇总","班次汇总","账户设置","服务续费"],
-			  	linkitem:["storepc_wealth/list.do?store_id=${storepd.store_id}","storepc_withdrawals/list.do?store_id=${storepd.store_id}","storepc_wealthhistory/list.do?store_id=${storepd.store_id}&chuli_type=1","storepc_wealthhistory/list.do?store_id=${storepd.store_id}&chuli_type=4&profit_type=3","storepc_wealthhistory/orderlistPage.do?store_id=${storepd.store_id}&pay_type=3","storepc_wealthhistory/list.do?store_id=${storepd.store_id}&chuli_type=3","storepc_wealthhistory/BanCiHuiZonglist.do?store_id=${storepd.store_id}","storepc_bankcard/list.do?store_id=${storepd.store_id}","storepc/goFeeNextNumber.do?store_id=${storepd.store_id}"],
+			  	listitem:["积分充值","提现","流水明细","商品销售明细表","提货券销售明细","充值提现汇总","班次汇总","账户设置"/* ,"服务续费" */],
+			  	linkitem:["storepc_wealth/list.do?store_id=${storepd.store_id}","storepc_withdrawals/list.do?store_id=${storepd.store_id}","storepc_wealthhistory/list.do?store_id=${storepd.store_id}&chuli_type=1","storepc_wealthhistory/list.do?store_id=${storepd.store_id}&chuli_type=4&profit_type=3","storepc_wealthhistory/orderlistPage.do?store_id=${storepd.store_id}&pay_type=3","storepc_wealthhistory/list.do?store_id=${storepd.store_id}&chuli_type=3","storepc_wealthhistory/BanCiHuiZonglist.do?store_id=${storepd.store_id}","storepc_bankcard/list.do?store_id=${storepd.store_id}"/* ,"storepc/goFeeNextNumber.do?store_id=${storepd.store_id}" */],
 			  	num:4},
  			  {
 				  	name:"互动沟通",

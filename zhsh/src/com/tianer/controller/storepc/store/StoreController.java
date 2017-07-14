@@ -47,10 +47,7 @@ import com.tianer.util.ErWerMa.OneEr;
 /** 
  * 
 * 类名称：StoreController   
-* 类描述： 
-* 创建人：刘耀耀
-* 创建时间：2016年5月26日 下午3:50:40
- */
+  */
 @Controller("storepcStoreController")
 @RequestMapping(value="/storepc")
 public class StoreController extends BaseController {
@@ -498,8 +495,7 @@ public class StoreController extends BaseController {
 	 */
 	@RequestMapping(value="/goShQyStore")
 	public ModelAndView goShQyStore() throws Exception{
-		//logBefore(logger, " 跳转至收货取银");
-		ModelAndView mv = this.getModelAndView();
+ 		ModelAndView mv = this.getModelAndView();
 		//shiro管理的session
  		Session session = SecurityUtils.getSubject().getSession();	
 		StoreRole slogin=(StoreRole)session.getAttribute(Const.SESSION_STORE_USER);
@@ -834,9 +830,11 @@ public class StoreController extends BaseController {
 	 						List<PageData> feeList=city_fileService.listAllCityFee(pd);
 	 						mv.addObject("feeList", feeList);
 	 						if(isopen_points != null && isopen_points.equals("1")){
-	 							mv.setViewName("storepc/transactionpayment");
+	 							mv.setViewName("storepc/transactionpayment_new");
+//	 							mv.setViewName("storepc/transactionpayment");
 	 						}else{
-	 							mv.setViewName("storepc/payment");
+	 							mv.setViewName("storepc/payment_new");
+//	 							mv.setViewName("storepc/payment");
 	 						}
     				}else if(biaozhun_status.equals("1")){
    						if( jichushezhi != null && jichushezhi.equals("11111111111")){
@@ -1057,6 +1055,7 @@ public class StoreController extends BaseController {
 			mv.addObject("deskList", deskList);
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 		}
 		mv.setViewName("storepc/loginTwo");
 		mv.addObject("pd",pd);
@@ -1074,15 +1073,14 @@ public class StoreController extends BaseController {
 		PageData pd = new PageData();
 		try {
 			pd = this.getPageData();
-//			//system.out.println(pd);
-			String type=pd.getString("type");
+ 			String type=pd.getString("type");
 			//store_shift_id班次，alldesk_no桌号
 			if(type.equals("2")){
 				storeManageService.updateOperator(pd);
 			}
-			
-		} catch (Exception e) {
+ 		} catch (Exception e) {
 			// TODO: handle exception
+ 			e.printStackTrace();
 		}
   		mv.setViewName("redirect:goStore.do");
 		mv.addObject("pd",pd);
@@ -1096,26 +1094,35 @@ public class StoreController extends BaseController {
 	@RequestMapping(value="/isPayBaoZhengJin")
 	@ResponseBody
 	public Object isPayBaoZhengJin(){
-		//logBefore(logger, "判断商家是否已经支付服务费");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
+ 		//shiro管理的session
+		Subject currentUser = SecurityUtils.getSubject();  
+		Session session = currentUser.getSession();	
+		StoreRole slogin=(StoreRole)session.getAttribute(Const.SESSION_STORE_USER);
     	String result="1";
   		String message="支付成功";
 		PageData pd = new PageData();
 		try{
 			pd = this.getPageData();
-  			pd=storepcService.findById(pd);
-  			if(pd!=null){
-  				//判断办证金是否已经交了
-				String biaozhun_status=pd.getString("biaozhun_status");
-				if(biaozhun_status.equals("0") || biaozhun_status.equals("2")){
-						 result="0";
-						 message="请先支付服务费";
-				}
-   			}else{
-  				result="0";
-  				message="账号不存在";
-  			}
-    	} catch(Exception e){
+			if(slogin ==null || slogin.getStore_id() == null){
+ 				result="0";
+ 				message="请先前往登录";
+ 			}else{
+ 				pd.put("store_id", slogin.getStore_id());
+ 				pd=storepcService.findById(pd);
+ 	  			if(pd!=null){
+ 	  				//判断办证金是否已经交了
+ 					String biaozhun_status=pd.getString("biaozhun_status");
+ 					if(biaozhun_status.equals("0") || biaozhun_status.equals("2")){
+ 							 result="0";
+ 							 message="请先支付服务费";
+ 					}
+ 	   			}else{
+ 	  				result="0";
+ 	  				message="账号不存在";
+ 	  			}
+ 			}
+     	} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
 		map.put("result", result);
@@ -1130,15 +1137,13 @@ public class StoreController extends BaseController {
 	@RequestMapping(value="/isPayThisOrder")
 	@ResponseBody
 	public Object isPayThisOrder(){
-		//logBefore(logger, "判断商家是否已经支付服务费");
-		Map<String,Object> map = new HashMap<String,Object>();
+ 		Map<String,Object> map = new HashMap<String,Object>();
     	String result="1";
   		String message="支付成功";
 		PageData pd = new PageData();
 		try{
 			pd = this.getPageData();
-  			String waterrecord_id=pd.getString("waterrecord_id");
-  			pd=ServiceHelper.getWaterRecordService().findWaterRecordIsPayOk(pd);
+   			pd=ServiceHelper.getWaterRecordService().findWaterRecordIsPayOk(pd);
   			if(pd == null){
   				result="0";
   				message="未支付成功";
@@ -1186,22 +1191,24 @@ public class StoreController extends BaseController {
  	 */
 	@RequestMapping(value="/goSheZhiOne")
 	public ModelAndView goSheZhiOne() throws Exception{
-		//logBefore(logger, "确认支付后前往设置页面");
- 		ModelAndView mv = this.getModelAndView();
+  		ModelAndView mv = this.getModelAndView();
+  		//shiro管理的session
+  		Subject currentUser = SecurityUtils.getSubject();  
+  		Session session = currentUser.getSession();	
+  		StoreRole slogin=(StoreRole)session.getAttribute(Const.SESSION_STORE_USER);
  		PageData pd = new PageData();
  		String jichushezhi="00000000000";//表示从第三个步骤开始的
  		String store_id="";
 		try { 
 			pd=this.getPageData();
-			String chongzhiok=pd.getString("chongzhiok");
-			if(chongzhiok != null && chongzhiok.contains("-")){
-				store_id=chongzhiok.split("-")[0];
-				jichushezhi=chongzhiok.split("-")[1];
-			}else{
-				store_id=pd.getString("store_id");
-				jichushezhi=pd.getString("jichushezhi");
-			}
-    		if(jichushezhi.equals("00000000000")){
+			if(slogin ==null || slogin.getStore_id() == null){
+				mv.setViewName("redirect:goLogin.do");//到登录页面
+				return mv;
+ 			}
+			store_id=slogin.getStore_id();
+			pd.put("store_id",store_id) ;
+ 			jichushezhi=pd.getString("jichushezhi");
+     		if(jichushezhi.equals("00000000000")){
  				mv.setViewName("storepc/shezhi_1");
  			}else if(jichushezhi.equals("10000000000")){
  				mv.setViewName("redirect:../storepc_StoreManageController/goInformation.do?jichushezhi=11000000000&store_id="+store_id);//到基础信息
