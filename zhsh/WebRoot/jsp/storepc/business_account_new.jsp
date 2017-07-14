@@ -97,10 +97,9 @@
       		if(window.t != null ){
       			clearInterval(t);
       		}
-      		var url='<%=basePath%>storepc/goStore.do';
-      		$.ajax({
+       		$.ajax({
 					type:"post",
-						url:"storepc_pay/store_cz.do",
+						url:"storepc_paymoney/store_cz.do",
 						data:{
 							"money":$("#amount").val(),"pay_way":channel
 						},
@@ -126,7 +125,7 @@
 		 			       				}
 			 			       			},1000);
 					 			 }else{
-					 				window.open('<%=basePath%>torepc_alipay/goPayChongZhi.do?total_amount='+$("#amount").val()+'&body=3&out_trade_no='+map);
+					 				window.open('<%=basePath%>storepc_paymoney/goPayChongZhi.do?total_amount='+$("#amount").val()+'&body=3&out_trade_no='+map);
 					 			 }
  							 }else{
 								 alert(data.message);

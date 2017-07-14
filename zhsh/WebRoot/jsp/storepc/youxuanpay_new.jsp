@@ -50,32 +50,31 @@
     	}
       	//ping++支付
     	function wap_pay() {
-    		var url='<%=basePath%>storepc/goStore.do';
-    		if(channel == "wx_pub_qr"){
- 				$.ajax({
- 					type:"post",
- 						url:"storepc_wx/payyouxuan.do",
- 						data:{
-  							"money":$("#amount").val(),"pay_way":channel,"youxuangoods_id":"${pd.youxuangoods_id}"
- 						},
- 	 					dataType:"json",
- 						success:function(data){ 
- 							 if(data.result == "1"){
- 								 var map=data.data;
- 								 var wx_pub_qr =map.code_url ;
- 								$("#erweimapay").empty();
-								//生成二维码：商家ID以及zhuohao.生成的二维码下载，图片尺寸为5*6CM；
-		 				        jQuery($("#erweimapay")).qrcode({ width: 150, height: 150,  text: wx_pub_qr }); 
-		 				        $("#erweimapay").append("<span>微信支付二维码,支付完关闭窗口即可</span>");
-  							 }else{
- 								 alert(data.message);
- 							 }
- 	   					}
- 				});  
- 			 }else{
- 				 alert("暂未开通");
- 			 }
-           }
+     		$.ajax({
+					type:"post",
+						url:"storepc_paymoney/payyouxuan.do",
+						data:{
+							"money":$("#amount").val(),"pay_way":channel,"youxuangoods_id":"${pd.youxuangoods_id}"
+						},
+	 					dataType:"json",
+						success:function(data){ 
+							 if(data.result == "1"){
+								 var map=data.data;
+								 if(channel == "wx_pub_qr"){
+									 var wx_pub_qr =map.code_url ;
+									 $("#erweimapay").empty();
+									 //生成二维码：商家ID以及zhuohao.生成的二维码下载，图片尺寸为5*6CM；
+			 				         jQuery($("#erweimapay")).qrcode({ width: 150, height: 150,  text: wx_pub_qr }); 
+			 				         $("#erweimapay").append("<span>微信支付二维码,支付完关闭窗口即可</span>");
+					 			 }else{
+					 				window.open('<%=basePath%>storepc_paymoney/goPayChongZhi.do?total_amount='+$("#amount").val()+'&body=4&out_trade_no='+map);
+					 			 }
+ 							 }else{
+								 alert(data.message);
+							 }
+	   					}
+				});  
+            }
     	
     
     </script>

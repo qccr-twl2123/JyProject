@@ -179,34 +179,39 @@
 	     			alert("请先选择一种交易扣点");
 	     			return;
 	     		}
+	     		//清除定时器
+	      		if(window.t1 != null ){
+	      			clearInterval(t1);
+	      		}
 	     		if($("#choose").is(":checked")){
-	     			 if(channel == "wx_pub_qr"){
-	     				$.ajax({
-	     					type:"post",
-	     						url:"storepc_wx/transaction_pointsPay.do",
-	     						data:{
- 	     							"money":paymoney,"pay_way":channel
-	     						},
-	     	 					dataType:"json",
-	     						success:function(data){ 
-	     							 if(data.result == "1"){
-	     								 var map=data.data;
-	     								 var wx_pub_qr =map.code_url ;
-	    								 $(".dask").show();
-	    								 $(".ewm").empty();
-	    								 //生成二维码：商家ID以及zhuohao.生成的二维码下载，图片尺寸为5*6CM；
-	    		 				         jQuery($(".ewm")).qrcode({ width: 180, height: 180,  text: wx_pub_qr }); 
-	    								 //设置定时器
-	    								 window.t1 = setInterval(isOverPay, 10000);//10秒执行一次
-	     							 }else{
-	     								 alert(data.message);
-	     							 }
-	     	   					}
-	     				});  
-	     			 }else{
-	     				 alert("暂未开通");
-	     			 }
-	     		}else{
+	     			$.ajax({
+     					type:"post",
+     						url:"storepc_paymoney/transaction_pointsPay.do",
+     						data:{
+	     							"money":paymoney,"pay_way":channel
+     						},
+     	 					dataType:"json",
+     						success:function(data){ 
+     							 if(data.result == "1"){
+     								 var map=data.data;
+     								 if(channel == "wx_pub_qr"){
+     									 var wx_pub_qr =map.code_url ;
+        								 $(".dask").show();
+        								 $(".ewm").empty();
+        								 //生成二维码：商家ID以及zhuohao.生成的二维码下载，图片尺寸为5*6CM；
+        		 				         jQuery($(".ewm")).qrcode({ width: 180, height: 180,  text: wx_pub_qr }); 
+        								 //设置定时器
+        								 window.t1 = setInterval(isOverPay, 10000);//10秒执行一次
+     				     			 }else{
+     				     				 window.open('<%=basePath%>storepc_paymoney/goPayChongZhi.do?total_amount='+paymoney+'&body=1&out_trade_no='+map);
+     				     			 }
+     								
+     							 }else{
+     								 alert(data.message);
+     							 }
+     	   					}
+     				});  
+ 	     		}else{
 	     			alert("请先同意，勾选");
 	     			return;
 	     		}
