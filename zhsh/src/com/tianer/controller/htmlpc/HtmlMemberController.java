@@ -1991,6 +1991,9 @@ public class HtmlMemberController extends BaseController {
 	private App_advertService app_advertService;
 	
 	
+	@Resource(name="youXuanService")
+	private YouXuanService youXuanService;
+	
 	
 	
 	
@@ -2034,10 +2037,7 @@ public class HtmlMemberController extends BaseController {
 		}
 	}
 	
-	
-	@Resource(name="youXuanService")
-	private YouXuanService youXuanService;
-	
+
 	
 
 	/**
@@ -2918,7 +2918,7 @@ public class HtmlMemberController extends BaseController {
 			}
   			BigDecimal total_fee = new BigDecimal(Double.parseDouble(_total_fee)*100);
   	    	//开始调用微信支付接口
-  			WXPayPath dodo = new WXPayPath();
+  			WXPayPath dodo = new WXPayPath("3");
  	    	Map<String, String> reqData=new HashMap<String, String>();
  	    	reqData.put("body", body);
 	    	reqData.put("attach",attach);
@@ -2932,11 +2932,11 @@ public class HtmlMemberController extends BaseController {
 	    	reqData.put("trade_type", "JSAPI");
 	    	reqData.put("openid", ServiceHelper.getAppMemberService().findMemberThreeById(pd).getString("wxopen_id"));
 
- 	    	Map<String, String> map2=dodo.unifiedOrder(reqData);
+ 	    	Map<String, String> map2=dodo.unifiedOrder(reqData,"3");
  	    	//开始处理结果
   	        if(map2.get("result_code").toString().equals("SUCCESS") && map2.get("return_code").toString().equals("SUCCESS")){
  	    	  returnmap.put("payment_type_", attach);
- 	    	  returnmap.put("appId_",  dodo.getAppID());
+ 	    	  returnmap.put("appId_", map2.get("appid").toString());
  	    	  returnmap.put("timestamp_", String.valueOf(((new Date()).getTime())));
  	    	  returnmap.put("nonceStr_", map2.get("nonce_str").toString());
  	    	  returnmap.put("package_","prepay_id="+ map2.get("prepay_id").toString());

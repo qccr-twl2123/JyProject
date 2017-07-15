@@ -134,7 +134,7 @@ public class StoreAppBackUrlController extends BaseController {
 			request.getReader().close();
 			String xmlStr = sb.toString();
 			//验签
-			WXPayPath dodo = new WXPayPath();
+			WXPayPath dodo = new WXPayPath("1");
 			boolean signflag=dodo.YanQian(xmlStr);
 			if(!signflag){
 				ServiceHelper.getAppPcdService().saveLog(xmlStr, "回调的订单验签失败","0099");

@@ -23,8 +23,8 @@ public class WXPayPath {
     private WXPay wxpay;
     private WXPayConfigImpl config;
  
-    public WXPayPath() throws Exception {
-        config = WXPayConfigImpl.getInstance();
+    public WXPayPath(String type) throws Exception {
+        config = WXPayConfigImpl.getInstance(type);
         wxpay = new WXPay(config);
     }
     
@@ -71,10 +71,11 @@ public class WXPayPath {
      * 作用：统一下单<br>向 Map 中添加 appid、mch_id、nonce_str、sign_type、sign <br>
      * 场景：公共号支付、扫码支付、APP支付
      * @param reqData 向wxpay post的请求数据
+     * type :1-b端app，2-c端app，3-公众号
      * @return API返回数据
      * @throws Exception
      */
-    public Map<String, String> unifiedOrder(Map<String, String> reqData) throws Exception {
+    public Map<String, String> unifiedOrder(Map<String, String> reqData,String type) throws Exception {
     	return wxpay.unifiedOrder(reqData);
     }
     
@@ -98,7 +99,7 @@ public class WXPayPath {
      * @return
      * @throws Exception 
      */
-    public  Map<String, String> payorderByHttps(Map<String, String> data) throws Exception{
+    public  Map<String, String> payorderByHttps(Map<String, String> data,String type) throws Exception{
      	return payorderByHttps(WXPayUtil.mapToXml(wxpay.fillRequestData(data)));
     }
 
@@ -203,7 +204,7 @@ public class WXPayPath {
 
     public static void main(String[] args) throws Exception {
          System.out.println("--------------->");
-         WXPayPath dodo = new WXPayPath();
+         WXPayPath dodo = new WXPayPath("3");
          dodo.test001();
           System.out.println("<---------------"); // wx2016112510573077
     }

@@ -2,6 +2,10 @@ package com.tianer.controller.base;
 
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -71,6 +75,21 @@ public class BaseController {
 		return str;
 	}
 	
+	/**
+	 * 要求外部订单号必须唯一。
+	 * @return
+	 */
+	private static String getOutTradeNo() {
+		SimpleDateFormat format = new SimpleDateFormat("MMddHHmmss", Locale.getDefault());
+		Date date = new Date();
+		String key = format.format(date);
+
+		Random r = new Random();
+		key = key + r.nextInt();
+		key = key.substring(0, 15);
+		return key;
+	}
+
 	
 	/**
 	 * 得到四位的id
@@ -292,7 +311,7 @@ public class BaseController {
 	
 	//主函数
 	public static void main(String[] msg){
-		System.out.println(getTimeID( ));;
+		System.out.println(getOutTradeNo( ));;
   	}
 	
 	/**

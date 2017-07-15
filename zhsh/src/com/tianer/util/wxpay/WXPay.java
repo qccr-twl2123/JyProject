@@ -5,10 +5,6 @@ import java.util.Map;
 
 import com.github.wxpay.sdk.WXPayConstants.SignType;
 
- 
-
- 
-
 public class WXPay {
 
     private WXPayConfig config;
@@ -162,10 +158,12 @@ public class WXPay {
      * @return API返回数据
      * @throws Exception
      */
-    public String requestWithoutCert(String urlSuffix, Map<String, String> reqData, int connectTimeoutMs, int readTimeoutMs) throws Exception {
+    public String requestWithoutCert(String urlSuffix, Map<String, String> reqData,
+                                     int connectTimeoutMs, int readTimeoutMs) throws Exception {
         String msgUUID = reqData.get("nonce_str");
         String reqBody = WXPayUtil.mapToXml(reqData);
-         String resp = this.wxPayRequest.requestWithoutCert(urlSuffix, msgUUID, reqBody, connectTimeoutMs, readTimeoutMs, autoReport);
+
+        String resp = this.wxPayRequest.requestWithoutCert(urlSuffix, msgUUID, reqBody, connectTimeoutMs, readTimeoutMs, autoReport);
         return resp;
     }
 

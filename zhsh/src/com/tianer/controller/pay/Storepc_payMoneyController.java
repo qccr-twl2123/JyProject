@@ -104,7 +104,7 @@ public class Storepc_payMoneyController extends BaseController{
    		try {
    			BigDecimal total_fee = new BigDecimal(Double.parseDouble(_total_fee)*100);
   	    	//开始调用微信支付接口
-  			WXPayPath dodo = new WXPayPath();
+  			WXPayPath dodo = new WXPayPath("3");
  	    	Map<String, String> reqData=new HashMap<String, String>();
  	    	reqData.put("body", body);
 	    	reqData.put("attach",attach);
@@ -116,7 +116,7 @@ public class Storepc_payMoneyController extends BaseController{
 	     	//JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付，统一下单接口trade_type的传参可参考这里
 	    	//MICROPAY--刷卡支付，刷卡支付有单独的支付接口，不调用统一下单接口
 	    	reqData.put("trade_type", "NATIVE");
- 	    	Map<String, String> map2=dodo.unifiedOrder(reqData);
+ 	    	Map<String, String> map2=dodo.unifiedOrder(reqData,"3");
  	    	//开始处理结果
   	        if(map2.get("result_code").toString().equals("SUCCESS") && map2.get("return_code").toString().equals("SUCCESS")){
   	        	returnmap.put("code_url", map2.get("code_url").toString());//支付的微信二维码

@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
+import com.alipay.api.internal.util.AlipaySignature;
 import com.tianer.controller.base.BaseController;
 import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.util.Const;
 import com.tianer.util.DateUtil;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
+import com.tianer.util.alipaypay.AlipayConfig;
 import com.tianer.util.wxpay.WXPayConfig;
 import com.tianer.util.wxpay.WXPayConfigImpl;
 import com.tianer.util.wxpay.WXPayPath;
@@ -37,6 +39,66 @@ import com.tianer.util.wxpay.WXPayUtil;
 @RequestMapping(value="/back_mapp")
 public class MemberAppBackUrlController extends BaseController { 
 	
+	
+	
+	
+
+	 
+	/**
+	 * 
+	* 方法名：Alipaynotify
+ 	* 描述：支付宝返回结果（获取流水单号）
+	* 返回类型：json
+	* back_mapp/alipaynotify.do
+	 */
+	@RequestMapping(value="/alipaynotify")
+	@ResponseBody
+	public Object Alipaynotify() throws Exception{
+  		PageData pd = new PageData();
+ 		try {
+ 			pd = this.getPageData();
+			Map<String, String> paramsMap =(Map<String, String>)pd ;//将异步通知中收到的所有参数都存放到map中
+			boolean signVerified = AlipaySignature.rsaCheckV1(paramsMap, AlipayConfig.alipay_public_key, AlipayConfig.charset, AlipayConfig.sign_type); //调用SDK验证签名
+			if(signVerified){
+				// TODO 验签成功后，按照支付结果异步通知中的描述，对支付结果中的业务内容进行二次校验，校验成功后在response中返回success并继续商户自身业务处理，校验失败返回failure
+				//订单状态成功：TRADE_SUCCESS
+				String trade_status=pd.getString("trade_status");	
+				if(trade_status.equals("TRADE_SUCCESS")){
+					//订单号
+					String out_trade_no=pd.getString("out_trade_no");	
+					//trade_no流水单号
+					String trade_no=pd.getString("trade_no");	
+ 					//total_fee总价
+					String total_fee=TongYong.df2.format(Double.parseDouble(pd.getString("total_fee").trim())*100);//化为分的单位
+					//body 1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
+					String body=pd.getString("body");
+					String resXml="";
+					if(body.equals("1")){
+						 resXml=YhmdHuiDiao(out_trade_no, trade_no, total_fee, pd);
+					 }else if(body.equals("2")){
+						 resXml=ThjHuiDiao(out_trade_no, trade_no, total_fee, pd);
+					 }else if(body.equals("3")){
+						 resXml=YxThjHuiDiao(out_trade_no, trade_no, total_fee, pd);
+					 }else{
+						 resXml=chongzhi(out_trade_no, trade_no, total_fee, pd);
+					 }
+					//logger记录
+					ServiceHelper.getAppPcdService().saveLog(pd.toString(), "支付宝回调的订单结果","alipay");
+ 					return "success";
+				}
+			}else{
+				// TODO 验签失败则记录异常日志，并在response中返回failure.
+				AlipayConfig.logResult(pd.toString());
+				ServiceHelper.getAppPcdService().saveLog(pd.toString(), "支付宝回调的订单验签失败","0099");
+			}
+ 		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+ 		return "";
+	} 
+ 	
+	
 
 	private String success= "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml> "; 
 	private String notsuccess="<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[]]></return_msg></xml>";
@@ -49,12 +111,12 @@ public class MemberAppBackUrlController extends BaseController {
 	/**
 	 * 微信支付回调接口
 	* 方法名：Notify
-	* back_mapp/notify.do
+	* back_mapp/wxnotify.do
 	* 
     */
-	@RequestMapping(value="/notify")
+	@RequestMapping(value="/wxnotify")
 	@ResponseBody
-	public void Notify(PrintWriter out,HttpServletRequest request) throws Exception{
+	public void wxnotify(PrintWriter out,HttpServletRequest request) throws Exception{
 		logBefore(logger, "微信支付回调接口");
 		String inputLine;
 		StringBuilder sb =new StringBuilder();
@@ -64,40 +126,22 @@ public class MemberAppBackUrlController extends BaseController {
 				sb.append(inputLine);
 			}
 			request.getReader().close();
-			String xmlStr = "<xml>"
-					+ "<appid><![CDATA[wxb4dc385f953b356e]]></appid>"//公众账号ID
-					+ "<bank_type><![CDATA[CCB_CREDIT]]></bank_type>"//付款银行
-					+ "<cash_fee><![CDATA[1]]></cash_fee>"//现金支付金额
-					+ "<fee_type><![CDATA[CNY]]></fee_type>"//货币种类
-					+ "<is_subscribe><![CDATA[Y]]></is_subscribe>"//是否关注公众账号
-					+ "<mch_id><![CDATA[1228442802]]></mch_id>"//商户号
-					+ "<nonce_str><![CDATA[1002477130]]></nonce_str>"//随机字符串
-					+ "<openid><![CDATA[o-HREuJzRr3moMvv990VdfnQ8x4k]]></openid>"//用户标识
-					+ "<out_trade_no><![CDATA[0016cacc7b844752a1222e6f3a57c897]]></out_trade_no>"//商户订单号最多32位
-					+ "<result_code><![CDATA[SUCCESS]]></result_code>"//业务结果
-					+ "<sign><![CDATA[1269E03E43F2B8C388A414EDAE185CEE]]></sign>"//签名
-					+ "<time_end><![CDATA[20150324100405]]></time_end>"//支付完成时间
-					+ "<total_fee>0</total_fee>"//总金额
-					+ "<trade_type><![CDATA[JSAPI]]></trade_type>"//交易类型
-					+ "<transaction_id><![CDATA[1009530574201503240036299496]]></transaction_id>"//微信支付订单号
-					+" <attach><![CDATA[12123212112014070335681123222222]]></attach>"//商家数据包
-			  + "</xml>" ;
+			String xmlStr = sb.toString();
 			//验签
-			WXPayPath dodo = new WXPayPath();
+			WXPayPath dodo = new WXPayPath("2");
 			boolean signflag=dodo.YanQian(xmlStr);
 			if(!signflag){
 				ServiceHelper.getAppPcdService().saveLog(xmlStr, "回调的订单验签失败","0099");
 				resXml=notsign;
 			}else{
 				Map<String, String> map =  WXPayUtil.xmlToMap( xmlStr );
-//				Map<String, String> map =  WXPayUtil.xmlToMap(sb.toString());
-	 	 		//1.订单id
+ 	 	 		//1.订单id
 				String out_trade_no=(String)map.get("out_trade_no");
 	 			//2.流水单号
 				String tradnumber = (String) map.get("transaction_id");
 	 			//3.总金额
 				String total_fee=(String) map.get("total_fee");
-				//4.支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
+				//4.支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值
 				String attach=(String) map.get("attach");
 	 			//是否成功
 				Object result_code=map.get("result_code");

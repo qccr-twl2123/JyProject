@@ -75,7 +75,7 @@ public class WxChatBackUrlController extends BaseController {
 					+" <attach><![CDATA[12123212112014070335681123222222]]></attach>"//商家数据包
 			  + "</xml>" ;
 			//验签
-			WXPayPath dodo = new WXPayPath();
+			WXPayPath dodo = new WXPayPath("3");
 			boolean signflag=dodo.YanQian(xmlStr);
 			if(!signflag){
 				ServiceHelper.getAppPcdService().saveLog(xmlStr, "回调的订单验签失败","0099");

@@ -19,7 +19,7 @@ public abstract class WXPayConfig {
      *
      * @return Mch ID
      */
-    abstract  String getMchID();
+    abstract String getMchID();
 
 
     /**
