@@ -12,6 +12,7 @@ public class WXPayConfigImpl extends WXPayConfig{
     public static String appid="";
     public static String mchid="";
     public static String key="";
+    public static String type="";
   
 	public static void setMchid(String mchid) {
 		WXPayConfigImpl.mchid = mchid;
@@ -21,6 +22,9 @@ public class WXPayConfigImpl extends WXPayConfig{
 	}
 	public static void setAppid(String appid) {
 		WXPayConfigImpl.appid = appid;
+	}
+	public static void setType(String type) {
+		WXPayConfigImpl.type = type;
 	}
 	
 	
@@ -32,16 +36,19 @@ public class WXPayConfigImpl extends WXPayConfig{
     		setKey("41rj1qy23o4wrc2g8hdcq23549jfk59c");
     		setMchid("1372729202");
     		setAppid("wx8d24d584280be57b");
+    		setType("1");
     	}else if(type.equals("2")){
     		certPath = "C://wx2/apiclient_cert.p12";
     		setKey("41rj1qy23o4wrc2g8hdcq23549jfk59c");
     		setMchid("1372729202");
     		setAppid("wx8d24d584280be57b");
+    		setType("2");
     	}else{
     		certPath = "C://wx3/apiclient_cert.p12";
     		setKey("a464afo556djfqaj456asdjflha467df");
     		setMchid("1366844902");
     		setAppid("wx62d81eec40f745b4");
+    		setType("3");
     	}
          File file = new File(certPath);
         InputStream certStream = new FileInputStream(file);
@@ -50,15 +57,9 @@ public class WXPayConfigImpl extends WXPayConfig{
         certStream.close();
     }
 
-    public static WXPayConfigImpl getInstance(String type) throws Exception{
-        if (INSTANCE == null) {
-            synchronized (WXPayConfigImpl.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new WXPayConfigImpl(type);
-                }
-            }
-        }
-        return INSTANCE;
+    public static WXPayConfigImpl getInstance(String _type) throws Exception{
+    	 INSTANCE = new WXPayConfigImpl(_type);
+         return INSTANCE;
     }
 
     public String getAppID() {

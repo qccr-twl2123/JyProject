@@ -73,8 +73,7 @@ import com.tianer.util.StringUtil;
 import com.tianer.util.ping.util.WxUtil;
 import com.tianer.util.ping.util.WxpubOAuth;
 import com.tianer.util.wxpay.WXPayPath;
-import com.tianer.util.wxpay.WXPayUtil;
-
+ 
 /** 
  * 
 * 类名称：HtmlMemberController   
@@ -2934,7 +2933,7 @@ public class HtmlMemberController extends BaseController {
 
  	    	Map<String, String> map2=dodo.unifiedOrder(reqData);
  	    	//开始处理结果
-  	        if(map2.get("result_code").toString().equals("SUCCESS") && map2.get("return_code").toString().equals("SUCCESS")){
+  	        if(map2.get("return_code").toString().equals("SUCCESS") && map2.get("result_code").toString().equals("SUCCESS")  ){
  	    	  returnmap.put("payment_type_", attach);
  	    	  returnmap.put("appId_", map2.get("appid").toString());
  	    	  returnmap.put("timestamp_", String.valueOf(((new Date()).getTime())));
@@ -2943,11 +2942,21 @@ public class HtmlMemberController extends BaseController {
  	    	  returnmap.put("signType_", "MD5");
   	    	  returnmap.put("paySign_", map2.get("sign").toString());
   	    	  returnmap.put("out_trade_no", out_trade_no);
-  	       }
- 	       returnmap.put("result_code", map2.get("result_code").toString());
- 	       returnmap.put("return_code", map2.get("return_code").toString());
- 	       returnmap.put("return_msg", map2.get("return_msg").toString());
- 		} catch (Exception e) {
+  	    	  returnmap.put("result_code", map2.get("result_code").toString());
+  	       }else{
+  	    	  returnmap.put("payment_type_", "");
+	    	  returnmap.put("appId_", "" );
+	    	  returnmap.put("timestamp_", "");
+	    	  returnmap.put("nonceStr_", "");
+	    	  returnmap.put("package_","");
+	    	  returnmap.put("signType_", "");
+	    	  returnmap.put("paySign_", "");
+	    	  returnmap.put("out_trade_no", "");
+	    	  returnmap.put("result_code", "");
+   	       }
+  	      returnmap.put("return_code", map2.get("return_code").toString());
+	      returnmap.put("return_msg", map2.get("return_msg").toString());
+   		} catch (Exception e) {
 			// TODO: handle exception
  			e.printStackTrace();
 		}
@@ -3093,9 +3102,8 @@ public class HtmlMemberController extends BaseController {
 			waterpd.put("area_name", ServiceHelper.getAppMemberService().findById(pd).getString("area_name"));
 			ServiceHelper.getWaterRecordService().saveWaterRecord(waterpd);
 			waterpd=null;
-			String  attach="4";//支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
-			String  body="九鱼网-充值余额";
-			data= WxPayOrder(TongYong.df2.format(money), attach, body,waterrecord_id);
+			//支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
+ 			data= WxPayOrder(money, "4", "九鱼网-充值余额",waterrecord_id);
  		}catch(Exception e){
 			result="0";
 			message="系统异常";

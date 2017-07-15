@@ -91,16 +91,30 @@ public class Memberapp_payController extends BaseController{
  	    	//开始处理结果
   	        if(map2.get("return_code").toString().equals("SUCCESS") && map2.get("result_code").toString().equals("SUCCESS")){
  	    	  returnmap.put("payment_type_", attach);
- 	    	  returnmap.put("appId_", map2.get("appid").toString() );
- 	    	  returnmap.put("timestamp_", String.valueOf(((new Date()).getTime())));
- 	    	  returnmap.put("nonceStr_", map2.get("nonce_str").toString());
- 	    	  returnmap.put("package_","prepay_id="+ map2.get("prepay_id").toString());
- 	    	  returnmap.put("signType_", "MD5");
-  	    	  returnmap.put("paySign_", map2.get("sign").toString());
+ 	    	  returnmap.put("appId", map2.get("appid").toString() );
+ 	    	  returnmap.put("mch_id", map2.get("mch_id").toString() );
+ 	    	  returnmap.put("trade_type", map2.get("trade_type").toString() );
+ 	    	  returnmap.put("timestamp", String.valueOf(((new Date()).getTime())));
+ 	    	  returnmap.put("nonceStr", map2.get("nonce_str").toString());
+ 	    	  returnmap.put("package","prepay_id="+ map2.get("prepay_id").toString());
+ 	    	  returnmap.put("signType", "MD5");
+  	    	  returnmap.put("paySign", map2.get("sign").toString());
   	    	  returnmap.put("out_trade_no", out_trade_no);
+  	    	  returnmap.put("result_code", map2.get("result_code").toString());
+  	       }else{
+  	    	  returnmap.put("trade_type", "");
+  	    	  returnmap.put("payment_type", "");
+	    	  returnmap.put("appId", "" );
+	    	  returnmap.put("mch_id", "" );
+	    	  returnmap.put("timestamp", "");
+	    	  returnmap.put("nonceStr", "");
+	    	  returnmap.put("package","");
+	    	  returnmap.put("signType", "");
+ 	    	  returnmap.put("paySign", "");
+ 	    	  returnmap.put("out_trade_no", "");
+ 	    	  returnmap.put("result_code", "");
   	       }
- 	       returnmap.put("result_code", map2.get("result_code").toString());
- 	       returnmap.put("return_code", map2.get("return_code").toString());
+  	       returnmap.put("return_code", map2.get("return_code").toString());
  	       returnmap.put("return_msg", map2.get("return_msg").toString());
  		} catch (Exception e) {
 			// TODO: handle exception
