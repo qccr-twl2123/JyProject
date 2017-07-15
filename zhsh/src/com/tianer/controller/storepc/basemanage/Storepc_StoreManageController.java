@@ -218,25 +218,32 @@ public class Storepc_StoreManageController extends BaseController {
 		String message="修改成功";
 		try {
 			pd=this.getPageData();
-			String beforpassword =pd.getString("beforpassword");
-			String newpassword =pd.getString("password");
-			String login_type=slogin.getType();
-			String login_id=slogin.getLogin_id();
-			String password=slogin.getPassword();//登录密码
-			if(!beforpassword.equals(password)){
-				result="0";
-				message="原密码有误"; 
-			}else{
-				if(login_type.equals("1")){//
-					storeManageService.updateStore(pd);
+			if(slogin != null){
+ 				String beforpassword =pd.getString("beforpassword");
+				String newpassword =pd.getString("password");
+				String login_type=slogin.getType();
+				String login_id=slogin.getLogin_id();
+				String password=slogin.getPassword();//登录密码
+				if(!beforpassword.equals(password)){
+					result="0";
+					message="原密码有误"; 
 				}else{
-					pd.put("operator_password", MD5.md5(newpassword));
-					pd.put("store_operator_id", login_id);
-					storeManageService.updateOperator(pd);
+					if(login_type.equals("1")){//
+						pd.put("password", MD5.md5(newpassword));
+						storeManageService.updateStore(pd);
+					}else{
+						pd.put("operator_password", MD5.md5(newpassword));
+						pd.put("store_operator_id", login_id);
+						storeManageService.updateOperator(pd);
+					}
 				}
+			}else{
+				result="0";
+				message="请前往登录";
 			}
- 		} catch (Exception e) {
+  		} catch (Exception e) {
 			// TODO: handle exception
+ 			e.printStackTrace();
 		}
 		map.put("result", result);
 		map.put("message", message);
@@ -253,20 +260,12 @@ public class Storepc_StoreManageController extends BaseController {
 	@RequestMapping(value="/showPassword")
 	public ModelAndView showPassword(Page page) throws Exception{
 		ModelAndView modelAndView = this.getModelAndView();
-		Subject currentUser = SecurityUtils.getSubject();  
- 		Session session = currentUser.getSession();	
- 		StoreRole slogin=(StoreRole)session.getAttribute(Const.SESSION_STORE_USER);
- 		try {
- 			if(slogin != null){
-  				String store_id=slogin.getStore_id();
- 				Store store = storeManageService.findStoreById(store_id);
- 				String password = store.getPassword();
- 				modelAndView.addObject("password", password);
- 				modelAndView.setViewName("/storepc/business_base4");
- 			}
+  		try {
+ 			 
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+ 		modelAndView.setViewName("/storepc/business_base4");
   		return modelAndView;
 	}
 
