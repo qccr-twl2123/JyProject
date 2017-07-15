@@ -86,7 +86,7 @@ public class Memberapp_payController extends BaseController{
 	    	//MICROPAY--刷卡支付，刷卡支付有单独的支付接口，不调用统一下单接口
 	    	reqData.put("trade_type", "APP");
  
- 	    	Map<String, String> map2=dodo.unifiedOrder(reqData,"2");
+ 	    	Map<String, String> map2=dodo.unifiedOrder(reqData);
  	    	//开始处理结果
   	        if(map2.get("return_code").toString().equals("SUCCESS") && map2.get("result_code").toString().equals("SUCCESS")){
  	    	  returnmap.put("payment_type_", attach);

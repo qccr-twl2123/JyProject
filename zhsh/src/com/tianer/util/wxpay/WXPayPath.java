@@ -75,7 +75,7 @@ public class WXPayPath {
      * @return API返回数据
      * @throws Exception
      */
-    public Map<String, String> unifiedOrder(Map<String, String> reqData,String type) throws Exception {
+    public Map<String, String> unifiedOrder(Map<String, String> reqData) throws Exception {
     	return wxpay.unifiedOrder(reqData);
     }
     
@@ -99,7 +99,7 @@ public class WXPayPath {
      * @return
      * @throws Exception 
      */
-    public  Map<String, String> payorderByHttps(Map<String, String> data,String type) throws Exception{
+    public  Map<String, String> payorderByHttps(Map<String, String> data) throws Exception{
      	return payorderByHttps(WXPayUtil.mapToXml(wxpay.fillRequestData(data)));
     }
 

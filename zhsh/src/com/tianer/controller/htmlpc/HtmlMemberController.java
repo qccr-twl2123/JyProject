@@ -2932,7 +2932,7 @@ public class HtmlMemberController extends BaseController {
 	    	reqData.put("trade_type", "JSAPI");
 	    	reqData.put("openid", ServiceHelper.getAppMemberService().findMemberThreeById(pd).getString("wxopen_id"));
 
- 	    	Map<String, String> map2=dodo.unifiedOrder(reqData,"3");
+ 	    	Map<String, String> map2=dodo.unifiedOrder(reqData);
  	    	//开始处理结果
   	        if(map2.get("result_code").toString().equals("SUCCESS") && map2.get("return_code").toString().equals("SUCCESS")){
  	    	  returnmap.put("payment_type_", attach);
