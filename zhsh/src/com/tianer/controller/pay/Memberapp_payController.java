@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tianer.controller.base.BaseController;
- import com.tianer.controller.tongyongUtil.TongYong;
+import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.controller.youxuan.YouXuanController;
 import com.tianer.entity.zhihui.OrderShop;
- import com.tianer.entity.zhihui.TihuoTask;
+import com.tianer.entity.zhihui.TihuoTask;
 import com.tianer.service.memberapp.AppMemberService;
 import com.tianer.service.memberapp.AppOrderService;
 import com.tianer.service.memberapp.AppStoreService;
@@ -35,7 +35,8 @@ import com.tianer.util.Const;
 import com.tianer.util.DateUtil;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
- import com.tianer.util.wxpay.WXPayPath;
+import com.tianer.util.alipaypay.AlipayConfig;
+import com.tianer.util.wxpay.WXPayPath;
  
 /** 
  * 
@@ -130,7 +131,7 @@ public class Memberapp_payController extends BaseController{
 		Map<String,Object> map = new HashMap<String,Object>();
 		Map<String,Object> map1 = new HashMap<String,Object>();
 		Map<String,String> wxpaydata = new HashMap<String,String>();
-		Map<String,String> alipaydata = new HashMap<String,String>();
+		String paystr="";
 		String result = "1";
 		String message="支付成功";
 		PageData pd = new PageData();
@@ -149,9 +150,7 @@ public class Memberapp_payController extends BaseController{
 				map.put("result", "0");
 				map.put("message","请先前往登录");
  				map.put("data", "");
- 				map.put("wxpaydata", wxpaydata);
-				map.put("alipaydata", alipaydata);
-				return map;
+ 				return map;
 			}
 			//判断当前会员的积分是否充足
 			if(Double.parseDouble(ServiceHelper.getAppMemberService().findById(pd).getString("now_integral")) < user_integral){
@@ -441,13 +440,13 @@ public class Memberapp_payController extends BaseController{
 				if(pay_way.contains("wx")){
 					wxpaydata=WxPayOrder(TongYong.df2.format(lastpaymoney), "3", "九鱼优选-购买商品",guanlian_id);
 				}else{
-					
+					paystr=AlipayConfig.LastpayStr(TongYong.df2.format(lastpaymoney), "九鱼优选-购买商品", "3", guanlian_id);
 				}
 			}else{
 					TongYong.youxuanOkOrder(guanlian_id, "");
 			}
-			map1.put("wxpay", wxpaydata);
-			map1.put("alipay", alipaydata);
+			map1.put("wxpaydata", wxpaydata);
+			map1.put("alipaystr", paystr);
 			map1.put("order_id", guanlian_id);
 		} catch(Exception e){
 			result="0";
@@ -479,7 +478,7 @@ public class Memberapp_payController extends BaseController{
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		Map<String, String> wxpaydata = new HashMap<String, String>();
-		Map<String, String> alipaydata = new HashMap<String, String>();
+		String paystr="";
   		String result="1";
 		String message="充值确认中";
  		PageData pd=new PageData();
@@ -536,15 +535,14 @@ public class Memberapp_payController extends BaseController{
 			waterpd.put("area_name", ServiceHelper.getAppMemberService().findById(pd).getString("area_name"));
 			ServiceHelper.getWaterRecordService().saveWaterRecord(waterpd);
 			waterpd=null;
-			String  attach="4";//支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
-			String  body="九鱼网-充值余额";
-			if(pay_way.contains("wx")){
-				wxpaydata= WxPayOrder(money, attach, body,waterrecord_id);
+			//支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
+ 			if(pay_way.contains("wx")){
+				wxpaydata= WxPayOrder(money, "4", "九鱼网-充值余额",waterrecord_id);
 			}else{
-				
+				paystr=AlipayConfig.LastpayStr(money, "九鱼网-充值余额", "4", waterrecord_id);
 			}
-			map1.put("wxpay", wxpaydata);
-			map1.put("alipay", alipaydata);
+ 			map1.put("wxpaydata", wxpaydata);
+			map1.put("alipaystr", paystr);
 			map1.put("order_id", waterrecord_id);
 		} catch(Exception e){
 			result="0";
@@ -554,7 +552,7 @@ public class Memberapp_payController extends BaseController{
 		map.put("result", result);
 		map.put("message",message);
 		map.put("data", map1);;
-	    	return map;
+	    return map;
 	}
  
 	
@@ -575,19 +573,17 @@ public class Memberapp_payController extends BaseController{
  		Map<String, Object> map = new HashMap<String, Object>();
  		Map<String, Object> map1 = new HashMap<String, Object>();
  		Map<String, String> wxpaydata = new HashMap<String, String>();
-		Map<String, String> alipaydata = new HashMap<String, String>();
-	  	String result="1";
+ 		String paystr="";
+		String result="1";
 		String message="支付成功";
 		PageData pd=new PageData();
-			try{
+		try{
 			pd = this.getPageData();
 			if(ServiceHelper.getAppMemberService().findById(pd) == null){
 				map.put("result", "0");
 				map.put("message","请先前往登录");
  				map.put("data", "");
- 				map.put("wxpaydata", wxpaydata);
-				map.put("alipaydata", alipaydata);
-				return map;
+  				return map;
 			}
 			String pay_way=pd.getString("pay_way");
 			String order_id=BaseController.getTimeID();//支付历史记录
@@ -604,27 +600,28 @@ public class Memberapp_payController extends BaseController{
 			}
 			pd=(PageData) orderpd.get("data");
 			String pay_type=pd.getString("pay_type");////1-收银，2-优惠买单，3-提货卷  
-			String attach="";//支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
+			//支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
+			String attach="";
 			String body="";
 			if(pay_type.equals("2")){
 				attach="1";
 				body="优惠买单-购买商品";
 			}else{
-				attach="2";
-				body="提货券-购买商品";
+				attach="2";//相当于支付宝的body
+				body="提货券-购买商品";//相当于支付宝的subject
 			}
-				double actual_money=Double.parseDouble(pd.getString("actual_money"));
+			double actual_money=Double.parseDouble(pd.getString("actual_money"));
 			if(actual_money > 0 ){
 				if(pay_way.contains("wx")){
 					wxpaydata= WxPayOrder(TongYong.df2.format(actual_money), attach, body,order_id);
 				}else{
-					
-				}
+					paystr=AlipayConfig.LastpayStr(TongYong.df2.format(actual_money), body, attach, order_id);
+ 				}
  			}
-			map1.put("wxpay", wxpaydata);
-			map1.put("alipay", alipaydata);
-				map.put("order_id", order_id);
-			}catch(Exception e){
+			map1.put("wxpaydata", wxpaydata);
+			map1.put("alipaystr", paystr);
+			map.put("order_id", order_id);
+		}catch(Exception e){
 			result="0";
 			message="系统异常";
  			logger.error(e.toString(), e);
@@ -632,8 +629,8 @@ public class Memberapp_payController extends BaseController{
 		map.put("result", result);
 		map.put("message", message);
 		map.put("data", map1);
-			return map;
-		}
+		return map;
+	}
 
 	
 	
