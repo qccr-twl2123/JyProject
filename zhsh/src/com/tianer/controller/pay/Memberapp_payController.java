@@ -35,8 +35,10 @@ import com.tianer.util.Const;
 import com.tianer.util.DateUtil;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
+import com.tianer.util.StringUtil;
 import com.tianer.util.alipaypay.AlipayConfig;
 import com.tianer.util.wxpay.WXPayPath;
+import com.tianer.util.wxpay.WXPayUtil;
  
 /** 
  * 
@@ -69,7 +71,7 @@ public class Memberapp_payController extends BaseController{
 	 * body       商品说明
 	 * out_trade_no   订单ID
 	 */
-	public static Map<String, String> WxPayOrder(String _total_fee,String attach,String body,String out_trade_no) throws Exception{
+	public static Map<String, String> WxPayOrder(String _total_fee,String attach,String body,String out_trade_no,HttpServletRequest request,String spbill_create_ip) throws Exception{
 		Map<String, String> returnmap=new HashMap<String, String>();
    		try {
    			BigDecimal total_fee = new BigDecimal(Double.parseDouble(_total_fee)*100);
@@ -80,43 +82,44 @@ public class Memberapp_payController extends BaseController{
 	    	reqData.put("attach",attach);
 	    	reqData.put("out_trade_no", out_trade_no);
 	    	reqData.put("fee_type", "CNY");
+	    	String  timestamp=String.valueOf(WXPayUtil.getCurrentTimestamp());
+	    	String  noncestr=WXPayUtil.generateNonceStr();
+	    	reqData.put("time_start", timestamp);
+	    	reqData.put("nonce_str", noncestr);
 	    	reqData.put("total_fee", String.valueOf(total_fee.intValue()));
-	    	reqData.put("spbill_create_ip", dodo.getSpbill_create_ip());
-	    	reqData.put("notify_url", "http://www.jiuyuvip.com/back_mapp/wxnotify.do");
+ 	    	reqData.put("spbill_create_ip", StringUtil.getIp(request));
+ 	    	reqData.put("notify_url", "https://www.jiuyuvip.com/back_mapp/wxnotify.do");
 	     	//JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付，统一下单接口trade_type的传参可参考这里
 	    	//MICROPAY--刷卡支付，刷卡支付有单独的支付接口，不调用统一下单接口
 	    	reqData.put("trade_type", "APP");
- 
- 	    	Map<String, String> map2=dodo.unifiedOrder(reqData);
- 	    	//开始处理结果
+  	    	Map<String, String> map2=dodo.unifiedOrder(reqData);
+  	    	//开始处理结果
   	        if(map2.get("return_code").toString().equals("SUCCESS") && map2.get("result_code").toString().equals("SUCCESS")){
- 	    	  returnmap.put("payment_type_", attach);
- 	    	  returnmap.put("appId", map2.get("appid").toString() );
- 	    	  returnmap.put("mch_id", map2.get("mch_id").toString() );
- 	    	  returnmap.put("trade_type", map2.get("trade_type").toString() );
- 	    	  returnmap.put("timestamp", String.valueOf(((new Date()).getTime())));
- 	    	  returnmap.put("nonceStr", map2.get("nonce_str").toString());
- 	    	  returnmap.put("package","prepay_id="+ map2.get("prepay_id").toString());
- 	    	  returnmap.put("signType", "MD5");
-  	    	  returnmap.put("paySign", map2.get("sign").toString());
-  	    	  returnmap.put("out_trade_no", out_trade_no);
-  	    	  returnmap.put("result_code", map2.get("result_code").toString());
-  	       }else{
-  	    	  returnmap.put("trade_type", "");
-  	    	  returnmap.put("payment_type", "");
-	    	  returnmap.put("appId", "" );
-	    	  returnmap.put("mch_id", "" );
+  	          returnmap.put("appid", map2.get("appid").toString() );
+ 	    	  returnmap.put("partnerid", map2.get("mch_id").toString() );
+ 	    	  returnmap.put("prepayid",map2.get("prepay_id").toString());
+   	    	  returnmap.put("timestamp", timestamp);
+ 	    	  returnmap.put("noncestr", noncestr );//WXPayUtil.generateNonceStr()或map2.get("nonce_str").toString()
+   	    	  returnmap.put("package", "Sign=WXPay");
+   	    	  System.out.println("参与签名参数="+returnmap.toString());
+   	    	  //二次签名x
+   	    	  String sign=dodo.AddSign(returnmap);
+   	    	  returnmap=WXPayUtil.xmlToMap(sign);
+   	    	  System.out.println("签名后的参数="+returnmap.toString());
+   	    	  returnmap.put("return_code", map2.get("return_code").toString());
+   	    	  returnmap.put("return_msg", map2.get("return_msg").toString());
+   	       }else{
+   	    	  returnmap.put("appid", "" );
+	    	  returnmap.put("partnerid", "" );
+	    	  returnmap.put("prepayid", "");
 	    	  returnmap.put("timestamp", "");
-	    	  returnmap.put("nonceStr", "");
-	    	  returnmap.put("package","");
-	    	  returnmap.put("signType", "");
- 	    	  returnmap.put("paySign", "");
- 	    	  returnmap.put("out_trade_no", "");
- 	    	  returnmap.put("result_code", "");
-  	       }
-  	       returnmap.put("return_code", map2.get("return_code").toString());
- 	       returnmap.put("return_msg", map2.get("return_msg").toString());
- 		} catch (Exception e) {
+ 	    	  returnmap.put("noncestr","");
+  	    	  returnmap.put("package", "");
+ 	    	  returnmap.put("sign", "");
+ 	    	  returnmap.put("return_code", map2.get("return_code").toString());
+ 	 	      returnmap.put("return_msg", map2.get("return_msg").toString());
+   	       }
+  		} catch (Exception e) {
 			// TODO: handle exception
  			e.printStackTrace();
 		}
@@ -452,7 +455,7 @@ public class Memberapp_payController extends BaseController{
 			lastpaymoney =   _amount.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue(); 
 			if(lastpaymoney >0){
 				if(pay_way.contains("wx")){
-					wxpaydata=WxPayOrder(TongYong.df2.format(lastpaymoney), "3", "九鱼优选-购买商品",guanlian_id);
+					wxpaydata=WxPayOrder(TongYong.df2.format(lastpaymoney), "3", "九鱼优选-购买商品",guanlian_id,request,pd.getString("ip"));
 				}else{
 					paystr=AlipayConfig.LastpayStr(TongYong.df2.format(lastpaymoney), "九鱼优选-购买商品", "3", guanlian_id);
 				}
@@ -498,6 +501,7 @@ public class Memberapp_payController extends BaseController{
  		PageData pd=new PageData();
 		try{
  			pd = this.getPageData();
+//  			System.out.println("APP端"+pd.getString("ip"));
  			if(ServiceHelper.getAppMemberService().findById(pd) == null){
 				map.put("result", "0");
 				map.put("message","请先前往登录");
@@ -551,7 +555,7 @@ public class Memberapp_payController extends BaseController{
 			waterpd=null;
 			//支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
  			if(pay_way.contains("wx")){
-				wxpaydata= WxPayOrder(money, "4", "九鱼网-充值余额",waterrecord_id);
+				wxpaydata= WxPayOrder(money, "4", "九鱼网-充值余额",waterrecord_id,request,pd.getString("ip"));
 			}else{
 				paystr=AlipayConfig.LastpayStr(money, "九鱼网-充值余额", "4", waterrecord_id);
 			}
@@ -627,7 +631,7 @@ public class Memberapp_payController extends BaseController{
 			double actual_money=Double.parseDouble(pd.getString("actual_money"));
 			if(actual_money > 0 ){
 				if(pay_way.contains("wx")){
-					wxpaydata= WxPayOrder(TongYong.df2.format(actual_money), attach, body,order_id);
+					wxpaydata= WxPayOrder(TongYong.df2.format(actual_money), attach, body,order_id,request,pd.getString("ip"));
 				}else{
 					paystr=AlipayConfig.LastpayStr(TongYong.df2.format(actual_money), body, attach, order_id);
  				}

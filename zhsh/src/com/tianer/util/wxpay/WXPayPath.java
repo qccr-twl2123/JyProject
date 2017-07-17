@@ -56,12 +56,13 @@ public class WXPayPath {
     
     
     /**
-     * 添加签名--Md5
+     * 添加签名--Md5 
+     * 生成带有 sign 的 XML 格式字符串
      * @return
      * @throws Exception 
      */
     public  String AddSign(Map<String, String> data) throws Exception{
-     	return WXPayUtil.generateSignedXml(data, config.getKey(), SignType.MD5);
+     	return WXPayUtil.generateSignedXml(data, config.getKey());
     }
     
    

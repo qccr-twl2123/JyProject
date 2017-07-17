@@ -300,4 +300,9 @@ public class WXPayUtil {
         return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 32);
     }
 
+    public static void main(String[] args) {
+		System.out.println(getCurrentTimestamp());
+		System.out.println(getCurrentTimestampMs());
+		System.out.println((new Date()).getTime());
+	}
 }
