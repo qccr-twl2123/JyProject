@@ -2939,7 +2939,7 @@ public class HtmlMemberController extends BaseController {
  	    	  returnmap.put("timestamp_", String.valueOf(((new Date()).getTime())));
  	    	  returnmap.put("nonceStr_", map2.get("nonce_str").toString());
  	    	  returnmap.put("package_","prepay_id="+ map2.get("prepay_id").toString());
- 	    	  returnmap.put("signType_", "MD5");
+ 	    	  returnmap.put("signType_", "HMACSHA256");
   	    	  returnmap.put("paySign_", map2.get("sign").toString());
   	    	  returnmap.put("out_trade_no", out_trade_no);
   	    	  returnmap.put("result_code", map2.get("result_code").toString());

@@ -65,6 +65,16 @@ public class WXPayPath {
      	return WXPayUtil.generateSignedXml(data, config.getKey());
     }
     
+    /**
+     * 添加签名--HMACSHA256 
+     * 生成带有 sign 的 XML 格式字符串
+     * @return
+     * @throws Exception 
+     */
+    public  String AddSignByHMACSHA256(Map<String, String> data) throws Exception{
+     	return WXPayUtil.generateSignedXml(data, config.getKey(),SignType.HMACSHA256);
+    }
+    
    
    //=================================================================================
    

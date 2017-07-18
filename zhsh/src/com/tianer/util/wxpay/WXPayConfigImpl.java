@@ -33,9 +33,9 @@ public class WXPayConfigImpl extends WXPayConfig{
     	String certPath ="";
     	if(type.equals("1")){
     		certPath = "C://wx1/apiclient_cert.p12";
-    		setKey("41rj1qy23o4wrc2g8hdcq23549jfk59c");
-    		setMchid("1372729202");
-    		setAppid("wx8d24d584280be57b");
+    		setKey("dfkash4a67drfvde5q9f5rw344wad1f8");
+    		setMchid("1390186002");
+    		setAppid("wx041bbb9db8f1e96b");
     		setType("1");
     	}else if(type.equals("2")){
     		certPath = "C://wx2/apiclient_cert.p12";

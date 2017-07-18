@@ -82,42 +82,39 @@ public class Memberapp_payController extends BaseController{
 	    	reqData.put("attach",attach);
 	    	reqData.put("out_trade_no", out_trade_no);
 	    	reqData.put("fee_type", "CNY");
-	    	String  timestamp=String.valueOf(WXPayUtil.getCurrentTimestamp());
-	    	String  noncestr=WXPayUtil.generateNonceStr();
-	    	reqData.put("time_start", timestamp);
-	    	reqData.put("nonce_str", noncestr);
+ 	    	String  nonce_str=WXPayUtil.generateNonceStr();
+ 	    	reqData.put("nonce_str", nonce_str);
+ 	    	reqData.put("time_start", DateUtil.getDayshms());
 	    	reqData.put("total_fee", String.valueOf(total_fee.intValue()));
  	    	reqData.put("spbill_create_ip", StringUtil.getIp(request));
  	    	reqData.put("notify_url", "https://www.jiuyuvip.com/back_mapp/wxnotify.do");
-	     	//JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付，统一下单接口trade_type的传参可参考这里
+ 	     	//JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付，统一下单接口trade_type的传参可参考这里
 	    	//MICROPAY--刷卡支付，刷卡支付有单独的支付接口，不调用统一下单接口
 	    	reqData.put("trade_type", "APP");
-  	    	Map<String, String> map2=dodo.unifiedOrder(reqData);
-  	    	//开始处理结果
+   	    	Map<String, String> map2=dodo.unifiedOrder(reqData);
+   	    	//开始处理结果
   	        if(map2.get("return_code").toString().equals("SUCCESS") && map2.get("result_code").toString().equals("SUCCESS")){
-  	          returnmap.put("appid", map2.get("appid").toString() );
- 	    	  returnmap.put("partnerid", map2.get("mch_id").toString() );
- 	    	  returnmap.put("prepayid",map2.get("prepay_id").toString());
-   	    	  returnmap.put("timestamp", timestamp);
- 	    	  returnmap.put("noncestr", noncestr );//WXPayUtil.generateNonceStr()或map2.get("nonce_str").toString()
-   	    	  returnmap.put("package", "Sign=WXPay");
-   	    	  System.out.println("参与签名参数="+returnmap.toString());
-   	    	  //二次签名x
-   	    	  String sign=dodo.AddSign(returnmap);
-   	    	  returnmap=WXPayUtil.xmlToMap(sign);
-   	    	  System.out.println("签名后的参数="+returnmap.toString());
-   	    	  returnmap.put("return_code", map2.get("return_code").toString());
-   	    	  returnmap.put("return_msg", map2.get("return_msg").toString());
-   	       }else{
-   	    	  returnmap.put("appid", "" );
-	    	  returnmap.put("partnerid", "" );
-	    	  returnmap.put("prepayid", "");
-	    	  returnmap.put("timestamp", "");
- 	    	  returnmap.put("noncestr","");
-  	    	  returnmap.put("package", "");
- 	    	  returnmap.put("sign", "");
- 	    	  returnmap.put("return_code", map2.get("return_code").toString());
- 	 	      returnmap.put("return_msg", map2.get("return_msg").toString());
+	  	          returnmap.put("appid", map2.get("appid").toString() );
+	 	    	  returnmap.put("partnerid", map2.get("mch_id").toString() );
+	 	    	  returnmap.put("prepayid",map2.get("prepay_id").toString());
+	   	    	  returnmap.put("timestamp", String.valueOf(WXPayUtil.getCurrentTimestamp()));
+	   	    	  returnmap.put("package", "Sign=WXPay");
+	 	    	  returnmap.put("noncestr", nonce_str );//WXPayUtil.generateNonceStr()或map2.get("nonce_str").toString()
+	    	    	  //二次签名x
+	   	    	  String sign=dodo.AddSignByHMACSHA256(returnmap);
+	   	    	  returnmap=WXPayUtil.xmlToMap(sign);
+    	    	  returnmap.put("return_code", map2.get("return_code").toString());
+    	    	  returnmap.put("return_msg", map2.get("return_msg").toString());
+    	     }else{
+	   	    	  returnmap.put("appid", "" );
+		    	  returnmap.put("partnerid", "" );
+		    	  returnmap.put("prepayid", "");
+		    	  returnmap.put("timestamp", "");
+	 	    	  returnmap.put("noncestr","");
+	  	    	  returnmap.put("package", "");
+	 	    	  returnmap.put("sign", "");
+	 	    	  returnmap.put("return_code", map2.get("return_code").toString());
+	 	 	      returnmap.put("return_msg", map2.get("return_msg").toString());
    	       }
   		} catch (Exception e) {
 			// TODO: handle exception

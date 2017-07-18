@@ -210,7 +210,7 @@ public class WXPayUtil {
                 sb.append(k).append("=").append(data.get(k).trim()).append("&");
         }
         sb.append("key=").append(key);
-        if (SignType.MD5.equals(signType)) {
+         if (SignType.MD5.equals(signType)) {
             return MD5(sb.toString()).toUpperCase();
         }
         else if (SignType.HMACSHA256.equals(signType)) {
@@ -228,7 +228,7 @@ public class WXPayUtil {
      * @return String 随机字符串
      */
     public static String generateNonceStr() {
-        return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 32);
+        return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 16);
     }
 
 
@@ -301,8 +301,6 @@ public class WXPayUtil {
     }
 
     public static void main(String[] args) {
-		System.out.println(getCurrentTimestamp());
-		System.out.println(getCurrentTimestampMs());
-		System.out.println((new Date()).getTime());
-	}
+		System.out.println(generateNonceStr());
+ 	}
 }

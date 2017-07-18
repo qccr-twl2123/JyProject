@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.tianer.controller.base.BaseController;
+import com.tianer.util.DateUtil;
 
 public class test {
 
@@ -21,7 +22,7 @@ public class test {
      }
     
     public void Apipay() throws Exception{
-    	WXPayPath dodo = new WXPayPath("2");
+    	WXPayPath dodo = new WXPayPath("3");
     	String out_trade_no=BaseController.getTimeID();
     	Map<String, String> reqData=new HashMap<String, String>();
     	reqData.put("body", "腾讯充值中心-QQ会员充值");
@@ -29,36 +30,35 @@ public class test {
     	reqData.put("out_trade_no", out_trade_no);
     	reqData.put("fee_type", "CNY");
     	reqData.put("total_fee", "1");
+    	reqData.put("time_start", DateUtil.getDayshms());
     	reqData.put("spbill_create_ip", dodo.getSpbill_create_ip());
-    	reqData.put("notify_url", "http://test.letiantian.com/wxpay/notify");
-    	String  timestamp=String.valueOf(WXPayUtil.getCurrentTimestamp());
-    	String  nonce_str=WXPayUtil.generateNonceStr();
-    	reqData.put("time_start", timestamp);
-    	reqData.put("nonce_str", nonce_str);
+    	reqData.put("notify_url", "https://test.letiantian.com/wxpay/notify");
+     	String  nonce_str=WXPayUtil.generateNonceStr();
+     	reqData.put("nonce_str", nonce_str);
 //     	JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付，统一下单接口trade_type的传参可参考这里
 //    	MICROPAY--刷卡支付，刷卡支付有单独的支付接口，不调用统一下单接口
-    	reqData.put("trade_type", "APP");
-//    	reqData.put("openid", "owD2DwsxdygwHXxNV75kjGT7Wvlw");
+    	reqData.put("trade_type", "JSAPI");
+    	reqData.put("openid", "owD2DwsxdygwHXxNV75kjGT7Wvlw");
     	
     	Map<String, String> data=new HashMap<String, String>();
     	//开始支付
     	data=dodo.unifiedOrder(reqData);
     	System.out.println(data);
-    	nextpay(timestamp, nonce_str,data.get("prepay_id").toString());
+    	nextpay(nonce_str,data.get("prepay_id").toString());
     }
     
     
-    public void nextpay(String timestamp,String noncestr,String prepayid) throws Exception{
+    public void nextpay(String nonce_str,String prepayid) throws Exception{
     	WXPayPath dodo = new WXPayPath("2");
     	Map<String, String> returnmap=new HashMap<String, String>();
-    	returnmap.put("appid", "wx8d24d584280be57b" );
-   	  	returnmap.put("partnerid", "1372729202" );
+    	returnmap.put("appid", "wxab8acb865bb1637e" );
+   	  	returnmap.put("partnerid", "11473623" );
    	  	returnmap.put("prepayid",prepayid);
-    	returnmap.put("timestamp", timestamp);
-   	  	returnmap.put("noncestr", noncestr);//
+    	returnmap.put("timestamp", String.valueOf(WXPayUtil.getCurrentTimestamp()));
+   	  	returnmap.put("noncestr", nonce_str);//
    	  	returnmap.put("package", "Sign=WXPay");
    	  	//二次签名x
-	    String sign=dodo.AddSign(returnmap);
+	    String sign=dodo.AddSignByHMACSHA256(returnmap);
 	    returnmap=WXPayUtil.xmlToMap(sign);
 	    System.out.println(returnmap.toString());
 	    

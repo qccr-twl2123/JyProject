@@ -213,6 +213,7 @@ public class Pay_historyController extends BaseController {
  	/**
  	 * 
  	* 方法名称:：thirdPartyCz 
+ 	* thirdPartyCz
  	* 方法描述：会员充值
  	* 创建人：魏汉文
  	* 创建时间：2016年7月6日 上午10:13:52
@@ -528,7 +529,7 @@ public class Pay_historyController extends BaseController {
 	/**
 	 * 第三方支付或者充值回调
 	* 方法名称:：payBackWay 
-	* 方法描述：
+ 	* 方法描述：
 	* 创建人：魏汉文
 	* 创建时间：2016年7月5日 下午6:30:51
 	 */

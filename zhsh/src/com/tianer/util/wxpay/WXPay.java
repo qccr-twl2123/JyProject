@@ -44,7 +44,7 @@ public class WXPay {
             this.signType = SignType.MD5; // 沙箱环境
         }
         else {
-            this.signType = SignType.HMACSHA256;
+            this.signType = SignType.HMACSHA256;//正式环境
         }
         this.wxPayRequest = new WXPayRequest(config);
     }
@@ -94,7 +94,7 @@ public class WXPay {
     public Map<String, String> fillRequestData(Map<String, String> reqData) throws Exception {
         reqData.put("appid", config.getAppID());
         reqData.put("mch_id", config.getMchID());
-        if(reqData.get("reqData") == null){
+        if(reqData.get("nonce_str") == null){
         	 reqData.put("nonce_str", WXPayUtil.generateNonceStr());
         }
          if (SignType.MD5.equals(this.signType)) {
