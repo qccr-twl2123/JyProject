@@ -71,7 +71,7 @@ public class Memberapp_payController extends BaseController{
 	 * body       商品说明
 	 * out_trade_no   订单ID
 	 */
-	public static Map<String, String> WxPayOrder(String _total_fee,String attach,String out_trade_no,HttpServletRequest request,String spbill_create_ip) throws Exception{
+	public static Map<String, String> WxPayOrder(String _total_fee,String attach,String out_trade_no,HttpServletRequest request) throws Exception{
 		Map<String, String> returnmap=new HashMap<String, String>();
    		try {
    			BigDecimal total_fee = new BigDecimal(Double.parseDouble(_total_fee)*100);
@@ -87,7 +87,7 @@ public class Memberapp_payController extends BaseController{
 			}else{
 				reqData.put("body", "九鱼网-充值余额");
 			}
-  	    	reqData.put("attach",attach);
+  	    	reqData.put("attach",attach); 
 	    	reqData.put("out_trade_no", out_trade_no);
 	    	reqData.put("fee_type", "CNY");
  	    	String  nonce_str=WXPayUtil.generateNonceStr();
@@ -460,7 +460,7 @@ public class Memberapp_payController extends BaseController{
 			lastpaymoney =   _amount.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue(); 
 			if(lastpaymoney >0){
 				if(pay_way.contains("wx")){
-					wxpaydata=WxPayOrder(TongYong.df2.format(lastpaymoney), "3",  guanlian_id,request,pd.getString("ip"));
+					wxpaydata=WxPayOrder(TongYong.df2.format(lastpaymoney), "3",  guanlian_id,request );
 				}else{
 					paystr=AlipayConfig.LastpayStr(TongYong.df2.format(lastpaymoney), "3", guanlian_id);
 				}
@@ -484,6 +484,81 @@ public class Memberapp_payController extends BaseController{
 	
 	
 	
+	
+	
+	/**
+   	 * 订单交易支付接口
+   	* 方法名称:：payorder 
+   	* 方法描述：订单支付接口
+   	* app_pay/payorder.do
+   	* 
+   	* member_id
+   	* store_id
+   	* pay_way 
+   	* url  ：  url
+   	 */
+	@RequestMapping(value="/payorder")
+	@ResponseBody
+	public  Object PayOrder(HttpServletRequest request) throws Exception{
+ 		Map<String, Object> map = new HashMap<String, Object>();
+ 		Map<String, Object> map1 = new HashMap<String, Object>();
+ 		Map<String, String> wxpaydata = new HashMap<String, String>();
+ 		String paystr="";
+		String result="1";
+		String message="支付成功";
+		PageData pd=new PageData();
+		try{
+			pd = this.getPageData();
+			if(ServiceHelper.getAppMemberService().findById(pd) == null){
+				map.put("result", "0");
+				map.put("message","请先前往登录");
+ 				map.put("data", "");
+  				return map;
+			}
+			String pay_way=pd.getString("pay_way");
+			String order_id=BaseController.getTimeID();//支付历史记录
+			pd.put("order_id", order_id);
+			pd.put("look_number", order_id);
+			// 处理订单
+			PageData orderpd=TongYong.chuliOrder(pd,ServiceHelper.getAppMemberService().findById(pd),ServiceHelper.getAppStoreService().findById(pd));
+			if(orderpd.getString("result").equals("0")){
+				ServiceHelper.getAppPcdService().saveLog(order_id, "订单支付出错","10");
+				map.put("result", orderpd.getString("result"));
+				map.put("message", orderpd.getString("message"));
+			    map.put("data", "");
+			    return map;
+			}
+			pd=(PageData) orderpd.get("data");
+			String pay_type=pd.getString("pay_type");////1-收银，2-优惠买单，3-提货卷  
+			//支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
+			String attach="";
+ 			if(pay_type.equals("2")){
+				attach="1";
+ 			}else{
+				attach="2";//相当于支付宝的body
+ 			}
+			double actual_money=Double.parseDouble(pd.getString("actual_money"));
+			if(actual_money > 0 ){
+				if(pay_way.contains("wx")){
+					wxpaydata= WxPayOrder(TongYong.df2.format(actual_money), attach, order_id,request );
+				}else{
+					paystr=AlipayConfig.LastpayStr(TongYong.df2.format(actual_money),   attach, order_id);
+ 				}
+ 			}
+			map1.put("wxpaydata", wxpaydata);
+			map1.put("alipaystr", paystr);
+			map1.put("order_id", order_id);
+		}catch(Exception e){
+			result="0";
+			message="系统异常";
+ 			logger.error(e.toString(), e);
+		}
+		map.put("result", result);
+		map.put("message", message);
+		map.put("data", map1);
+		return map;
+	}
+
 	/**
  	 * 
  	*  充值接口:：paychongzhi 
@@ -559,7 +634,7 @@ public class Memberapp_payController extends BaseController{
 			waterpd=null;
 			//支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
  			if(pay_way.contains("wx")){
-				wxpaydata= WxPayOrder(money, "4", waterrecord_id,request,pd.getString("ip"));
+				wxpaydata= WxPayOrder(money, "4", waterrecord_id,request);
 			}else{
 				paystr=AlipayConfig.LastpayStr(money,  "4", waterrecord_id);
 			}
@@ -573,86 +648,53 @@ public class Memberapp_payController extends BaseController{
 		}
 		map.put("result", result);
 		map.put("message",message);
-		map.put("data", map1);;
+		map.put("data", "");
+	    return map;
+	}
+	
+	
+	
+	/**
+ 	 * 
+ 	*  验证订单是否已经支付完成接口
+  	*  app_pay/yanzhengOrder.do
+ 	*  
+ 	*  order_id  订单ID
+ 	*  type  	   支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
+  	*  返回数据：data:0 - 未完======= 1，97 已完成
+  	*  
+ 	 */
+	@RequestMapping(value="/yanzhengOrder")
+	@ResponseBody
+	public Object yanzhengOrder(String order_id , String type) throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+     	String result="1";
+		String message="充值确认中";
+		String data="0";
+ 		PageData pd=new PageData();
+		try{
+			if(type.equals("3")){
+				pd.put("guanlian_id", order_id);
+				if(ServiceHelper.getAppOrderService().getguanlianById(pd) != null && ServiceHelper.getAppOrderService().getguanlianById(pd).getString("status").equals("1")){
+					data="1";
+				}
+ 			}else{
+				pd.put("waterrecord_id", order_id);
+	 			if(ServiceHelper.getWaterRecordService().findWaterRecordIsPayOk(pd) != null ){
+	 				data="1";
+				}
+			}
+ 		} catch(Exception e){
+			result="0";
+			message="获取异常";
+			logger.error(e.toString(), e);
+		}
+		map.put("result", result);
+		map.put("message",message);
+		map.put("data", data);;
 	    return map;
 	}
  
-	
-	/**
-   	 * 订单交易支付接口
-   	* 方法名称:：payorder 
-   	* 方法描述：订单支付接口
-   	* app_pay/payorder.do
-   	* 
-   	* member_id
-   	* store_id
-   	* pay_way 
-   	* url  ：  url
-   	 */
-	@RequestMapping(value="/payorder")
-	@ResponseBody
-	public  Object PayOrder(HttpServletRequest request) throws Exception{
- 		Map<String, Object> map = new HashMap<String, Object>();
- 		Map<String, Object> map1 = new HashMap<String, Object>();
- 		Map<String, String> wxpaydata = new HashMap<String, String>();
- 		String paystr="";
-		String result="1";
-		String message="支付成功";
-		PageData pd=new PageData();
-		try{
-			pd = this.getPageData();
-			if(ServiceHelper.getAppMemberService().findById(pd) == null){
-				map.put("result", "0");
-				map.put("message","请先前往登录");
- 				map.put("data", "");
-  				return map;
-			}
-			String pay_way=pd.getString("pay_way");
-			String order_id=BaseController.getTimeID();//支付历史记录
-			pd.put("order_id", order_id);
-			pd.put("look_number", order_id);
-			// 处理订单
-			PageData orderpd=TongYong.chuliOrder(pd,ServiceHelper.getAppMemberService().findById(pd),ServiceHelper.getAppStoreService().findById(pd));
-			if(orderpd.getString("result").equals("0")){
-				ServiceHelper.getAppPcdService().saveLog(order_id, "订单支付出错","10");
-				map.put("result", orderpd.getString("result"));
-				map.put("message", orderpd.getString("message"));
-			    map.put("data", "");
-			    return map;
-			}
-			pd=(PageData) orderpd.get("data");
-			String pay_type=pd.getString("pay_type");////1-收银，2-优惠买单，3-提货卷  
-			//支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
-			String attach="";
- 			if(pay_type.equals("2")){
-				attach="1";
- 			}else{
-				attach="2";//相当于支付宝的body
- 			}
-			double actual_money=Double.parseDouble(pd.getString("actual_money"));
-			if(actual_money > 0 ){
-				if(pay_way.contains("wx")){
-					wxpaydata= WxPayOrder(TongYong.df2.format(actual_money), attach, order_id,request,pd.getString("ip"));
-				}else{
-					paystr=AlipayConfig.LastpayStr(TongYong.df2.format(actual_money),   attach, order_id);
- 				}
- 			}
-			map1.put("wxpaydata", wxpaydata);
-			map1.put("alipaystr", paystr);
-			map1.put("order_id", order_id);
-		}catch(Exception e){
-			result="0";
-			message="系统异常";
- 			logger.error(e.toString(), e);
-		}
-		map.put("result", result);
-		map.put("message", message);
-		map.put("data", map1);
-		return map;
-	}
-
-	
-	
 	
 
 }

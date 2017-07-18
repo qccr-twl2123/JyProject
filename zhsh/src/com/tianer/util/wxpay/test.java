@@ -44,7 +44,7 @@ public class test {
     	//开始支付
     	data=dodo.unifiedOrder(reqData);
     	System.out.println(data);
-    	nextpay(nonce_str,data.get("prepay_id").toString());
+//    	nextpay(nonce_str,data.get("prepay_id").toString());
     }
     
     

@@ -121,6 +121,7 @@ public class PcBackUrlController extends BaseController {
 			}
 			request.getReader().close();
 			String xmlStr = sb.toString();
+			System.out.println("最后得到的XMl格式参数"+xmlStr);
 			//验签
 			WXPayPath dodo = new WXPayPath("2");
 			boolean signflag=dodo.YanQianHMACSHA256(xmlStr);

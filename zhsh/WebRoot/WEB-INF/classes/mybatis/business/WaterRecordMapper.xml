@@ -785,8 +785,12 @@
 		from 
 			tb_waterrecord a
 		where 
-			a.waterrecord_id = #{waterrecord_id} and a.pay_status='1'
- 	</select>
+			a.waterrecord_id = #{waterrecord_id} 
+			<choose>
+				<when test="pay_status != null and pay_status != ''">and a.pay_status='1'</when>
+				<otherwise>and a.pay_status in ('1','97')</otherwise>
+			</choose>
+  	</select>
  	
  	<!--  删除制定订单 -->
 	<delete id="deleteWater"  parameterType="pd">

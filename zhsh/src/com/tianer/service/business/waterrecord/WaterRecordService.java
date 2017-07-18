@@ -165,18 +165,19 @@ public class WaterRecordService {
 	public void updateAll(PageData pd)throws Exception{
 		dao.update("WaterRecordMapper.updateAll", pd);
 	}
-	
-	
- 	/**
- 	 * 判断当前订单是否支付完成
- 	 */
- 	public PageData findWaterRecordIsPayOk(PageData  pd) throws Exception {
- 		return (PageData) dao.findForObject("WaterRecordMapper.findWaterRecordIsPayOk", pd);
- 	}
+  	
  	
  	
  	
 	//=================================2017-07-11================================================
+	
+	/**
+ 	 * 判断当前订单是否支付完成--刚支付完成状态1，97
+ 	 */
+ 	public PageData findWaterRecordIsPayOk(PageData  pd) throws Exception {
+ 		return (PageData) dao.findForObject("WaterRecordMapper.findWaterRecordIsPayOk", pd);
+ 	}
+	
  	/**
  	 * 第三方支付时候需要的回调详情
  	 */

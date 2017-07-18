@@ -209,7 +209,7 @@ public class WXPayPath {
             System.out.println(xmlStr);
             System.out.println("+++++++++++++++++");
             System.out.println(WXPayUtil.isSignatureValid(xmlStr, config.getKey()));
-             Map<String, String> hm = WXPayUtil.xmlToMap(xmlStr);
+            Map<String, String> hm = WXPayUtil.xmlToMap(xmlStr);
             System.out.println("+++++++++++++++++");
             System.out.println(hm);
             System.out.println(hm.get("attach").length());
@@ -217,7 +217,6 @@ public class WXPayPath {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
     
     

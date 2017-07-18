@@ -87,6 +87,10 @@ public class WXPay {
      * 向 Map 中添加 appid、mch_id、nonce_str、sign_type、sign <br>
      * 该函数适用于商户适用于统一下单等接口，不适用于红包、代金券接口
      *
+     *添加进sign的参数有
+     *body trade_type attach out_trade_no fee_type time_start total_fee spbill_create_ip notify_url
+     *appid、mch_id、nonce_str、sign_type、
+     *
      * @param reqData
      * @return
      * @throws Exception
@@ -104,7 +108,8 @@ public class WXPay {
             reqData.put("sign_type", WXPayConstants.HMACSHA256);
          }
          reqData.put("sign", WXPayUtil.generateSignature(reqData, config.getKey(), this.signType));
-          return reqData;
+//         System.out.println(reqData.toString()); 
+         return reqData;
     }
 
     /**

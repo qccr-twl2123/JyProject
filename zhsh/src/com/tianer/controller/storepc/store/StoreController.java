@@ -1143,6 +1143,7 @@ public class StoreController extends BaseController {
 		PageData pd = new PageData();
 		try{
 			pd = this.getPageData();
+			pd.put("pay_status", "1");
    			pd=ServiceHelper.getWaterRecordService().findWaterRecordIsPayOk(pd);
   			if(pd == null){
   				result="0";
