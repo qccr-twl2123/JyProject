@@ -129,7 +129,7 @@ public class MemberAppBackUrlController extends BaseController {
 			String xmlStr = sb.toString();
 			//验签
 			WXPayPath dodo = new WXPayPath("2");
-			boolean signflag=dodo.YanQian(xmlStr);
+			boolean signflag=dodo.YanQianHMACSHA256(xmlStr);
 			if(!signflag){
 				ServiceHelper.getAppPcdService().saveLog(xmlStr, "回调的订单验签失败","0099");
 				resXml=notsign;

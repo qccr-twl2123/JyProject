@@ -100,7 +100,7 @@ public class Memberapp_payController extends BaseController{
 	   	    	  returnmap.put("timestamp", String.valueOf(WXPayUtil.getCurrentTimestamp()));
 	   	    	  returnmap.put("package", "Sign=WXPay");
 	 	    	  returnmap.put("noncestr", nonce_str );//WXPayUtil.generateNonceStr()或map2.get("nonce_str").toString()
-	    	    	  //二次签名x
+	    	      //二次签名x
 	   	    	  String sign=dodo.AddSignByHMACSHA256(returnmap);
 	   	    	  returnmap=WXPayUtil.xmlToMap(sign);
     	    	  returnmap.put("return_code", map2.get("return_code").toString());

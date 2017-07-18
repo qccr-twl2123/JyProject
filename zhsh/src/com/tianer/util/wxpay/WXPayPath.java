@@ -46,7 +46,7 @@ public class WXPayPath {
     }
 
     /**
-     * sign验签
+     * sign验签Md5
      * @return
      * @throws Exception 
      */
@@ -73,6 +73,16 @@ public class WXPayPath {
      */
     public  String AddSignByHMACSHA256(Map<String, String> data) throws Exception{
      	return WXPayUtil.generateSignedXml(data, config.getKey(),SignType.HMACSHA256);
+    }
+    
+    /**
+     * sign验签 -- HMACSHA256
+     * @return
+     * @throws Exception 
+     */
+    public  boolean YanQianHMACSHA256(String xmlStr) throws Exception{
+    	Map<String, String> data=WXPayUtil.xmlToMap(xmlStr);
+     	return WXPayUtil.isSignatureValid(data,  config.getKey(), SignType.HMACSHA256);
     }
     
    

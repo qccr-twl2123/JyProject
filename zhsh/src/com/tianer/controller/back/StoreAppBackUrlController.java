@@ -135,14 +135,13 @@ public class StoreAppBackUrlController extends BaseController {
 			String xmlStr = sb.toString();
 			//验签
 			WXPayPath dodo = new WXPayPath("1");
-			boolean signflag=dodo.YanQian(xmlStr);
+			boolean signflag=dodo.YanQianHMACSHA256(xmlStr);
 			if(!signflag){
 				ServiceHelper.getAppPcdService().saveLog(xmlStr, "回调的订单验签失败","0099");
 				resXml=notsign;
 			}else{
 				Map<String, String> map =  WXPayUtil.xmlToMap( xmlStr );
-//				Map<String, String> map =  WXPayUtil.xmlToMap(sb.toString());
-	 	 		//1.订单id
+ 	 	 		//1.订单id
 				String out_trade_no=(String)map.get("out_trade_no");
 	 			//2.流水单号
 				String tradnumber = (String) map.get("transaction_id");
