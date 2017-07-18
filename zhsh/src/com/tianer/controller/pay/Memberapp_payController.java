@@ -478,8 +478,7 @@ public class Memberapp_payController extends BaseController{
 		map.put("result", result);
 		map.put("message",message);
 		map.put("data", map1);
-		pd=null;
-		return map;
+ 		return map;
 	}
 	
 	
@@ -648,7 +647,7 @@ public class Memberapp_payController extends BaseController{
 		}
 		map.put("result", result);
 		map.put("message",message);
-		map.put("data", "");
+		map.put("data",map1);
 	    return map;
 	}
 	
@@ -669,19 +668,19 @@ public class Memberapp_payController extends BaseController{
 	public Object yanzhengOrder(String order_id , String type) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
      	String result="1";
-		String message="充值确认中";
-		String data="0";
+		String message="支付确认中";
+		String orderstatus="0";
  		PageData pd=new PageData();
 		try{
 			if(type.equals("3")){
 				pd.put("guanlian_id", order_id);
 				if(ServiceHelper.getAppOrderService().getguanlianById(pd) != null && ServiceHelper.getAppOrderService().getguanlianById(pd).getString("status").equals("1")){
-					data="1";
+					orderstatus="1";
 				}
  			}else{
 				pd.put("waterrecord_id", order_id);
 	 			if(ServiceHelper.getWaterRecordService().findWaterRecordIsPayOk(pd) != null ){
-	 				data="1";
+	 				orderstatus="1";
 				}
 			}
  		} catch(Exception e){
@@ -691,7 +690,7 @@ public class Memberapp_payController extends BaseController{
 		}
 		map.put("result", result);
 		map.put("message",message);
-		map.put("data", data);;
+		map.put("data", orderstatus);;
 	    return map;
 	}
  
