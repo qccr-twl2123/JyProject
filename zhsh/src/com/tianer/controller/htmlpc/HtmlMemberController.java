@@ -2908,7 +2908,7 @@ public class HtmlMemberController extends BaseController {
 	 * body       商品说明
 	 * out_trade_no   订单ID
 	 */
-	public static Map<String, String> WxPayOrder(String _total_fee,String attach,String body,String out_trade_no) throws Exception{
+	public static Map<String, String> WxPayOrder(String _total_fee,String attach,String out_trade_no) throws Exception{
 		Map<String, String> returnmap=new HashMap<String, String>();
    		try {
   			PageData pd=new PageData();
@@ -2919,8 +2919,16 @@ public class HtmlMemberController extends BaseController {
   	    	//开始调用微信支付接口
   			WXPayPath dodo = new WXPayPath("3");
  	    	Map<String, String> reqData=new HashMap<String, String>();
- 	    	reqData.put("body", body);
-	    	reqData.put("attach",attach);
+ 	    	if(attach.equals("1")){
+  				reqData.put("body", "优惠买单-购买商品");
+			}else if(attach.equals("2")){
+  				reqData.put("body", "提货券-购买商品");//相当于支付宝的subject
+			}else if(attach.equals("3")){
+				reqData.put("body", "九鱼优选-购买商品");
+			}else{
+				reqData.put("body", "九鱼网-充值余额");
+			}
+ 	    	reqData.put("attach",attach);
 	    	reqData.put("out_trade_no", out_trade_no);
 	    	reqData.put("fee_type", "CNY");
 	    	reqData.put("total_fee", String.valueOf(total_fee.intValue()));
@@ -3010,17 +3018,14 @@ public class HtmlMemberController extends BaseController {
 //				String pay_way=pd.getString("pay_way");//nowpay,wx,alipay
 				String pay_type=pd.getString("pay_type");////1-收银，2-优惠买单，3-提货卷  
 				String attach="";//支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
-				String body="";
-				if(pay_type.equals("2")){
+ 				if(pay_type.equals("2")){
 					attach="1";
-					body="优惠买单-购买商品";
-				}else{
+ 				}else{
 					attach="2";
-					body="提货券-购买商品";
-				}
+ 				}
  				double actual_money=Double.parseDouble(pd.getString("actual_money"));
 				if(actual_money > 0 ){
-					data=(Map<String, String>) WxPayOrder(TongYong.df2.format(actual_money), attach, body,order_id);
+					data=(Map<String, String>) WxPayOrder(TongYong.df2.format(actual_money), attach, order_id);
  				}
 				data.put("order_id", order_id);
   		}catch(Exception e){
@@ -3103,7 +3108,7 @@ public class HtmlMemberController extends BaseController {
 			ServiceHelper.getWaterRecordService().saveWaterRecord(waterpd);
 			waterpd=null;
 			//支付类型  1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
- 			data= WxPayOrder(money, "4", "九鱼网-充值余额",waterrecord_id);
+ 			data= WxPayOrder(money, "4",  waterrecord_id);
  		}catch(Exception e){
 			result="0";
 			message="系统异常";
@@ -3450,7 +3455,7 @@ public class HtmlMemberController extends BaseController {
 			BigDecimal _amount = new BigDecimal(lastpaymoney);
 			lastpaymoney =   _amount.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue(); 
 			if(lastpaymoney >0){
- 				Map<String, String> data=WxPayOrder(TongYong.df2.format(lastpaymoney), "3", "九鱼优选-购买商品",guanlian_id);
+ 				Map<String, String> data=WxPayOrder(TongYong.df2.format(lastpaymoney), "3",guanlian_id);
  				map.put("data", data);
 			}else{
 				TongYong.youxuanOkOrder(guanlian_id, "");

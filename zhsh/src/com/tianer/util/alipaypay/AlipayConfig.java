@@ -149,10 +149,21 @@ public class AlipayConfig {
 	 * @param out_trade_no 订单号
 	 * @return
 	 */
-	public static String LastpayStr(String total_amount,String subject,String body,String out_trade_no) {
+	public static String LastpayStr(String total_amount,String body,String out_trade_no) {
 		Map<String, String> keyValues = new HashMap<String, String>();
 
 		keyValues.put("app_id", app_id);
+		
+		String subject="";
+		if(body.equals("1")){
+			subject="优惠买单-购买商品";
+		}else if(body.equals("2")){
+			subject= "提货券-购买商品";//相当于支付宝的subject
+		}else if(body.equals("3")){
+			subject="九鱼优选-购买商品";
+		}else{
+			subject="九鱼网-充值余额";
+		}
 
 		keyValues.put("biz_content", "{\"timeout_express\":\"30m\",\"product_code\":\"QUICK_MSECURITY_PAY\",\"total_amount\":\"" + total_amount+  "\",\"subject\":\"" + subject+  "\",\"body\":\"" + body+  "\",\"out_trade_no\":\"" + out_trade_no +  "\"}");
 		

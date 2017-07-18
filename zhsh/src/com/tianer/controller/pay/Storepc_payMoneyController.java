@@ -304,14 +304,14 @@ public class Storepc_payMoneyController extends BaseController{
  				result="0";
  				message="id不能为空";
  			}else{
- 	 			 	String store_wealthhistory_id=BaseController.getCZUID(pd.getString("store_id"));//充值单号
+ 					pd.put("store_id", slogin.getStore_id());
+ 	 			 	String store_wealthhistory_id=BaseController.getCZUID("");//充值单号
 	 			 	if( pd.getString("store_operator_id") == null ||  pd.getString("store_operator_id").trim().equals("") ){
 	 						pd.put("store_operator_id", "jy"+pd.getString("store_id"));
 	 				}else{
 	 						store_wealthhistory_id=BaseController.getCZUID(pd.getString("store_operator_id")); 
 	 				}
-	 			 	pd.put("store_id", slogin.getStore_id());
-					String money=pd.getString("money");
+ 					String money=pd.getString("money");
 					if( money== null || money.equals("") || Double.parseDouble(money) <= 0 ){
 						result="0";
 		 				message="金额不能为空且必须大于0";
@@ -409,7 +409,7 @@ public class Storepc_payMoneyController extends BaseController{
  		   				data=WxPayOrder(money, "4", "优选商品-编辑支付", store_wealthhistory_id);
 		   				map.put("data", data);
 	   				}else{
-		   					map.put("data", store_wealthhistory_id);
+		   				map.put("data", store_wealthhistory_id);
 	   				}
   		}catch(Exception e){
 			result="0";

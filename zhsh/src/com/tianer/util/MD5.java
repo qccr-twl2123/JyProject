@@ -32,6 +32,6 @@ public class MD5 {
 	public static void main(String[] args) {
 		String time=(new Date()).getTime()+"";
 		System.out.println(time);
-   		System.out.println(md5("qwer0000"));
+   		System.out.println(md5("123456"));
  	}
 }

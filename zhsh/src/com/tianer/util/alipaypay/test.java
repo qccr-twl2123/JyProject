@@ -22,7 +22,7 @@ public class test {
     
     public void Apipay() throws Exception{ 
     	String out_trade_no=BaseController.get32UUID();
-    	String str=AlipayConfig.LastpayStr("0.01", "九鱼网充值订单金额", "4",out_trade_no );
+    	String str=AlipayConfig.LastpayStr("0.01", "4",out_trade_no );
      	System.out.println(str);
      }
     
