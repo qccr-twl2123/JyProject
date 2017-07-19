@@ -59,7 +59,7 @@ public class WxChatBackUrlController extends BaseController {
 			String xmlStr = sb.toString();
  			//验签
 			WXPayPath dodo = new WXPayPath("3");
-			boolean signflag=dodo.YanQianHMACSHA256(xmlStr);
+			boolean signflag=dodo.YanQian(xmlStr);
 			if(!signflag){
 				ServiceHelper.getAppPcdService().saveLog(xmlStr, "回调的订单验签失败","0099");
 				resXml=notsign;
