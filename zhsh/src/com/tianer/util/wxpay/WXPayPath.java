@@ -82,8 +82,7 @@ public class WXPayPath {
      */
     public  boolean YanQianHMACSHA256(String xmlStr) throws Exception{
     	Map<String, String> data=WXPayUtil.xmlToMap(xmlStr);
-    	System.out.println(data.toString());
-     	return WXPayUtil.isSignatureValid(data,  config.getKey(), SignType.HMACSHA256);
+      	return WXPayUtil.isSignatureValid(data,  config.getKey(), SignType.HMACSHA256);
     }
     
    

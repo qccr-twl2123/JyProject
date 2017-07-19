@@ -23,7 +23,7 @@
 </head>
 <body style="background:#ededed;">
 <nav class="top">
-	<a href="html_me/listPurse.do"><b class="back-arrow fl"></b></a>
+	<a href="html_me/goMe.do?type=11"><b class="back-arrow fl"></b></a>
 	<div style="text-align:center;line-height:40px;color:#fff">充值</div>
 </nav>
 <div class="recharge">
@@ -79,7 +79,7 @@ var base_inf={
 						}else{
 							var map=data.data;
 							if(map.return_msg == "OK"){
-								onBridgeReady(map.payment_type_,map.appId_,map.timestamp_,map.nonceStr_,map.package_,map.signType_,map.paySign_,map.out_trade_no_);
+								callWxJsPay(map.payment_type,map.appId,map.timeStamp,map.nonceStr,map.package_,map.signType,map.sign,map.out_trade_no);
 		 		        	 }else{
 		 		        		 alert(map.return_msg);
 		 		        	 }

@@ -65,12 +65,12 @@
                 <span>支付宝支付</span>
             </label>
         </li>
-        <li class="checkbutton">
+<!--         <li class="checkbutton">
             <div class="button_box" style="display:none;">
-                <!-- <div class="butt" onclick="shuaxin()">刷新</div> -->
+                <div class="butt" onclick="shuaxin()">刷新</div>
                 <div class="butt" onclick="sure_pay()">确定</div>
             </div>
-        </li>
+        </li> -->
     </ul>
     </div>
 </section>
@@ -104,7 +104,7 @@
  					type:"post",
  						url:"storepc_wx/store_cz.do",
  						data:{
-  							"money",$("#amount").val(),"pay_way":channel
+  							"money":$("#amount").val(),"pay_way":channel
  						},
  	 					dataType:"json",
  						success:function(data){ 

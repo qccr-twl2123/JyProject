@@ -74,11 +74,11 @@ public class Storepc_wealthController extends BaseController{
 				mv.setViewName("redirect:goLogin.do");//到登录页面
 				return mv;
  			}
+			String jichushezhi=pd.getString("jichushezhi");
 			String store_id=slogin.getStore_id();
 			pd.put("store_id",store_id) ;
  			pd=appStoreService.findById(pd);
- 			String jichushezhi=pd.getString("jichushezhi");
- 			String now_wealth=wealthService.sumStoreWealth(pd); 
+  			String now_wealth=wealthService.sumStoreWealth(pd); 
  			pd.put("now_wealth", now_wealth);
    			if(jichushezhi != null && jichushezhi.equals("11111111100")){
   				mv.setViewName("/storepc/shezhi_9_new");
