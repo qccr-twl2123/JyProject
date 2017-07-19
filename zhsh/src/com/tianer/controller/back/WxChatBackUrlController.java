@@ -57,8 +57,7 @@ public class WxChatBackUrlController extends BaseController {
 			}
 			request.getReader().close();
 			String xmlStr = sb.toString();
-			System.out.println("最后得到的XMl格式参数"+xmlStr);
-			//验签
+ 			//验签
 			WXPayPath dodo = new WXPayPath("3");
 			boolean signflag=dodo.YanQianHMACSHA256(xmlStr);
 			if(!signflag){

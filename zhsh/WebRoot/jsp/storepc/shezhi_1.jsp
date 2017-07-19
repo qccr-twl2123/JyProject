@@ -23,7 +23,9 @@
 <div class="bg">
 	<header>
 	    <div class="head_cont">
-	        <img src="img/storelogo.png" alt="" class="logo">
+	        <img src="img/storelogo.png" alt="" class="logo" style="
+    width: 100px;
+">
 	        <div class="title">•  九鱼销链，欢迎您~ </div>
 	        <div class="one"></div>
 	    </div>
