@@ -26,7 +26,7 @@ import com.tianer.util.wxpay.WXPayUtil;
  *
  */
 @Controller("wxChatBackUrlController")
-@RequestMapping(value="/wxback_chat")
+@RequestMapping(value="/back_chat")
 public class WxChatBackUrlController extends BaseController { 
 	
 	
@@ -47,8 +47,7 @@ public class WxChatBackUrlController extends BaseController {
 	@RequestMapping(value="/notify")
 	@ResponseBody
 	public void Notify(PrintWriter out,HttpServletRequest request) throws Exception{
-		logBefore(logger, "微信支付回调接口");
-		String inputLine;
+ 		String inputLine;
 		StringBuilder sb =new StringBuilder();
 		String resXml="";//返回数据
  		try {
@@ -324,7 +323,7 @@ public class WxChatBackUrlController extends BaseController {
 		  			//更新会员充值次数
 		  			moneypd=null;
 		  			moneypd=new PageData();
- 		  			int cz_number=Integer.parseInt(pd.getString("cz_number"))+1;
+ 		  			int cz_number=Integer.parseInt(ServiceHelper.getAppMemberService().findById(pd).getString("cz_number"))+1;
 		  			moneypd.put("cz_number", cz_number);
 		  			moneypd.put("member_id",  pd.getString("member_id"));
 	  				ServiceHelper.getAppMemberService().edit(moneypd);
@@ -335,8 +334,7 @@ public class WxChatBackUrlController extends BaseController {
 		  			pd.put("pay_status", "1");
 		  			pd.put("order_tn", tradnumber);
  		  			ServiceHelper.getWaterRecordService().editWaterRecord(pd);
- 		  			 				
-				}
+ 				}
 			}
 		
 		} catch (Exception e) {

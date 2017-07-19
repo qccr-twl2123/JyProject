@@ -2936,7 +2936,7 @@ public class HtmlMemberController extends BaseController {
 	    	reqData.put("fee_type", "CNY");
 	    	reqData.put("total_fee", String.valueOf(total_fee.intValue()));
 	    	reqData.put("spbill_create_ip", dodo.getSpbill_create_ip());
-	    	reqData.put("notify_url", "https://www.jiuyuvip.com/wxback_chat/notify.do");
+	    	reqData.put("notify_url", "https://www.jiuyuvip.com/back_chat/notify.do");
 	     	//JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付，统一下单接口trade_type的传参可参考这里
 	    	//MICROPAY--刷卡支付，刷卡支付有单独的支付接口，不调用统一下单接口
 	    	reqData.put("trade_type", "JSAPI");
