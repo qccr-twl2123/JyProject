@@ -112,7 +112,7 @@ public class Storepc_payMoneyController extends BaseController{
 	    	reqData.put("fee_type", "CNY");
 	    	reqData.put("total_fee", String.valueOf(total_fee.intValue()));
 	    	reqData.put("spbill_create_ip", dodo.getSpbill_create_ip());
-	    	reqData.put("notify_url", "http://www.jiuyuvip.com/back_pc/notify.do");
+	    	reqData.put("notify_url", "https://www.jiuyuvip.com/back_pc/wxnotify.do");
 	     	//JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付，统一下单接口trade_type的传参可参考这里
 	    	//MICROPAY--刷卡支付，刷卡支付有单独的支付接口，不调用统一下单接口
 	    	reqData.put("trade_type", "NATIVE");
@@ -188,7 +188,7 @@ public class Storepc_payMoneyController extends BaseController{
  		   				data=WxPayOrder(money, "2", "服务费-支付", store_wealthhistory_id);
 		   				map.put("data", data);
 	   				}else{
-		   					map.put("data", store_wealthhistory_id);
+		   				map.put("data", store_wealthhistory_id);
 	   				}
  	 			}
   			}
@@ -199,8 +199,7 @@ public class Storepc_payMoneyController extends BaseController{
 		}
 		map.put("result", result);
 		map.put("message", message);
-		map.put("data", data);
-    	return map;
+     	return map;
 	}
 	
 	

@@ -2,6 +2,7 @@ package com.tianer.controller.back;
 
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 
@@ -49,8 +50,9 @@ public class PcBackUrlController extends BaseController {
   		PageData pd = new PageData();
  		try {
  			pd = this.getPageData();
-			Map<String, String> paramsMap =(Map<String, String>)pd ;//将异步通知中收到的所有参数都存放到map中
-			boolean signVerified = AlipaySignature.rsaCheckV1(paramsMap, AlipayConfig.alipay_public_key, AlipayConfig.charset, AlipayConfig.sign_type); //调用SDK验证签名
+ 			Map<String, String> paramsMap=new HashMap<String, String>();  
+			paramsMap =(Map<String, String>)pd ;//将异步通知中收到的所有参数都存放到map中
+  			boolean signVerified = AlipaySignature.rsaCheckV1(paramsMap, AlipayConfig.alipay_public_key, AlipayConfig.charset, AlipayConfig.sign_type); //调用SDK验证签名
 			if(signVerified){
 				// TODO 验签成功后，按照支付结果异步通知中的描述，对支付结果中的业务内容进行二次校验，校验成功后在response中返回success并继续商户自身业务处理，校验失败返回failure
 				//订单状态成功：TRADE_SUCCESS
