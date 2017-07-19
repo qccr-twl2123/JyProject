@@ -183,7 +183,8 @@ public class Storepc_payMoneyController extends BaseController{
 	   				pd.put("last_wealth",ServiceHelper.getAppStoreService().sumStoreWealth(pd));
 		   			pd.put("arrivalMoney", TongYong.df2.format(-Double.parseDouble(money)));
 		   			ServiceHelper.getAppStoreService().saveWealthhistory(pd);
- 	   				if(pay_way.contains("wx")){
+ 	   				System.out.println("pay_way="+pay_way);
+		   			if(pay_way.contains("wx")){
  	   					//获取支付二维码
  		   				data=WxPayOrder(money, "2", "服务费-支付", store_wealthhistory_id);
 		   				map.put("data", data);
@@ -262,7 +263,7 @@ public class Storepc_payMoneyController extends BaseController{
 		   				data=WxPayOrder(money, "1", "交易扣点-支付", store_wealthhistory_id);
 		   				map.put("data", data);
 	   				}else{
-		   					map.put("data", store_wealthhistory_id);
+		   				map.put("data", store_wealthhistory_id);
 	   				}
 				}
   			}
@@ -273,7 +274,6 @@ public class Storepc_payMoneyController extends BaseController{
 		}
 		map.put("result", result);
 		map.put("message", message);
-		map.put("data", data);
     	return map;
 	}
 	

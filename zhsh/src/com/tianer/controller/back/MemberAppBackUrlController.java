@@ -3,6 +3,7 @@ package com.tianer.controller.back;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,47 +54,59 @@ public class MemberAppBackUrlController extends BaseController {
 	 */
 	@RequestMapping(value="/alipaynotify")
 	@ResponseBody
-	public Object Alipaynotify() throws Exception{
-  		PageData pd = new PageData();
- 		try {
- 			pd = this.getPageData();
-			Map<String, String> paramsMap =(Map<String, String>)pd ;//将异步通知中收到的所有参数都存放到map中
-			boolean signVerified = AlipaySignature.rsaCheckV1(paramsMap, AlipayConfig.alipay_public_key, AlipayConfig.charset, AlipayConfig.sign_type); //调用SDK验证签名
+	public Object Alipaynotify(HttpServletRequest request) throws Exception{
+		Map<String, String> paramsMap = new HashMap<String, String>();  
+        Map<String, String[]> requestParams = request.getParameterMap();  
+   		try {
+   			for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {  
+   	            String name = iter.next();  
+   	            String[] values = requestParams.get(name);  
+   	            String valueStr = "";  
+   	            for (int i = 0; i < values.length; i++) {  
+   	                valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + ",";  
+   	            }  
+   	            // 乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化  
+   	            // valueStr = new String(valueStr.getBytes("ISO-8859-1"), "gbk");  
+   	            paramsMap.put(name, valueStr);  
+   	        } 
+   			boolean signVerified = AlipaySignature.rsaCheckV1(paramsMap, AlipayConfig.alipay_public_key, AlipayConfig.charset, AlipayConfig.sign_type); //调用SDK验证签名
 			if(signVerified){
 				// TODO 验签成功后，按照支付结果异步通知中的描述，对支付结果中的业务内容进行二次校验，校验成功后在response中返回success并继续商户自身业务处理，校验失败返回failure
 				//订单状态成功：TRADE_SUCCESS
-				String trade_status=pd.getString("trade_status");	
+				String trade_status=paramsMap.get("trade_status");	
 				if(trade_status.equals("TRADE_SUCCESS")){
 					//订单号
-					String out_trade_no=pd.getString("out_trade_no");	
+					String out_trade_no=paramsMap.get("out_trade_no");	
 					//trade_no流水单号
-					String trade_no=pd.getString("trade_no");	
+					String trade_no=paramsMap.get("trade_no");	
  					//total_fee总价
-					String total_fee=TongYong.df2.format(Double.parseDouble(pd.getString("total_fee").trim())*100);//化为分的单位
+					String total_fee=TongYong.df2.format(Double.parseDouble(paramsMap.get("total_amount").trim())*100);//化为分的单位
 					//body 1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
-					String body=pd.getString("body");
+					String body=paramsMap.get("body");
 					String resXml="";
 					if(body.equals("1")){
-						 resXml=YhmdHuiDiao(out_trade_no, trade_no, total_fee, pd);
+						 resXml=YhmdHuiDiao(out_trade_no, trade_no, total_fee, paramsMap);
 					 }else if(body.equals("2")){
-						 resXml=ThjHuiDiao(out_trade_no, trade_no, total_fee, pd);
+						 resXml=ThjHuiDiao(out_trade_no, trade_no, total_fee, paramsMap);
 					 }else if(body.equals("3")){
-						 resXml=YxThjHuiDiao(out_trade_no, trade_no, total_fee, pd);
+						 resXml=YxThjHuiDiao(out_trade_no, trade_no, total_fee, paramsMap);
 					 }else{
-						 resXml=chongzhi(out_trade_no, trade_no, total_fee, pd);
+						 resXml=chongzhi(out_trade_no, trade_no, total_fee, paramsMap);
 					 }
 					//logger记录
-					ServiceHelper.getAppPcdService().saveLog(pd.toString(), "支付宝回调的订单结果","alipay");
+					ServiceHelper.getAppPcdService().saveLog(paramsMap.toString(), "支付宝回调的订单结果","alipay");
  					return "success";
 				}
 			}else{
 				// TODO 验签失败则记录异常日志，并在response中返回failure.
-				AlipayConfig.logResult(pd.toString());
-				ServiceHelper.getAppPcdService().saveLog(pd.toString(), "支付宝回调的订单验签失败","0099");
+				AlipayConfig.logResult(paramsMap.toString());
+				ServiceHelper.getAppPcdService().saveLog(paramsMap.toString(), "支付宝回调的订单验签失败","0099");
 			}
  		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+  			ServiceHelper.getAppPcdService().saveLog(paramsMap.toString(), "系统异常","9999");
+			return "success";
 		}
  		return "";
 	} 
@@ -117,8 +130,7 @@ public class MemberAppBackUrlController extends BaseController {
 	@RequestMapping(value="/wxnotify")
 	@ResponseBody
 	public void wxnotify(PrintWriter out,HttpServletRequest request) throws Exception{
-		logBefore(logger, "微信支付回调接口");
-		String inputLine;
+ 		String inputLine;
 		StringBuilder sb =new StringBuilder();
 		String resXml="";//返回数据
  		try {
@@ -156,6 +168,8 @@ public class MemberAppBackUrlController extends BaseController {
 						 }else{
 							 resXml=chongzhi(out_trade_no, tradnumber, total_fee, map);
 						 }
+						//logger记录
+						ServiceHelper.getAppPcdService().saveLog(xmlStr, "微信回调的订单结果","wx");
 			 	}else{
  					ServiceHelper.getAppPcdService().saveLog(out_trade_no, "支付失败"+map.toString(),"0099");
  					resXml=notsuccess;	 
@@ -164,7 +178,8 @@ public class MemberAppBackUrlController extends BaseController {
    		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			e.printStackTrace();
-		}
+			ServiceHelper.getAppPcdService().saveLog(resXml, "系统异常","9999");
+ 		}
  		out.write(resXml);
 		out.close();
  	}

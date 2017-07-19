@@ -227,7 +227,7 @@
 						if(data.result =="1"){
 							window.location.href='storepc/goSheZhiOne.do?jichushezhi=00000000000';
   						}else{
-  							alert(data.message);
+  							//alert(data.message);
   						}
    					}
 			});  
@@ -238,13 +238,12 @@
      		$.ajax({
 				type:"post",
 					url:"<%=basePath%>storepc/isPayBaoZhengJin.do",
-					data:{"store_id":"${pd.store_id}"},
-					dataType:"json",
+ 					dataType:"json",
 					success:function(data){ 
 						if(data.result =="0"){
- 							alert(data.message);
+ 							//alert(data.message);
   						}else{
-							window.location.href='<%=basePath%>storepc/goSheZhiOne.do?store_id=${pd.store_id}&jichushezhi=00000000000';
+							window.location.href='<%=basePath%>storepc/goSheZhiOne.do?jichushezhi=00000000000';
 						}
    					}
 			});  

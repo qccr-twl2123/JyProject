@@ -82,6 +82,7 @@ public class WXPayPath {
      */
     public  boolean YanQianHMACSHA256(String xmlStr) throws Exception{
     	Map<String, String> data=WXPayUtil.xmlToMap(xmlStr);
+    	System.out.println(data.toString());
      	return WXPayUtil.isSignatureValid(data,  config.getKey(), SignType.HMACSHA256);
     }
     
@@ -185,35 +186,14 @@ public class WXPayPath {
      * 小测试
      */
     public  void test001() {
-        String xmlStr="<xml><return_code><![CDATA[SUCCESS]]></return_code>\n" +
-                "<return_msg><![CDATA[OK]]></return_msg>\n" +
-                "<appid><![CDATA[wx273fe72f2db863ed]]></appid>\n" +
-                "<mch_id><![CDATA[1228845802]]></mch_id>\n" +
-                "<nonce_str><![CDATA[lCXjx3wNx45HfTV2]]></nonce_str>\n" +
-                "<sign><![CDATA[68D7573E006F0661FD2A77BA59124E87]]></sign>\n" +
-                "<result_code><![CDATA[SUCCESS]]></result_code>\n" +
-                "<openid><![CDATA[oZyc_uPx_oed7b4q1yKmj_3M2fTU]]></openid>\n" +
-                "<is_subscribe><![CDATA[N]]></is_subscribe>\n" +
-                "<trade_type><![CDATA[NATIVE]]></trade_type>\n" +
-                "<bank_type><![CDATA[CFT]]></bank_type>\n" +
-                "<total_fee>1</total_fee>\n" +
-                "<fee_type><![CDATA[CNY]]></fee_type>\n" +
-                "<transaction_id><![CDATA[4008852001201608221983528929]]></transaction_id>\n" +
-                "<out_trade_no><![CDATA[20160822162018]]></out_trade_no>\n" +
-                "<attach><![CDATA[]]></attach>\n" +
-                "<time_end><![CDATA[20160822202556]]></time_end>\n" +
-                "<trade_state><![CDATA[SUCCESS]]></trade_state>\n" +
-                "<cash_fee>1</cash_fee>\n" +
-                "</xml>";
+        String xmlStr="<xml><appid><![CDATA[wx62d81eec40f745b4]]></appid><attach><![CDATA[1]]></attach><bank_type><![CDATA[CMB_DEBIT]]></bank_type><cash_fee><![CDATA[1]]></cash_fee><fee_type><![CDATA[CNY]]></fee_type><is_subscribe><![CDATA[Y]]></is_subscribe><mch_id><![CDATA[1366844902]]></mch_id><nonce_str><![CDATA[b52d7634b3494a8a]]></nonce_str><openid><![CDATA[owD2DwsxdygwHXxNV75kjGT7Wvlw]]></openid><out_trade_no><![CDATA[CZ20170719122528990166]]></out_trade_no><result_code><![CDATA[SUCCESS]]></result_code><return_code><![CDATA[SUCCESS]]></return_code><sign><![CDATA[7BD185F3191E6C72182A640A517A851450B878C70AC24D70BFB7AD19D9A5B911]]></sign><time_end><![CDATA[20170719122556]]></time_end><total_fee>1</total_fee><trade_type><![CDATA[NATIVE]]></trade_type><transaction_id><![CDATA[4008812001201707191543140374]]></transaction_id></xml>";
         try {
-            System.out.println(xmlStr);
+        	 Map<String, String> hm = WXPayUtil.xmlToMap(xmlStr);
+        	 System.out.println(hm);
             System.out.println("+++++++++++++++++");
-            System.out.println(WXPayUtil.isSignatureValid(xmlStr, config.getKey()));
-            Map<String, String> hm = WXPayUtil.xmlToMap(xmlStr);
-            System.out.println("+++++++++++++++++");
-            System.out.println(hm);
-            System.out.println(hm.get("attach").length());
-
+            System.out.println(WXPayUtil.isSignatureValid(hm, config.getKey(),SignType.HMACSHA256));
+            
+ 
         } catch (Exception e) {
             e.printStackTrace();
         }
