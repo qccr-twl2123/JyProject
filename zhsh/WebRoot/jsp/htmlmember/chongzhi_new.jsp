@@ -79,7 +79,7 @@ var base_inf={
 						}else{
 							var map=data.data;
 							if(map.return_msg == "OK"){
-								callWxJsPay(map.payment_type,map.appId,map.timeStamp,map.nonceStr,map.package_,map.signType,map.sign,map.out_trade_no);
+								callWxJsPay(map.payment_type,map.appId,map.timeStamp,map.nonceStr,map.package,map.signType,map.sign,map.out_trade_no);
 		 		        	 }else{
 		 		        		 alert(map.return_msg);
 		 		        	 }

@@ -257,7 +257,7 @@ var base_inf={
 	   			var order_id = map.order_id;//订单号
  	   			if(double_actual_money > 0){ 
  					 if(map.return_msg == "OK"){
-						onBridgeReady(map.payment_type_,map.appId_,map.timestamp_,map.nonceStr_,map.package_,map.signType_,map.paySign_,map.out_trade_no_);
+ 						callWxJsPay(map.payment_type,map.appId,map.timeStamp,map.nonceStr,map.package,map.signType,map.sign,map.out_trade_no);
 		        	 }else{
 		        		 alert(map.return_msg);
 		        	 }

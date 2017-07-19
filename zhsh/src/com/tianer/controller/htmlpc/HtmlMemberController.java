@@ -2950,12 +2950,12 @@ public class HtmlMemberController extends BaseController {
  	    	  returnmap.put("nonceStr", WXPayUtil.generateNonceStr());
  	    	  returnmap.put("package","prepay_id="+ map2.get("prepay_id").toString());
  	    	  returnmap.put("signType", WXPayConstants.MD5);
-   	    	 //二次签名x
+   	    	 //二次签名
    	    	  String sign=dodo.AddSign(returnmap);
    	    	  returnmap=WXPayUtil.xmlToMap(sign);
      	      returnmap.put("result_code", map2.get("result_code").toString());
   	       } 
-  	       returnmap.put("payment_type_", attach);
+  	       returnmap.put("payment_type", attach);
   	       returnmap.put("out_trade_no", out_trade_no);
   	       returnmap.put("return_code", map2.get("return_code").toString());
 	       returnmap.put("return_msg", map2.get("return_msg").toString());

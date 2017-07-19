@@ -98,14 +98,15 @@ public class WXPay {
     public Map<String, String> fillRequestData(Map<String, String> reqData) throws Exception {
     	if(reqData.get("sign_type") != null && reqData.get("sign_type").equals( WXPayConstants.MD5) ){
     		this.signType=SignType.MD5;
+    		reqData.put("sign_type", WXPayConstants.MD5);
     	}else{
     		this.signType=SignType.HMACSHA256;
+    		reqData.put("sign_type", WXPayConstants.HMACSHA256);
       	}
     	reqData.put("appid", config.getAppID());
         reqData.put("mch_id", config.getMchID());
         reqData.put("nonce_str", WXPayUtil.generateNonceStr());
-        reqData.put("sign_type", WXPayConstants.HMACSHA256);
-	    reqData.put("sign", WXPayUtil.generateSignature(reqData, config.getKey(), this.signType));
+ 	    reqData.put("sign", WXPayUtil.generateSignature(reqData, config.getKey(), this.signType));
         return reqData;
     }
 
