@@ -170,12 +170,10 @@ public class AlipayConfig {
  		keyValues.put("timestamp", DateUtil.getTime());
  		keyValues.put("version", "1.0");
 		keyValues.put("notify_url", notify_url_app);//app回调地址
-  		
+  		String str=AlipayConfig.buildOrderParam(keyValues);//进行utf-8编码
 		String sign=AlipayConfig.getSign(keyValues);
- 		keyValues.put("sign", sign);
- 		
- 		String str=AlipayConfig.buildOrderParam(keyValues);
- 		return str;
+ 		str=str+"&sign="+sign;
+  		return str;
 	}
 
 	/**
@@ -280,11 +278,12 @@ public class AlipayConfig {
 		authInfo.append(buildKeyValue(tailKey, tailValue, false));
 
  		String encodedSign = AlipaySignUtils.sign(authInfo.toString(), merchant_private_key, true);
-// 		try {
-//			encodedSign = URLEncoder.encode(encodedSign, "UTF-8");
-//		} catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		}
+ 		try {
+			encodedSign = URLEncoder.encode(encodedSign, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+ 		
 		return encodedSign;
 	}
  
