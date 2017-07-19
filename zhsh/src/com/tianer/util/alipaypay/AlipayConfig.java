@@ -153,8 +153,7 @@ public class AlipayConfig {
 		Map<String, String> keyValues = new HashMap<String, String>();
 
 		keyValues.put("app_id", app_id);
-		
-		String subject="";
+ 		String subject="";
 		if(body.equals("1")){
 			subject="优惠买单-购买商品";
 		}else if(body.equals("2")){
@@ -164,23 +163,17 @@ public class AlipayConfig {
 		}else{
 			subject="九鱼网-充值余额";
 		}
-
-		keyValues.put("biz_content", "{\"timeout_express\":\"30m\",\"product_code\":\"QUICK_MSECURITY_PAY\",\"total_amount\":\"" + total_amount+  "\",\"subject\":\"" + subject+  "\",\"body\":\"" + body+  "\",\"out_trade_no\":\"" + out_trade_no +  "\"}");
-		
-		keyValues.put("charset", "utf-8");
-
-		keyValues.put("method", "alipay.trade.app.pay");
-
-		keyValues.put("sign_type", sign_type);
-
-		keyValues.put("timestamp", DateUtil.getTime());
-
-		keyValues.put("version", "1.0");
+ 		keyValues.put("biz_content", "{\"timeout_express\":\"30m\",\"product_code\":\"QUICK_MSECURITY_PAY\",\"total_amount\":\"" + total_amount+  "\",\"subject\":\"" + subject+  "\",\"body\":\"" + body+  "\",\"out_trade_no\":\"" + out_trade_no +  "\"}");
+ 		keyValues.put("charset", "utf-8");
+ 		keyValues.put("method", "alipay.trade.app.pay");
+ 		keyValues.put("sign_type", sign_type);
+ 		keyValues.put("timestamp", DateUtil.getTime());
+ 		keyValues.put("version", "1.0");
 		keyValues.put("notify_url", notify_url_app);//app回调地址
-	
+  		
 		String sign=AlipayConfig.getSign(keyValues);
-		keyValues.put("sign", sign);
-		
+ 		keyValues.put("sign", sign);
+ 		
  		String str=AlipayConfig.buildOrderParam(keyValues);
  		return str;
 	}
@@ -197,20 +190,15 @@ public class AlipayConfig {
 		Map<String, String> keyValues = new HashMap<String, String>();
 
 		keyValues.put("app_id", app_id);
-
-		keyValues.put("biz_content", "{\"timeout_express\":\"30m\",\"product_code\":\"QUICK_MSECURITY_PAY\",\"total_amount\":\"" + total_amount+  "\",\"subject\":\"" + subject+  "\",\"body\":\"" + body+  "\",\"out_trade_no\":\"" + out_trade_no +  "\"}");
-		
-		keyValues.put("charset", "utf-8");
-
-		keyValues.put("method", "alipay.trade.app.pay");
-
-		keyValues.put("sign_type", sign_type);
-
-		keyValues.put("timestamp", DateUtil.getTime());
-
-		keyValues.put("version", "1.0");
+ 		keyValues.put("biz_content", "{\"timeout_express\":\"30m\",\"product_code\":\"QUICK_MSECURITY_PAY\",\"total_amount\":\"" + total_amount+  "\",\"subject\":\"" + subject+  "\",\"body\":\"" + body+  "\",\"out_trade_no\":\"" + out_trade_no +  "\"}");
+ 		keyValues.put("charset", "utf-8");
+ 		keyValues.put("method", "alipay.trade.app.pay");
+ 		keyValues.put("sign_type", sign_type);
+ 		keyValues.put("timestamp", DateUtil.getTime());
+ 		keyValues.put("version", "1.0");
 		keyValues.put("notify_url", notify_url_app);//app回调地址
-	
+		System.out.println(keyValues.toString());
+		
 		String sign=AlipayConfig.getSign(keyValues);
 		keyValues.put("sign", sign);
 		
@@ -236,6 +224,7 @@ public class AlipayConfig {
 
 		String tailKey = keys.get(keys.size() - 1);
 		String tailValue = map.get(tailKey);
+		 
 		sb.append(buildKeyValue(tailKey, tailValue, true));
 
 		return sb.toString();
@@ -290,14 +279,12 @@ public class AlipayConfig {
 		String tailValue = map.get(tailKey);
 		authInfo.append(buildKeyValue(tailKey, tailValue, false));
 
-		String oriSign = AlipaySignUtils.sign(authInfo.toString(), merchant_private_key, true);
-		String encodedSign = "";
-
-		try {
-			encodedSign = URLEncoder.encode(oriSign, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+ 		String encodedSign = AlipaySignUtils.sign(authInfo.toString(), merchant_private_key, true);
+// 		try {
+//			encodedSign = URLEncoder.encode(encodedSign, "UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
 		return encodedSign;
 	}
  

@@ -81,7 +81,6 @@ public class Storepc_payMoneyController extends BaseController{
 			    } catch (AlipayApiException e) {
 			        e.printStackTrace();
 			    }
-//			    System.out.println(form.toString());
 			    httpResponse.setContentType("text/html;charset=" + AlipayConfig.charset);
 			    httpResponse.getWriter().write(form);//直接将完整的表单html输出到页面
 			    httpResponse.getWriter().flush();
