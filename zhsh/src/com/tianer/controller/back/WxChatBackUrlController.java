@@ -85,6 +85,8 @@ public class WxChatBackUrlController extends BaseController {
 						 }else{
 							 resXml=chongzhi(out_trade_no, tradnumber, total_fee, map);
 						 }
+						//logger记录
+						ServiceHelper.getAppPcdService().saveLog(xmlStr, "微信回调的订单结果","wx");
 			 	}else{
  					ServiceHelper.getAppPcdService().saveLog(out_trade_no, "支付失败"+map.toString(),"0099");
  					resXml=notsuccess;	 
@@ -93,6 +95,7 @@ public class WxChatBackUrlController extends BaseController {
    		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			e.printStackTrace();
+			ServiceHelper.getAppPcdService().saveLog(resXml, "系统异常","9999");
 		}
  		out.write(resXml);
 		out.close();

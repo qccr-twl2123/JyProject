@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.github.wxpay.sdk.WXPayConstants.SignType;
 import com.pingplusplus.model.Charge;
 import com.tianer.controller.base.BaseController;
 import com.tianer.controller.memberapp.pay_history.Pay_historyController;
@@ -72,6 +73,7 @@ import com.tianer.util.SmsUtil;
 import com.tianer.util.StringUtil;
 import com.tianer.util.ping.util.WxUtil;
 import com.tianer.util.ping.util.WxpubOAuth;
+import com.tianer.util.wxpay.WXPayConstants;
 import com.tianer.util.wxpay.WXPayPath;
 import com.tianer.util.wxpay.WXPayUtil;
  
@@ -2939,15 +2941,15 @@ public class HtmlMemberController extends BaseController {
 	    	//MICROPAY--刷卡支付，刷卡支付有单独的支付接口，不调用统一下单接口
 	    	reqData.put("trade_type", "JSAPI");
 	    	reqData.put("openid", ServiceHelper.getAppMemberService().findMemberThreeById(pd).getString("wxopen_id"));
-
- 	    	Map<String, String> map2=dodo.unifiedOrder(reqData);
+	        reqData.put("sign_type", WXPayConstants.MD5);
+  	    	Map<String, String> map2=dodo.unifiedOrder(reqData);
  	    	//开始处理结果
   	        if(map2.get("return_code").toString().equals("SUCCESS") && map2.get("result_code").toString().equals("SUCCESS")  ){
   	    	  returnmap.put("appId", map2.get("appid").toString());
  	    	  returnmap.put("timeStamp", String.valueOf(WXPayUtil.getCurrentTimestamp()));
  	    	  returnmap.put("nonceStr", WXPayUtil.generateNonceStr());
  	    	  returnmap.put("package","prepay_id="+ map2.get("prepay_id").toString());
- 	    	  returnmap.put("signType", "MD5");
+ 	    	  returnmap.put("signType", WXPayConstants.MD5);
    	    	 //二次签名x
    	    	  String sign=dodo.AddSign(returnmap);
    	    	  returnmap=WXPayUtil.xmlToMap(sign);
