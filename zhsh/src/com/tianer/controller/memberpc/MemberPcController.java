@@ -1045,11 +1045,12 @@ public class MemberPcController extends BaseController{
   	   			}
   	   			mv.addObject("firstList",firstList);
   			}
-			String sk=pd.getString("sk");
-			String store_id=EbotongSecurity.ebotongDecrypto(sk.substring(4, sk.length()-1));
-			pd.put("member_id", member_id);
-			pd.put("store_id", store_id);
-			//判断是否开通类别积分购买的权限
+   			if(pd.getString("sk") != null){
+  				String store_id=EbotongSecurity.ebotongDecrypto(pd.getString("sk").substring(4, pd.getString("sk").length()-1));
+  				pd.put("store_id", store_id);
+  			}
+ 			pd.put("member_id", member_id);
+ 			//判断是否开通类别积分购买的权限
 			PageData storejfpd=pcTongYongService.getJfByIdByStore(pd);
 			mv.addObject("storejfpd", storejfpd);
    			//获取商家的大小图片
