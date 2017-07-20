@@ -27,6 +27,7 @@ import com.tianer.controller.zhihui.payMoney.ChargeExample;
 import com.tianer.entity.html.HtmlUser;
 import com.tianer.entity.zhihui.StoreRole;
 import com.tianer.util.Const;
+import com.tianer.util.DateUtil;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
 import com.tianer.util.StringUtil;
@@ -61,8 +62,7 @@ public class Storeapp_payController extends BaseController{
   	    	//开始调用微信支付接口
   			WXPayPath dodo = new WXPayPath("1");
  	    	Map<String, String> reqData=new HashMap<String, String>();
- 	    	reqData.put("attach",attach);
- 	    	//支付类型  1-支付扣点充值，2-支付服务费，3-充值，4-支付优选编辑费用 
+  	    	//支付类型  1-支付扣点充值，2-支付服务费，3-充值，4-支付优选编辑费用 
  	    	if(attach.equals("1")){
   				reqData.put("body", "支付扣点充值");
 			}else if(attach.equals("2")){
@@ -72,18 +72,32 @@ public class Storeapp_payController extends BaseController{
 			}else{
 				reqData.put("body", "支付优选编辑费用");
 			}
+ 	    	reqData.put("attach",attach);
  	    	reqData.put("out_trade_no", out_trade_no);
+ 	    	String  nonce_str=WXPayUtil.generateNonceStr();
+ 	    	reqData.put("nonce_str", nonce_str);
+ 	    	reqData.put("time_start", DateUtil.getDayshms());
 	    	reqData.put("fee_type", "CNY");
 	    	reqData.put("total_fee", String.valueOf(total_fee.intValue()));
 	    	reqData.put("spbill_create_ip",  StringUtil.getIp(request));
 	    	reqData.put("notify_url", "http://www.jiuyuvip.com/back_sapp/notify.do");
 	     	//JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付，统一下单接口trade_type的传参可参考这里
 	    	//MICROPAY--刷卡支付，刷卡支付有单独的支付接口，不调用统一下单接口
-	    	reqData.put("trade_type", "NATIVE");
+	    	reqData.put("trade_type", "APP");
  	    	Map<String, String> map2=dodo.unifiedOrder(reqData);
  	    	//开始处理结果
   	        if(map2.get("result_code").toString().equals("SUCCESS") && map2.get("return_code").toString().equals("SUCCESS")){
-  	        	returnmap.put("code_url", map2.get("code_url").toString());//支付的微信二维码
+  	        	  returnmap.put("appid", map2.get("appid").toString() );
+	 	    	  returnmap.put("partnerid", map2.get("mch_id").toString() );
+	 	    	  returnmap.put("prepayid",map2.get("prepay_id").toString());
+	   	    	  returnmap.put("timestamp", String.valueOf(WXPayUtil.getCurrentTimestamp()));
+	   	    	  returnmap.put("package", "Sign=WXPay");
+	 	    	  returnmap.put("noncestr", nonce_str );//WXPayUtil.generateNonceStr()或map2.get("nonce_str").toString()
+	    	      //二次签名x
+	   	    	  String sign=dodo.AddSignByHMACSHA256(returnmap);
+	   	    	  returnmap=WXPayUtil.xmlToMap(sign);
+	   	    	  returnmap.put("return_code", map2.get("return_code").toString());
+	   	    	  returnmap.put("return_msg", map2.get("return_msg").toString());
   	        }
  	        returnmap.put("result_code", map2.get("result_code").toString());
  	        returnmap.put("return_code", map2.get("return_code").toString());
