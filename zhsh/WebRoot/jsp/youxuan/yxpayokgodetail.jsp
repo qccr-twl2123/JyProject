@@ -30,7 +30,7 @@
 	$(function(){
   		$.ajax({
 	        type:"post",
-	        url:'<%=basePath%>youxuan/successPayOrderDeTail.do', 
+	        url:'youxuan/successPayOrderDeTail.do', 
 		  	data:{
 	  	 		"orderno":"${pd.orderno}" 
 		  	},                
@@ -71,7 +71,7 @@
 	});
 	//爆屏列表
 	function goBaoPing(){
-		window.location.href='<%=basePath%>html_member/goMyYouXuan.do?city_name=${pd.city_name}&area_name=${pd.area_name}';
+		window.location.href='html_member/goMyYouXuan.do?city_name=${pd.city_name}&area_name=${pd.area_name}';
 	}
 	</script>
 </body>

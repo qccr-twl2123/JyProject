@@ -2457,8 +2457,7 @@ public class YouXuanController extends BaseController {
  	 		 			//更改下状态
 	 		 			PageData glpd=new PageData();
 			       		glpd.put("guanlian_id", orderno);
-			       		glpd.put("status", "0");//0-未处理，1-已处理
-			       		glpd=appOrderService.getguanlianById(glpd);
+ 			       		glpd=appOrderService.getguanlianById(glpd);
 			       		if(glpd != null){
  			       				String[] allbeguanlian_id=glpd.getString("beguanlian_id").split(",");
 			       				for (int i = 0; i < allbeguanlian_id.length; i++) {

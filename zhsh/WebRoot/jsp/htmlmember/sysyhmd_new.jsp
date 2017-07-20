@@ -129,9 +129,16 @@
     </div>
 </section>
 </body>
-<script type="text/javascript" src="js/htmlmember/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+var base_inf={
+         base_herf:"<%=basePath%>" 
+};
+</script>
+<script src="js/jquery-1.8.0.min.js"></script>
 <script src="js/jquery.form.js"></script>
-<script src="js/ping/pingpp.js" type="text/javascript"></script>
+<script src="js/wx/jweixin-1.0.0.js"></script>
+<script src="js/wx/zepto.min.js"></script>
+<script src="js/htmlmember/weixindemo.js"></script>
 <script type="text/javascript">
 
 	//判断是否为数字
