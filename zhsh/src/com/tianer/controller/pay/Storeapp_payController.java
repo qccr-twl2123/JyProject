@@ -29,6 +29,7 @@ import com.tianer.entity.zhihui.StoreRole;
 import com.tianer.util.Const;
 import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
+import com.tianer.util.StringUtil;
 import com.tianer.util.alipaypay.AlipayConfig;
 import com.tianer.util.wxpay.WXPayPath;
 import com.tianer.util.wxpay.WXPayUtil;
@@ -42,53 +43,7 @@ import com.tianer.util.wxpay.WXPayUtil;
 @RequestMapping(value="/storeapp_pay")
 public class Storeapp_payController extends BaseController{
 	
-
-	/**
-	 * 支付宝支付
-	 * storeapp_pay/goPayChongZhi.do?total_amount=0.01&body=3&out_trade_no=12141212
-	 * @param out
-	 * total_amount  支付金额 
-	 * body  支付类型  1-支付扣点充值，2-支付服务费，3-充值，4-支付优选编辑费用 
-	 * out_trade_no 订单ID
-	 */
-	@RequestMapping(value="/goPayChongZhi")
- 	public void goPayChongZhi(HttpServletRequest httpRequest, HttpServletResponse httpResponse,String total_amount,String body,String out_trade_no){
-  		try{
- 				AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.gatewayUrl, AlipayConfig.app_id, AlipayConfig.merchant_private_key, "json", AlipayConfig.charset, AlipayConfig.alipay_public_key, AlipayConfig.sign_type);
-				AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();//创建API对应的request
- 			    alipayRequest.setNotifyUrl(AlipayConfig.notify_url_app);//在公共参数中设置回跳和通知地址
-			   //商户订单号，商户网站订单系统中唯一订单号，必填
-   				//订单名称，必填
- 				//body商品描述  支付类型  1-支付扣点充值，2-支付服务费，3-充值，4-支付优选编辑费用 
-			    String subject ="";
-			    if(body.equals("1")){
-			    	subject="支付扣点-充值余额";
-			    }else if(body.equals("2")){
-			    	subject="九鱼网服务费支付";
-			    }else if(body.equals("3")){
-			    	subject="九鱼网充值-支付";
-			    }else{
-			    	subject="优选商品-编辑支付";
-			    }
-				alipayRequest.setBizContent("{\"out_trade_no\":\""+ out_trade_no +"\"," 
-						+ "\"total_amount\":\""+ total_amount +"\"," 
-						+ "\"subject\":\""+ subject +"\"," 
-						+ "\"body\":\""+ body +"\"," 
-						+ "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
-			    String form="";
-			    try {
-			        form = alipayClient.pageExecute(alipayRequest).getBody(); //调用SDK生成表单
-			    } catch (AlipayApiException e) {
-			        e.printStackTrace();
-			    }
-			    httpResponse.setContentType("text/html;charset=" + AlipayConfig.charset);
-			    httpResponse.getWriter().write(form);//直接将完整的表单html输出到页面
-			    httpResponse.getWriter().flush();
-			    httpResponse.getWriter().close();
-		} catch(Exception e){
-			logger.error(e.toString(), e);
-		}
-   	}
+ 
 	
 
 	/**
@@ -99,19 +54,28 @@ public class Storeapp_payController extends BaseController{
 	 * body       商品说明
 	 * out_trade_no   订单ID
 	 */
-	public static Map<String, String> WxPayOrder(String _total_fee,String attach,String body,String out_trade_no) throws Exception{
+	public static Map<String, String> WxPayOrder(String _total_fee,String attach,String out_trade_no,HttpServletRequest request) throws Exception{
 		Map<String, String> returnmap=new HashMap<String, String>();
    		try {
    			BigDecimal total_fee = new BigDecimal(Double.parseDouble(_total_fee)*100);
   	    	//开始调用微信支付接口
   			WXPayPath dodo = new WXPayPath("1");
  	    	Map<String, String> reqData=new HashMap<String, String>();
- 	    	reqData.put("body", body);
-	    	reqData.put("attach",attach);
-	    	reqData.put("out_trade_no", out_trade_no);
+ 	    	reqData.put("attach",attach);
+ 	    	//支付类型  1-支付扣点充值，2-支付服务费，3-充值，4-支付优选编辑费用 
+ 	    	if(attach.equals("1")){
+  				reqData.put("body", "支付扣点充值");
+			}else if(attach.equals("2")){
+  				reqData.put("body", "支付服务费");//相当于支付宝的subject
+			}else if(attach.equals("3")){
+				reqData.put("body", "充值");
+			}else{
+				reqData.put("body", "支付优选编辑费用");
+			}
+ 	    	reqData.put("out_trade_no", out_trade_no);
 	    	reqData.put("fee_type", "CNY");
 	    	reqData.put("total_fee", String.valueOf(total_fee.intValue()));
-	    	reqData.put("spbill_create_ip", dodo.getSpbill_create_ip());
+	    	reqData.put("spbill_create_ip",  StringUtil.getIp(request));
 	    	reqData.put("notify_url", "http://www.jiuyuvip.com/back_sapp/notify.do");
 	     	//JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付，统一下单接口trade_type的传参可参考这里
 	    	//MICROPAY--刷卡支付，刷卡支付有单独的支付接口，不调用统一下单接口
@@ -144,19 +108,19 @@ public class Storeapp_payController extends BaseController{
 	@ResponseBody
 	public Object Store_cz(HttpServletRequest request) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, String> data = new HashMap<String, String>();
-		//shiro管理的session
-		Subject currentUser = SecurityUtils.getSubject();  
-		Session session = currentUser.getSession();	
-		StoreRole slogin=(StoreRole)session.getAttribute(Const.SESSION_STORE_USER);
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		Map<String, String> wxpaydata = new HashMap<String, String>();
+		String paystr="";
    		String result="1";
 		String message="充值确认中";
  		PageData pd=new PageData();
 		try{
 			pd = this.getPageData();
-			if(slogin ==null || slogin.getStore_id() == null){
- 				result="0";
- 				message="id不能为空";
+			if(pd.getString("store_id") ==null || pd.getString("store_id").equals("")){
+				map.put("result", "0");
+				map.put("message", "ID参数不能为空");
+				map.put("data", "");
+		    	return map;
  			}else{
  	 			 	String store_wealthhistory_id=BaseController.getCZUID(pd.getString("store_id"));//充值单号
 	 			 	if( pd.getString("store_operator_id") == null ||  pd.getString("store_operator_id").trim().equals("") ){
@@ -164,8 +128,7 @@ public class Storeapp_payController extends BaseController{
 	 				}else{
 	 						store_wealthhistory_id=BaseController.getCZUID(pd.getString("store_operator_id")); 
 	 				}
-	 			 	pd.put("store_id", slogin.getStore_id());
-					String money=pd.getString("money");
+ 					String money=pd.getString("money");
 					if( money== null || money.equals("") || Double.parseDouble(money) <= 0 ){
 						result="0";
 		 				message="金额不能为空且必须大于0";
@@ -188,8 +151,15 @@ public class Storeapp_payController extends BaseController{
 		   				double nownom = Double.parseDouble(nowMoney);
 		   				pd.put("last_wealth", TongYong.df2.format(nownom+nom));
 		   				ServiceHelper.getAppStoreService().saveWealthhistory(pd);
-		   				//获取支付二维码
-		   				data=WxPayOrder(money, "3", "九鱼网充值-支付", store_wealthhistory_id);
+		   				//支付类型  1-支付扣点充值，2-支付服务费，3-充值，4-支付优选编辑费用 
+		   				if(pay_way.contains("wx")){
+		   					wxpaydata= WxPayOrder(money, "3", store_wealthhistory_id,request);
+		   				}else{
+		   					paystr=AlipayConfig.LastpayStrByStore(money,  "3", store_wealthhistory_id);
+		   				}
+			   	 		map1.put("wxpaydata", wxpaydata);
+						map1.put("alipaystr", paystr);
+						map1.put("order_id", store_wealthhistory_id);
  	 			}
   			}
   		}catch(Exception e){
@@ -199,7 +169,7 @@ public class Storeapp_payController extends BaseController{
 		}
 		map.put("result", result);
 		map.put("message", message);
-		map.put("data", data);
+		map.put("data", map1);
     	return map;
 	}
 	

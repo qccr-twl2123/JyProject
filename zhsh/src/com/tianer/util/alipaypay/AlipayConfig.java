@@ -51,7 +51,9 @@ public class AlipayConfig {
   	// 服务器异步通知页面路径  --PC回调接口
   	public static String notify_url_pc = "https://www.jiuyuvip.com/back_pc/alipaynotify.do";
   	// 服务器异步通知页面路径  --商家端App回调接口
-  	public static String notify_url_app = "https://www.jiuyuvip.com/back_sapp/alipaynotify.do";
+  	public static String notify_url_sapp = "https://www.jiuyuvip.com/back_sapp/alipaynotify.do";
+  	// 服务器异步通知页面路径  --商家端App回调接口
+  	public static String notify_url_mapp = "https://www.jiuyuvip.com/back_mapp/alipaynotify.do";
  	
  	
 
@@ -141,6 +143,7 @@ public class AlipayConfig {
     
     
     /**
+     * 会员端app
 	 * 构造支付订单--验签sign--拼接字符创--utf-8编码格式按 
 	 * @param total_amount 订单金额
 	 * @param subject 标题
@@ -148,10 +151,9 @@ public class AlipayConfig {
 	 * @param out_trade_no 订单号
 	 * @return
 	 */
-	public static String LastpayStr(String total_amount,String body,String out_trade_no) {
+	public static String LastpayStrByMember(String total_amount,String body,String out_trade_no) {
 		Map<String, String> keyValues = new HashMap<String, String>();
-
-		keyValues.put("app_id", app_id);
+ 		keyValues.put("app_id", app_id);
  		String subject="";
 		if(body.equals("1")){
 			subject="优惠买单-购买商品";
@@ -168,39 +170,76 @@ public class AlipayConfig {
  		keyValues.put("sign_type", sign_type);
  		keyValues.put("timestamp", DateUtil.getTime());
  		keyValues.put("version", "1.0");
-		keyValues.put("notify_url", notify_url_app);//app回调地址
+		keyValues.put("notify_url", notify_url_mapp);//app回调地址
   		String str=AlipayConfig.buildOrderParam(keyValues);//进行utf-8编码
 		String sign=AlipayConfig.getSign(keyValues);
  		str=str+"&sign="+sign;
   		return str;
 	}
+	
 
-	/**
-	 * 构造支付订单参数列表
+    /**
+     * 商家端app参数
+	 * 构造支付订单--验签sign--拼接字符创--utf-8编码格式按 
 	 * @param total_amount 订单金额
 	 * @param subject 标题
 	 * @param body 1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
 	 * @param out_trade_no 订单号
 	 * @return
 	 */
-	public static Map<String, String> buildOrderParamMap(String total_amount,String subject,String body,String out_trade_no) {
+	public static String LastpayStrByStore(String total_amount,String body,String out_trade_no) {
 		Map<String, String> keyValues = new HashMap<String, String>();
-
+		//支付类型  1-支付扣点充值，2-支付服务费，3-充值，4-支付优选编辑费用 
 		keyValues.put("app_id", app_id);
+ 		String subject="";
+		if(body.equals("1")){
+			subject="支付扣点充值";
+		}else if(body.equals("2")){
+			subject= "支付服务费"; 
+		}else if(body.equals("3")){
+			subject="充值";
+		}else{
+			subject="支付优选编辑费用 ";
+		}
  		keyValues.put("biz_content", "{\"timeout_express\":\"30m\",\"product_code\":\"QUICK_MSECURITY_PAY\",\"total_amount\":\"" + total_amount+  "\",\"subject\":\"" + subject+  "\",\"body\":\"" + body+  "\",\"out_trade_no\":\"" + out_trade_no +  "\"}");
  		keyValues.put("charset", "utf-8");
  		keyValues.put("method", "alipay.trade.app.pay");
  		keyValues.put("sign_type", sign_type);
  		keyValues.put("timestamp", DateUtil.getTime());
  		keyValues.put("version", "1.0");
-		keyValues.put("notify_url", notify_url_app);//app回调地址
-		System.out.println(keyValues.toString());
-		
+		keyValues.put("notify_url", notify_url_sapp);//app回调地址
+  		String str=AlipayConfig.buildOrderParam(keyValues);//进行utf-8编码
 		String sign=AlipayConfig.getSign(keyValues);
-		keyValues.put("sign", sign);
-		
-		return keyValues;
+ 		str=str+"&sign="+sign;
+  		return str;
 	}
+
+//	/**
+//	 * 构造支付订单参数列表
+//	 * @param total_amount 订单金额
+//	 * @param subject 标题
+//	 * @param body 1-优惠买单支付，2-购买提货券商品,3-优选商品,4-充值商品
+//	 * @param out_trade_no 订单号
+//	 * @return
+//	 */
+//	public static Map<String, String> buildOrderParamMap(String total_amount,String subject,String body,String out_trade_no) {
+//		Map<String, String> keyValues = new HashMap<String, String>();
+//
+//		keyValues.put("app_id", app_id);
+// 		keyValues.put("biz_content", "{\"timeout_express\":\"30m\",\"product_code\":\"QUICK_MSECURITY_PAY\",\"total_amount\":\"" + total_amount+  "\",\"subject\":\"" + subject+  "\",\"body\":\"" + body+  "\",\"out_trade_no\":\"" + out_trade_no +  "\"}");
+// 		keyValues.put("charset", "utf-8");
+// 		keyValues.put("method", "alipay.trade.app.pay");
+// 		keyValues.put("sign_type", sign_type);
+// 		keyValues.put("timestamp", DateUtil.getTime());
+// 		keyValues.put("version", "1.0");
+//		keyValues.put("notify_url", notify_url_app);//app回调地址
+//		System.out.println(keyValues.toString());
+//		
+//		String sign=AlipayConfig.getSign(keyValues);
+//		keyValues.put("sign", sign);
+//		
+//		return keyValues;
+//	}
 	
 	/**
 	 * 构造支付订单参数信息

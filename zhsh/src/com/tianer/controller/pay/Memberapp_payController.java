@@ -462,7 +462,7 @@ public class Memberapp_payController extends BaseController{
 				if(pay_way.contains("wx")){
 					wxpaydata=WxPayOrder(TongYong.df2.format(lastpaymoney), "3",  guanlian_id,request );
 				}else{
-					paystr=AlipayConfig.LastpayStr(TongYong.df2.format(lastpaymoney), "3", guanlian_id);
+					paystr=AlipayConfig.LastpayStrByMember(TongYong.df2.format(lastpaymoney), "3", guanlian_id);
 				}
 			}else{
 					TongYong.youxuanOkOrder(guanlian_id, "");
@@ -539,7 +539,7 @@ public class Memberapp_payController extends BaseController{
 				if(pay_way.contains("wx")){
 					wxpaydata= WxPayOrder(TongYong.df2.format(actual_money), attach, order_id,request );
 				}else{
-					paystr=AlipayConfig.LastpayStr(TongYong.df2.format(actual_money),   attach, order_id);
+					paystr=AlipayConfig.LastpayStrByMember(TongYong.df2.format(actual_money),   attach, order_id);
  				}
  			}
 			map1.put("wxpaydata", wxpaydata);
@@ -633,7 +633,7 @@ public class Memberapp_payController extends BaseController{
  			if(pay_way.contains("wx")){
 				wxpaydata= WxPayOrder(money, "4", waterrecord_id,request);
 			}else{
-				paystr=AlipayConfig.LastpayStr(money,  "4", waterrecord_id);
+				paystr=AlipayConfig.LastpayStrByMember(money,  "4", waterrecord_id);
 			}
  			map1.put("wxpaydata", wxpaydata);
 			map1.put("alipaystr", paystr);
