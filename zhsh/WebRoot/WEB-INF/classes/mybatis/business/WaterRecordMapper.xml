@@ -100,7 +100,8 @@
  					<if test="pay_status =='3'.toString()">pass_time=now(),</if>
  					<if test="pay_status =='2'.toString()">exception_time=now(),</if>
  				</if>
-				<if test=" order_tn != null and order_tn != '' ">order_tn = #{order_tn}</if>
+				<if test=" order_tn != null and order_tn != '' ">order_tn = #{order_tn},</if>
+				<if test=" nowuser_money != null and nowuser_money != '' ">nowuser_money = #{nowuser_money},</if>
 				<if test=" over_operator_id != null and over_operator_id != '' ">over_operator_id = #{over_operator_id},</if>
 				<if test=" dakuan_remark != null and dakuan_remark != '' ">dakuan_remark = #{dakuan_remark},</if>
 				<if test=" exception_operator_id != null and exception_operator_id != '' ">exception_operator_id = #{exception_operator_id},</if>

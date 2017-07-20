@@ -486,9 +486,7 @@ public class Memberapp_payController extends BaseController{
 	
 	
 	/**
-   	 * 订单交易支付接口
-   	* 方法名称:：payorder 
-   	* 方法描述：订单支付接口
+     	* 方法描述：订单支付接口
    	* app_pay/payorder.do
    	* 
    	* member_id

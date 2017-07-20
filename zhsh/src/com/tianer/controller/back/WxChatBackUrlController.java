@@ -326,6 +326,7 @@ public class WxChatBackUrlController extends BaseController {
  		  			int cz_number=Integer.parseInt(ServiceHelper.getAppMemberService().findById(pd).getString("cz_number"))+1;
 		  			moneypd.put("cz_number", cz_number);
 		  			moneypd.put("member_id",  pd.getString("member_id"));
+		  			moneypd.put("now_money", TongYong.df2.format(now_money+actionmoney));
 	  				ServiceHelper.getAppMemberService().edit(moneypd);
 		  			if(cz_number == 1){//新增会员的魅力值
  		  				TongYong.charm_numberAdd(pd.getString("member_id"), Const.charm_number[9]); 
@@ -333,6 +334,7 @@ public class WxChatBackUrlController extends BaseController {
 		  			//更新支付信息
 		  			pd.put("pay_status", "1");
 		  			pd.put("order_tn", tradnumber);
+		  			pd.put("nowuser_money", TongYong.df2.format(now_money+actionmoney));
  		  			ServiceHelper.getWaterRecordService().editWaterRecord(pd);
  				}
 			}

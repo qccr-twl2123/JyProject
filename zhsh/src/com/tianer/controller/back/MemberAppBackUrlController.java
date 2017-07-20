@@ -409,6 +409,7 @@ public class MemberAppBackUrlController extends BaseController {
 		  			moneypd=new PageData();
  		  			int cz_number=Integer.parseInt(pd.getString("cz_number"))+1;
 		  			moneypd.put("cz_number", cz_number);
+		  			moneypd.put("now_money", TongYong.df2.format(now_money+actionmoney));
 		  			moneypd.put("member_id",  pd.getString("member_id"));
 	  				ServiceHelper.getAppMemberService().edit(moneypd);
 		  			if(cz_number == 1){//新增会员的魅力值
@@ -417,6 +418,7 @@ public class MemberAppBackUrlController extends BaseController {
 		  			//更新支付信息
 		  			pd.put("pay_status", "1");
 		  			pd.put("order_tn", tradnumber);
+		  			pd.put("nowuser_money", TongYong.df2.format(now_money+actionmoney));
  		  			ServiceHelper.getWaterRecordService().editWaterRecord(pd);
  		  			 				
 				}
