@@ -65,12 +65,12 @@
                 <span>支付宝支付</span>
             </label>
         </li>
-<!--         <li class="checkbutton">
-            <div class="button_box" style="display:none;">
+        <li class="checkbutton">
+            <div class="button_box" >
                 <div class="butt" onclick="shuaxin()">刷新</div>
                 <div class="butt" onclick="sure_pay()">确定</div>
             </div>
-        </li> -->
+        </li>  
     </ul>
     </div>
 </section>
@@ -98,33 +98,33 @@
       		if($("#amount").val() == "" || $("#amount").val() =="0"){
       			return;
       		}
-     		var url='<%=basePath%>storepc/goSheZhiOne.do?jichushezhi=${pd.jichushezhi}';
-     		if(channel == "wx_pub_qr"){
- 				$.ajax({
- 					type:"post",
- 						url:"storepc_wx/store_cz.do",
- 						data:{
-  							"money":$("#amount").val(),"pay_way":channel
- 						},
- 	 					dataType:"json",
- 						success:function(data){ 
- 							 if(data.result == "1"){
- 								 var map=data.data;
- 								 var wx_pub_qr =map.code_url ;
-  					     		 $(".dask").show();
- 								 $(".ewm").empty();
- 								 //生成二维码：商家ID以及zhuohao.生成的二维码下载，图片尺寸为5*6CM；
- 							     jQuery($(".ewm")).qrcode({ width: 180, height: 180,  text: wx_pub_qr }); 
- 							    //设置定时器
- 								 window.t1 = setInterval(shuaxin, 10000);//10秒执行一次
+      		$.ajax({
+					type:"post",
+						url:"storepc_paymoney/store_cz.do",
+						data:{
+							"money":$("#amount").val(),"pay_way":channel
+						},
+	 					dataType:"json",
+						success:function(data){ 
+							 if(data.result == "1"){
+								 var map=data.data;
+								 if(channel == "wx_pub_qr"){
+ 									 var wx_pub_qr =map.code_url ;
+						     		 $(".dask").show();
+									 $(".ewm").empty();
+									 //生成二维码：商家ID以及zhuohao.生成的二维码下载，图片尺寸为5*6CM；
+								     jQuery($(".ewm")).qrcode({ width: 180, height: 180,  text: wx_pub_qr }); 
+								    //设置定时器
+									 window.t1 = setInterval(shuaxin, 10000);//10秒执行一次
+					 			 }else{
+					 				window.open('<%=basePath%>storepc_paymoney/goPayChongZhi.do?total_amount='+$("#amount").val()+'&body=3&out_trade_no='+map);
+					 			 }
  							 }else{
- 								 alert(data.message);
- 							 }
- 	   					}
- 				});  
- 			 }else{
- 				 alert("暂未开通");
- 			 }
+								 alert(data.message);
+							 }
+	   					}
+				});  
+     		
            }
      	
      	//刷新

@@ -19,13 +19,6 @@
 		height:98%;	
 	}
 	</style>
-	<script src="js/jquery-1.8.0.min.js"></script>
-	<script src="js/jquery.qrcode.min.js"></script>
-	<script type="text/javascript">
-        if("${ispay}" != null && "${ispay}" != "" && "${ispay}" == "1"){
-        	window.top.location="<%=basePath%>storepc/goStore.do";
-        }
-    </script>
 </head>
 <body>
 <c:if test="${storeqx.look eq '1'}">
@@ -75,6 +68,13 @@
 	</div>
 </c:if>
 </body>
+<script src="js/jquery-1.8.0.min.js"></script>
+<script src="js/jquery.qrcode.min.js"></script>
+<script type="text/javascript">
+        if("${ispay}" != null && "${ispay}" != "" && "${ispay}" == "1"){
+        	window.top.location="<%=basePath%>storepc/goStore.do";
+        }
+</script>
 <script type="text/javascript">
 		//刷新
         function shuaxin(){

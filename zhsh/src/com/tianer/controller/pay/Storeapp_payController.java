@@ -52,7 +52,6 @@ public class Storeapp_payController extends BaseController{
 	 *  
 	 * total_fee  金额
 	 * attach     支付类型  1-支付扣点充值，2-支付服务费，3-充值，4-支付优选编辑费用 
-	 * body       商品说明
 	 * out_trade_no   订单ID
 	 */
 	public static Map<String, String> WxPayOrder(String _total_fee,String attach,String out_trade_no,HttpServletRequest request) throws Exception{
@@ -80,7 +79,7 @@ public class Storeapp_payController extends BaseController{
 	    	reqData.put("fee_type", "CNY");
 	    	reqData.put("total_fee", String.valueOf(total_fee.intValue()));
 	    	reqData.put("spbill_create_ip",  StringUtil.getIp(request));
-	    	reqData.put("notify_url", "http://www.jiuyuvip.com/back_sapp/notify.do");
+	    	reqData.put("notify_url", "http://www.jiuyuvip.com/back_sapp/wxnotify.do");
 	     	//JSAPI--公众号支付、NATIVE--原生扫码支付、APP--app支付，统一下单接口trade_type的传参可参考这里
 	    	//MICROPAY--刷卡支付，刷卡支付有单独的支付接口，不调用统一下单接口
 	    	reqData.put("trade_type", "APP");
