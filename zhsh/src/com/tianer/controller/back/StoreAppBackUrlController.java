@@ -148,7 +148,7 @@ public class StoreAppBackUrlController extends BaseController {
 			request.getReader().close();
 			String xmlStr = sb.toString();
  			//验签
-			WXPayPath dodo = new WXPayPath("3");
+			WXPayPath dodo = new WXPayPath("1");
 			boolean signflag=dodo.YanQianHMACSHA256(xmlStr);
 			if(!signflag){
 				ServiceHelper.getAppPcdService().saveLog(xmlStr, "回调的订单验签失败","0099");
@@ -215,7 +215,10 @@ public class StoreAppBackUrlController extends BaseController {
     			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值订单不存在"+map.toString(),"0099");
      			 return notorder;
     		 }
-    		 //判断金额是否一致
+    		 if(historypd.getString("process_status").equals("1")){
+    			 return success;
+    		 }
+     		 //判断金额是否一致
     		 double number=Double.parseDouble(historypd.getString("number"));
      		 if(actionmoney != number){
      			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值金额不匹配"+map.toString(),"0099");
@@ -291,6 +294,9 @@ public class StoreAppBackUrlController extends BaseController {
 		}
  		return success;
 	}
+	
+	
+	 
 	
 	 
 }

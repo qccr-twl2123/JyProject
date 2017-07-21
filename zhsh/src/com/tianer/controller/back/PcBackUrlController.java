@@ -204,6 +204,9 @@ public class PcBackUrlController extends BaseController {
     			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值订单不存在"+map.toString(),"0099");
      			 return notorder;
     		 }
+    		 if(historypd.getString("process_status").equals("1")){
+    			 return success;
+    		 }
     		 //判断金额是否一致
     		 double number=Double.parseDouble(historypd.getString("number"));
      		 if(actionmoney != number){
@@ -300,6 +303,9 @@ public class PcBackUrlController extends BaseController {
     		 if(historypd == null){
     			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "交易扣点订单不存在"+map.toString(),"0099");
      			 return notorder;
+    		 }
+    		 if(historypd.getString("process_status").equals("1")){
+    			 return success;
     		 }
     		 //判断金额是否一致
     		 double number=Double.parseDouble(historypd.getString("number"));
@@ -416,6 +422,9 @@ public class PcBackUrlController extends BaseController {
 	 		 	if(historypd == null){
 	    			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "优选订单不存在"+map.toString(),"0099");
 	     			 return notorder;
+	    		 }
+	 		 	if(historypd.getString("process_status").equals("1")){
+	    			 return success;
 	    		 }
 	    		 //判断金额是否一致
 	    		 double number=Double.parseDouble(historypd.getString("number"));
@@ -539,6 +548,9 @@ public class PcBackUrlController extends BaseController {
 		 		 if(historypd == null){
 	    			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "服务费订单不存在"+map.toString(),"0099");
 	     			 return notorder;
+	    		 }
+		 		if(historypd.getString("process_status").equals("1")){
+	    			 return success;
 	    		 }
 	    		 //判断金额是否一致
 	    		 double number=Double.parseDouble(historypd.getString("number"));

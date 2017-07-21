@@ -86,7 +86,7 @@ public class WxChatBackUrlController extends BaseController {
 						 }
 						//logger记录
 						ServiceHelper.getAppPcdService().saveLog(xmlStr, "微信回调的订单结果","wx");
-			 	}else{
+ 			 	}else{
  					ServiceHelper.getAppPcdService().saveLog(out_trade_no, "支付失败"+map.toString(),"0099");
  					resXml=notsuccess;	 
 				}		
@@ -112,6 +112,9 @@ public class WxChatBackUrlController extends BaseController {
     		if(pd == null){
     			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "优惠买单的订单不存在"+map.toString(),"0099");
      			 return notorder;
+    		}
+    		if(pd.getString("order_status").equals("1")){
+    			return success;
     		}
     		double actual_money=Double.parseDouble(pd.getString("actual_money"));
     		if(actionmoney != actual_money){
@@ -147,6 +150,9 @@ public class WxChatBackUrlController extends BaseController {
     			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "提货券的订单不存在"+map.toString(),"0099");
      			 return notorder;
     		}
+    		if(pd.getString("order_status").equals("1")){
+    			return success;
+    		}
     		double actual_money=Double.parseDouble(pd.getString("actual_money"));
     		if(actionmoney != actual_money){
     			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "提货券的订单金额不匹配"+map.toString(),"0099");
@@ -177,9 +183,8 @@ public class WxChatBackUrlController extends BaseController {
 				double actionmoney=(new BigDecimal(Double.parseDouble(total_fee)/100)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
   	 			PageData glpd=new PageData();
 				glpd.put("guanlian_id", out_trade_no);
-				glpd.put("status", "0");//0-未处理，1-已处理
-				glpd=ServiceHelper.getAppOrderService().getguanlianById(glpd);
-				if(glpd != null){
+ 				glpd=ServiceHelper.getAppOrderService().getguanlianById(glpd);
+				if(glpd != null && glpd.getString("status").equals("0")){
 					String[] allbeguanlian_id=glpd.getString("beguanlian_id").split(",");
 	       			PageData orderpd=null;
 					PageData mpd=null;
@@ -271,9 +276,13 @@ public class WxChatBackUrlController extends BaseController {
 	 				 return notmoney;
 				}
 	 		}else{
-	 			 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "优选回调的订单不存在"+map.toString(),"0099");
-     			 return notorder;
-	 		}
+	 			if(glpd != null && glpd.getString("status").equals("1")){
+	 				 return success;
+	 			}else{
+	 				ServiceHelper.getAppPcdService().saveLog(out_trade_no, "优选回调的订单不存在"+map.toString(),"0099");
+	     			return notorder;
+	 			}
+ 	 		}
  		} catch (Exception e) {
 			// TODO: handle exception
  			e.printStackTrace();
@@ -300,6 +309,9 @@ public class WxChatBackUrlController extends BaseController {
 				 ServiceHelper.getAppPcdService().saveLog(out_trade_no, "充值回调的订单不存在"+map.toString(),"0099");
 				 return notorder;
 			}else{
+				if(pd.getString("pay_status").equals("1")){
+ 					 return success;
+				}
 				double actionmoney=(new BigDecimal(Double.parseDouble(total_fee)/100)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
 				//判断当前充值订单的金额和返回的金额是不是一致的
 				double jymoney=Double.parseDouble(pd.getString("money"));
