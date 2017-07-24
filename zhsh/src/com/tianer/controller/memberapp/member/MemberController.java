@@ -38,6 +38,7 @@ import com.tianer.util.PageData;
 import com.tianer.util.ServiceHelper;
 import com.tianer.util.SmsUtil;
 import com.tianer.util.StringUtil;
+import com.tianer.util.alipaypay.AlipayConfig;
 
 /** 
  * 
@@ -1864,20 +1865,48 @@ public class MemberController extends BaseController {
 	
 	//新的版本所采用的接口=========================================================================
 	
+	/**
+	 *支付宝登录之前需要获取的InforStr字符串
+	 *app_member/getInforStr.do
+	 */
+	@RequestMapping(value="/getInforStr")
+	@ResponseBody
+	public Object getInforStr() throws Exception{
+ 		Map<String,Object> map = new HashMap<String,Object>();
+ 		String result = "1";
+		String message="获取成功";
+		String inforStr="";
+   		try {
+   			inforStr=AlipayConfig.buildAuthInfoMap();
+  		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			result="0";
+			message="系统错误";
+		}
+  		map.put("result", result);
+  		map.put("message", message);
+  		map.put("data", inforStr);
+  		return map;
+	}
+	
+	
 	
 	/**
 	 *使用微信登录 
 	 *第一步
-	 * app_member/threeNumberIsZhuCe.do?open_id=owD2DwsxdygwHXxNV75kjGT7Wvlw
+	 * app_member/threeNumberIsZhuCe.do
 	 * open_id 微信的唯一标示ID
-	 * unionid 账号的唯一标示
+	 * unionid(支付宝对应的user_id) 账号的唯一标示
 	 * type    登录类型：1-微信登录，2-QQ登录，3-微博登录,4-支付宝
+	 * 
+	 * （支付宝专用：auth_code  ）
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/threeNumberIsZhuCe")
 	@ResponseBody
-	public Object ThreeNumberIsZhuCe(String open_id,String unionid,String type) throws Exception{
+	public Object ThreeNumberIsZhuCe(String open_id,String unionid,String type,String auth_code) throws Exception{
  		Map<String,Object> map = new HashMap<String,Object>();
  		String result = "1";
 		String message="登录成功";
@@ -1908,6 +1937,8 @@ public class MemberController extends BaseController {
   	 				pd=appMemberService.getByUnionid(pd);
   	 			}
   			}else if(type.equals("4")){
+  				//调用方法获取用户id
+  				
   				pd.put("alipayunionid", unionid);
   	 			if(appMemberService.getByUnionid(pd) ==null ){
   	 				result="0";
@@ -1919,6 +1950,8 @@ public class MemberController extends BaseController {
  		} catch (Exception e) {
 			// TODO: handle exception
 			logger.error("判断微信是否注册"+e.toString());
+			result="0";
+			message="系统错误";
 		}
   		map.put("result", result);
   		map.put("message", message);

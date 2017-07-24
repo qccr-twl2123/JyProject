@@ -14,6 +14,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
+import com.tianer.controller.base.BaseController;
 import com.tianer.util.DateUtil;
 
 /**
@@ -32,11 +33,9 @@ public class AlipayConfig {
 
 	// 应用ID,您的APPID，收款账号既是您的APPID对应支付宝账号
 	public static String app_id = "2017071207728109";
-	
-	// 商户签约的pid
-	public static String pid = "";
-	
-	// 商户唯一标识的target_id
+ 	// 商户签约的pid
+	public static String pid = "2088421286148271";
+ 	// 商户唯一标识的target_id
 	public static String target_id = "";
 	
 	// 商户私钥，您的PKCS8格式RSA2私钥
@@ -97,47 +96,39 @@ public class AlipayConfig {
 
 	
 	/**
-	 * 构造授权参数列表
-	 * 
-	 * @param pid
-	 * @param app_id
-	 * @param target_id
-	 * @return
+	 * 支付宝第三方登录需要的授权信息
+	 * infoStr：根据商户的授权请求信息生成。
+	 * https://docs.open.alipay.com/218/105327
 	 */
-	public static Map<String, String> buildAuthInfoMap() {
+	public static String buildAuthInfoMap() {
 		Map<String, String> keyValues = new HashMap<String, String>();
-
+ 		// 服务接口名称， 固定值
+		keyValues.put("apiname", "com.alipay.account.auth");
+		// 服务接口名称， 固定值
+		keyValues.put("method", "alipay.open.auth.sdk.code.get");
 		// 商户签约拿到的app_id，如：2013081700024223
 		keyValues.put("app_id", app_id);
-
-		// 商户签约拿到的pid，如：2088102123816631
-		keyValues.put("pid", pid);
-
-		// 服务接口名称， 固定值
-		keyValues.put("apiname", "com.alipay.account.auth");
-
 		// 商户类型标识， 固定值
 		keyValues.put("app_name", "mc");
-
-		// 业务类型， 固定值
+ 		// 业务类型， 固定值
 		keyValues.put("biz_type", "openservice");
-
+		// 商户签约拿到的pid，如：2088102123816631
+		keyValues.put("pid", pid);
 		// 产品码， 固定值
 		keyValues.put("product_id", "APP_FAST_LOGIN");
-
-		// 授权范围， 固定值
+ 		// 授权范围， 固定值
 		keyValues.put("scope", "kuaijie");
-
-		// 商户唯一标识target_id，如：kkkkk091125
-		keyValues.put("target_id", target_id);
-
-		// 授权类型， 固定值
+ 		// 商户唯一标识target_id，如：kkkkk091125
+		keyValues.put("target_id", BaseController.get32UUID());
+ 		// 授权类型， 固定值
 		keyValues.put("auth_type", "AUTHACCOUNT");
-
-		// 签名类型
+ 		// 签名类型
 		keyValues.put("sign_type", sign_type);
-
-		return keyValues;
+		//获取URL编码过的sign
+		String sign=getSign(keyValues);
+		//转字符串,URL编码
+		String inforstr=buildOrderParam(keyValues)+"&sign="+sign;
+  		return inforstr;
 	}
     
     
@@ -317,6 +308,7 @@ public class AlipayConfig {
 
  		String encodedSign = AlipaySignUtils.sign(authInfo.toString(), merchant_private_key, true);
  		try {
+ 			//进行URL编码
 			encodedSign = URLEncoder.encode(encodedSign, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
