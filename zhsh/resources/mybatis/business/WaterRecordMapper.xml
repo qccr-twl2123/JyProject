@@ -806,6 +806,7 @@
 		select 
 			a.waterrecord_id ,
 			a.user_id ,
+			a.pay_status,
 			a.money
 		from 
 			tb_waterrecord a

@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.api.request.AlipayOpenAuthTokenAppRequest;
+import com.alipay.api.response.AlipayOpenAuthTokenAppResponse;
 import com.tianer.controller.base.BaseController;
 import com.tianer.controller.tongyongUtil.TongYong;
 import com.tianer.util.Const;
@@ -139,8 +143,7 @@ public class MemberAppBackUrlController extends BaseController {
 			}
 			request.getReader().close();
 			String xmlStr = sb.toString();
-			System.out.println("最后得到的XMl格式参数"+xmlStr);
-			//验签
+ 			//验签
 			WXPayPath dodo = new WXPayPath("2");
 			boolean signflag=dodo.YanQianHMACSHA256(xmlStr);
 			if(!signflag){
@@ -419,7 +422,7 @@ public class MemberAppBackUrlController extends BaseController {
 		  			//更新会员充值次数
 		  			moneypd=null;
 		  			moneypd=new PageData();
- 		  			int cz_number=Integer.parseInt(pd.getString("cz_number"))+1;
+ 		  			int cz_number=Integer.parseInt(ServiceHelper.getAppMemberService().findById(pd).getString("cz_number"))+1;
 		  			moneypd.put("cz_number", cz_number);
 		  			moneypd.put("now_money", TongYong.df2.format(now_money+actionmoney));
 		  			moneypd.put("member_id",  pd.getString("member_id"));
@@ -443,4 +446,93 @@ public class MemberAppBackUrlController extends BaseController {
 		return success;
 	}
 	 
+	
+	
+	
+	
+	/**
+	 * 
+	* 方法名：loginAlipayYanZheng
+ 	* 描述：支付宝登录---支付宝页面跳转同步通知页面
+	* 返回类型：json
+	* back_mapp/loginAlipayYanZheng.do
+	 */
+	@RequestMapping(value="/loginAlipayYanZheng")
+	@ResponseBody
+	public void LoginAlipayYanZheng(HttpServletRequest request,PrintWriter out) throws Exception{
+		Map<String, String> paramsMap = new HashMap<String, String>();  
+        Map<String, String[]> requestParams = request.getParameterMap();  
+        //获取支付宝GET过来反馈信息
+		Map<String,String> params = new HashMap<String,String>();
+   		try {
+   			for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
+   		        String name = (String) iter.next();
+   		        String[] values = (String[]) requestParams.get(name);
+   		        String valueStr = "";
+   		        for (int i = 0; i < values.length; i++) {
+   		            valueStr = (i == values.length - 1) ? valueStr + values[i]
+   		                    : valueStr + values[i] + ",";
+   		        }
+   		        //乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
+   		        valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+   		        params.put(name, valueStr);
+   		    }
+   		    
+   		    //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
+   		    //支付宝用户号
+   		    String app_id = new String(request.getParameter("app_id").getBytes("ISO-8859-1"),"UTF-8");
+   		    out.write(app_id + "\n");
+
+   		    //获取第三方登录授权
+   		    String alipay_app_auth = new String(request.getParameter("source").getBytes("ISO-8859-1"),"UTF-8");
+   		    out.write(alipay_app_auth + "\n");
+   		    
+   		    //第三方授权code
+   		    String app_auth_code = new String(request.getParameter("app_auth_code").getBytes("ISO-8859-1"),"UTF-8");//获的第三方登录用户授权app_auth_code
+   		    out.write(app_auth_code + "\n");
+   		    
+   		    String privateKey = AlipayConfig.merchant_private_key;
+   		    String publicKey = AlipayConfig.alipay_public_key;
+   		    
+   		    //使用auth_code换取接口access_token及用户userId
+   		     AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do",AlipayConfig.app_id,privateKey,"json","UTF-8",publicKey,"RSA2");//正常环境下的网关
+//   		 AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipaydev.com/gateway.do","沙箱环境下的应用APPID",privateKey,"json","UTF-8",publicKey,"RSA2");//沙箱下的网关
+   		     
+   		     
+   		    AlipayOpenAuthTokenAppRequest requestLogin1 = new AlipayOpenAuthTokenAppRequest();
+   		    requestLogin1.setBizContent("{" +
+   		        "\"grant_type\":\"authorization_code\"," +
+   		        "\"code\":\""+ app_auth_code +"\"" +
+   		        "}");
+   		    
+   		    //第三方授权
+   		    AlipayOpenAuthTokenAppResponse responseToken = alipayClient.execute(requestLogin1);
+   		    if(responseToken.isSuccess()){
+   		        out.write("<br/>调用成功" + "\n");
+    		    out.write(responseToken.getAuthAppId() + "\n");
+   		        out.write(responseToken.getAppAuthToken() + "\n");
+   		        out.write(responseToken.getUserId() + "\n");
+    		} else {
+   		        out.write("调用失败" + "\n");
+   		    }
+   		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+  			ServiceHelper.getAppPcdService().saveLog(paramsMap.toString(), "第三方授权系统异常","9999");
+ 		}
+ 	} 
+ 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
