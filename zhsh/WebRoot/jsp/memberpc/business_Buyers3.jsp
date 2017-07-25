@@ -78,13 +78,19 @@
             </span>
             <span class="sel_box">
                 <select name="city" id="loc_shi" class="select_item" onchange="addsearcharea()">
-                     <c:forEach items="${cityList }" var="var" >
-                    	<option value="${var.city_id }" ${pd.city_name eq var.city_name?'selected':'' }>${var.city_name }</option>
+                    <c:if test="${!empty pd.city_name}">
+                    	<option value="">--${pd.city_name}--</option>
+                     </c:if>
+                    <c:forEach items="${cityList }" var="var" >
+                    	<option value="${var.city_id }" >${var.city_name }</option>
                     </c:forEach>
                  </select>
                 <select name="area" id="loc_qu" class="select_item" onchange="shaixin()">
+                	 <c:if test="${!empty pd.area_name}">
+                    	<option value="">--${pd.area_name}--</option>
+                     </c:if>
                 	 <c:forEach items="${areaList }" var="var" >
-                	 	<option value="${var.area_id }" ${pd.area_name eq var.area_name?'selected':'' }>${var.area_name }</option>
+                	 	<option value="${var.area_id }" >${var.area_name }</option>
                 	 </c:forEach>
                  </select>
             </span>

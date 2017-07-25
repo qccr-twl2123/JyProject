@@ -12,7 +12,7 @@
   <script src="<%=basePath%>js/jquery-1.8.0.min.js"></script>
   <script type="text/javascript">
       $(function(){
-    	  $.ajax({
+    	 	 /* $.ajax({
     	       	type:"post",
     	       	url:"https://api.map.baidu.com/highacciploc/v1?qcip=&callback_type=jsonp&qterm=pc&ak=KUS9Zfra9SBVjiljB1vDpofLkH8bXuL9&coord=bd09ll", 
     		        dataType:"jsonp",
@@ -23,9 +23,10 @@
     		        		pcd(content.location.lng,content.location.lat);
     		        	}
     		        }
-    		   });
-    			//精确----->获取省市区
-    	  		function pcd(lng,lat){
+    		   }); */
+    	 	 
+    	 	   //精确----->获取省市区
+     	  	   function pcd(lng,lat){
     		  		$.ajax({
     		 	         	type:"post",
     		 	         	url:"https://api.map.baidu.com/geocoder/v2/?ak=KUS9Zfra9SBVjiljB1vDpofLkH8bXuL9&callback=renderReverse&location="+lat+","+lng+"&output=json&pois=1", 
@@ -38,6 +39,23 @@
     		 		        }
     		 		   });
     		  	}	
+    			
+    	 	   
+     	  		gogogo1();
+    	  		//普通定位定位开始
+        		function gogogo1(){
+        			$.ajax({
+        	         	type:"post",
+        	         	url:"https://api.map.baidu.com/location/ip?ak=KUS9Zfra9SBVjiljB1vDpofLkH8bXuL9&coor=bd09ll", 
+        		        dataType:"jsonp",
+        		        success: function(data){
+          		        	var point=data.content.point;
+         		        	var lng=point.x;
+         		        	var lat=point.y;
+          		        	pcd( lng , lat);
+           		        }
+        		   });
+        		}
       });
       
   	/* String url = request.getScheme()+"://"+request.getServerName()+"/jiuyusy.do"; 
