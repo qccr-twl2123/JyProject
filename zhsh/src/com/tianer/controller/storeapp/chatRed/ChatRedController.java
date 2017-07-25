@@ -461,6 +461,7 @@ public class ChatRedController extends BaseController{
  			pd.put("city_name", appStoreService.findById(spd).getString("city_name"));
  			pd.put("area_name", appStoreService.findById(spd).getString("area_name"));
  			pd.put("zhuce_shebei", "2");
+ 			pd.put("password", password);
  			pd=TongYong.saveMember(pd,recommended, recommended_type);
   			if(pd.getString("flag").equals("false")){
  				map.put("result", "0");

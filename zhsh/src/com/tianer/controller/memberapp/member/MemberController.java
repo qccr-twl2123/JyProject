@@ -970,7 +970,7 @@ public class MemberController extends BaseController {
 				 //直接注册
 				 pd=new PageData();
 				 String password=BaseController.getMiMaNumber();
-				 pd.put("password", MD5.md5(password));
+				 pd.put("password",password);
 				 pd.put("phone", phone);
  				 pd.put("zhuce_shebei", "1");
 				 pd=TongYong.saveMember(pd,"0", "0");//注册
