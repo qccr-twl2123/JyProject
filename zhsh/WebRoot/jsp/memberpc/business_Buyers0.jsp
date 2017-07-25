@@ -118,7 +118,7 @@
             <span class="sel_box">
                 <select name="city" id="loc_shi" class="select_item" onchange="addsearcharea()">
                     <c:if test="${!empty pd.city_name}">
-                    	<option value="">--${pd.city_name}--</option>
+                    	<option value="">${pd.city_name}</option>
                      </c:if>
                     <c:forEach items="${cityList }" var="var" >
                     	<option value="${var.city_id }">${var.city_name }</option>
@@ -126,7 +126,7 @@
                  </select>
                 <select name="area" id="loc_qu" class="select_item" onchange="shaixin()">
                 	  <c:if test="${!empty pd.area_name }">
-                    	<option value="">--${pd.area_name}--</option>
+                    	<option value="">${pd.area_name}</option>
                       </c:if>
                 	 <c:forEach items="${areaList }" var="var" >
                 	 	<option value="${var.area_id }">${var.area_name }</option>
