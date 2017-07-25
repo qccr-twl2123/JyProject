@@ -2034,8 +2034,7 @@ public class MemberController extends BaseController {
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
-  			
-  			
+   			
   				//获取用户的一些信息
 				if(type.equals("1")){
 					pd.put("wxunionid",unionid);

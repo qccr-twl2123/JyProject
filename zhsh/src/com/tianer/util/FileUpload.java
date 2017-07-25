@@ -62,7 +62,7 @@ public class FileUpload {
  
 	//===
 	public static void main(String[] args) throws IOException {
-		fileUpFile("C:/erweima/f77544689c684a1d8c5adda140288da4.png","E://apache-tomcat-7.0.63//webapps//FileSave//File//opratorZFile","f77544689c684a1d8c5adda140288da4.png");
+		getImageByUrl("https://q.qlogo.cn/qqapp/1105492816/4F4A5579A4035637F89BF7734D9CF7F7/100","E://","ll");
 	}
 	
 	

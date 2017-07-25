@@ -25,14 +25,15 @@ public class MD5 {
 			str = buf.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
-
 		}
 		return str;
 	}
+	
+	
 	public static void main(String[] args) {
 		String time=(new Date()).getTime()+"";
 		System.out.println(time);
-   		System.out.println(md5("666181"));
-   		 
+   		System.out.println(md5("321220"));
+//   	685e8f4ebf16af3273236a72be80addf
  	}
 }

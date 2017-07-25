@@ -21,8 +21,11 @@ public class AppMemberService {
 	* 新增会员魏汉文
 	*/
 	public void save(PageData pd)throws Exception{
-		dao.save("AppMemberMapper.save", pd);
-		dao.delete("LQVIPMapper.deleteVipByPhone", pd);//删除线下vip
+		//判断按手机号注册是否已经注册
+		if(detailByPhone(pd) == null){
+			dao.save("AppMemberMapper.save", pd);
+			dao.delete("LQVIPMapper.deleteVipByPhone", pd);//删除线下vip
+		}
    	}
   	
 	/*
