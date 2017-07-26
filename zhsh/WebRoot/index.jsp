@@ -29,7 +29,7 @@
      	  	   function pcd(lng,lat){
     		  		$.ajax({
     		 	         	type:"post",
-    		 	         	url:"https://api.map.baidu.com/geocoder/v2/?ak=KUS9Zfra9SBVjiljB1vDpofLkH8bXuL9&callback=renderReverse&location="+lat+","+lng+"&output=json&pois=1", 
+    		 	         	url:"https://api.map.baidu.com/geocoder/v2/?ak=ltKk6fs4gHVPtWqtAsErXpBOd7ezHIWe&callback=renderReverse&location="+lat+","+lng+"&output=json&pois=1", 
     		 		        dataType:"jsonp",
     		 		        success: function(data){
     		 		        	var result=data.result;
@@ -46,7 +46,7 @@
         		function gogogo1(){
         			$.ajax({
         	         	type:"post",
-        	         	url:"https://api.map.baidu.com/location/ip?ak=KUS9Zfra9SBVjiljB1vDpofLkH8bXuL9&coor=bd09ll", 
+        	         	url:"https://api.map.baidu.com/location/ip?ak=ltKk6fs4gHVPtWqtAsErXpBOd7ezHIWe&coor=bd09ll", 
         		        dataType:"jsonp",
         		        success: function(data){
           		        	var point=data.content.point;

@@ -22,7 +22,7 @@
 			}
 	</style>
 	<script src="js/jquery-1.8.0.min.js"></script>
- 	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=KUS9Zfra9SBVjiljB1vDpofLkH8bXuL9"></script>
+ 	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=ltKk6fs4gHVPtWqtAsErXpBOd7ezHIWe"></script>
 </head>
 <body>
   	<!-- 地图地位位置 -->
