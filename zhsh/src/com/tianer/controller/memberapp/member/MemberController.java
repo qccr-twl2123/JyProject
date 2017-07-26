@@ -39,6 +39,7 @@ import com.tianer.util.ServiceHelper;
 import com.tianer.util.SmsUtil;
 import com.tianer.util.StringUtil;
 import com.tianer.util.alipaypay.AlipayConfig;
+import com.tianer.util.alipaypay.AlipayLogin;
 
 /** 
  * 
@@ -1938,12 +1939,12 @@ public class MemberController extends BaseController {
   	 			}
   			}else if(type.equals("4")){
   				//调用方法获取用户id
-  				
+  				pd=AlipayLogin.LoginAlipayYanZheng(auth_code);
   				pd.put("alipayunionid", unionid);
   	 			if(appMemberService.getByUnionid(pd) ==null ){
   	 				result="0";
   	 				message="当前账号未注册，前往获取验证码";
-    	    		}else{
+    	    	}else{
   	 				pd=appMemberService.getByUnionid(pd);
   	 			}
   			}
