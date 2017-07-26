@@ -1901,13 +1901,12 @@ public class MemberController extends BaseController {
 	 * unionid(支付宝对应的user_id) 账号的唯一标示
 	 * type    登录类型：1-微信登录，2-QQ登录，3-微博登录,4-支付宝
 	 * 
-	 * （支付宝专用：auth_code  ）
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/threeNumberIsZhuCe")
 	@ResponseBody
-	public Object ThreeNumberIsZhuCe(String open_id,String unionid,String type,String auth_code) throws Exception{
+	public Object ThreeNumberIsZhuCe(String open_id,String unionid,String type) throws Exception{
  		Map<String,Object> map = new HashMap<String,Object>();
  		String result = "1";
 		String message="登录成功";
@@ -1939,8 +1938,7 @@ public class MemberController extends BaseController {
   	 			}
   			}else if(type.equals("4")){
   				//调用方法获取用户id
-  				pd=AlipayLogin.LoginAlipayYanZheng(auth_code);
-  				pd.put("alipayunionid", unionid);
+   				pd.put("alipayunionid", unionid);
   	 			if(appMemberService.getByUnionid(pd) ==null ){
   	 				result="0";
   	 				message="当前账号未注册，前往获取验证码";
@@ -2013,16 +2011,16 @@ public class MemberController extends BaseController {
 	 * image_url 头像
 	 * name 姓名
 	 * sex 性别
+	 * auth_code 
  	 */
 	@RequestMapping(value="/threeLogin")
 	@ResponseBody
-	public Object ThreeLogin(String open_id,String phone,String type,String unionid,String image_url,String name,String sex) throws Exception{
+	public Object ThreeLogin(String open_id,String phone,String type,String unionid,String image_url,String name,String sex,String auth_code) throws Exception{
  		Map<String,Object> map = new HashMap<String,Object>();
  		String result = "1";
 		String message="登录成功";
   		PageData pd = new PageData();
   		try {
-//  			System.out.println(this.getPageData().toString());
 	  			try {
 	  				//存储app的第三方登录信息
 		  			PageData _pd=new PageData();
@@ -2035,8 +2033,7 @@ public class MemberController extends BaseController {
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
-   			
-  				//获取用户的一些信息
+	  			//获取用户的一些信息
 				if(type.equals("1")){
 					pd.put("wxunionid",unionid);
 				}else if(type.equals("2")){
@@ -2044,9 +2041,14 @@ public class MemberController extends BaseController {
 				}else if(type.equals("3")){
 					pd.put("wbunionid",unionid);
 				}else if(type.equals("4")){
+					//调用方法获取用户id
+	  				pd=AlipayLogin.LoginAlipayYanZheng(pd,auth_code);
 					pd.put("alipayunionid",unionid);
+					image_url=pd.getString("image_url");
+					name=pd.getString("name");
+					sex=pd.getString("sex");
 				}
-   				//判断当前手机号是否注册过
+    			//判断当前手机号是否注册过
   	 			pd.put("phone", phone);
    	 			if(appMemberService.detailByPhone(pd) == null){
    	 				String password=BaseController.getMiMaNumber();
@@ -2055,7 +2057,7 @@ public class MemberController extends BaseController {
 					pd.put("name",name);
 					pd.put("sex",sex);
 					pd.put("zhuce_shebei","1");
-    	 			pd=TongYong.saveMember(pd,"0", "0");//注册
+     	 			pd=TongYong.saveMember(pd,"0", "0");//注册
 					//发送短信
 					SmsUtil.ZhuCeForPassword(phone, password);
    	 			} 
