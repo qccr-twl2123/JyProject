@@ -131,7 +131,7 @@
 	    function gogogo3(wxlng,wxlat){
 	    		$.ajax({
 		         	type:"post",
-		         	url:"https://api.map.baidu.com/geoconv/v1/?coords="+wxlng+","+wxlat+"&from=1&to=5&ak=KUS9Zfra9SBVjiljB1vDpofLkH8bXuL9", 
+		         	url:"https://api.map.baidu.com/geoconv/v1/?coords="+wxlng+","+wxlat+"&from=1&to=5&ak=ltKk6fs4gHVPtWqtAsErXpBOd7ezHIWe", 
 			        dataType:"jsonp",
 			        success: function(data){
 	 		        	var status=data.status;

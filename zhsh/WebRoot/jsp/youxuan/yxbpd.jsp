@@ -58,9 +58,9 @@
 		        <h6 class="jieshu"></h6>
 	    	</div>
 		</div>
-		<!-- <div class="fork ">
+		 <div class="fork ">
 			<a href="" class="iconfont icon-fenxiang"></a>
-		</div> -->
+		</div> 
 	</header>
 <script type="text/javascript">
 function backreturn(){

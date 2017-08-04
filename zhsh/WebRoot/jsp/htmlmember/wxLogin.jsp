@@ -120,7 +120,6 @@ if("${member_id}" != ""){//已经注册过微信账号,直接前往首页
 	 $(".readyjsp").show();
  	 //微信定位
 	 wxdingwei();
-	 //gogogo2();
   } else{
 	  /* if("${pd.subscribe}" == 0){
 		  document.title='前往关注页面';
@@ -263,29 +262,12 @@ function lenghtOK(obj){
 	
 	
 //===============================================================================
-		
-//精确定位定位开始
-function gogogo2(){
-		$.ajax({
-         	type:"post",
-         	url:"https://api.map.baidu.com/highacciploc/v1?qcip=&callback_type=jsonp&qterm=pc&ak=KUS9Zfra9SBVjiljB1vDpofLkH8bXuL9&coord=bd09ll", 
-	        dataType:"jsonp",
-	        success: function(data){
-	        	var result=data.result;
-	        	var content=data.content;
-	        	if(result.error == 161){
-	        		window.lng=content.location.lng;
-	        		window.lat=content.location.lat;
- 	        		pcd(content.location.lng,content.location.lat);
-	        	}
-	        }
-	   });
-}
+
 //精确定位--->获取省市区
 function pcd(lng,lat){
 		$.ajax({
 	         	type:"post",
-	         	url:"https://api.map.baidu.com/geocoder/v2/?ak=KUS9Zfra9SBVjiljB1vDpofLkH8bXuL9&callback=renderReverse&location="+lat+","+lng+"&output=json&pois=1", 
+	         	url:"https://api.map.baidu.com/geocoder/v2/?ak=ltKk6fs4gHVPtWqtAsErXpBOd7ezHIWe&callback=renderReverse&location="+lat+","+lng+"&output=json&pois=1", 
 		        dataType:"jsonp",
 		        success: function(data){
 		        	if(data.status == "0"){
